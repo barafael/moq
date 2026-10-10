@@ -53,7 +53,8 @@ Decided in the 2026-10-09 planning session:
   shares that host by design. Four `moq-ci` instances
   (`count` exposed so the host can tune it). One `moq-gpu` instance for
   [GPU CI](/quest/m1/gpu-ci.md) with `PrivateDevices=false` and
-  `DeviceAllow` for `/dev/nvidia*`; it never takes `moq-ci` work. Put the
+  `DeviceAllow = [ "char-nvidia* rw" ]` and a closed device policy;
+  device-group selectors support globs, while device-node paths do not. it never takes `moq-ci` work. Put the
   kixelated cachix substituter in the module's `nix.settings`, since dynamic
   users are not `trusted-users` and cannot pass `extra-substituters`. The
   shared store grows with every flake revision, so enable disk-aware

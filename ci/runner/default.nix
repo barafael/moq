@@ -69,7 +69,8 @@ in
         serviceOverrides = {
           LimitMEMLOCK = "64M";
           PrivateDevices = false;
-          DeviceAllow = [ "/dev/nvidia* rw" ];
+          DevicePolicy = "closed";
+          DeviceAllow = [ "char-nvidia* rw" ];
         };
       };
     };

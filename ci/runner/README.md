@@ -28,7 +28,9 @@ key never enters the Nix store or the job environment.
 
 Each runner uses a dynamic user, a fresh work directory, its dedicated label,
 and the upstream sandbox defaults. CPU and GPU jobs share the Nix daemon and
-store. Enabling GPU access relaxes device isolation for the GPU runner only.
+store. Enabling GPU access relaxes device isolation for the GPU runner only, with
+a closed device policy allowing NVIDIA character-device groups. Load the host
+NVIDIA modules before starting that runner so systemd can resolve the groups.
 Nix retains the selected shell as a system closure dependency and collects
 other paths when disk space falls below 10 GiB, freeing towards 30 GiB.
 Runner services allow 64 MiB locked memory for concurrent io_uring tests.
