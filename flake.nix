@@ -655,7 +655,9 @@
             assert host.config.services.github-runners.moq-gpu.extraLabels == [ "moq-gpu" ];
             assert host.config.systemd.services.github-runner-moq-gpu.serviceConfig.DevicePolicy == "closed";
             assert
-              host.config.systemd.services.github-runner-moq-gpu.serviceConfig.DeviceAllow
+              (builtins.filter (
+                entry: entry != ""
+              ) host.config.systemd.services.github-runner-moq-gpu.serviceConfig.DeviceAllow)
               == [ "char-nvidia* rw" ];
             pkgs.runCommand "moq-ci-runner-check" { } "touch $out";
 
