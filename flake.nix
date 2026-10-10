@@ -55,6 +55,7 @@
     {
       nixosModules = {
         moq-relay = import ./nix/modules/moq-relay.nix;
+        ci-runner = import ./ci/runner;
       };
 
       overlays.default = import ./nix/overlay.nix { inherit crane; };
@@ -626,6 +627,34 @@
         # Which compiler cache those runs get is a workflow concern
         # (`.github/actions/rust-cache`); nothing here configures it.
         checks = {
+          ci-runner =
+            let
+              host = nixpkgs.lib.nixosSystem {
+                system = "x86_64-linux";
+                modules = [
+                  self.nixosModules.ci-runner
+                  {
+                    services.moq-ci = {
+                      enable = true;
+                      appId = 123;
+                      privateKeyFile = "/run/secrets/test-key";
+                      warmShell = self.devShells.x86_64-linux.default;
+                      gpu.enable = true;
+                    };
+                  }
+                ];
+              };
+              runner = host.config.services.github-runners.moq-ci;
+              service = host.config.systemd.services.github-runner-moq-ci-1;
+            in
+            assert runner.count == 4;
+            assert runner.ephemeral && runner.noDefaultLabels;
+            assert runner.extraLabels == [ "moq-ci" ];
+            assert runner.tokenFile == null;
+            assert service.serviceConfig.DynamicUser;
+            assert host.config.services.github-runners.moq-gpu.extraLabels == [ "moq-gpu" ];
+            pkgs.runCommand "moq-ci-runner-check" { } "touch $out";
+
           package-source-assets = pkgs.runCommand "package-source-assets" { } ''
             test -f "${overlayPkgs.moq-boy.src}/rs/moq-video/src/frame/nv12_resize.ptx"
             touch "$out"

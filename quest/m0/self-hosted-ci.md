@@ -63,10 +63,9 @@ Decided in the 2026-10-09 planning session:
   "Self-hosted runners" permission, its key on the host. Register as org
   runners in a runner group restricted to `moq-dev/moq`; that is narrower than
   the repository Administration permission a repo-level runner needs. Never
-  reuse moq-bot or a PAT. `services.github-runners` takes a token file, not an
-  App key, and an ephemeral runner re-registers on every restart, so a
-  pre-start step mints a fresh installation token from the key into that file
-  each time.
+  reuse moq-bot or a PAT. The pinned `services.github-runners` supports `githubApp` directly and
+  mints a fresh installation and registration token on every start. Use that
+  implementation rather than a second token-minting service.
 - **Cache:** run `jdx/mr-boxington-cache` on the host with filesystem blob
   storage and a durable metadata database (the default `memory://` loses the
   index on restart, orphaning the blobs; PostgreSQL via `services.postgresql`
@@ -109,3 +108,12 @@ Public API: none. Wire: none.
 - [CI host](/quest/m0/ci-host.md) - the maintainer brings up the host this module configures
 - [GPU CI](/quest/m1/gpu-ci.md) - the nightly NVIDIA job that runs on the `moq-gpu` instance
 - [Merge queue](/quest/m1/merge-queue-settings.md) - once on, its runs route here too
+
+## Implementation blocker
+
+The latest tagged cache server, v0.1.1, predates anonymous read-only access.
+Its anonymous mode permits writes and cannot enforce this quest's trust
+boundary. Upstream main has the required policy but has not released it.
+Keep workflow routing hosted until a stable server supports anonymous reads
+with OIDC-gated writes. An explicitly approved unreleased commit pin is the
+alternative; a client-only read-only setting is insufficient.
