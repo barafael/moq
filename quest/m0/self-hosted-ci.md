@@ -102,15 +102,8 @@ group) with `CI_RUNNER` set and unset, and that the module evaluates (`nix eval`
 and with a token from a PR ref). End-to-end proof happens in
 [CI host](/quest/m0/ci-host.md).
 
-Public API: none. Wire: none.
 
-## Related
-
-- [CI host](/quest/m0/ci-host.md) - the maintainer brings up the host this module configures
-- [GPU CI](/quest/m1/gpu-ci.md) - the nightly NVIDIA job that runs on the `moq-gpu` instance
-- [Merge queue](/quest/m1/merge-queue-settings.md) - once on, its runs route here too
-
-## Implementation blocker
+**Implementation blocker:**
 
 The latest tagged cache server, v0.1.1, predates anonymous read-only access.
 Its anonymous mode permits writes and cannot enforce this quest's trust
@@ -118,3 +111,11 @@ boundary. Upstream main has the required policy but has not released it.
 Keep workflow routing hosted until a stable server supports anonymous reads
 with OIDC-gated writes. An explicitly approved unreleased commit pin is the
 alternative; a client-only read-only setting is insufficient.
+
+Public API: none. Wire: none.
+
+## Related
+
+- [CI host](/quest/m0/ci-host.md) - the maintainer brings up the host this module configures
+- [GPU CI](/quest/m1/gpu-ci.md) - the nightly NVIDIA job that runs on the `moq-gpu` instance
+- [Merge queue](/quest/m1/merge-queue-settings.md) - once on, its runs route here too
