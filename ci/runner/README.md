@@ -8,6 +8,7 @@ policy and the workflow integration have been tested.
 Create a dedicated GitHub App with organisation **Self-hosted runners: write**,
 install it on `moq-dev`, and create an organisation runner group named `moq`
 restricted to `moq-dev/moq`. Deploy its PEM key as a root-readable runtime secret.
+Use an absolute string path; store paths and Nix path literals are refused.
 The NixOS runner module derives short-lived tokens on each registration; the
 key never enters the Nix store or the job environment.
 
@@ -33,7 +34,7 @@ a closed device policy allowing NVIDIA character-device groups. Load the host
 NVIDIA modules before starting that runner so systemd can resolve the groups.
 Nix retains the selected shell as a system closure dependency and collects
 other paths when disk space falls below 10 GiB, freeing towards 30 GiB.
-Runner services allow 64 MiB locked memory for concurrent io_uring tests.
+Runner services allow 64 MiB locked memory for concurrent io\_uring tests.
 
 The latest tagged `jdx/mr-boxington-cache` server is v0.1.1. Its anonymous mode
 also permits writes. Do not deploy it with anonymous access for this workload.

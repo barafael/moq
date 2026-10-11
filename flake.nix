@@ -644,9 +644,14 @@
                   }
                 ];
               };
+              keyType = host.options.services.moq-ci.privateKeyFile.type;
               runner = host.config.services.github-runners.moq-ci;
               service = host.config.systemd.services.github-runner-moq-ci-1;
             in
+            assert keyType.check "/run/secrets/test-key";
+            assert !(keyType.check "${builtins.storeDir}/test-key");
+            assert !(keyType.check ./flake.nix);
+            assert !(keyType.check "relative-key");
             assert runner.count == 4;
             assert runner.ephemeral && runner.noDefaultLabels;
             assert runner.extraLabels == [ "moq-ci" ];

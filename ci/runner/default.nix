@@ -38,8 +38,10 @@ in
       description = "ID of the dedicated organisation runner GitHub App.";
     };
     privateKeyFile = lib.mkOption {
-      type = lib.types.path;
-      description = "Runtime path to the App key, outside the Nix store.";
+      type = lib.types.addCheck (lib.types.strMatching "^/.*") (
+        path: !(lib.hasPrefix "${builtins.storeDir}/" path) && path != builtins.storeDir
+      );
+      description = "Absolute runtime string path to the App key, outside the Nix store.";
     };
     runnerGroup = lib.mkOption {
       type = lib.types.str;
