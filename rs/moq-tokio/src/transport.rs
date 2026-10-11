@@ -55,16 +55,8 @@ const CLOSE_LINGER: std::time::Duration = std::time::Duration::from_secs(10);
 ///   watch parks until the caller's reads drain the backlog, deliberately
 ///   trading watch liveness on an undrained flooding stream for a memory
 ///   bound (every driver in this crate drains its reads alongside the watch).
-///   A send stream only
-///   starts the real watch once `finish` or `reset` makes it terminal; before
-///   that a closure surfaces as an error on the next write instead of waking an
-///   idle watch. The send-side gap this leaves: a peer that resets a stream
-///   sitting idle (no pending write, not finished) does not wake a parked
-///   `poll_closed`, so a driver waiting on "next frame or peer close" learns of
-///   the closure only when the next write fails. The drivers' other arms keep
-///   the session making progress; the stream itself lingers until then. A
-///   native poll implementation observes closure without owning the stream,
-///   which is why a backend that has one is not wrapped.
+///   Send-side watches are interruptible, so an idle watch can observe peer
+///   cancellation while later writes reclaim the stream.
 pub struct Session<S: web_transport_trait::Session> {
 	session: S,
 	accept_uni: OpSlot<Result<S::RecvStream, S::Error>>,
@@ -231,9 +223,6 @@ pub struct SendStream<S: web_transport_trait::SendStream + 'static> {
 	priority: Option<u8>,
 	finish: bool,
 	reset: Option<u32>,
-	/// Whether `finish` or `reset` has been observed, so no further writes can
-	/// come and the closed() watch may safely take ownership of the stream.
-	terminal: bool,
 	/// Bytes already transmitted but not yet reported to the caller: a write the
 	/// stored future finished (possibly inside
 	/// [`poll_closed`](wt_poll::SendStream::poll_closed)) while the caller held a
@@ -273,7 +262,6 @@ impl<S: web_transport_trait::SendStream + 'static> SendStream<S> {
 			priority: None,
 			finish: false,
 			reset: None,
-			terminal: false,
 			completed: Bytes::new(),
 			interrupt: None,
 		}
@@ -374,17 +362,22 @@ impl<S: web_transport_trait::SendStream + 'static> wt_poll::SendStream for SendS
 						}
 					}
 				},
-				SendState::Closing(mut fut) => match fut.as_mut().poll(cx) {
-					Poll::Pending => {
-						*self.state.get_mut().unwrap() = Some(SendState::Closing(fut));
-						return Poll::Pending;
+				SendState::Closing(mut fut) => {
+					if let Some(tx) = self.interrupt.take() {
+						let _ = tx.send(());
 					}
-					Poll::Ready((mut stream, _res)) => {
-						self.interrupt = None;
-						self.settle(&mut stream);
-						*self.state.get_mut().unwrap() = Some(SendState::Idle(stream));
+					match fut.as_mut().poll(cx) {
+						Poll::Pending => {
+							*self.state.get_mut().unwrap() = Some(SendState::Closing(fut));
+							return Poll::Pending;
+						}
+						Poll::Ready((mut stream, _res)) => {
+							self.interrupt = None;
+							self.settle(&mut stream);
+							*self.state.get_mut().unwrap() = Some(SendState::Idle(stream));
+						}
 					}
-				},
+				}
 			}
 		}
 	}
@@ -405,18 +398,21 @@ impl<S: web_transport_trait::SendStream + 'static> wt_poll::SendStream for SendS
 	}
 
 	fn finish(&mut self) -> Result<(), Self::Error> {
-		self.terminal = true;
 		match self.state.get_mut().unwrap().as_mut() {
 			Some(SendState::Idle(stream)) => stream.finish(),
 			_ => {
 				self.finish = true;
+				if matches!(self.state.get_mut().unwrap(), Some(SendState::Closing(_)))
+					&& let Some(tx) = self.interrupt.take()
+				{
+					let _ = tx.send(());
+				}
 				Ok(())
 			}
 		}
 	}
 
 	fn reset(&mut self, code: u32) {
-		self.terminal = true;
 		match self.state.get_mut().unwrap().as_mut() {
 			Some(SendState::Idle(stream)) => stream.reset(code),
 			_ => {
@@ -435,14 +431,6 @@ impl<S: web_transport_trait::SendStream + 'static> wt_poll::SendStream for SendS
 			match self.state.get_mut().unwrap().take().expect("in-flight") {
 				SendState::Idle(mut stream) => {
 					self.settle(&mut stream);
-					// Only a finished (or reset) stream starts the real closed()
-					// watch: that future owns the stream, and a stream the caller
-					// may still write to must stay reclaimable. Before that,
-					// closure surfaces as an error on the next operation instead.
-					if !self.terminal {
-						*self.state.get_mut().unwrap() = Some(SendState::Idle(stream));
-						return Poll::Pending;
-					}
 					// Interruptible like a write: a late reset (the group machines
 					// cancel a finished stream this way) must not wait for a FIN
 					// acknowledgement that may never come.
@@ -546,15 +534,21 @@ impl<S: web_transport_trait::SendStream + 'static> Drop for SendStream<S> {
 					});
 				}
 			}
+			// Both deferred actions fired the watch's interrupt when recorded, so
+			// the salvage task reclaims the stream without waiting on the peer.
 			Some(SendState::Closing(fut)) => {
 				let reset = self.reset.take();
-				if reset.is_some()
+				let finish = std::mem::take(&mut self.finish);
+				if (reset.is_some() || finish)
 					&& let Ok(handle) = tokio::runtime::Handle::try_current()
 				{
 					handle.spawn(async move {
 						let (mut stream, _) = fut.await;
-						if let Some(code) = reset {
-							stream.reset(code);
+						match reset {
+							Some(code) => stream.reset(code),
+							None => {
+								let _ = stream.finish();
+							}
 						}
 					});
 				}
@@ -839,6 +833,7 @@ mod tests {
 		resets: Arc<Mutex<Vec<u32>>>,
 		/// The peer never acknowledges the FIN: closed() stays pending forever.
 		never_ack: Arc<AtomicBool>,
+		stopped: Arc<AtomicBool>,
 	}
 
 	impl web_transport_trait::SendStream for FakeSend {
@@ -871,10 +866,16 @@ mod tests {
 		}
 
 		async fn closed(&mut self) -> Result<(), Self::Error> {
-			match self.finished.load(Ordering::SeqCst) && !self.never_ack.load(Ordering::SeqCst) {
-				true => Ok(()),
-				false => std::future::pending().await,
-			}
+			std::future::poll_fn(|_| {
+				if self.stopped.load(Ordering::SeqCst) {
+					return Poll::Ready(Err(FakeError));
+				}
+				match self.finished.load(Ordering::SeqCst) && !self.never_ack.load(Ordering::SeqCst) {
+					true => Poll::Ready(Ok(())),
+					false => Poll::Pending,
+				}
+			})
+			.await
 		}
 	}
 
@@ -931,12 +932,22 @@ mod tests {
 		let mut send = SendStream::new(fake.clone());
 		let mut cx = cx();
 
-		// A pre-terminal closed watch stays pending without consuming the stream.
+		// An idle closed watch stays pending until the peer cancels.
 		assert!(send.poll_closed(&mut cx).is_pending());
 
 		// The write proceeds; the old ownership-transfer watch deadlocked here.
 		assert_eq!(send.poll_write(&mut cx, b"hello"), Poll::Ready(Ok(5)));
 		assert_eq!(fake.writes.lock().unwrap().as_slice(), b"hello");
+	}
+
+	#[test]
+	fn send_closed_observes_stop_while_idle() {
+		let fake = FakeSend::default();
+		let mut send = SendStream::new(fake.clone());
+		let mut cx = cx();
+		assert!(send.poll_closed(&mut cx).is_pending());
+		fake.stopped.store(true, Ordering::SeqCst);
+		assert!(matches!(send.poll_closed(&mut cx), Poll::Ready(Err(_))));
 	}
 
 	// After finish() the real closed() watch runs and resolves.
@@ -1165,6 +1176,25 @@ mod tests {
 		.await
 		.expect("the salvage task never applied the reset");
 		assert_eq!(fake.resets.lock().unwrap().as_slice(), &[9]);
+	}
+
+	// An idle closed watch owns the stream, so a FIN recorded against it and then
+	// dropped must still go out instead of the backend's drop reset.
+	#[tokio::test(start_paused = true)]
+	async fn a_deferred_finish_survives_a_drop_mid_watch() {
+		let fake = FakeSend::default();
+		let mut send = SendStream::new(fake.clone());
+		let mut cx = cx();
+
+		assert!(send.poll_closed(&mut cx).is_pending());
+		send.finish().unwrap();
+		drop(send);
+
+		for _ in 0..10 {
+			tokio::task::yield_now().await;
+		}
+		assert!(fake.finished.load(Ordering::SeqCst), "the deferred FIN was lost");
+		assert!(fake.resets.lock().unwrap().is_empty());
 	}
 
 	// The receive-side twin: a reader dropped mid-read still sends the deferred

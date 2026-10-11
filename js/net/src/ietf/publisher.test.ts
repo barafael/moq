@@ -13,9 +13,12 @@ import type { Producer as TrackProducer } from "../track.ts";
 import { wireOf } from "../wire.ts";
 import { NativeSession, type Session } from "./adapter.ts";
 import type * as Cluster from "./cluster.ts";
+import { toRequestCode } from "./error.ts";
 import { Fetch, FetchHeader } from "./fetch.ts";
+import * as Message from "./message.ts";
 import { Frame, Group as GroupMessage } from "./object.ts";
-import { PublishDone } from "./publish.ts";
+import { Parameters } from "./parameters.ts";
+import { PublishDone, PublishDoneStatus } from "./publish.ts";
 import { PublishNamespace, PublishNamespaceUpdate } from "./publish_namespace.ts";
 import { Publisher } from "./publisher.ts";
 import { RequestError, RequestOk } from "./request.ts";
@@ -1492,6 +1495,8 @@ interface ServedGroup {
 	sequence: number;
 	/** Whether the header claimed the stream starts at the group's first object. */
 	firstObject: boolean;
+	/** Whether the header claimed the stream's FIN ends the group (END_OF_GROUP). */
+	endOfGroup: boolean;
 	/** Each object's absolute id (reconstructed from its delta) and payload. */
 	objects: { id: number; payload: string }[];
 }
@@ -1623,7 +1628,12 @@ async function readGroup(stream: ReadableStream<Uint8Array>): Promise<ServedGrou
 		objects.push({ id, payload: new TextDecoder().decode(payload) });
 	}
 
-	return { sequence: header.groupId, firstObject: header.flags.firstObject, objects };
+	return {
+		sequence: header.groupId,
+		firstObject: header.flags.firstObject,
+		endOfGroup: header.flags.hasEnd,
+		objects,
+	};
 }
 
 /** Read a stream carrying only an END_OF_TRACK object, returning the group it names. */
@@ -1684,7 +1694,8 @@ async function readFill(stream: ReadableStream<Uint8Array>): Promise<ServedFill>
 /**
  * An absolute filter names the objects it wants, so the boundary groups are trimmed to it
  * and the groups outside it are never opened. The first object written carries its absolute
- * id, or the subscriber would read a silently renumbered group.
+ * id, or the subscriber would read a silently renumbered group, and a capped tail does not
+ * claim END_OF_GROUP, or the subscriber would think the group ended at the cap.
  */
 test("draft-20: an absolute filter trims the range it serves", async () => {
 	const fx = fixture();
@@ -1715,6 +1726,7 @@ test("draft-20: an absolute filter trims the range it serves", async () => {
 			sequence: 1,
 			// The head was trimmed, so the stream does not start at the group's first object.
 			firstObject: false,
+			endOfGroup: true,
 			objects: [
 				{ id: 1, payload: "1.1" },
 				{ id: 2, payload: "1.2" },
@@ -1726,6 +1738,8 @@ test("draft-20: an absolute filter trims the range it serves", async () => {
 		expect(await readGroup(second)).toEqual({
 			sequence: 2,
 			firstObject: true,
+			// The filter ends at object 0 of 3, so the stream stops before the group does.
+			endOfGroup: false,
 			objects: [{ id: 0, payload: "2.0" }],
 		});
 
@@ -1787,6 +1801,7 @@ test("draft-20: a fill serves the current group's head on a fetch stream", async
 		expect(await readGroup(live)).toEqual({
 			sequence: 0,
 			firstObject: false,
+			endOfGroup: true,
 			objects: [{ id: 2, payload: "0.2" }],
 		});
 	} finally {
@@ -1863,7 +1878,7 @@ test("draft-20: a backwards range within one group serves nothing and ends the s
 	try {
 		const served = await nextUni(fx.uni);
 		if (!served) throw new Error("the group stream never opened");
-		expect(await readGroup(served)).toEqual({ sequence: 0, firstObject: false, objects: [] });
+		expect(await readGroup(served)).toEqual({ sequence: 0, firstObject: false, endOfGroup: false, objects: [] });
 	} finally {
 		fx.close();
 		client.close();
@@ -2310,4 +2325,293 @@ for (const version of [Version.DRAFT_15, Version.DRAFT_19] as const) {
 			}
 		}
 	}
+}
+
+for (const version of [
+	Version.DRAFT_17,
+	Version.DRAFT_18,
+	Version.DRAFT_19,
+	Version.DRAFT_20,
+	Version.DRAFT_21,
+	Version.DRAFT_22,
+]) {
+	test(`requester FIN is version gated for subscription ${version}`, async () => {
+		const pair = createMockTransportPair(ALPN.DRAFT_19);
+		const session = new NativeSession(pair.server, version, true);
+		const { pub, origin } = publisher(pair.server, { session });
+		const broadcast = publish(origin, Path.from("test"));
+		const track = broadcast.createTrack("video");
+		const client = await Stream.open(pair.client, { version });
+		const server = await Stream.accept(pair.server, version);
+		if (!server) throw new Error("missing stream");
+		const serving = pub.runSubscribe(
+			new Subscribe({
+				requestId: 0n,
+				trackNamespace: Path.from("test"),
+				trackName: "video",
+				subscriberPriority: 128,
+			}),
+			server,
+		);
+		const uni = pair.client.incomingUnidirectionalStreams.getReader();
+		try {
+			expect(await client.reader.u53()).toBe(SubscribeOk.id);
+			await SubscribeOk.decode(client.reader, version);
+			client.writer.close();
+			await client.writer.closed;
+			if (version <= Version.DRAFT_18) {
+				await serving;
+				expect(track.subscription.peek()).toBeUndefined();
+			} else {
+				const group = new GroupProducer(0);
+				group.writeFrame({
+					payload: new TextEncoder().encode("after FIN"),
+					timestamp: Timestamp.fromMillis(0),
+				});
+				group.close();
+				track.writeGroup(group);
+				const next = await uni.read();
+				expect(next.done).toBeFalse();
+				if (next.done) throw new Error("no group after FIN");
+				const reader = new Reader(next.value, undefined, version);
+				expect((await GroupMessage.decode(reader, version)).groupId).toBe(0);
+				client.reader.stop(new Error("cancel"));
+				await serving;
+			}
+		} finally {
+			client.close();
+			track.close();
+			broadcast.close();
+			origin.close();
+			uni.releaseLock();
+		}
+	});
+}
+
+/** Send an update on an established subscription without closing the requester. */
+async function sendSubscriptionUpdate(client: Stream, params: Parameters, version: IetfVersion) {
+	await client.writer.u53(0x02);
+	await Message.encode(client.writer, async (writer) => {
+		await writer.u62(1n);
+		if (version === Version.DRAFT_17) await writer.u62(7n);
+		await params.encode(writer, version);
+	});
+}
+
+for (const version of [
+	Version.DRAFT_17,
+	Version.DRAFT_18,
+	Version.DRAFT_19,
+	Version.DRAFT_20,
+	Version.DRAFT_21,
+	Version.DRAFT_22,
+]) {
+	for (const field of ["filter", "largest", "token"] as const) {
+		test(`unsupported subscription update ${field} is refused in ${version}`, async () => {
+			const fx = fixture(version);
+			const track = fx.broadcast.createTrack("video");
+			const { client } = await runSubscribe(
+				fx,
+				new Subscribe({
+					requestId: 7n,
+					trackNamespace: Path.from("test"),
+					trackName: "video",
+					subscriberPriority: 0,
+				}),
+			);
+			try {
+				const params = new Parameters();
+				if (field === "filter") params.subscriptionFilter = { kind: "nextObject" };
+				else if (field === "largest") params.largest = { groupId: 1n, objectId: 0n };
+				// AUTHORIZATION_TOKEN, which only decodes as a repeatable parameter.
+				else params.bytes.set(0x03n, new Uint8Array([1]));
+				await sendSubscriptionUpdate(client, params, version);
+				expect(await client.reader.u53()).toBe(RequestError.id);
+				expect((await RequestError.decode(client.reader, version)).errorCode).toBe(
+					toRequestCode("not_supported", "subscribe", version),
+				);
+				expect(await client.reader.u53()).toBe(PublishDone.id);
+				expect((await PublishDone.decode(client.reader, version)).statusCode).toBe(
+					PublishDoneStatus.UPDATE_FAILED,
+				);
+			} finally {
+				track.close();
+				client.close();
+				fx.close();
+			}
+		});
+	}
+}
+
+test("unsupported subscription update remains UPDATE_FAILED while the last group drains", async () => {
+	const fx = fixture();
+	const track = fx.broadcast.createTrack("video");
+	const queued = Promise.withResolvers<void>();
+	const slot = Promise.withResolvers<void>();
+	const create = fx.pair.server.createUnidirectionalStream.bind(fx.pair.server);
+	fx.pair.server.createUnidirectionalStream = async (options?: WebTransportSendStreamOptions) => {
+		queued.resolve();
+		await slot.promise;
+		return create(options);
+	};
+	const { client } = await runSubscribe(
+		fx,
+		new Subscribe({ requestId: 7n, trackNamespace: Path.from("test"), trackName: "video", subscriberPriority: 0 }),
+	);
+	try {
+		writeGroup(track, 1);
+		await queued.promise;
+		track.close();
+		const params = new Parameters();
+		params.forward = false;
+		await sendSubscriptionUpdate(client, params, V20);
+		expect(await client.reader.u53()).toBe(RequestError.id);
+		expect((await RequestError.decode(client.reader, V20)).errorCode).toBe(
+			toRequestCode("not_supported", "subscribe", V20),
+		);
+		expect(await client.reader.u53()).toBe(PublishDone.id);
+		expect((await PublishDone.decode(client.reader, V20)).statusCode).toBe(PublishDoneStatus.UPDATE_FAILED);
+	} finally {
+		slot.resolve();
+		track.close();
+		client.close();
+		fx.close();
+	}
+});
+
+test("PUBLISH_DONE waits for an update reply that is partly written", async () => {
+	const fx = fixture();
+	const track = fx.broadcast.createTrack("video");
+	const client = await Stream.open(fx.pair.client, { version: V20 });
+	const server = await Stream.accept(fx.pair.server, V20);
+	if (!server) throw new Error("missing stream");
+	const serving = fx.pub.runSubscribe(
+		new Subscribe({ requestId: 7n, trackNamespace: Path.from("test"), trackName: "video", subscriberPriority: 0 }),
+		server,
+	);
+	try {
+		expect(await client.reader.u53()).toBe(SubscribeOk.id);
+		await SubscribeOk.decode(client.reader, V20);
+
+		// Hold the REQUEST_OK after its type, before its length and body.
+		const paused = Promise.withResolvers<void>();
+		const resume = Promise.withResolvers<void>();
+		const write = server.writer.write.bind(server.writer);
+		let writes = 0;
+		server.writer.write = async (v: Uint8Array) => {
+			if (++writes === 2) {
+				paused.resolve();
+				await resume.promise;
+			}
+			await write(v);
+		};
+
+		const params = new Parameters();
+		params.subscriberPriority = 1;
+		await sendSubscriptionUpdate(client, params, V20);
+		await paused.promise;
+		track.close();
+		await flush();
+		resume.resolve();
+
+		expect(await client.reader.u53()).toBe(RequestOk.id);
+		await RequestOk.decode(client.reader, V20);
+		expect(await client.reader.u53()).toBe(PublishDone.id);
+		expect((await PublishDone.decode(client.reader, V20)).statusCode).toBe(PublishDoneStatus.TRACK_ENDED);
+		await serving;
+	} finally {
+		track.close();
+		client.close();
+		fx.close();
+	}
+});
+
+for (const kind of ["refused", "malformed"] as const) {
+	test(`a ${kind} update resets an open group instead of finishing it`, async () => {
+		const fx = fixture();
+		const track = fx.broadcast.createTrack("video");
+		const { client } = await runSubscribe(
+			fx,
+			new Subscribe({
+				requestId: 7n,
+				trackNamespace: Path.from("test"),
+				trackName: "video",
+				subscriberPriority: 0,
+			}),
+		);
+		try {
+			const group = track.appendGroup();
+			group.writeFrame({ payload: new TextEncoder().encode("a"), timestamp: Timestamp.now() });
+			const uni = await fx.uni.read();
+			if (uni.done) throw new Error("no group");
+			const raw = uni.value.getReader();
+			await raw.read();
+			if (kind === "refused") {
+				const params = new Parameters();
+				params.forward = false;
+				await sendSubscriptionUpdate(client, params, V20);
+				expect(await client.reader.u53()).toBe(RequestError.id);
+				await RequestError.decode(client.reader, V20);
+			} else {
+				// Not REQUEST_UPDATE, the only message a requester may send here.
+				await client.writer.u53(0x03);
+			}
+			expect(await client.reader.u53()).toBe(PublishDone.id);
+			expect((await PublishDone.decode(client.reader, V20)).statusCode).toBe(
+				kind === "refused" ? PublishDoneStatus.UPDATE_FAILED : PublishDoneStatus.INTERNAL_ERROR,
+			);
+			let ended = "open";
+			try {
+				for (;;) {
+					const next = await raw.read();
+					if (next.done) {
+						ended = "fin";
+						break;
+					}
+				}
+			} catch {
+				ended = "reset";
+			}
+			expect(ended).toBe("reset");
+		} finally {
+			track.close();
+			client.close();
+			fx.close();
+		}
+	});
+}
+
+for (const version of [
+	Version.DRAFT_16,
+	Version.DRAFT_17,
+	Version.DRAFT_18,
+	Version.DRAFT_19,
+	Version.DRAFT_20,
+	Version.DRAFT_21,
+	Version.DRAFT_22,
+] as const) {
+	test(`namespace fill includes visible routes without solicitation in ${version}`, async () => {
+		const pair = createMockTransportPair(ALPN.DRAFT_19);
+		const session = new NativeSession(pair.server, version, true);
+		const { pub, origin } = publisher(pair.server, { session });
+		const broadcast = publish(origin, Path.from("room/cam"));
+		const client = await Stream.open(pair.client, { version });
+		const server = await Stream.accept(pair.server, version);
+		if (!server) throw new Error("missing request stream");
+		const serving = pub.runSubscribeNamespace(
+			new SubscribeNamespace({ requestId: 0n, namespace: Path.from("room") }),
+			server,
+		);
+		try {
+			expect(await client.reader.u53()).toBe(RequestOk.id);
+			await RequestOk.decode(client.reader, version);
+			expect(await client.reader.u53()).toBe(SubscribeNamespaceEntry.id);
+			expect((await SubscribeNamespaceEntry.decode(client.reader, version)).suffix).toBe(Path.from("cam"));
+		} finally {
+			client.close();
+			await serving;
+			broadcast.close();
+			origin.close();
+		}
+	});
 }

@@ -7,7 +7,7 @@ import { Fetch } from "./fetch.ts";
 import * as GoAway from "./goaway.ts";
 import * as Namespace from "./namespace.ts";
 import { FetchFrame, type FetchPosition, Frame, Group, type GroupFlags } from "./object.ts";
-import { Parameters, SetupOptions } from "./parameters.ts";
+import { Parameters, SetupOption, SetupOptions } from "./parameters.ts";
 import { Publish, PublishDone } from "./publish.ts";
 import * as Announce from "./publish_namespace.ts";
 import { RequestError, RequestOk } from "./request.ts";
@@ -242,14 +242,8 @@ test("Message Parameters: Location preserves bigint precision", async () => {
 
 	expect(params.largest).toEqual(largest);
 
-	for (const version of [
-		Version.DRAFT_14,
-		Version.DRAFT_15,
-		Version.DRAFT_16,
-		Version.DRAFT_17,
-		Version.DRAFT_18,
-		Version.DRAFT_19,
-	]) {
+	// Draft 14 carries Largest in the SUBSCRIBE_OK body, so it defines no LARGEST_OBJECT parameter.
+	for (const version of [Version.DRAFT_15, Version.DRAFT_16, Version.DRAFT_17, Version.DRAFT_18, Version.DRAFT_19]) {
 		const encoded = await encodeVersioned(params, version);
 		const decoded = await decodeVersioned(encoded, Parameters.decode, version);
 		expect(decoded.largest).toEqual(largest);
@@ -1945,3 +1939,160 @@ test("Subscribe v16: rejects INCLUDE_PROPERTIES", async () => {
 	const body = framed([...TRACK_HEAD, 0x01, 0x35, 0x01, 0x00]);
 	await expect(decodeVersioned(body, Subscribe.Subscribe.decode, Version.DRAFT_16)).rejects.toThrow();
 });
+
+for (const version of [Version.DRAFT_14, Version.DRAFT_15]) {
+	// DELIVERY_TIMEOUT (0x02) is the known key: both drafts define it.
+	test(`Parameters ${version}: unknown key does not hide a later known value`, async () => {
+		for (const bytes of [new Uint8Array([2, 0x3e, 1, 0x02, 7]), new Uint8Array([2, 0x3d, 1, 42, 0x02, 7])]) {
+			const params = await Parameters.decode(new Reader(undefined, bytes, version), version);
+			expect(params.deliveryTimeout).toBe(7n);
+		}
+	});
+
+	test(`Parameters ${version}: only a recognized key must be unique`, async () => {
+		for (const bytes of [
+			new Uint8Array([3, 0x3e, 1, 0x3e, 2, 0x02, 7]),
+			new Uint8Array([3, 0x3d, 1, 42, 0x3d, 1, 43, 0x02, 7]),
+			// ROUTE_COST (0x40b58): the cluster extension is negotiated only from draft 17.
+			new Uint8Array([3, 0x80, 0x04, 0x0b, 0x58, 5, 0x80, 0x04, 0x0b, 0x58, 6, 0x02, 7]),
+		]) {
+			const params = await Parameters.decode(new Reader(undefined, bytes, version), version);
+			expect(params.deliveryTimeout).toBe(7n);
+		}
+		const known = new Uint8Array([2, 0x02, 7, 0x02, 8]);
+		await expect(Parameters.decode(new Reader(undefined, known, version), version)).rejects.toThrow(/duplicate/);
+	});
+}
+
+// Draft 14 defines only DELIVERY_TIMEOUT, AUTHORIZATION TOKEN and MAX CACHE DURATION, so
+// later definitions such as SUBSCRIBER_PRIORITY and LOCATION_FILTER are unrecognized and may repeat.
+test("Parameters draft14: later definitions are unrecognized", async () => {
+	for (const bytes of [new Uint8Array([2, 0x20, 7, 0x20, 8]), new Uint8Array([2, 0x21, 0, 0x21, 0])]) {
+		const params = await Parameters.decode(new Reader(undefined, bytes, Version.DRAFT_14), Version.DRAFT_14);
+		expect(params.subscriberPriority).toBeUndefined();
+		expect(params.subscriptionFilter).toBeUndefined();
+	}
+});
+
+test("Subscribe draft15 recognizes only its parameters", async () => {
+	for (const parameter of [
+		[0x32, 7],
+		[0x04, 0],
+		[0x23, 1, 255],
+		[0x25, 1, 255],
+		[0x35, 1, 255],
+	]) {
+		const body = framed([...TRACK_HEAD, 2, ...parameter, 0x20, 7]);
+		const decoded = await decodeVersioned(body, Subscribe.Subscribe.decode, Version.DRAFT_15);
+		expect(decoded.subscriberPriority).toBe(7);
+		expect(decoded.fill).toBeUndefined();
+		expect(decoded.rangeFilters).toBe(false);
+	}
+	await expect(
+		decodeVersioned(framed([...TRACK_HEAD, 1, 0x21, 1, 255]), Subscribe.Subscribe.decode, Version.DRAFT_15),
+	).rejects.toThrow();
+});
+
+test("Publish draft15 ignores subscription-only parameters", async () => {
+	for (const parameter of [
+		[0x02, 7],
+		[0x20, 0x41, 0],
+		[0x21, 1, 255],
+	]) {
+		const body = framed([1, 1, 1, 116, 1, 118, 1, 2, ...parameter, 0x10, 0]);
+		const decoded = await decodeVersioned(body, Publish.decode, Version.DRAFT_15);
+		expect(decoded.forward).toBe(false);
+	}
+});
+
+for (const version of [Version.DRAFT_14, Version.DRAFT_15, Version.DRAFT_16, Version.DRAFT_17]) {
+	test(`SubscribeNamespace ${version}: FORWARD follows the draft`, async () => {
+		for (const value of [0, 1, 2]) {
+			const head = [
+				1,
+				...(version === Version.DRAFT_17 ? [0] : []),
+				0,
+				...(version >= Version.DRAFT_16 ? [1] : []),
+			];
+			const decoded = decodeVersioned(
+				framed([...head, 1, 0x10, value]),
+				SubscribeNamespace.SubscribeNamespaceLegacy.decode,
+				version,
+			);
+			if (version === Version.DRAFT_14 || value <= 1) await decoded;
+			else await expect(decoded).rejects.toThrow();
+		}
+	});
+}
+
+const SETUP_VERSIONS = [
+	Version.DRAFT_14,
+	Version.DRAFT_15,
+	Version.DRAFT_16,
+	Version.DRAFT_17,
+	Version.DRAFT_18,
+	Version.DRAFT_19,
+	Version.DRAFT_20,
+	Version.DRAFT_21,
+	Version.DRAFT_22,
+] as const;
+
+const legacySetup = (version: IetfVersion) => version <= Version.DRAFT_16;
+
+// A SETUP block carrying the option `kind` twice.
+async function repeatedSetupOption(kind: bigint, version: IetfVersion): Promise<Uint8Array> {
+	const { stream, written } = createTestWritableStream();
+	const writer = new Writer(stream, version);
+	if (legacySetup(version)) await writer.u53(2);
+	await writer.u62(kind);
+	for (let i = 0; i < 2; i++) {
+		if (i > 0) await writer.u62(version <= Version.DRAFT_15 ? kind : 0n);
+		if (kind % 2n === 0n) await writer.u62(1n);
+		else {
+			await writer.u53(1);
+			await writer.u8(1);
+		}
+	}
+	await writer.close();
+	await writer.closed;
+	return concatChunks(written);
+}
+
+const SETUP_UNIQUENESS: [bigint, (version: IetfVersion) => boolean][] = [
+	[0x20n, () => false],
+	[0x21n, () => false],
+	[0x9dn, () => false],
+	[0x11cn, () => false],
+	[SetupOption.MaxRequestId, legacySetup],
+	[SetupOption.HopId, (v) => !legacySetup(v)],
+	[SetupOption.RelayCost, (v) => !legacySetup(v)],
+	[SetupOption.MaxAuthTokenCacheSize, () => true],
+	[SetupOption.Solicit, () => true],
+	[SetupOption.Hidden, () => true],
+	[SetupOption.Implementation, () => true],
+];
+
+for (const version of SETUP_VERSIONS) {
+	for (const [kind, unique] of SETUP_UNIQUENESS) {
+		test(`SETUP ${version}: option ${kind} must be unique only when defined`, async () => {
+			const bytes = await repeatedSetupOption(kind, version);
+			const decoded = SetupOptions.decode(new Reader(undefined, bytes, version), version);
+			if (unique(version)) await expect(decoded).rejects.toThrow(/duplicate/);
+			else await decoded;
+		});
+	}
+}
+
+for (const version of [
+	Version.DRAFT_17,
+	Version.DRAFT_18,
+	Version.DRAFT_19,
+	Version.DRAFT_20,
+	Version.DRAFT_21,
+	Version.DRAFT_22,
+]) {
+	test(`SETUP ${version}: repeated unknown options still require complete values`, async () => {
+		const bytes = new Uint8Array([0x21, 1, 97, 0, 2, 98]);
+		await expect(SetupOptions.decode(new Reader(undefined, bytes, version), version)).rejects.toThrow();
+	});
+}

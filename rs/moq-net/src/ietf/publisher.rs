@@ -256,13 +256,18 @@ impl<S: crate::transport::poll::Session> Target<S> {
 		}
 	}
 
-	/// Ready when the peer ends this loop by closing the stream it asked on.
+	/// Ready when the peer ends this loop by cancelling the stream it asked on.
 	///
 	/// An unsolicited loop has no stream of its own to watch and parks here: the
 	/// session driver polling it is what drops it when the session ends.
-	fn poll_closed(&mut self, cx: &mut std::task::Context<'_>) -> Poll<Result<(), Error>> {
+	fn poll_closed(
+		&mut self,
+		finished: &mut bool,
+		version: Version,
+		cx: &mut std::task::Context<'_>,
+	) -> Poll<Result<(), Error>> {
 		match self.stream() {
-			Some(stream) => stream.reader.poll_closed(cx),
+			Some(stream) => super::request_stream::poll_cancel(stream, finished, version, cx),
 			None => Poll::Pending,
 		}
 	}
@@ -313,8 +318,8 @@ pub(super) struct Publisher<S: crate::transport::poll::Session> {
 	// origin we consume so it matches the local relay identity across every session,
 	// which is what makes cross-session loop detection work.
 	self_origin: crate::Hop,
-	// The identity assigned to the peer by the caller (`Client::with_peer_hop`, or
-	// the per-session default a server hands every request), used when the peer declares
+	// The identity assigned to the peer (a fresh per-session id, or one the caller
+	// pinned with `with_peer_hop`), used when the peer declares
 	// none itself. A peer that negotiates the MoQ Cluster extension declares its own,
 	// which wins unless it withheld it as the reserved 0.
 	peer_hop: Option<crate::Hop>,
@@ -420,8 +425,8 @@ where
 	/// The Hop ID whose paths must not be advertised (or served) back to this peer.
 	///
 	/// A peer that declared an identity supplies its own; otherwise fall back to the one
-	/// we assigned it (`Client::with_peer_hop` when dialing, `Request::with_peer_hop`
-	/// or a fresh per-session id when accepting), since moq-transport carries no identity
+	/// we assigned it (a fresh per-session id, or one pinned with `Client::with_peer_hop`
+	/// or `Request::with_peer_hop`), since moq-transport carries no identity
 	/// of its own. A peer that declared the reserved 0 declared no identity, so it takes
 	/// the fallback like any other anonymous peer.
 	fn exclude(&self, peer: &cluster::Peer) -> crate::Hop {
@@ -696,37 +701,22 @@ where
 				})
 				.await?;
 
-			// Run the track, cancelling on reader close (Unsubscribe or stream close).
+			let mut request_finished = false;
+
+			// Serve the track while reading updates; on draft-19+ only abrupt closure cancels.
 			// The fill (when one was requested) runs alongside on its own fetch stream;
 			// its failures reset that stream and never touch the subscription.
 			let mut track_serve =
 				TrackServe::new(self.session.clone(), track, request_id, self.version, range, timescale);
-			let served = {
-				let serve = async {
-					match fill {
-						Some((fill, cache, timescale)) => {
-							let fill = self.run_fill(request_id, priority, fill, cache, timescale);
-							let track = kio::wait(|waiter| track_serve.poll(waiter));
-							let (res, filled) = futures::join!(track, fill);
-							(res, filled)
-						}
-						None => (kio::wait(|waiter| track_serve.poll(waiter)).await, false),
-					}
-				};
-				let mut serve = std::pin::pin!(serve);
-				let mut closed_session = self.session.clone();
-				kio::wait(|waiter| {
-					if let Poll::Ready(served) = waiter.poll_future(serve.as_mut()) {
-						return Poll::Ready(Some(served));
-					}
-					let mut cx = std::task::Context::from_waker(waiter.waker());
-					if stream.reader.poll_closed(&mut cx).is_ready() || closed_session.poll_closed(&mut cx).is_ready() {
-						return Poll::Ready(None);
-					}
-					Poll::Pending
-				})
-				.await
+			let fill = async {
+				match fill {
+					Some((fill, cache, timescale)) => self.run_fill(request_id, priority, fill, cache, timescale).await,
+					None => false,
+				}
 			};
+			let served = self
+				.run_subscription(&mut stream, &mut track_serve, &mut request_finished, fill)
+				.await;
 
 			let completed = served.is_some();
 			let (res, filled) = served.unwrap_or((Ok(()), false));
@@ -746,7 +736,9 @@ where
 						return Poll::Ready(res);
 					}
 					let mut cx = std::task::Context::from_waker(waiter.waker());
-					if stream.reader.poll_closed(&mut cx).is_ready() || closed_session.poll_closed(&mut cx).is_ready() {
+					if super::request_stream::poll_cancel(&mut stream, &mut request_finished, self.version, &mut cx)
+						.is_ready() || closed_session.poll_closed(&mut cx).is_ready()
+					{
 						return Poll::Ready(Err(Error::Cancel));
 					}
 					Poll::Pending
@@ -765,6 +757,7 @@ where
 			// Send PublishDone
 			let (status, reason) = match &res {
 				Ok(()) => (ietf::PublishDoneStatus::TrackEnded, "track ended"),
+				Err(Error::Unsupported) => (ietf::PublishDoneStatus::UpdateFailed, "update failed"),
 				Err(_) => (ietf::PublishDoneStatus::InternalError, "internal error"),
 			};
 			let _ = stream.writer.encode(&ietf::PublishDone::ID).await;
@@ -785,6 +778,105 @@ where
 			let _ = stream.writer.close().await;
 
 			res
+		}
+	}
+
+	/// Serve a subscription until the track and any fill finish, applying the requester's
+	/// updates. `None` when the requester or session cancelled it.
+	///
+	/// Drafts 14-16 deliver follow-ups on a virtual stream, where anything still ends the
+	/// subscription. From draft 17 a REQUEST_UPDATE is read and answered: a priority
+	/// change is applied, and anything else is refused and ends the subscription with
+	/// UPDATE_FAILED rather than being dropped silently.
+	async fn run_subscription(
+		&self,
+		stream: &mut Stream<S, Version>,
+		serve: &mut TrackServe<S>,
+		finished: &mut bool,
+		fill: impl std::future::Future<Output = bool>,
+	) -> Option<(Result<(), Error>, bool)> {
+		let legacy = matches!(self.version, Version::Draft14 | Version::Draft15 | Version::Draft16);
+		let mut session = self.session.clone();
+		let mut fill = std::pin::pin!(fill);
+		let mut filled = None;
+		let mut served = None;
+		loop {
+			let event = kio::wait(|waiter| {
+				let mut cx = std::task::Context::from_waker(waiter.waker());
+				if session.poll_closed(&mut cx).is_ready() {
+					return Poll::Ready(Err(Error::Cancel));
+				}
+				// Virtual writers on drafts 14-16 are already closed while the request lives.
+				if !legacy && stream.writer.poll_closed(&mut cx).is_ready() {
+					return Poll::Ready(Err(Error::Cancel));
+				}
+				if !*finished {
+					if legacy {
+						if stream.reader.poll_closed(&mut cx).is_ready() {
+							return Poll::Ready(Err(Error::Cancel));
+						}
+					} else {
+						match stream
+							.reader
+							.poll_decode_maybe::<super::request_stream::Update>(&mut cx)
+						{
+							Poll::Ready(Ok(Some(update))) => return Poll::Ready(Ok(Some(update))),
+							Poll::Ready(Ok(None)) if !super::request_stream::fin_cancels(self.version) => {
+								*finished = true
+							}
+							Poll::Ready(Ok(None)) => return Poll::Ready(Err(Error::Cancel)),
+							Poll::Ready(Err(err)) => return Poll::Ready(Err(err)),
+							Poll::Pending => {}
+						}
+					}
+				}
+				if filled.is_none()
+					&& let Poll::Ready(done) = waiter.poll_future(fill.as_mut())
+				{
+					filled = Some(done);
+				}
+				if served.is_none()
+					&& let Poll::Ready(done) = serve.poll(waiter)
+				{
+					served = Some(done);
+				}
+				match (&served, filled) {
+					(Some(Ok(())), Some(_)) => Poll::Ready(Ok(None)),
+					(Some(Err(err)), Some(_)) => Poll::Ready(Err(err.clone())),
+					_ => Poll::Pending,
+				}
+			})
+			.await;
+			let filled = filled.unwrap_or(false);
+			let update = match event {
+				Ok(None) => return Some((Ok(()), filled)),
+				Err(Error::Cancel) => return None,
+				Err(err) => return Some((Err(err), filled)),
+				Ok(Some(update)) => update,
+			};
+			if update.unsupported {
+				let result = self
+					.write_subscribe_error(
+						&mut stream.writer,
+						serve.request_id,
+						&Error::Unsupported,
+						"REQUEST_UPDATE parameters not supported",
+					)
+					.await;
+				return Some((result.and(Err(Error::Unsupported)), filled));
+			}
+			if let Some(priority) = update.priority
+				&& let Err(err) = serve.set_priority(super::priority::from_wire(priority))
+			{
+				return Some((Err(err), filled));
+			}
+			let acked = async {
+				stream.writer.encode(&ietf::RequestOk::ID).await?;
+				stream.writer.encode(&ietf::RequestOk { request_id: None }).await
+			};
+			if let Err(err) = acked.await {
+				return Some((Err(err), filled));
+			}
 		}
 	}
 
@@ -1290,10 +1382,11 @@ where
 		// The subscriber cancelling is the only other way this ends early, and is owed
 		// nothing.
 		let group = {
+			let mut finished = false;
 			let mut read = std::pin::pin!(read_fetch(&track, start.group, start.object, until, priority));
 			kio::wait(|waiter| {
 				let mut cx = std::task::Context::from_waker(waiter.waker());
-				if stream.reader.poll_closed(&mut cx).is_ready() {
+				if super::request_stream::poll_cancel(&mut stream, &mut finished, self.version, &mut cx).is_ready() {
 					return Poll::Ready(None);
 				}
 				waiter.poll_future(read.as_mut()).map(Some)
@@ -1396,13 +1489,11 @@ where
 		// the lifetime of a request whose subscription never arrives or resolves.
 		let joined = {
 			let mut pending = false;
+			let mut finished = false;
 			let mut deadline = crate::runtime::Deadline::after(&self.runtime, Duration::from_secs(10));
 			kio::wait(|waiter| {
 				let mut cx = std::task::Context::from_waker(waiter.waker());
-				// The request reader is what the subscriber FINs or resets. The writer
-				// on a draft-14-16 virtual stream reports closed immediately, which is
-				// not a cancellation.
-				if stream.reader.poll_closed(&mut cx).is_ready() {
+				if super::request_stream::poll_cancel(stream, &mut finished, self.version, &mut cx).is_ready() {
 					return Poll::Ready(Err(Error::Cancel));
 				}
 				let joins = self.joins.poll(waiter, |joins| match joins.get(&subscribe_id) {
@@ -1948,8 +2039,8 @@ where
 	/// ([`solicit`](super::solicit)),
 	/// and then this loop does nothing and
 	/// [`Self::run_subscribe_namespace_stream`] carries the advertisements instead.
-	/// Exactly one of the two is live, which is what keeps the peer from hearing a
-	/// namespace twice.
+	/// On draft 16 and later, an explicit subscription also fills its requested
+	/// namespaces even when this unsolicited loop is active.
 	pub async fn run_publish_namespaces(self) -> Result<(), Error> {
 		if self.requires_solicitation().await {
 			return Ok(());
@@ -1973,8 +2064,9 @@ where
 	///
 	/// All the announce state is local to this task (mirroring `lite::Publisher`'s
 	/// announce handling): whatever this subscription advertised is withdrawn
-	/// when its stream ends. It only advertises anything when the peer asked to be told
-	/// on request; otherwise [`Self::run_publish_namespaces`] has already said it all.
+	/// when its stream ends. Drafts 14 and 15 suppress visible namespaces already
+	/// carried by [`Self::run_publish_namespaces`]; later drafts fill the request
+	/// independently of unsolicited advertisements.
 	async fn run_subscribe_namespace_stream(
 		self,
 		mut stream: Stream<S, Version>,
@@ -2046,15 +2138,16 @@ where
 		let declared = self.peer_setup.get().await.hidden;
 		let origin = origin.discovery(!declared || msg.hidden || self.origin.includes_hidden());
 
-		// Unless the peer asked to be told only on request, it has already heard what an
-		// unsolicited PUBLISH_NAMESPACE can say. Repeating it here would leave it holding
-		// two sources for one namespace, so this stream carries only what that loop hid
-		// from the empty prefix and this request may see, and otherwise simply stays open
-		// until the peer is done with it.
-		let origin = match self.requires_solicitation().await {
-			true => origin,
-			false if !declared || self.origin.includes_hidden() => origin.empty(),
-			false => origin.beyond(&self.origin.clone().discovery(false)),
+		// NAMESPACE is discovery, so draft 16+ fills the request even after an unsolicited
+		// PUBLISH_NAMESPACE. Earlier drafts only send advertisements the other loop hid.
+		let origin = if matches!(self.version, Version::Draft14 | Version::Draft15) {
+			match self.requires_solicitation().await {
+				true => origin,
+				false if !declared || self.origin.includes_hidden() => origin.empty(),
+				false => origin.beyond(&self.origin.clone().discovery(false)),
+			}
+		} else {
+			origin
 		};
 
 		let ns = Namespaces::new(peer, target);
@@ -2080,9 +2173,10 @@ where
 		let mut retry = crate::runtime::Deadline::new(&self.runtime);
 		let mut retry_at: Option<crate::runtime::Instant> = None;
 		let mut retry_delay = RETRY_BASE;
+		let mut finished = false;
 
-		// Stream updates (origin route (un)announces), bailing if the peer closes
-		// its side first.
+		// Stream updates (origin route (un)announces), bailing if the peer cancels
+		// its request first.
 		let res = loop {
 			match ns.watched.values().any(|watch| watch.deferred) {
 				// Arm on the edge, so a turn that changes nothing else doesn't push the
@@ -2099,7 +2193,7 @@ where
 				let Namespaces { target, .. } = &mut ns;
 				kio::wait(|waiter| {
 					let mut cx = std::task::Context::from_waker(waiter.waker());
-					if let Poll::Ready(res) = target.poll_closed(&mut cx) {
+					if let Poll::Ready(res) = target.poll_closed(&mut finished, self.version, &mut cx) {
 						return Poll::Ready(NamespaceEvent::Closed(res));
 					}
 					if let Poll::Ready(update) = announced.poll_next(waiter) {
@@ -2187,6 +2281,8 @@ struct TrackServe<S: crate::transport::poll::Session> {
 	range: ServeRange,
 	timescale: Option<Timescale>,
 	children: kio::Tasks<GroupServe<S>>,
+	/// The subscriber priority, which every group stream follows while it is open.
+	priority: kio::Producer<u8>,
 	/// The track finished: the in-flight group machines drain, then FIN.
 	draining: bool,
 	/// Group streams opened, shared with the group machines.
@@ -2217,6 +2313,7 @@ impl<S: crate::transport::poll::Session> TrackServe<S> {
 		}
 		track.end_at(range.end.map_or(Bound::Unbounded, |end| Bound::Included(end.group)));
 		let datagrams = session.max_datagram_size() > 0;
+		let priority = kio::Producer::new(track.subscription().priority);
 
 		Self {
 			datagrams,
@@ -2227,10 +2324,23 @@ impl<S: crate::transport::poll::Session> TrackServe<S> {
 			range,
 			timescale,
 			children: kio::Tasks::new(),
+			priority,
 			draining: false,
 			opened: Default::default(),
 			end: None,
 		}
+	}
+
+	/// Move the subscriber priority, for the group streams already open as well as later ones.
+	fn set_priority(&mut self, priority: u8) -> Result<(), Error> {
+		let mut subscription = self.track.subscription();
+		subscription.priority = priority;
+		self.track.update(subscription)?;
+		// Only a closed channel refuses the write, and this is the producer, which never closes it.
+		if let Ok(mut current) = self.priority.write() {
+			*current = priority;
+		}
+		Ok(())
 	}
 
 	/// Group streams opened so far.
@@ -2315,6 +2425,9 @@ impl<S: crate::transport::poll::Session> TrackServe<S> {
 						flags: ietf::GroupFlags {
 							has_extensions: self.timescale.is_some(),
 							first_object: slice.skip == 0,
+							// A stream capped by the range stops before the group may end, so its
+							// FIN cannot claim END_OF_GROUP.
+							has_end: slice.until.is_none(),
 							..Default::default()
 						},
 					};
@@ -2323,7 +2436,7 @@ impl<S: crate::transport::poll::Session> TrackServe<S> {
 						GroupServe::new(
 							self.session.clone(),
 							msg,
-							self.track.subscription().priority,
+							self.priority.consume(),
 							group,
 							self.timescale,
 							self.version,
@@ -2407,7 +2520,10 @@ struct GroupServe<S: crate::transport::poll::Session> {
 	/// The subscription's count of opened streams, bumped once this one opens.
 	opened: Arc<AtomicU64>,
 	msg: ietf::GroupHeader,
-	priority: u8,
+	/// The subscription's priority, followed while the stream is open.
+	priority: kio::Consumer<u8>,
+	/// The priority last handed to the stream.
+	applied: u8,
 	group: group::Consumer,
 	timescale: Option<Timescale>,
 	version: Version,
@@ -2451,7 +2567,7 @@ impl<S: crate::transport::poll::Session> GroupServe<S> {
 	fn new(
 		session: S,
 		msg: ietf::GroupHeader,
-		priority: u8,
+		priority: kio::Consumer<u8>,
 		mut group: group::Consumer,
 		timescale: Option<Timescale>,
 		version: Version,
@@ -2460,10 +2576,12 @@ impl<S: crate::transport::poll::Session> GroupServe<S> {
 		group.skip_to(slice.skip);
 		group.end_at(slice.until.map_or(Bound::Unbounded, Bound::Excluded));
 		let object_delta = group.index();
+		let applied = *priority.read();
 		Self {
 			session,
 			opened: Default::default(),
 			msg,
+			applied,
 			priority,
 			group,
 			timescale,
@@ -2481,6 +2599,20 @@ impl<S: crate::transport::poll::Session> GroupServe<S> {
 
 	fn poll_serve(&mut self, waiter: &kio::Waiter) -> Poll<Result<(), Error>> {
 		let mut cx = std::task::Context::from_waker(waiter.waker());
+		// A REQUEST_UPDATE can move the subscriber priority while this stream is open.
+		// Serve and Closed, the only states holding a writer, apply the change; Open
+		// reads the current value once it gets its stream.
+		let applied = self.applied;
+		let mut moved = match self.priority.poll(waiter, |priority| match **priority == applied {
+			true => Poll::Pending,
+			false => Poll::Ready(**priority),
+		}) {
+			Poll::Ready(Ok(priority)) => {
+				self.applied = priority;
+				Some(priority)
+			}
+			_ => None,
+		};
 		loop {
 			match &mut self.state {
 				GroupState::Open => {
@@ -2497,7 +2629,8 @@ impl<S: crate::transport::poll::Session> GroupServe<S> {
 					};
 					self.opened.fetch_add(1, Ordering::Relaxed);
 					let mut stream = stream;
-					stream.set_priority(self.priority);
+					self.applied = *self.priority.read();
+					stream.set_priority(self.applied);
 
 					let mut writer = Writer::new(stream, self.version);
 					if let Err(err) = writer.buffer(&self.msg) {
@@ -2519,6 +2652,9 @@ impl<S: crate::transport::poll::Session> GroupServe<S> {
 					batch,
 					batch_pos,
 				} => {
+					if let Some(priority) = moved.take() {
+						writer.set_priority(priority);
+					}
 					// The peer closing first cancels the group.
 					if writer.poll_closed(&mut cx).is_ready() {
 						self.state = GroupState::Done;
@@ -2636,6 +2772,9 @@ impl<S: crate::transport::poll::Session> GroupServe<S> {
 					}
 				}
 				GroupState::Closed { writer } => {
+					if let Some(priority) = moved.take() {
+						writer.set_priority(priority);
+					}
 					// Wait until everything is acknowledged by the peer so we can still
 					// cancel the stream. poll_close releases the stream on completion so
 					// the Drop fallback cannot reset the acknowledged stream.
@@ -2756,7 +2895,7 @@ mod group_priority_test {
 		let mut serve = GroupServe::new(
 			session,
 			msg,
-			200,
+			kio::Producer::new(200).consume(),
 			consumer,
 			Some(Timescale::default()),
 			Version::Draft14,
@@ -2858,7 +2997,7 @@ mod group_priority_test {
 				publisher_priority: 0,
 				flags: Default::default(),
 			},
-			0,
+			kio::Producer::new(0).consume(),
 			group,
 			Some(Timescale::default()),
 			Version::Draft19,
@@ -2903,7 +3042,7 @@ mod group_priority_test {
 				publisher_priority: 0,
 				flags: Default::default(),
 			},
-			0,
+			kio::Producer::new(0).consume(),
 			group,
 			Some(Timescale::default()),
 			Version::Draft19,
@@ -2924,6 +3063,49 @@ mod group_priority_test {
 
 		assert!(matches!(futures::poll!(serving.as_mut()), Poll::Ready(Err(Error::Old))));
 		assert_eq!(log.resets(), vec![crate::StreamError::Cancel.to_code()]);
+	}
+
+	/// A stream parked on its FIN acknowledgement still follows each priority update.
+	#[tokio::test]
+	async fn unacknowledged_fin_follows_priority_updates() {
+		let session = SinkSession::new(Default::default()).with_unacked_fin();
+		let log = session.log.clone();
+		let track = track::Producer::new(std::sync::Arc::new(crate::broadcast::Info::default()), "test", None);
+		let mut group = track.create_group(group::Info { sequence: 0 }).unwrap();
+		group.write_frame(crate::Timestamp::ZERO, b"done".as_slice()).unwrap();
+		let consumer = group.consume();
+		group.finish().unwrap();
+
+		let priority = kio::Producer::new(200);
+		let mut serve = GroupServe::new(
+			session,
+			ietf::GroupHeader {
+				track_alias: 0,
+				group_id: 0,
+				sub_group_id: 0,
+				publisher_priority: 0,
+				flags: Default::default(),
+			},
+			priority.consume(),
+			consumer,
+			Some(Timescale::default()),
+			Version::Draft19,
+			GroupSlice::default(),
+		);
+		let mut serving = std::pin::pin!(kio::wait(|waiter| serve.poll_serve(waiter)));
+		assert!(
+			futures::poll!(serving.as_mut()).is_pending(),
+			"the FIN is unacknowledged"
+		);
+		assert_eq!(log.priorities(), vec![200]);
+
+		*priority.write().ok().unwrap() = 100;
+		assert!(futures::poll!(serving.as_mut()).is_pending());
+		assert_eq!(log.priorities(), vec![200, 100]);
+
+		*priority.write().ok().unwrap() = 50;
+		assert!(futures::poll!(serving.as_mut()).is_pending());
+		assert_eq!(log.priorities(), vec![200, 100, 50]);
 	}
 
 	/// The final payload remains guarded after its frame has advanced the group cursor.
@@ -2953,7 +3135,7 @@ mod group_priority_test {
 				publisher_priority: 0,
 				flags: Default::default(),
 			},
-			0,
+			kio::Producer::new(0).consume(),
 			group,
 			Some(Timescale::default()),
 			Version::Draft19,
@@ -4360,7 +4542,7 @@ mod serve_tests {
 			let mut serve = GroupServe::new(
 				session,
 				header(),
-				0,
+				kio::Producer::new(0).consume(),
 				consumer,
 				Some(Timescale::default()),
 				Version::Draft20,
@@ -4393,6 +4575,261 @@ mod serve_tests {
 			0,
 			"the cap excludes cc"
 		);
+	}
+
+	/// A stream cut short by the range's end Location does not claim END_OF_GROUP, since
+	/// the group goes on past it. A range ending on a whole group still does. A cap at or past
+	/// the group's real end clears the bit too, since the header is written before we know.
+	#[tokio::test]
+	async fn capped_group_does_not_claim_its_end() {
+		async fn serve(object: Option<u64>) -> ietf::GroupHeader {
+			let log = crate::lite::test_transport::Log::default();
+			let session = SinkSession::new(log.clone());
+
+			let track = track::Producer::new(std::sync::Arc::new(crate::broadcast::Info::default()), "test", None);
+			let subscriber = track.subscribe(None);
+
+			let mut group = track.append_group().unwrap();
+			for payload in [b"aa", b"bb", b"cc"] {
+				group.write_frame(crate::Timestamp::ZERO, payload.as_slice()).unwrap();
+			}
+			group.finish().unwrap();
+			track.finish().unwrap();
+
+			let range = ServeRange {
+				start: Some(Location { group: 0, object: 0 }),
+				end: Some(EndLocation { group: 0, object }),
+			};
+			let mut serve = TrackServe::new(session, subscriber, RequestId(0), Version::Draft20, range, None);
+			kio::wait(|waiter| serve.poll(waiter)).await.unwrap();
+
+			let mut buf = bytes::Bytes::from(log.writes.lock().unwrap().clone());
+			ietf::GroupHeader::decode(&mut buf, Version::Draft20).expect("a group header")
+		}
+
+		assert!(!serve(Some(0)).await.flags.has_end, "capped at object 0 of 3");
+		assert!(!serve(Some(2)).await.flags.has_end, "capped at the last object");
+		assert!(!serve(Some(3)).await.flags.has_end, "capped past the last object");
+		assert!(serve(None).await.flags.has_end, "the whole group");
+	}
+
+	const ALL_VERSIONS: [Version; 9] = [
+		Version::Draft14,
+		Version::Draft15,
+		Version::Draft16,
+		Version::Draft17,
+		Version::Draft18,
+		Version::Draft19,
+		Version::Draft20,
+		Version::Draft21,
+		Version::Draft22,
+	];
+
+	/// Drafts 14-18 cancel a request on its requester's FIN; later drafts only end updates.
+	fn fin_cancels(version: Version) -> bool {
+		matches!(
+			version,
+			Version::Draft14 | Version::Draft15 | Version::Draft16 | Version::Draft17 | Version::Draft18
+		)
+	}
+
+	/// Poll `run` while letting spawned tasks progress; whether it finished.
+	async fn drive<F: std::future::Future>(mut run: std::pin::Pin<&mut F>) -> bool {
+		for _ in 0..50 {
+			if futures::poll!(run.as_mut()).is_ready() {
+				return true;
+			}
+			tokio::task::yield_now().await;
+		}
+		false
+	}
+
+	/// Start a live subscription on a request stream opened from `requester`, whose script
+	/// is what the requester sends after SUBSCRIBE.
+	async fn start_subscription(
+		h: &Serve,
+		mut requester: ScriptedSession,
+	) -> impl std::future::Future<Output = Result<(), Error>> + use<> {
+		settle().await;
+		let stream = Stream::open(&mut requester, h.publisher.version).await.unwrap();
+		h.publisher
+			.clone()
+			.run_subscribe_stream(stream, subscribe(Filter::NextObject, None))
+	}
+
+	/// Draft-21 section 6.4.2.2 lets a requester FIN right after SUBSCRIBE. From draft 19
+	/// that only ends its updates, so media keeps flowing; earlier drafts cancel.
+	#[tokio::test(start_paused = true)]
+	async fn requester_fin_is_version_gated_for_subscriptions() {
+		for version in ALL_VERSIONS {
+			let h = serve(version);
+			let run = start_subscription(&h, ScriptedSession::per_stream_eof(vec![vec![]])).await;
+			let mut run = std::pin::pin!(run);
+			let ended = drive(run.as_mut()).await;
+			assert_eq!(ended, fin_cancels(version), "{version}");
+			if !ended {
+				let mut group = h.track.create_group(group::Info { sequence: 0 }).unwrap();
+				group.write_frame(timestamp(), b"after FIN".as_slice()).unwrap();
+				group.finish().unwrap();
+				assert!(!drive(run.as_mut()).await, "{version}");
+				assert_eq!(occurrences(&h.log, b"after FIN"), 1, "{version}");
+			}
+		}
+	}
+
+	#[tokio::test(start_paused = true)]
+	async fn requester_fin_is_version_gated_for_fetches() {
+		for version in ALL_VERSIONS.into_iter().filter(|v| !Filter::is_draft20(*v)) {
+			for joining in [false, true] {
+				for reset in [false, true] {
+					let mut h = serve(version);
+					publish_pairs(&mut h, 1, None);
+					settle().await;
+					let requester = if reset {
+						ScriptedSession::per_stream_reset(vec![vec![]])
+					} else {
+						ScriptedSession::per_stream_eof(vec![vec![]])
+					};
+					let stream = Stream::open(&mut requester.clone(), version).await.unwrap();
+					if joining {
+						h.publisher.joins.lock().insert(
+							RequestId(REQUEST_ID),
+							Some(Joined::Group {
+								end: Location { group: 0, object: 2 },
+								cache: h.track.consume(),
+								timescale: None,
+							}),
+						);
+					}
+					let fetch_type = if joining {
+						FetchType::RelativeJoining {
+							subscriber_request_id: RequestId(REQUEST_ID),
+							group_offset: 0,
+						}
+					} else {
+						FetchType::Standalone {
+							namespace: crate::Path::new("room"),
+							track: "video".into(),
+							start: Location { group: 0, object: 0 },
+							end: Location { group: 0, object: 2 },
+						}
+					};
+					let _ = h
+						.publisher
+						.clone()
+						.run_fetch_stream(
+							stream,
+							ietf::Fetch {
+								request_id: FETCH_ID,
+								subscriber_priority: 128,
+								group_order: GroupOrder::Ascending,
+								fetch_type,
+								range_filters: false,
+								fill_timeout: false,
+							},
+						)
+						.await;
+					assert_eq!(
+						occurrences(&h.log, b"0-0"),
+						usize::from(!reset && !fin_cancels(version)),
+						"{version}, joining={joining}, reset={reset}"
+					);
+				}
+			}
+		}
+	}
+
+	/// A reset request stream still cancels the subscription on every draft.
+	#[tokio::test(start_paused = true)]
+	async fn requester_reset_cancels_subscriptions() {
+		for version in ALL_VERSIONS {
+			let h = serve(version);
+			let run = start_subscription(&h, ScriptedSession::per_stream_reset(vec![vec![]])).await;
+			assert!(drive(std::pin::pin!(run)).await, "{version}");
+		}
+	}
+
+	/// A REQUEST_UPDATE carrying a priority is applied and acknowledged, and the
+	/// subscription keeps going. The second, empty update changes nothing.
+	#[tokio::test(start_paused = true)]
+	async fn subscription_update_applies_priority_without_ending_the_request() {
+		for version in [Version::Draft19, Version::Draft22] {
+			let h = serve(version);
+			let requester = ScriptedSession::per_stream(vec![vec![0x02, 0, 4, 2, 1, 0x20, 10, 0x02, 0, 2, 4, 0]]);
+			let run = start_subscription(&h, requester.clone()).await;
+			let mut run = std::pin::pin!(run);
+			assert!(!drive(run.as_mut()).await, "{version}");
+			assert_eq!(h.track.subscription().unwrap().priority, 245, "{version}");
+			// REQUEST_OK with no parameters, once per update.
+			assert_eq!(occurrences(&requester.log, &[0x07, 0, 1, 0]), 2, "{version}");
+		}
+	}
+
+	/// A priority update moves the group streams already in flight too, not only the
+	/// ones opened after it.
+	#[tokio::test(start_paused = true)]
+	async fn subscription_update_reprioritizes_open_group_streams() {
+		let h = serve(Version::Draft22);
+		let requester = ScriptedSession::new(Vec::new());
+		let mut run = std::pin::pin!(start_subscription(&h, requester.clone()).await);
+		assert!(!drive(run.as_mut()).await);
+
+		// An unfinished group keeps its stream open.
+		let mut group = h.track.create_group(group::Info { sequence: 0 }).unwrap();
+		group.write_frame(timestamp(), b"open".as_slice()).unwrap();
+		assert!(!drive(run.as_mut()).await);
+		let before = h.log.priorities();
+		assert_eq!(before.len(), 1, "{before:?}");
+		assert_ne!(before[0], 245);
+
+		// REQUEST_UPDATE with SUBSCRIBER_PRIORITY 10.
+		requester.push(&[0x02, 0, 4, 2, 1, 0x20, 10]);
+		assert!(!drive(run.as_mut()).await);
+		assert_eq!(h.track.subscription().unwrap().priority, 245);
+		let after = h.log.priorities();
+		assert_eq!(after.last(), Some(&245), "{after:?}");
+	}
+
+	/// An update we cannot apply is refused NOT_SUPPORTED and ends the subscription with
+	/// UPDATE_FAILED, rather than silently dropping it.
+	#[tokio::test(start_paused = true)]
+	async fn unsupported_subscription_update_fails_the_subscription() {
+		for version in [Version::Draft17, Version::Draft19, Version::Draft22] {
+			let h = serve(version);
+			// FORWARD=0 asks to pause delivery, which this publisher does not support.
+			let script = match version {
+				// Draft 17 carries a Required Request ID Delta after the Request ID.
+				Version::Draft17 => vec![0x02, 0, 5, 2, 0, 1, 0x10, 0],
+				_ => vec![0x02, 0, 4, 2, 1, 0x10, 0],
+			};
+			let requester = ScriptedSession::per_stream(vec![script]);
+			let run = start_subscription(&h, requester.clone()).await;
+			run.await.unwrap_err();
+			assert_eq!(
+				occurrences(&requester.log, b"REQUEST_UPDATE parameters not supported"),
+				1,
+				"{version}"
+			);
+			assert_eq!(occurrences(&requester.log, b"update failed"), 1, "{version}");
+		}
+	}
+
+	/// SUBSCRIBE_NAMESPACE follows the same gate as SUBSCRIBE.
+	#[tokio::test(start_paused = true)]
+	async fn namespace_requester_fin_is_version_gated() {
+		for version in ALL_VERSIONS {
+			let h = serve(version);
+			let mut requester = ScriptedSession::per_stream_eof(vec![vec![]]);
+			let stream = Stream::open(&mut requester, version).await.unwrap();
+			let msg = ietf::SubscribeNamespace {
+				request_id: RequestId(0),
+				namespace: crate::Path::new(""),
+				hidden: false,
+			};
+			let mut run = std::pin::pin!(h.publisher.clone().run_subscribe_namespace_stream(stream, msg));
+			let ended = drive(run.as_mut()).await;
+			assert_eq!(ended, fin_cancels(version), "{version}");
+		}
 	}
 }
 
@@ -5057,13 +5494,13 @@ mod tests {
 	}
 
 	/// A hidden namespace reaches only a subscription that opted in or named its dot
-	/// segment. With the unsolicited loop live, the subscription stream carries just
-	/// what that loop hid, so nothing is advertised twice.
+	/// segment. Modern subscriptions include visible namespaces even when the
+	/// unsolicited loop also advertises them; drafts 14 and 15 suppress duplicates.
 	#[tokio::test]
 	async fn hidden_namespaces_need_an_opt_in() {
 		for (solicit, prefix, hidden, cam, stats) in [
-			(Some(false), "", false, 1, 0),
-			(Some(false), "", true, 1, 1),
+			(Some(false), "", false, 2, 0),
+			(Some(false), "", true, 2, 1),
 			(Some(false), ".stats", false, 1, 1),
 			(Some(true), "", false, 1, 0),
 			(Some(true), "", true, 1, 1),
@@ -5105,7 +5542,16 @@ mod tests {
 								scoped,
 							})
 							.await;
-							let expected = usize::from(!declared || hidden || prefix == ".stats");
+							let on_stream = !declared || hidden || prefix == ".stats";
+							let unsolicited = solicit != Some(true) && !declared;
+							let legacy = matches!(version, Version::Draft14 | Version::Draft15);
+							let inline = if legacy {
+								(solicit == Some(true) && on_stream)
+									|| (solicit != Some(true) && declared && (hidden || prefix == ".stats"))
+							} else {
+								on_stream
+							};
+							let expected = usize::from(inline) + usize::from(unsolicited);
 							assert_eq!(
 								occurrences(&log, b"node"),
 								expected,
@@ -5118,20 +5564,24 @@ mod tests {
 		}
 	}
 
-	/// The regression that made announces solicited in the first place: a namespace sent
-	/// as both PUBLISH_NAMESPACE and NAMESPACE leaves the peer holding two sources for
-	/// one broadcast, and whichever arrives second replaces the one the first attached.
-	/// The peer's SETUP picks which loop carries it, so the other stays quiet and the
-	/// namespace goes out exactly once either way.
-	#[tokio::test]
-	async fn each_namespace_is_advertised_exactly_once() {
-		let (unsolicited, streams) = advertise_both_ways(Some(false)).await;
-		assert_eq!(unsolicited, 1, "a peer that required nothing is told once");
-		assert_eq!(streams, 2, "on its own PUBLISH_NAMESPACE request");
-
-		let (solicited, streams) = advertise_both_ways(Some(true)).await;
-		assert_eq!(solicited, 1, "a peer that asked to be told on request is told once");
-		assert_eq!(streams, 1, "inline on the SUBSCRIBE_NAMESPACE stream it asked on");
+	/// Namespace discovery on a request stream also reaches non-SOLICIT peers from draft 16.
+	#[tokio::test(start_paused = true)]
+	async fn a_non_solicit_peer_hears_a_namespace_both_ways() {
+		let (times, streams) = advertise_both_ways(Some(false)).await;
+		assert_eq!(times, 2, "PUBLISH_NAMESPACE and NAMESPACE");
+		assert_eq!(streams, 2, "one subscription and one PUBLISH_NAMESPACE request");
+		let (once, streams) = advertise_both_ways(Some(true)).await;
+		assert_eq!(once, 1);
+		assert_eq!(streams, 1);
+		for version in [Version::Draft14, Version::Draft15] {
+			let log = advertise_with_hidden(Discovery {
+				version,
+				solicit: Some(false),
+				..Discovery::default()
+			})
+			.await;
+			assert_eq!(occurrences(&log, b"cam"), 1, "{version}");
+		}
 	}
 
 	/// A peer out of stream credit parks the open. That must not wedge the loop, because

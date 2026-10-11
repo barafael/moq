@@ -63,6 +63,12 @@ impl Kind {
 	}
 }
 
+/// How far behind the live edge a cursor's feed still asks for a group. A group resolves
+/// into a row only once its successor starts, so a cursor keeping up fetches it at the live
+/// edge; the budget only has to cover a burst (a publisher catching up) and a cursor that
+/// fell behind. The default zero would deliver only the newest group of a burst.
+const FEED_MAX_DELAY: Duration = Duration::from_secs(30);
+
 /// A built init segment, with the content hash that versions its URL (`init.{hash}.mp4`).
 ///
 /// Hashing the bytes rather than a list of catalog fields covers every input that shapes the
@@ -640,6 +646,25 @@ impl Rendition {
 		})
 	}
 
+	/// The binding this rendition's media is fetched through now.
+	pub(crate) fn binding(&self) -> Arc<moq_mux::Binding> {
+		self.media.sync(&self.live)
+	}
+
+	/// Subscribe to the media track on `binding` once it resolves: `None` when it never will.
+	pub(crate) fn poll_subscribe(
+		&self,
+		binding: &moq_mux::Binding,
+		waiter: &kio::Waiter,
+	) -> Poll<Option<moq_net::track::Subscribing>> {
+		let Ok(broadcast) = std::task::ready!(binding.poll_broadcast(waiter)) else {
+			return Poll::Ready(None);
+		};
+		let track = broadcast.track(&self.name).ok();
+		let subscription = moq_net::track::Subscription::default().with_max_age(FEED_MAX_DELAY);
+		Poll::Ready(track.map(|track| track.subscribe(subscription).into_inner()))
+	}
+
 	/// The media track handle on `binding`, with that bound broadcast so a fetch can tell a
 	/// gone publisher from a live failure.
 	///
@@ -695,6 +720,11 @@ impl Rendition {
 
 	async fn load_init(&self) -> Result<Option<Arc<Init>>> {
 		let binding = self.media.sync(&self.live);
+		// A transmuxed segment can cache the init while another bootstrap holds `building`,
+		// blocked on an unfinished group.
+		if let Some(init) = self.run().init {
+			return Ok(Some(init));
+		}
 		let _building = self.building.lock().await;
 		let run = self.run();
 		if let Some(init) = run.init {
@@ -738,6 +768,9 @@ impl Rendition {
 	/// cache.
 	pub async fn segment(&self, segment: u64) -> Result<Option<Bytes>> {
 		let binding = self.media.sync(&self.live);
+		// Read the run before the rows (see `restart`), so an init decoded from them is never
+		// cached for a run that started while they were being fetched.
+		let run = self.run();
 		let Some(ranges) = self.live.segment_ranges(segment) else {
 			return Ok(None);
 		};
@@ -796,7 +829,13 @@ impl Rendition {
 		if frames.is_empty() {
 			return Ok(None);
 		}
-		Ok(Some(muxer.fragment(segment as u32, &frames)?))
+		let fragment = muxer.fragment(segment as u32, &frames)?;
+		// Inline codec metadata was already decoded from these completed groups.
+		// Reuse it instead of fetching a newer, possibly unfinished timeline tail.
+		if let Some(bytes) = muxer.init()? {
+			self.cache_init(run.epoch, bytes);
+		}
+		Ok(Some(fragment))
 	}
 }
 
