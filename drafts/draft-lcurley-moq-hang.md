@@ -122,6 +122,7 @@ The root of the catalog is a JSON document with the following schema:
 
 ~~~
 type Catalog = {
+  "contributions": Record<string, { "broadcast": string }> | undefined,
   "audio": AudioSchema | undefined,
   "video": VideoSchema | undefined,
   "archive": ArchiveSchema | undefined,
@@ -142,6 +143,16 @@ This way catalog updates are rare and a client MAY choose to not subscribe.
 The `json` and `binary` sections ({{data}}) are how a track like that is listed.
 
 This specification defines audio, video, and text media tracks, plus an optional `archive` entry ({{archive-catalog}}) naming the timeline track ({{timeline}}) that indexes each track, an optional root `clock` entry ({{clock}}) mapping content time to wall time, and the application data tracks in {{data}}.
+
+## Contributions {#contributions}
+The optional `contributions` map names whole broadcasts whose catalogs describe their renditions.
+Each entry MUST contain a string `broadcast`, resolved relative to this catalog's broadcast using {{field-broadcast}}.
+A malformed entry or a reference escaping the root MUST cause the catalog to be rejected.
+
+Listing an entry MUST NOT subscribe to the contribution; a consumer opens its catalog only upon explicit selection.
+A contribution's rendition identifiers belong to that contribution and MUST NOT replace identifiers in the referring catalog.
+An unavailable contribution does not invalidate the referring catalog.
+References are not recursively expanded: each further contribution requires an explicit selection.
 
 ## Clock {#clock}
 The catalog's root `clock` field is the broadcast's one continuous clock:
@@ -1073,6 +1084,8 @@ This document has no IANA actions.
 
 ## moq-hang-04
 {:numbered="false"}
+
+- Added optional whole-broadcast `contributions` with explicit lazy selection and scoped rendition identifiers.
 
 - Defined encoder `jitter` as flush lateness above the rendition's own recent minimum, replacing fixed frame-duration hints; container batches retain media-span estimates.
 - Timed CMAF samples from the frame timestamp, which is the fragment's earliest presentation time; `tfdt` is only relative within the fragment, and places the samples of an untimed frame. A timed CMAF track counts in its `mdhd` ticks.
