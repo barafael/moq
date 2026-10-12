@@ -627,12 +627,16 @@ impl Consumer {
 	/// A segment can answer a FETCH only when it owns the requested head and the
 	/// rest of the group. A frame boundary inside the group therefore falls
 	/// through to another segment or to the live route's upstream FETCH.
+	///
+	/// A warm cache's open group is a miss: its upstream subscription is gone, so
+	/// nothing writes the rest of it, and a FETCH answered from it stalls after
+	/// the cached frames. Only a re-splice can continue it.
 	pub(crate) fn cached_group(&self, sequence: u64, frame_start: u64) -> Option<group::Consumer> {
 		let segments = self.state.read().segments.clone();
 		segments.iter().rev().find_map(|segment| {
 			let (start, end) = frames(segment.start, segment.end, sequence)?;
 			(start <= frame_start && end.is_none())
-				.then(|| segment.track.cached_group(sequence, frame_start))
+				.then(|| segment.track.cached_group(sequence, frame_start, segment.warm))
 				.flatten()
 		})
 	}
@@ -822,10 +826,15 @@ impl Fetching {
 	/// than `latched` when given. `Err` when the logical track aborted;
 	/// `Ok(None)` when the producer is gone with no qualifying segment, so
 	/// nothing will ever answer.
+	///
+	/// A warm cache never qualifies. Its complete groups already answered through
+	/// [`Consumer::cached_group`], and its open ones must miss, so the fetch waits
+	/// for the re-splice its own demand triggers and asks that copy instead.
 	fn poll_latch(&self, waiter: &kio::Waiter, latched: Option<u64>) -> Poll<Result<Option<(u64, track::Consumer)>>> {
 		let newest = move |segments: &[Segment]| {
 			segments
 				.last()
+				.filter(|segment| !segment.warm)
 				.filter(|segment| latched.is_none_or(|latched| segment.id > latched))
 				.map(|segment| (segment.id, segment.track.clone()))
 		};
@@ -879,9 +888,9 @@ impl kio::Pollable for Fetching {
 				Poll::Ready(Err(err)) => err,
 				Poll::Ready(Ok(group)) => return Poll::Ready(Ok(group)),
 				Poll::Pending => {
-					// A warm cache deliberately parks misses while demand re-splices
-					// upstream. Follow that newer segment without waiting for the warm
-					// copy to reject its queued request.
+					// A takeover may splice a newer copy while this one still holds the
+					// request queued. Follow it without waiting for the old copy to
+					// reject.
 					let latched = *latched;
 					match self.poll_latch(waiter, Some(latched)) {
 						Poll::Ready(Ok(Some((id, track)))) => {
