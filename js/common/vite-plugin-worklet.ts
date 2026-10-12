@@ -1,4 +1,4 @@
-import { build } from "esbuild";
+import { rolldown } from "rolldown";
 import type { Plugin } from "vite";
 
 const SUFFIX = "?worklet";
@@ -8,7 +8,7 @@ const SUFFIX = "?worklet";
  *
  * Usage: import workletUrl from "./my-worklet.ts?worklet"
  *
- * The worklet file is compiled to JS with all dependencies bundled via esbuild,
+ * The worklet file is compiled to JS with all dependencies bundled via rolldown,
  * then inlined as a string. At runtime, a blob URL is created and exported.
  * Pass the URL to audioWorklet.addModule().
  */
@@ -36,16 +36,15 @@ export function workletInline(alias?: Record<string, string>): Plugin {
 				this.addWatchFile(filePath);
 			}
 
-			const result = await build({
-				entryPoints: [filePath],
-				bundle: true,
-				write: false,
-				format: "esm",
-				target: "esnext",
-				alias: alias,
-			});
-
-			const compiled = result.outputFiles[0].text;
+			// Rolldown is Vite's own bundler and runs in-process, so nothing outlives the build.
+			const bundle = await rolldown({ input: filePath, platform: "browser", resolve: { alias } });
+			let compiled: string;
+			try {
+				const { output } = await bundle.generate({ format: "es", codeSplitting: false });
+				compiled = output[0].code;
+			} finally {
+				await bundle.close();
+			}
 
 			return [
 				`const code = ${JSON.stringify(compiled)};`,
