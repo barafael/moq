@@ -27,7 +27,10 @@ So a change of a broadcast's best route waits 300 ms before it is announced,
 while a new broadcast and a removed one go out at once. By then the withdrawal
 has usually removed the other stale routes too, and the relay sends one
 retraction instead of advertising each stale path in turn. Requests still
-follow the current best route immediately; only the announcement waits.
+follow the current best route immediately; only the announcement waits. For
+2 s after a relay retracts a broadcast, it holds back a worse path to the same
+publisher that a peer still hunting offers, instead of announcing the
+broadcast again.
 
 Failover routes must carry copies of the same broadcast. For each track, the
 relay requires matching timescale, retention window, publisher priority, and
