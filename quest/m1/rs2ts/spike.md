@@ -33,8 +33,22 @@ Report, for the codec (`coding/` plus the lite message types) and the model
   Charon has no crates.io release, and its LLBC format breaks about five
   times a week.
 
-The prior Charon evidence is the 2026-09-27 spike and the draft prototype in
-[#5049](https://github.com/moq-dev/moq/pull/5049). Do not post on rust-js
-without the maintainer's approval; it is outside our orgs.
+The prior Charon evidence is the 2026-09-27 spike and the closed prototype
+[#5049](https://github.com/moq-dev/moq/pull/5049), a fail-closed Python LLBC
+emitter (Charon 0.1.284, nightly-2026-09-17). Its findings:
+
+- moq-net's real `zigzag`/`unzigzag` translated to TypeScript on `u32`
+  halves and matched native Rust over 15,900 cases. The generated integer
+  entry point was 840 B gzip, on par with hand-written halves and faster
+  than a BigInt control (Bun, a browser proxy). That is evidence to revisit
+  the blanket ban on 64-bit bit operations once a codec slice passes.
+- Hand-written probes covered nested options, clone/move/last-drop, early
+  returns, unwind cleanup, and independent struct copies; general copy/drop
+  lowering was not attempted.
+- Charon also extracted `varint::size`; its enums/`Result`, tuples, calls,
+  and halves casts were the next untranslated slice.
+
+Do not post on rust-js without the maintainer's approval; it is outside our
+orgs.
 
 Public API: none. Wire: none.
