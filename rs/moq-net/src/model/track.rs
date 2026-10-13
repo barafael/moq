@@ -4055,12 +4055,38 @@ impl Cursor {
 	/// drift budget has convicted on the way.
 	fn poll_next_group(&mut self, waiter: &kio::Waiter) -> Poll<Result<Option<group::Consumer>>> {
 		let mut floor = self.next_sequence.max(self.min_sequence);
+		let has_start = floor != 0 || self.subscription.read().start.is_some();
 		let end = self.end_sequence;
 		// One scan for the whole poll, so walking a backlog off stays linear in its size.
 		let drift = ready!(self.poll_drift(end, waiter))?;
 
 		let group = loop {
-			let Some(producer) = ready!(self.poll(waiter, |state| state.poll_next_in_range(floor, end))?) else {
+			let Some(producer) = ready!(self.poll(waiter, |state| {
+				let Some(group) = ready!(state.poll_next_in_range(floor, end))? else {
+					return Poll::Ready(Ok(None));
+				};
+				if (has_start || state.start_sequence.is_some())
+					&& floor < group.sequence
+					&& !state.is_complete()
+					&& state.abort.is_none()
+				{
+					let mut missing = floor
+						.max(state.live_floor.unwrap_or(0))
+						.max(state.start_sequence.unwrap_or(0));
+					// Aborted groups and datagrams cannot arrive as stream groups.
+					while missing < group.sequence
+						&& (state.lookup.get(&missing).is_some_and(Slot::is_aborted) || state.holds_datagram(missing))
+					{
+						missing += 1;
+					}
+					// A higher ID is not proof of loss: independent streams can reorder.
+					// The same reach-based budget that expires held groups judges holes.
+					if missing < group.sequence && !state.poll_drifted(missing, end, drift.budget, waiter) {
+						return Poll::Pending;
+					}
+				}
+				Poll::Ready(Ok(Some(group)))
+			})?) else {
 				// Deliberately no flush of `seek_pending` here: only a delivery commit
 				// may count a conviction. This `None` can be an artifact of a floor
 				// that will lower again. A conviction never committed is dropped
@@ -4494,8 +4520,8 @@ impl Subscriber {
 ///
 /// The same budget follows a group already handed out: once newer content pulls that far
 /// ahead, a read still waiting on it ends with [`Error::Old`] and the cursor moves on. A
-/// gap costs nothing either way, since the cursor seeks to the lowest cached group in
-/// range rather than waiting for the sequence it would have read next.
+/// missing group waits under the same budget once the cursor has a start. It is skipped
+/// only when its successor proves it stale, or the source establishes it cannot arrive.
 ///
 /// The budget is updatable mid-stream through [`Self::control`]. [`Duration::ZERO`] (the
 /// default) keeps only what nothing newer has superseded, so a consumer that stalls and
@@ -5124,7 +5150,7 @@ mod test {
 			.unwrap();
 		assert_eq!(recv_datagram(&mut datagrams).sequence, 5);
 
-		producer.create_group(group::Info { sequence: 3 }).unwrap();
+		producer.create_group(group::Info { sequence: 4 }).unwrap();
 		producer.create_group(group::Info { sequence: 6 }).unwrap();
 
 		let mut next = || {
@@ -5136,7 +5162,7 @@ mod test {
 				.expect("track was closed")
 				.sequence
 		};
-		assert_eq!(next(), 3, "the datagram at sequence 5 did not consume group 3");
+		assert_eq!(next(), 4, "the datagram at sequence 5 did not consume group 4");
 		assert_eq!(next(), 6);
 	}
 
@@ -8457,6 +8483,127 @@ mod test {
 	}
 
 	#[test]
+	fn next_group_waits_for_missing_group_within_max_delay() {
+		let producer = track_producer("test", Info::timed());
+		let mut consumer = producer
+			.subscribe(Subscription::default().with_max_delay(Duration::from_secs(2)))
+			.ordered();
+		producer
+			.create_group(group::Info { sequence: 5 })
+			.unwrap()
+			.finish()
+			.unwrap();
+		assert_eq!(drain_ordered(&mut consumer), [5]);
+
+		let mut later = producer.create_group(group::Info { sequence: 7 }).unwrap();
+		later
+			.write_frame(Timestamp::from_millis(7000).unwrap(), b"later".as_slice())
+			.unwrap();
+		assert!(
+			consumer.next_group().now_or_never().is_none(),
+			"group 6 may still arrive"
+		);
+
+		let mut missing = producer.create_group(group::Info { sequence: 6 }).unwrap();
+		missing
+			.write_frame(Timestamp::from_millis(6000).unwrap(), b"missing".as_slice())
+			.unwrap();
+		missing.finish().unwrap();
+		assert_eq!(drain_ordered(&mut consumer), [6, 7]);
+	}
+
+	#[test]
+	fn next_group_waits_until_missing_group_is_provably_stale() {
+		let producer = track_producer("test", Info::timed());
+		let mut consumer = producer
+			.subscribe(Subscription::default().with_max_delay(Duration::from_secs(2)))
+			.ordered();
+		producer
+			.create_group(group::Info { sequence: 5 })
+			.unwrap()
+			.finish()
+			.unwrap();
+		assert_eq!(drain_ordered(&mut consumer), [5]);
+
+		let mut later = producer.create_group(group::Info { sequence: 7 }).unwrap();
+		consumer.set_groups(..8);
+		let woken = Arc::new(std::sync::atomic::AtomicBool::new(false));
+		let waker = futures::task::waker(Arc::new(FlagWake(woken.clone())));
+		let mut context = std::task::Context::from_waker(&waker);
+		let mut next = std::pin::pin!(consumer.next_group());
+
+		assert!(next.as_mut().poll(&mut context).is_pending());
+		later
+			.write_frame(Timestamp::from_millis(7000).unwrap(), b"start".as_slice())
+			.unwrap();
+		assert!(std::future::Future::poll(next.as_mut(), &mut context).is_pending());
+		woken.store(false, Ordering::SeqCst);
+		later
+			.write_frame(Timestamp::from_millis(8999).unwrap(), b"within".as_slice())
+			.unwrap();
+		assert!(std::future::Future::poll(next.as_mut(), &mut context).is_pending());
+		assert!(!woken.load(Ordering::SeqCst), "below the deadline");
+		let mut outside = producer.create_group(group::Info { sequence: 9 }).unwrap();
+		outside
+			.write_frame(Timestamp::from_millis(100_000).unwrap(), b"outside".as_slice())
+			.unwrap();
+		assert!(
+			next.as_mut().poll(&mut context).is_pending(),
+			"outside the cap cannot expire a gap"
+		);
+		woken.store(false, Ordering::SeqCst);
+		later
+			.write_frame(Timestamp::from_millis(9000).unwrap(), b"deadline".as_slice())
+			.unwrap();
+		assert_eq!(
+			std::future::Future::poll(next.as_mut(), &mut context).map(|res| res.unwrap().unwrap().sequence),
+			Poll::Ready(7)
+		);
+	}
+
+	#[test]
+	fn next_group_waits_for_explicit_start() {
+		let producer = track_producer("test", Info::timed());
+		let mut consumer = producer
+			.subscribe(
+				Subscription::default()
+					.with_groups(0..)
+					.with_max_delay(Duration::from_secs(2)),
+			)
+			.ordered();
+		let mut later = producer.create_group(group::Info { sequence: 1 }).unwrap();
+		later
+			.write_frame(Timestamp::from_millis(1000).unwrap(), b"later".as_slice())
+			.unwrap();
+		assert!(consumer.next_group().now_or_never().is_none());
+		producer
+			.create_group(group::Info { sequence: 0 })
+			.unwrap()
+			.finish()
+			.unwrap();
+		assert_eq!(drain_ordered(&mut consumer), [0, 1]);
+	}
+
+	#[test]
+	fn next_group_gap_rechecks_changed_delay() {
+		let producer = track_producer("test", Info::timed());
+		let mut consumer = producer.subscribe(replay()).ordered();
+		producer
+			.create_group(group::Info { sequence: 0 })
+			.unwrap()
+			.finish()
+			.unwrap();
+		assert_eq!(drain_ordered(&mut consumer), [0]);
+		let mut later = producer.create_group(group::Info { sequence: 2 }).unwrap();
+		later
+			.write_frame(Timestamp::from_millis(2000).unwrap(), b"later".as_slice())
+			.unwrap();
+		assert!(consumer.next_group().now_or_never().is_none());
+		consumer.control().update(Subscription::default()).unwrap();
+		assert_eq!(drain_ordered(&mut consumer), [2]);
+	}
+
+	#[test]
 	fn next_group_skips_late_arrivals() {
 		let producer = track_producer("test", Info::timed());
 		let mut consumer = producer.subscribe(None).ordered();
@@ -8475,8 +8622,8 @@ mod test {
 		producer.create_group(group::Info { sequence: 3 }).unwrap();
 		// Seq 4 arrives late and is also skipped.
 		producer.create_group(group::Info { sequence: 4 }).unwrap();
-		// Seq 7 arrives and is returned.
-		producer.create_group(group::Info { sequence: 7 }).unwrap();
+		// The next sequence arrives and is returned.
+		producer.create_group(group::Info { sequence: 6 }).unwrap();
 
 		let group = consumer
 			.next_group()
@@ -8484,7 +8631,7 @@ mod test {
 			.expect("should not block")
 			.expect("would have errored")
 			.expect("track should not be closed");
-		assert_eq!(group.sequence, 7);
+		assert_eq!(group.sequence, 6);
 
 		// No more groups. This would block.
 		assert!(
@@ -8494,13 +8641,13 @@ mod test {
 	}
 
 	#[test]
-	fn next_group_returns_arrivals_in_order() {
+	fn next_group_returns_contiguous_groups_in_order() {
 		let producer = track_producer("test", Info::timed());
 		let mut consumer = producer.subscribe(replay()).ordered();
 
-		// Seq 3 arrives first, then seq 5. Both should be returned in arrival order.
+		// Seq 4 arrives first, then seq 3. Both are returned in sequence order.
+		producer.create_group(group::Info { sequence: 4 }).unwrap();
 		producer.create_group(group::Info { sequence: 3 }).unwrap();
-		producer.create_group(group::Info { sequence: 5 }).unwrap();
 
 		let group = consumer
 			.next_group()
@@ -8516,7 +8663,7 @@ mod test {
 			.expect("should not block")
 			.expect("would have errored")
 			.expect("track should not be closed");
-		assert_eq!(group.sequence, 5);
+		assert_eq!(group.sequence, 4);
 	}
 
 	#[test]
@@ -8699,12 +8846,13 @@ mod test {
 		// Now blocked: 8 is still beyond the cap.
 		assert!(consumer.next_group().now_or_never().is_none());
 
-		// Raise the cap; cached seq 8 is finally served.
+		// Raising the cap still waits for the missing groups within the delay budget.
 		consumer.set_groups(..11);
-		assert_eq!(
-			consumer.next_group().now_or_never().unwrap().unwrap().unwrap().sequence,
-			8
-		);
+		assert!(consumer.next_group().now_or_never().is_none());
+		producer.create_group(group::Info { sequence: 7 }).unwrap();
+		assert!(consumer.next_group().now_or_never().is_none());
+		producer.create_group(group::Info { sequence: 6 }).unwrap();
+		assert_eq!(drain_ordered(&mut consumer), [6, 7, 8]);
 	}
 
 	/// `recv_group` (arrival order) honors the `end_at` cap by parking, like
@@ -9004,13 +9152,8 @@ mod test {
 		let mut consumer = producer.subscribe(replay()).ordered();
 		consumer.set_groups(..=u64::MAX);
 
-		producer.create_group(group::Info { sequence: 0 }).unwrap();
 		producer.create_group(group::Info { sequence: u64::MAX }).unwrap();
 
-		assert_eq!(
-			consumer.next_group().now_or_never().unwrap().unwrap().unwrap().sequence,
-			0
-		);
 		assert_eq!(
 			consumer.next_group().now_or_never().unwrap().unwrap().unwrap().sequence,
 			u64::MAX
