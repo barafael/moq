@@ -18,6 +18,8 @@ pub(crate) struct SessionStart<S: crate::transport::poll::Session> {
 	pub driver: Driver<S>,
 	/// The session-side GOAWAY halves, stored on the public [`crate::Session`].
 	pub goaway: crate::goaway::Handle,
+	/// The estimate PROBE reports, published by the session's supervisor.
+	pub estimate: kio::Producer<crate::session::Estimate>,
 }
 
 /// Server: read the peer's single SETUP message off its Setup Stream before starting
@@ -164,7 +166,9 @@ where
 	// Read out before the setup machine takes ownership below.
 	let our_cost = our_setup.cost;
 
+	let estimate = kio::Producer::default();
 	let publisher = Publisher::new(PublisherConfig {
+		estimate: estimate.weak(),
 		runtime: runtime.clone(),
 		session: session.clone(),
 		origin: publish,
@@ -204,6 +208,7 @@ where
 		recv_bandwidth: recv_bw_consumer,
 		driver,
 		goaway: goaway_handle,
+		estimate,
 	})
 }
 

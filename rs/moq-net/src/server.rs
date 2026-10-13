@@ -128,6 +128,7 @@ impl Server {
 			start.recv_bandwidth,
 			crate::driver::Protocol::Lite(Box::new(start.driver)),
 			start.goaway,
+			Some(start.estimate),
 		))
 	}
 
@@ -544,6 +545,7 @@ where
 				None,
 				crate::driver::Protocol::Ietf(protocol),
 				goaway,
+				None,
 			))
 		}
 		.maybe_boxed()
@@ -603,7 +605,7 @@ where
 			};
 			stream.writer.encode(&server_setup).await?;
 
-			let (recv_bw, protocol, goaway) = match version {
+			let (recv_bw, protocol, goaway, estimate) = match version {
 				Version::Lite(v) => {
 					let stream = stream.with_version(v);
 					// Pre-lite-05: no Setup Stream, so nothing to advertise or seed.
@@ -622,6 +624,7 @@ where
 						start.recv_bandwidth,
 						crate::driver::Protocol::Lite(Box::new(start.driver)),
 						start.goaway,
+						Some(start.estimate),
 					)
 				}
 				Version::Ietf(v) => {
@@ -644,11 +647,13 @@ where
 						peer_declared: Some(peer_declared),
 						early_unis: Vec::new(),
 					})?;
-					(None, crate::driver::Protocol::Ietf(protocol), goaway)
+					(None, crate::driver::Protocol::Ietf(protocol), goaway, None)
 				}
 			};
 
-			Ok(Session::new(runtime, session, version, recv_bw, protocol, goaway))
+			Ok(Session::new(
+				runtime, session, version, recv_bw, protocol, goaway, estimate,
+			))
 		}
 		.maybe_boxed()
 	}

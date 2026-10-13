@@ -4,7 +4,7 @@ use std::{sync::Arc, task::Poll, time::Duration};
 
 use web_transport_trait::Stats as _;
 
-use crate::{Error, SessionError, Version, bandwidth, goaway};
+use crate::{Error, SessionError, Version, bandwidth, goaway, runtime::Timers as _};
 
 /// How long [`Session::close`] waits for queued data before closing anyway.
 const CLOSE_TIMEOUT: Duration = Duration::from_secs(1);
@@ -74,6 +74,31 @@ pub struct Stats {
 	pub packets_lost: Option<u64>,
 }
 
+/// The congestion controller's view of the connection, as PROBE reports it.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub(crate) struct Estimate {
+	/// The congestion controller's send rate.
+	pub send_rate: Option<bandwidth::Rate>,
+	/// The smoothed round-trip time.
+	pub rtt: Option<Duration>,
+}
+
+impl Estimate {
+	/// Read the transport's current estimate.
+	pub(crate) fn read<S: crate::transport::poll::Session>(session: &S) -> Self {
+		Self::from(&snapshot(session))
+	}
+}
+
+impl From<&Stats> for Estimate {
+	fn from(stats: &Stats) -> Self {
+		Self {
+			send_rate: stats.estimated_send_rate,
+			rtt: stats.rtt,
+		}
+	}
+}
+
 /// A MoQ transport session, wrapping a WebTransport connection.
 ///
 /// Returned with a [`Driver`](crate::Driver) by [`crate::Client::connect`] and
@@ -98,7 +123,8 @@ pub struct Session {
 	closed: kio::Consumer<Option<Ended>>,
 	stats: kio::Shared<StatsState>,
 	version: Version,
-	send_bandwidth: Option<bandwidth::Consumer>,
+	// Weak, so the sampler runs only while a caller holds a consumer.
+	send_bandwidth: Option<bandwidth::Weak>,
 	recv_bandwidth: Option<bandwidth::Consumer>,
 	goaway: Arc<goaway::Handle>,
 }
@@ -113,7 +139,7 @@ impl Session {
 	///
 	/// Returns `None` if the QUIC backend doesn't support bandwidth estimation.
 	pub fn send_bandwidth(&self) -> Option<bandwidth::Consumer> {
-		self.send_bandwidth.clone()
+		self.send_bandwidth.as_ref().map(bandwidth::Weak::consume)
 	}
 
 	/// Returns a consumer for the estimated receive bitrate (from PROBE).
@@ -254,16 +280,22 @@ impl Session {
 		recv_bandwidth: Option<bandwidth::Consumer>,
 		protocol: crate::driver::Protocol<S>,
 		goaway: goaway::Handle,
+		estimate: Option<kio::Producer<Estimate>>,
 	) -> (Self, crate::Driver<S>)
 	where
 		S: crate::transport::poll::Session,
 	{
 		let sample = snapshot(&session);
+		if let Some(estimate) = &estimate
+			&& let Ok(mut current) = estimate.write()
+		{
+			*current = Estimate::from(&sample);
+		}
 
 		// Send bandwidth is version-agnostic: it depends on QUIC backend support.
 		let (send_bandwidth, send_producer) = if sample.estimated_send_rate.is_some() {
 			let producer = bandwidth::Producer::new();
-			(Some(producer.consume()), Some(producer))
+			(Some(producer.weak()), Some(producer))
 		} else {
 			(None, None)
 		};
@@ -285,6 +317,8 @@ impl Session {
 			closed,
 			stats: stats.clone(),
 			send_bandwidth: send_producer,
+			estimate,
+			sampled: None,
 			mode: SamplerMode::Idle,
 			drain: Drain::Idle,
 		};
@@ -334,6 +368,10 @@ pub(crate) struct Supervisor<S> {
 	/// The send-rate estimate channel, when the backend reports one. `None`
 	/// also once every consumer is gone for good.
 	send_bandwidth: Option<bandwidth::Producer>,
+	/// Published on change while a consumer exists; see [`Self::poll_sampler`].
+	estimate: Option<kio::Producer<Estimate>>,
+	/// When the last sample was taken.
+	sampled: Option<crate::time::Instant>,
 	mode: SamplerMode,
 	drain: Drain,
 }
@@ -450,9 +488,10 @@ impl<S: crate::transport::poll::Session> Supervisor<S> {
 		true
 	}
 
-	/// Take one sample and arm the next deadline.
-	fn sample(&mut self) {
+	/// Take one sample, publishing it to the bandwidth and estimate channels.
+	fn sample(&mut self) -> Stats {
 		let sample = snapshot(&self.session);
+		self.sampled = Some(self.runtime.now());
 		if let Some(producer) = &self.send_bandwidth {
 			// An error means every consumer is gone for good; the stats cell
 			// still wants the sample.
@@ -460,6 +499,21 @@ impl<S: crate::transport::poll::Session> Supervisor<S> {
 				self.send_bandwidth = None;
 			}
 		}
+		if let Some(estimate) = &self.estimate
+			&& let Ok(mut current) = estimate.write()
+		{
+			let next = Estimate::from(&sample);
+			// Only a change wakes the consumers.
+			if *current != next {
+				*current = next;
+			}
+		}
+		sample
+	}
+
+	/// Take one sample for the readers that asked, and arm the next deadline.
+	fn sample_demanded(&mut self) {
+		let sample = self.sample();
 		let mut stats = self.stats.lock();
 		stats.sample = sample;
 		stats.demanded = false;
@@ -470,6 +524,30 @@ impl<S: crate::transport::poll::Session> Supervisor<S> {
 	}
 
 	fn poll_sampler(&mut self, waiter: &kio::Waiter) {
+		self.poll_demanded(waiter);
+
+		// An estimate consumer (a PROBE stream) samples only when the driver runs
+		// anyway, never on a timer of its own: a session nothing wakes is sending
+		// nothing, so its estimate has nothing new to say. The driver polls this
+		// before the protocol, so the estimate a consumer reads is at most one
+		// interval old.
+		let Some(estimate) = &self.estimate else { return };
+		if estimate.poll_used(waiter).is_pending() {
+			return;
+		}
+		let now = self.runtime.now();
+		if self
+			.sampled
+			.is_none_or(|at| now.duration_since(at) >= Self::POLL_INTERVAL)
+		{
+			// Not into the stats cell: writing it would wake this sampler's own
+			// registration there, and stats readers demand their own samples.
+			self.sample();
+		}
+	}
+
+	/// Sample on an interval while a bandwidth consumer or a stats reader wants it.
+	fn poll_demanded(&mut self, waiter: &kio::Waiter) {
 		loop {
 			match &mut self.mode {
 				SamplerMode::Idle => {
@@ -495,7 +573,7 @@ impl<S: crate::transport::poll::Session> Supervisor<S> {
 					if !demanded {
 						return;
 					}
-					self.sample();
+					self.sample_demanded();
 				}
 				SamplerMode::Polling { deadline } => {
 					if deadline.poll(waiter).is_pending() {
@@ -507,7 +585,7 @@ impl<S: crate::transport::poll::Session> Supervisor<S> {
 						self.mode = SamplerMode::Idle;
 						continue;
 					}
-					self.sample();
+					self.sample_demanded();
 					// Loop so the fresh deadline registers the waiter.
 				}
 			}
