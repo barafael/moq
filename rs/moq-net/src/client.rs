@@ -212,6 +212,7 @@ impl Client {
 			start.recv_bandwidth,
 			crate::driver::Protocol::Lite(Box::new(start.driver)),
 			start.goaway,
+			Some(start.estimate),
 		))
 	}
 
@@ -295,6 +296,7 @@ impl Client {
 					None,
 					crate::driver::Protocol::Ietf(protocol),
 					goaway,
+					None,
 				));
 			}
 			Some(ALPN_16) => {
@@ -380,7 +382,7 @@ impl Client {
 			.copied()
 			.ok_or(Error::Version)?;
 
-		let (recv_bw, protocol, goaway) = match version {
+		let (recv_bw, protocol, goaway, estimate) = match version {
 			Version::Lite(v) => {
 				let stream = stream.with_version(v);
 				let start = lite::start(lite::Config {
@@ -401,6 +403,7 @@ impl Client {
 					start.recv_bandwidth,
 					crate::driver::Protocol::Lite(Box::new(start.driver)),
 					start.goaway,
+					Some(start.estimate),
 				)
 			}
 			Version::Ietf(v) => {
@@ -435,11 +438,13 @@ impl Client {
 					peer_declared: Some(peer_declared),
 					early_unis: Vec::new(),
 				})?;
-				(None, crate::driver::Protocol::Ietf(protocol), goaway)
+				(None, crate::driver::Protocol::Ietf(protocol), goaway, None)
 			}
 		};
 
-		Ok(Session::new(runtime, session, version, recv_bw, protocol, goaway))
+		Ok(Session::new(
+			runtime, session, version, recv_bw, protocol, goaway, estimate,
+		))
 	}
 }
 

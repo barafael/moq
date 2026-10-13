@@ -15,7 +15,10 @@
 use std::{
 	future::Future,
 	pin::Pin,
-	sync::{Arc, Mutex},
+	sync::{
+		Arc, Mutex,
+		atomic::{AtomicUsize, Ordering},
+	},
 	task::{Context, Poll},
 	time::Duration,
 };
@@ -402,6 +405,29 @@ struct SessionSide {
 	withheld: Mutex<bool>,
 	/// Whether the datagrams this side sends are lost.
 	lossy: Mutex<bool>,
+	/// What [`poll::Session::stats`] reports.
+	stats: Mutex<MockStats>,
+	/// How many times the stats were read.
+	stats_reads: AtomicUsize,
+}
+
+/// The connection statistics a [`MockSession`] reports. Unavailable by default.
+#[derive(Clone, Copy, Default)]
+pub struct MockStats {
+	/// The congestion controller's send-rate estimate, in bits per second.
+	pub estimated_send_rate: Option<u64>,
+	/// The smoothed round-trip time.
+	pub rtt: Option<Duration>,
+}
+
+impl web_transport_trait::Stats for MockStats {
+	fn estimated_send_rate(&self) -> Option<u64> {
+		self.estimated_send_rate
+	}
+
+	fn rtt(&self) -> Option<Duration> {
+		self.rtt
+	}
 }
 
 /// An in-memory mock WebTransport session.
@@ -555,13 +581,24 @@ impl poll::Session for MockSession {
 	}
 
 	fn stats(&self) -> impl web_transport_trait::Stats {
-		web_transport_trait::StatsUnavailable
+		self.side.stats_reads.fetch_add(1, Ordering::Relaxed);
+		*self.side.stats.lock().unwrap()
 	}
 }
 
 // Only some test binaries steer delivery.
 #[allow(dead_code)]
 impl MockSession {
+	/// Report `stats` from now on.
+	pub fn set_stats(&self, stats: MockStats) {
+		*self.side.stats.lock().unwrap() = stats;
+	}
+
+	/// How many times the stats were read.
+	pub fn stats_reads(&self) -> usize {
+		self.side.stats_reads.load(Ordering::Relaxed)
+	}
+
 	/// Hold back the uni streams this side opens from now on.
 	///
 	/// The peer's transport has them, so a FIN is acknowledged at once, but its application
@@ -658,6 +695,8 @@ pub fn create_mock_session_pair(protocol: Option<&'static str>) -> (MockSession,
 		held: Mutex::default(),
 		withheld: Mutex::default(),
 		lossy: Mutex::default(),
+		stats: Mutex::default(),
+		stats_reads: AtomicUsize::default(),
 	});
 
 	let server_side = Arc::new(SessionSide {
@@ -672,6 +711,8 @@ pub fn create_mock_session_pair(protocol: Option<&'static str>) -> (MockSession,
 		held: Mutex::default(),
 		withheld: Mutex::default(),
 		lossy: Mutex::default(),
+		stats: Mutex::default(),
+		stats_reads: AtomicUsize::default(),
 	});
 
 	let new = |side| MockSession {

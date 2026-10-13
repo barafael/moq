@@ -67,13 +67,6 @@ impl<R: Timers> Deadline<R> {
 		}
 	}
 
-	/// A deadline armed for `at`.
-	pub fn at(runtime: &R, at: Instant) -> Self {
-		let mut deadline = Self::new(runtime);
-		deadline.set(Some(at));
-		deadline
-	}
-
 	/// A deadline armed for `duration` past the runtime's [`now`](Timers::now).
 	///
 	/// A duration the clock cannot represent (e.g. [`std::time::Duration::MAX`])
@@ -95,6 +88,7 @@ impl<R: Timers> Deadline<R> {
 	}
 
 	/// The instant this fires at, or `None` while disarmed.
+	#[cfg(test)]
 	pub fn deadline(&self) -> Option<Instant> {
 		self.at
 	}
