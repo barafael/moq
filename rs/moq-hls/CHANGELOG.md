@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.13](https://github.com/moq-dev/moq/compare/moq-hls-v0.5.12...moq-hls-v0.5.13) - 2026-10-13
+
+### Other
+
+- updated the following local packages: moq-net, hang, moq-mux
+
 ## [0.5.12](https://github.com/moq-dev/moq/compare/moq-hls-v0.5.11...moq-hls-v0.5.12) - 2026-10-11
 
 ### Fixed
