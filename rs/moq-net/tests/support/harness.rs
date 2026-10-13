@@ -18,16 +18,6 @@ use super::mock::{MockSession, MockStats, create_mock_session_pair};
 
 pub use moq_net::time::run;
 
-/// Spawn a protocol driver, returning how many times it has been polled.
-pub fn spawn_counted<D: moq_net::time::Driver + Send + 'static>(driver: D) -> Arc<AtomicUsize> {
-	let polls = Arc::new(AtomicUsize::new(0));
-	tokio::spawn(run(Counted {
-		driver,
-		polls: polls.clone(),
-	}));
-	polls
-}
-
 struct Counted<D> {
 	driver: D,
 	polls: Arc<AtomicUsize>,
@@ -64,6 +54,8 @@ pub struct MockConnectOptions {
 	pub latency: std::time::Duration,
 	/// What both transports report as their connection statistics.
 	pub stats: MockStats,
+	/// Count server driver polls into this counter when supplied.
+	pub server_polls: Option<Arc<AtomicUsize>>,
 }
 
 impl MockConnectOptions {
@@ -77,6 +69,7 @@ impl MockConnectOptions {
 			server_subscribe: None,
 			latency: std::time::Duration::ZERO,
 			stats: MockStats::default(),
+			server_polls: None,
 		}
 	}
 }
@@ -90,8 +83,6 @@ pub struct MockPair {
 	pub client_transport: MockSession,
 	/// The server's end of the mock transport, for steering delivery.
 	pub server_transport: MockSession,
-	/// How many times the server's driver has been polled.
-	pub server_polls: Arc<AtomicUsize>,
 }
 
 /// Run the MoQ handshake over the mock transport, returning connected sessions.
@@ -144,16 +135,19 @@ pub async fn connect_mock(opts: MockConnectOptions) -> MockPair {
 			.accept(now(), server_transport)
 			.await
 			.expect("server handshake failed");
-		(session, spawn_counted(driver))
+		match opts.server_polls {
+			Some(polls) => drop(tokio::spawn(run(Counted { driver, polls }))),
+			None => drop(tokio::spawn(run(driver))),
+		}
+		session
 	};
-	let (client_session, (server_session, server_polls)) = tokio::join!(client_fut, server_fut);
+	let (client_session, server_session) = tokio::join!(client_fut, server_fut);
 
 	MockPair {
 		client: client_session,
 		server: server_session,
 		client_transport: transports.0,
 		server_transport: transports.1,
-		server_polls,
 	}
 }
 
