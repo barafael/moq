@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.12](https://github.com/moq-dev/moq/compare/moq-net-v0.3.11...moq-net-v0.3.12) - 2026-10-13
+
+### Fixed
+
+- *(net)* backport anonymous retraction queue deduplication
+- *(net)* queue a prefix retracted again at one clock reading once
+- *(net)* settle retraction quarantines in clock order
+- *(net)* hold back a stale path to a prefix a cursor just retracted
+
+### Other
+
+- Merge pull request #5403 from moq-dev/codex/release-idle-poll-counting
+- Merge pull request #5399 from moq-dev/codex/release-quarantine-churn
+- Merge remote-tracking branch 'origin/release' into backport/retract-quarantine
+
 ## [0.3.11](https://github.com/moq-dev/moq/compare/moq-net-v0.3.10...moq-net-v0.3.11) - 2026-10-11
 
 ### Fixed
