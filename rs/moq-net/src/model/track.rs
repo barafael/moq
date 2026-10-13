@@ -2844,6 +2844,18 @@ impl Consumer {
 		}
 	}
 
+	/// Whether the cache is fed live, so the newest object it holds is the track's largest.
+	/// A cache only fetches fill, or a relay's warm cache whose upstream producer closed, is not.
+	pub(crate) fn is_live(&self) -> bool {
+		match &self.inner {
+			ConsumerKind::Plain(state) => {
+				let state = state.read();
+				state.published && !state.closed
+			}
+			ConsumerKind::Spliced(resume) => resume.is_live(),
+		}
+	}
+
 	/// Fetching a single past group, without holding a live subscription.
 	///
 	/// Returns a [`kio::Pending`] that resolves to the [`group::Consumer`]:
@@ -8940,6 +8952,37 @@ mod test {
 			"pre-accept backfill growth is reclaimed after accept"
 		);
 		assert!(pool.used() <= 13_000, "usage converges: {}", pool.used());
+	}
+
+	/// A cache only a fetch handler fills has no live feed, so its newest fetched object
+	/// is not the track's largest. Accepting the request feeds it live until the producer goes.
+	#[tokio::test]
+	async fn a_fetch_only_cache_is_not_live() {
+		let request = Request::new(Arc::new(broadcast::Info::default()), "test");
+		let dynamic = request.dynamic();
+		let consumer = request.consume();
+
+		let pending = consumer.fetch_group(2, None);
+		let req = dynamic
+			.requested_group()
+			.now_or_never()
+			.expect("should not block")
+			.unwrap();
+		let mut fetched = req.accept(None).unwrap();
+		fetched
+			.write_frame(Timestamp::ZERO, bytes::Bytes::from_static(b"2-0"))
+			.unwrap();
+		fetched.finish().unwrap();
+		pending.await.unwrap();
+		assert!(!consumer.is_live(), "a fetch-only cache is not live");
+
+		let producer = request.accept(None);
+		assert!(consumer.is_live(), "an accepted track is live");
+
+		// The fetch handler keeps the track alive like a producer clone, so both go.
+		drop(dynamic);
+		drop(producer);
+		assert!(!consumer.is_live(), "a track whose producer went is not live");
 	}
 
 	/// Re-serving a sequence many times must not accumulate eviction hints: stale
