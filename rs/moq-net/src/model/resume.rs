@@ -731,9 +731,16 @@ impl Consumer {
 		self.state.read().latest()
 	}
 
-	/// Whether the newest segment still has its live producer.
+	/// Whether the newest segment still has its live producer. A parked warm cache is an
+	/// open producer with no upstream feed behind it, so it never is.
 	pub(crate) fn is_live(&self) -> bool {
-		let track = self.state.read().segments.last().map(|segment| segment.track.clone());
+		let track = self
+			.state
+			.read()
+			.segments
+			.last()
+			.filter(|segment| !segment.warm)
+			.map(|segment| segment.track.clone());
 		track.is_some_and(|track| track.is_live())
 	}
 
@@ -3322,6 +3329,25 @@ mod test {
 		for frame in 0..=rounds {
 			assert_eq!(read(&mut group), frame.to_string().as_bytes());
 		}
+	}
+
+	/// A parked track's warm cache is an open producer with no upstream feed, so the track
+	/// is not live until a copy is spliced after it.
+	#[tokio::test]
+	async fn a_parked_warm_cache_is_not_live() {
+		let (_track, consumer) = track_pair("a");
+		let mut producer = Producer::new();
+		producer.takeover(&consumer).unwrap();
+		let resumed = producer.consume();
+		assert!(resumed.is_live(), "a live copy is live");
+
+		let (_cache, cache_consumer) = track_pair("cache");
+		producer.park(&cache_consumer).unwrap();
+		assert!(!resumed.is_live(), "a parked warm cache is not live");
+
+		let (_next, next_consumer) = track_pair("next");
+		producer.takeover(&next_consumer).unwrap();
+		assert!(resumed.is_live(), "the copy spliced after it is live");
 	}
 
 	/// A group held back at the reader's cap when a park replaces its segments comes
