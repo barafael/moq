@@ -84,6 +84,22 @@ Decided:
   epoch, so a cluster GOAWAY redial or a standby takeover ends subscriptions
   instead of resuming them (accepted 2026-10-06 over negotiating the field on
   lite-06). A release that needs seamless failover promotes lite-07 first.
+  Re-examined 2026-10-13 with no concrete need, so nothing is planned. If a
+  pre-lite-07 need appears, start from these findings:
+  - A SETUP parameter on lite-05/06 is the only viable carriage. Shipped peers
+    ignore unknown SETUP ids (Rust and JS, release and main), so the path and
+    old peers stay unchanged, mirroring [IETF epochs](/quest/m1/ietf-epochs.md).
+    Its cost: SETUP races other streams on the Rust client and in JS, so
+    epoch-bearing streams would wait on the peer's SETUP, and no negotiated
+    flag changes a message's encoding today (codecs see only `Version`).
+  - Cutting a smaller lite-07 early and moving the rest to lite-08 needs no
+    new mechanism, but overrides the
+    [freeze policy](/quest/m1/lite07-finalize.md).
+  - Rejected: appending the epoch to lite-06 SUBSCRIBE, TRACK, or FETCH (shipped
+    decoders refuse trailing bytes); a skippable lite-06 ANNOUNCE type alone
+    (it cannot pin requests); and a path suffix or `.epoch/` sibling (it renames
+    the broadcast, and lite-06 has no hidden filter to keep siblings from old
+    clients).
 
 Decided 2026-10-06: older versions and moq-transport lose cross-route resume,
 since their routes have no epoch, but their mid-group start handling stays.
