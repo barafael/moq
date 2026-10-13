@@ -2503,11 +2503,16 @@ impl Consumer {
 	///
 	/// Unlike [`Self::peek_group`], this is suitable for satisfying a FETCH: a
 	/// partial cached copy is a miss so the caller can ask upstream for its head.
-	pub(crate) fn cached_group(&self, sequence: u64, frame_start: u64) -> Option<group::Consumer> {
+	/// With `finished`, an unfinished copy is a miss too, for a cache nothing
+	/// writes to anymore.
+	pub(crate) fn cached_group(&self, sequence: u64, frame_start: u64, finished: bool) -> Option<group::Consumer> {
 		match &self.inner {
 			ConsumerKind::Plain(state) => {
 				let state = state.read();
 				let group = state.covering_group(sequence, frame_start)?;
+				if finished && !group.is_finished() {
+					return None;
+				}
 				group.cache_refresh();
 				Some(group.consume())
 			}
