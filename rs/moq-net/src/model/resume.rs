@@ -731,6 +731,12 @@ impl Consumer {
 		self.state.read().latest()
 	}
 
+	/// Whether the newest segment still has its live producer.
+	pub(crate) fn is_live(&self) -> bool {
+		let track = self.state.read().segments.last().map(|segment| segment.track.clone());
+		track.is_some_and(|track| track.is_live())
+	}
+
 	/// The newest segment's declared exclusive end, where fetches are routed.
 	pub(crate) fn final_sequence(&self) -> Option<u64> {
 		// Copied out: the segment's track takes its own lock.

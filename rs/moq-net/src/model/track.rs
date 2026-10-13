@@ -2844,6 +2844,15 @@ impl Consumer {
 		}
 	}
 
+	/// Whether the cache is fed live, so the newest object it holds is the track's largest.
+	/// A relay's warm cache whose upstream producer closed is not.
+	pub(crate) fn is_live(&self) -> bool {
+		match &self.inner {
+			ConsumerKind::Plain(state) => !state.read().closed,
+			ConsumerKind::Spliced(resume) => resume.is_live(),
+		}
+	}
+
 	/// Fetching a single past group, without holding a live subscription.
 	///
 	/// Returns a [`kio::Pending`] that resolves to the [`group::Consumer`]:
