@@ -12,7 +12,7 @@
 
 use std::time::Duration;
 
-use criterion::{BenchmarkId, Criterion, Throughput, criterion_group, criterion_main};
+use criterion::{BatchSize, BenchmarkId, Criterion, Throughput, criterion_group, criterion_main};
 use futures::FutureExt;
 use moq_net::{Hop, Hops, Pattern, Patterns, Timestamp, announce, broadcast, kio, origin};
 
@@ -76,6 +76,47 @@ fn bench_announce(c: &mut Criterion) {
 					cursor.next().now_or_never().flatten().expect("retract delivered");
 				}
 			});
+		});
+	}
+	group.finish();
+}
+
+/// A peer carrying `publishers` broadcasts withdraws them all before the
+/// driver's clock moves again, then `subscribers` cursors drain the retractions.
+/// Each retraction quarantines its prefix until a fresh clock reading, so a cost
+/// per earlier retraction shows up as a slope over publishers.
+fn bench_withdraw(c: &mut Criterion) {
+	let mut group = c.benchmark_group("origin/withdraw");
+	for (publishers, subscribers) in [(100, 1), (1_000, 1), (10_000, 1), (1_000, 10)] {
+		let id = BenchmarkId::from_parameter(format!("{publishers}p_{subscribers}s"));
+		group.bench_function(id, |b| {
+			b.iter_batched(
+				|| {
+					let (producer, mut driver) = origin::Producer::new(origin::Config::default());
+					// Retractions read the driver's last clock reading, which stays put below.
+					driver
+						.poll(moq_net::time::Instant::now(), &kio::Waiter::noop())
+						.unwrap();
+					let routes: Vec<_> = (0..publishers)
+						.map(|i| producer.dynamic(format!("room/{i}"), peer_route(9, 1)).unwrap())
+						.collect();
+					let mut cursors: Vec<_> = (0..subscribers).map(|_| producer.consume().announced()).collect();
+					for cursor in &mut cursors {
+						while cursor.next().now_or_never().flatten().is_some() {}
+					}
+					(producer, driver, routes, cursors)
+				},
+				|(producer, driver, routes, mut cursors)| {
+					drop(routes);
+					for cursor in &mut cursors {
+						for _ in 0..publishers {
+							cursor.next().now_or_never().flatten().expect("retract delivered");
+						}
+					}
+					(producer, driver, cursors)
+				},
+				BatchSize::LargeInput,
+			);
 		});
 	}
 	group.finish();
@@ -480,6 +521,7 @@ fn bench_handoff(c: &mut Criterion) {
 criterion_group!(
 	benches,
 	bench_announce,
+	bench_withdraw,
 	bench_announce_mounted,
 	bench_announce_fleet,
 	bench_announce_duplicate,
