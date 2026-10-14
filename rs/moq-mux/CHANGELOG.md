@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.10.14](https://github.com/moq-dev/moq/compare/moq-mux-v0.10.13...moq-mux-v0.10.14) - 2026-10-14
+
+### Fixed
+
+- *(mux)* an unset host clock publishes without a wall mapping ([#5448](https://github.com/moq-dev/moq/pull/5448))
+
 ## [0.10.13](https://github.com/moq-dev/moq/compare/moq-mux-v0.10.12...moq-mux-v0.10.13) - 2026-10-13
 
 ### Other

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.19.26](https://github.com/moq-dev/moq/compare/moq-tokio-v0.19.25...moq-tokio-v0.19.26) - 2026-10-14
+
+### Other
+
+- Merge branch 'release' into quest/m0/release-22/fetch
+
 ## [0.19.25](https://github.com/moq-dev/moq/compare/moq-tokio-v0.19.24...moq-tokio-v0.19.25) - 2026-10-13
 
 ### Other

@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.13](https://github.com/moq-dev/moq/compare/moq-net-v0.3.12...moq-net-v0.3.13) - 2026-10-14
+
+### Fixed
+
+- *(net)* a parked warm cache is not a live feed
+- *(net)* keep a quiet track's latest group past rejoin and takeover ([#5430](https://github.com/moq-dev/moq/pull/5430))
+
+### Other
+
+- Merge branch 'release' into quest/m0/release-22/fetch
+
 ## [0.3.12](https://github.com/moq-dev/moq/compare/moq-net-v0.3.11...moq-net-v0.3.12) - 2026-10-13
 
 ### Fixed

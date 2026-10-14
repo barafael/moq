@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.21.14](https://github.com/moq-dev/moq/compare/hang-v0.21.13...hang-v0.21.14) - 2026-10-14
+
+### Fixed
+
+- *(hang)* ignore incompatible archive metadata in catalogs (backport #5485) ([#5520](https://github.com/moq-dev/moq/pull/5520))
+
 ## [0.21.13](https://github.com/moq-dev/moq/compare/hang-v0.21.12...hang-v0.21.13) - 2026-10-13
 
 ### Other
