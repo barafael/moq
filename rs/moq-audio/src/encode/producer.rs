@@ -829,7 +829,10 @@ mod tests {
 		.await
 		.unwrap();
 
-		producer.write(&full_frame(0)).unwrap();
+		// Fill the no-start settlement window before resetting a running decoder.
+		for micros in (0..=500_000).step_by(20_000) {
+			producer.write(&full_frame(micros)).unwrap();
+		}
 		let first = audio.read().await.unwrap().expect("first packet before the reanchor");
 		assert_eq!(first.data.len() / size_of::<f32>(), 960 - 312);
 
@@ -1128,6 +1131,8 @@ mod tests {
 			);
 
 			producer.write(&pcm_frame(&[0.1; 4 * 1024], anchor_us)).unwrap();
+			producer.finish().unwrap();
+
 			let mut pts = Vec::new();
 			for _ in 0..4 {
 				pts.push(packet(&mut reader).await.expect("a packet").timestamp.as_micros());
@@ -1178,6 +1183,8 @@ mod tests {
 
 		// A second of audio, so the filter's delay is nowhere near the whole write.
 		producer.write(&pcm_frame(&vec![0.1; 44_100], 1_000_000)).unwrap();
+
+		producer.finish().unwrap();
 
 		let first = packet(&mut reader).await.expect("a packet");
 		assert_eq!(first.timestamp.as_micros(), 1_000_000);

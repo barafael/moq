@@ -807,6 +807,9 @@ mod tests {
 				.unwrap();
 		}
 
+		// This finite fixture ends before the ordered reader settles its startup.
+		producer.finish().unwrap();
+
 		let first = consumer.read().await.unwrap().expect("decoded frame");
 		assert_eq!(first.timestamp.as_micros(), 0);
 
@@ -1272,6 +1275,9 @@ mod tests {
 			producer.cut(None).unwrap();
 		}
 
+		// This finite fixture ends before the ordered reader settles its startup.
+		producer.finish().unwrap();
+
 		// The pre-skip is trimmed off the first packet, so it decodes short. That
 		// shortfall is codec delay, not a hole: without counting it the packet after
 		// every stream start would read as a gap.
@@ -1526,6 +1532,9 @@ mod tests {
 			producer.cut(None).unwrap();
 		}
 
+		// This finite fixture ends before the ordered reader settles its startup.
+		producer.finish().unwrap();
+
 		let first = consumer.read().await.unwrap().expect("first decoded frame");
 		let second = consumer.read().await.unwrap().expect("second decoded frame");
 		let first_frames = first.data.len() / size_of::<f32>();
@@ -1635,6 +1644,9 @@ mod tests {
 				keyframe: true,
 			})
 			.unwrap();
+
+		// This finite fixture ends before the ordered reader settles its startup.
+		producer.finish().unwrap();
 
 		let frame = consumer.read().await.unwrap().expect("decoded frame");
 		assert_eq!(

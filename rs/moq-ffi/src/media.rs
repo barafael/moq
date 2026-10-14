@@ -1102,6 +1102,9 @@ impl Catalog {
 }
 
 /// Reads container-decoded frames from a live media track.
+///
+/// Without a subscription start, delivery waits for a full max-delay media span or track end;
+/// zero starts immediately. Groups arriving below the ordered cursor are discarded.
 #[derive(uniffi::Object)]
 pub struct MoqMediaTrackConsumer {
 	task: Task<Media>,
@@ -1328,5 +1331,62 @@ mod catalog_tests {
 		assert!(catalog.set_section("video".into(), "{}".into()).is_err());
 		assert!(catalog.set_section("app".into(), "{".into()).is_err());
 		consumer.cancel();
+	}
+}
+
+#[cfg(test)]
+mod ordered_tests {
+	use super::*;
+	use moq_mux::container::Container as _;
+	use std::future::Future;
+	use std::task::{Context, Poll, Waker};
+
+	#[tokio::test]
+	async fn binding_read_settles_an_open_unfloored_window() {
+		let broadcast = moq_net::broadcast::Info::new().produce();
+		let track = broadcast.create_track("data", hang::container::track_info(0)).unwrap();
+		let binding = MoqBroadcastConsumer::new(broadcast.consume());
+		let reader = MoqMediaTrackConsumer::subscribe(
+			&binding,
+			MoqMediaTrackConfig {
+				name: "data".into(),
+				container: MoqContainer::Legacy,
+				subscription: Some(MoqSubscription {
+					priority: 0,
+					max_delay_us: 500_000,
+					group_start: None,
+					group_end: None,
+				}),
+			},
+		)
+		.await
+		.unwrap();
+		let write = |sequence, micros| {
+			let mut group = track.create_group(moq_net::group::Info { sequence }).unwrap();
+			moq_mux::catalog::hang::Container::Legacy(moq_mux::container::Kind::Data)
+				.write(
+					&mut group,
+					&[moq_mux::container::Frame {
+						timestamp: moq_net::Timestamp::from_micros(micros).unwrap(),
+						payload: bytes::Bytes::from_static(&[1]),
+						keyframe: true,
+						duration: None,
+					}],
+				)
+				.unwrap();
+			group.finish().unwrap();
+		};
+		let mut reading = std::pin::pin!(reader.next());
+		let mut cx = Context::from_waker(Waker::noop());
+		write(3, 300_000);
+		assert!(reading.as_mut().poll(&mut cx).is_pending());
+		write(0, 0);
+		assert!(reading.as_mut().poll(&mut cx).is_pending());
+		write(4, 500_000);
+		let Poll::Ready(Ok(Some(first))) = reading.as_mut().poll(&mut cx) else {
+			panic!("the full window must settle while the producer is still open");
+		};
+		assert_eq!(first.timestamp_us, 0, "the late retained head survives settlement");
+		reader.cancel();
 	}
 }

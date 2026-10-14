@@ -1070,7 +1070,7 @@ fn raw_loc_video_uses_the_declared_catalog_container() {
 	assert!(video_cfg.container.init.is_null());
 
 	let frame_cb = Callback::new();
-	let consumer = id(unsafe { moq_consume_video(catalog, 0, 10_000_000, Some(channel_callback), frame_cb.ptr) });
+	let consumer = id(unsafe { moq_consume_video(catalog, 0, 0, Some(channel_callback), frame_cb.ptr) });
 
 	let timestamp_us = 42_000;
 	let payload = b"codec frame";
@@ -1989,7 +1989,7 @@ fn double_close_all_resource_types() {
 	let catalog_id = id(catalog_cb.recv());
 
 	let frame_cb = Callback::new();
-	let track = id(unsafe { moq_consume_audio(catalog_id, 0, 10_000_000, Some(channel_callback), frame_cb.ptr) });
+	let track = id(unsafe { moq_consume_audio(catalog_id, 0, 0, Some(channel_callback), frame_cb.ptr) });
 
 	let payload = b"test";
 	assert_eq!(
@@ -2829,6 +2829,7 @@ fn track_request_dynamic_survives_accept() {
 
 #[test]
 fn local_publish_consume() {
+	// Zero requests immediate reads; an open no-start reader with a budget settles first.
 	let origin = id(moq_origin_create());
 	let path = b"live";
 	let broadcast = publish_broadcast(origin, path);
@@ -2888,7 +2889,7 @@ fn local_publish_consume() {
 	);
 
 	let frame_cb = Callback::new();
-	let track = id(unsafe { moq_consume_audio(catalog_id, 0, 10_000_000, Some(channel_callback), frame_cb.ptr) });
+	let track = id(unsafe { moq_consume_audio(catalog_id, 0, 0, Some(channel_callback), frame_cb.ptr) });
 
 	let payload = b"opus audio payload data";
 	let timestamp_us: u64 = 1_000_000;
@@ -3050,7 +3051,7 @@ fn consume_audio_follows_a_sibling_broadcast_reference() {
 	let catalog_id = id(catalog_cb.recv());
 
 	let frame_cb = Callback::new();
-	let track = id(unsafe { moq_consume_audio(catalog_id, 0, 10_000_000, Some(channel_callback), frame_cb.ptr) });
+	let track = id(unsafe { moq_consume_audio(catalog_id, 0, 0, Some(channel_callback), frame_cb.ptr) });
 
 	// Published on the sibling, so it only arrives if the reference was followed.
 	let payload = b"opus audio payload data";
@@ -3182,7 +3183,7 @@ fn video_publish_consume() {
 	);
 
 	let frame_cb = Callback::new();
-	let track = id(unsafe { moq_consume_video(catalog_id, 0, 10_000_000, Some(channel_callback), frame_cb.ptr) });
+	let track = id(unsafe { moq_consume_video(catalog_id, 0, 0, Some(channel_callback), frame_cb.ptr) });
 
 	let keyframe = [0x00, 0x00, 0x00, 0x01, 0x65, 0xAA, 0xBB, 0xCC];
 	assert_eq!(
@@ -3379,7 +3380,7 @@ fn video_raw_publish_consume() {
 	let catalog_id = id(catalog_cb.recv());
 
 	let decoder = moq_video_decoder_output {
-		max_delay_us: 10_000_000,
+		max_delay_us: 0,
 		format: moq_video_pixel_format::MOQ_VIDEO_PIXEL_FORMAT_I420 as u32,
 		width: 0,
 		height: 0,
@@ -3584,7 +3585,7 @@ fn decode_first_frame(output: &moq_video_decoder_output) -> (u32, u32, usize) {
 #[test]
 fn video_raw_decode_rgba() {
 	let output = moq_video_decoder_output {
-		max_delay_us: 10_000_000,
+		max_delay_us: 0,
 		format: moq_video_pixel_format::MOQ_VIDEO_PIXEL_FORMAT_RGBA as u32,
 		width: 0,
 		height: 0,
@@ -3597,7 +3598,7 @@ fn video_raw_decode_rgba() {
 #[test]
 fn video_raw_decode_resize() {
 	let output = moq_video_decoder_output {
-		max_delay_us: 10_000_000,
+		max_delay_us: 0,
 		format: moq_video_pixel_format::MOQ_VIDEO_PIXEL_FORMAT_I420 as u32,
 		width: 160,
 		height: 120,
@@ -3925,7 +3926,7 @@ fn video_raw_decode() {
 
 	// Subscribe + decode before publishing frames so the keyframe group is delivered.
 	let output = moq_video_decoder_output {
-		max_delay_us: 10_000_000,
+		max_delay_us: 0,
 		format: moq_video_pixel_format::MOQ_VIDEO_PIXEL_FORMAT_I420 as u32,
 		width: 0,
 		height: 0,
@@ -4003,7 +4004,7 @@ fn multiple_frames_ordering() {
 	let catalog_id = id(catalog_cb.recv());
 
 	let frame_cb = Callback::new();
-	let track = id(unsafe { moq_consume_audio(catalog_id, 0, 10_000_000, Some(channel_callback), frame_cb.ptr) });
+	let track = id(unsafe { moq_consume_audio(catalog_id, 0, 0, Some(channel_callback), frame_cb.ptr) });
 
 	let timestamps: [u64; 5] = [0, 20_000, 40_000, 60_000, 80_000];
 	for (i, &ts) in timestamps.iter().enumerate() {
