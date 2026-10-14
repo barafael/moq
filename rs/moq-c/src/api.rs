@@ -3412,7 +3412,8 @@ pub unsafe extern "C" fn moq_consume_catalog_section(
 
 /// Consume a video track from a broadcast, delivering frames in order.
 ///
-/// - `max_delay_us` controls the maximum amount of buffering allowed before skipping a GoP.
+/// - `max_delay_us` controls the initial media settlement span and the budget before skipping a GoP.
+///   Zero starts immediately; otherwise delivery waits for that span or track completion.
 /// - `on_frame` is called with a positive frame ID per frame, then exactly once
 ///   more with a terminal code: `0` (closed cleanly) or a negative error. After
 ///   the terminal (`<= 0`) callback, `on_frame` is never called again and
@@ -3461,7 +3462,8 @@ pub extern "C" fn moq_consume_video_cancel(track: u32) -> i32 {
 /// the terminal (`<= 0`) callback, `on_frame` is never called again and
 /// `user_data` is never touched again, so release `user_data` there. The
 /// terminal callback fires even after [moq_consume_audio_cancel].
-/// The `max_delay_us` parameter controls how long to wait before skipping frames.
+/// The `max_delay_us` parameter controls the initial media settlement span and the skip budget.
+/// Zero starts immediately; otherwise delivery waits for that span or track completion.
 ///
 /// Returns a non-zero handle to the track on success, or a negative code on failure.
 ///

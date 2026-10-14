@@ -44,6 +44,7 @@ pub struct Options {
 	/// PCM output conversion.
 	pub output: Output,
 	/// How far a group may fall behind the live edge before the subscription skips it.
+	/// Without a declared start, the ordered reader also settles a full media span before delivery.
 	pub max_delay: std::time::Duration,
 	/// Initial cached-group policy.
 	pub start: Start,
@@ -51,7 +52,7 @@ pub struct Options {
 	///
 	/// The jitter buffer a player holds ahead of the playhead, reported by
 	/// [`Consumer::delay`]. Distinct from [`max_delay`](Self::max_delay), which is
-	/// the live-edge skip budget and adds no buffering. A fixed delay beyond the
+	/// the ordered startup and live-edge skip budget. A fixed delay beyond the
 	/// track's retention is refused.
 	pub delay: Option<Duration>,
 }
