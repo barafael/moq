@@ -1022,6 +1022,8 @@ struct Pump {
 }
 
 impl Pump {
+	const MAX_DELAY: Duration = Duration::from_secs(1);
+
 	/// Subscribe to the track, then stream its frames to the rendition's pad, owning it until the
 	/// track ends, errors, or `cancel` fires. The pad goes back to the session without an EOS
 	/// either way. Returns the rendition if its track ended rather than being cancelled, so the
@@ -1046,7 +1048,7 @@ impl Pump {
 		// rendition.
 		let subscriber = tokio::select! {
 			_ = cancel.changed() => return None,
-			subscriber = track.subscribe(moq_net::track::Subscription::default().with_max_delay(Duration::from_secs(1))) => match subscriber {
+			subscriber = track.subscribe(moq_net::track::Subscription::default().with_max_delay(Self::MAX_DELAY)) => match subscriber {
 				Ok(subscriber) => subscriber,
 				Err(err) => {
 					gst::warning!(CAT, "track {name} failed to subscribe: {err:?}");
@@ -1775,7 +1777,11 @@ mod session_tests {
 		let mut write = |i: u64| {
 			producer
 				.write(moq_mux::container::Frame {
-					timestamp: moq_net::Timestamp::from_micros(i * 33_000).unwrap(),
+					// The head fills the ordered reader's existing startup window.
+					timestamp: moq_net::Timestamp::from_micros(
+						i * super::Pump::MAX_DELAY.as_micros() as u64 / (HEAD - 1),
+					)
+					.unwrap(),
 					payload: bytes::Bytes::from(vec![i as u8; 64]),
 					keyframe: i == 0,
 					duration: None,
@@ -2119,6 +2125,21 @@ mod session_tests {
 		}
 	}
 
+	impl Publisher {
+		/// Complete the ordered media window without changing the frame the pad tests block on.
+		fn settle(&mut self) {
+			let micros = (self.start.elapsed() + super::Pump::MAX_DELAY).as_micros() as u64;
+			self.video
+				.write(moq_mux::container::Frame {
+					timestamp: moq_net::Timestamp::from_micros(micros).unwrap(),
+					payload: bytes::Bytes::from_static(&[0; 64]),
+					keyframe: false,
+					duration: None,
+				})
+				.unwrap();
+		}
+	}
+
 	// A dial still running once the element reached NULL can outlive `main`, and aws-lc aborts the
 	// process when a thread asks it for randomness after its exit destructors ran.
 	#[test]
@@ -2196,6 +2217,7 @@ mod session_tests {
 			gst::PadProbeReturn::Ok
 		});
 		publisher.write(0);
+		publisher.settle();
 		reached
 			.recv_timeout(Duration::from_secs(10))
 			.expect("the frame never reached the pad");
@@ -2218,6 +2240,7 @@ mod session_tests {
 			});
 		});
 		publisher.write(0);
+		publisher.settle();
 
 		let (_cancel, cancel) = watch::channel(false);
 		let (_shutdown, shutdown) = watch::channel(true);
@@ -2263,6 +2286,7 @@ mod session_tests {
 			gst::PadProbeReturn::Drop
 		});
 		publisher.write(0);
+		publisher.settle();
 		returned
 			.recv_timeout(Duration::from_secs(10))
 			.expect("stop from the pump never returned");
