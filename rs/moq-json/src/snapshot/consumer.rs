@@ -71,6 +71,11 @@ impl<T: DeserializeOwned> Consumer<T> {
 	/// snapshot track its content is superseded by definition, so the reader waits for the
 	/// replacement. Only a failure of the track itself ends the stream.
 	pub fn poll_next(&mut self, waiter: &kio::Waiter) -> Poll<Result<Option<T>>> {
+		// Each group starts with a full snapshot, so missing older groups cannot affect it.
+		if let Some(latest) = self.track.latest() {
+			self.track.set_groups(latest..);
+		}
+
 		// Drain to the newest group, resetting reconstruction state whenever we switch.
 		let track_finished = loop {
 			match self.track.poll_next_group(waiter)? {

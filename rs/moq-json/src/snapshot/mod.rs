@@ -823,6 +823,30 @@ mod test {
 	}
 
 	#[test]
+	fn newest_snapshot_skips_missing_groups() {
+		let track = moq_net::broadcast::Info::new()
+			.produce()
+			.create_track("test", moq_net::track::Info::default())
+			.unwrap();
+		let mut consumer = Consumer::<Value>::new(track.subscribe(None), consumer::Config::default());
+		let waiter = kio::Waiter::noop();
+		for sequence in [0, 2] {
+			let mut group = track.create_group(moq_net::group::Info { sequence }).unwrap();
+			group
+				.write_frame(
+					None,
+					Bytes::from(serde_json::to_vec(&json!({ "n": sequence })).unwrap()),
+				)
+				.unwrap();
+			group.finish().unwrap();
+			match consumer.poll_next(&waiter) {
+				Poll::Ready(Ok(Some(value))) => assert_eq!(value, json!({ "n": sequence })),
+				other => panic!("expected the newest snapshot, got {other:?}"),
+			}
+		}
+	}
+
+	#[test]
 	fn late_joiner_collapses_backlog_to_latest() {
 		// A whole group's worth of snapshot + deltas is buffered before the consumer reads. It should
 		// apply them all but yield only the latest value once, not replay every superseded state.
