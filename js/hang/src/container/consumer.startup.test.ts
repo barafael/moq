@@ -6,13 +6,19 @@ import { encodeFrame, Format } from "./legacy.ts";
 // Drain the in-memory readers and their continuations without advancing mocked time.
 const flush = () => new Promise<void>((resolve) => setImmediate(resolve));
 
-function setup(maxDelay = 100) {
+function setup(maxDelay = 100, start?: number) {
 	jest.useFakeTimers();
 	const track = new Track.Producer("video");
-	const consumer = new Consumer(track.subscribe({ maxDelay: Time.Milli(30_000) }), {
-		format: new Format("video"),
-		maxDelay: Time.Milli(maxDelay),
-	});
+	const consumer = new Consumer(
+		track.subscribe({
+			maxDelay: Time.Milli(30_000),
+			groups: start === undefined ? undefined : { start: { included: start } },
+		}),
+		{
+			format: new Format("video"),
+			maxDelay: Time.Milli(maxDelay),
+		},
+	);
 	const results: Read[] = [];
 	const warn = spyOn(console, "warn").mockImplementation(() => {});
 	const reading = (async () => {
@@ -92,7 +98,7 @@ for (const emptySuccessor of [false, true]) {
 }
 
 test("Consumer preserves a declared marker before its first media across a hole", async () => {
-	const { track, results, warn } = setup();
+	const { track, results, warn } = setup(100, 16);
 	const marker = new Group.Producer(16);
 	track.writeGroup(marker);
 	write(marker, 0, true);
@@ -104,15 +110,17 @@ test("Consumer preserves a declared marker before its first media across a hole"
 	track.writeGroup(live);
 	write(live, 50_000);
 	await flush();
-	// Group 17 never arrived, so the media after the marker is past a gap. It spans the declared
-	// pause too: the reader can't tell where group 17 would have started.
-	expect(items(results)).toEqual(["end 16@0", "gap 0+50000", "18@50000"]);
+	// The marker was read, so group 17 remains a recoverable hole within the budget.
+	expect(items(results)).toEqual(["end 16@0"]);
+	write(live, 150_000);
+	await flush();
+	expect(items(results)).toEqual(["end 16@0", "gap 0+50000", "18@50000", "18@150000"]);
 	expect(frames(results)[0].frame.keyframe).toBe(true);
 	expect(warn).not.toHaveBeenCalled();
 });
 
 test.each([false, true])("Consumer still waits for a gap after media (playhead reset: %s)", async (reset) => {
-	const { track, consumer, results, warn } = setup(1000);
+	const { track, consumer, results, warn } = setup(1000, 16);
 	const first = new Group.Producer(16);
 	track.writeGroup(first);
 	write(first, 0);

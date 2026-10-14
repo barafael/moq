@@ -19,6 +19,15 @@ error lists and rerun.
 
 These land with the next breaking release, not the 2026-09-23 train.
 
+- **Ordered container reads settle their initial window and drop backfill.**
+  Rust's `moq_mux::container::Consumer` and JS's `Container.Consumer` with no
+  declared start wait for a full `max_delay` / `maxDelay` media span, or track
+  completion, then begin at the lowest group seen. Zero starts immediately.
+  Declare a subscription start when the first group is known. Groups arriving
+  below the cursor are discarded; use arrival-order track reads when every
+  group is needed. Frames retain their transport ingress time, so this hold
+  counts toward playback delay.
+
 - **A QUIC load-balancer nonce needs its server id.** `listen.lb_nonce`,
   `--listen-quic-lb-nonce`, and `MOQ_LISTEN_QUIC_LB_NONCE` without `lb_id` stop
   startup. Setting `lb_id` (or `lb_nonce`) and `load_balancer` together also

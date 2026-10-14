@@ -23,7 +23,7 @@ export interface ConsumerProps {
 
 /** One item of a {@link Consumer.next} read, in delivery order. Mirrors Rust's `container::Read`. */
 export type Read =
-	/** A media frame from `group`. Only group equality means anything: numbers may skip. */
+	/** A media frame from `group`; groups advance in sequence order and their numbers may skip. */
 	| { kind: "frame"; group: number; frame: ReceivedFrame }
 	/**
 	 * Media after an item already read will never reach this reader: a group was skipped, evicted,
@@ -88,13 +88,18 @@ function continues(prev: Group, next: Group | undefined): next is Group {
 	);
 }
 
-/** Reads frames from a MoQ track in order, buffering groups and skipping ones that fall `maxDelay` behind. */
+/**
+ * Reads frames in group order and discards backfill below the delivery cursor.
+ * Without a declared start, first delivery waits for a full `maxDelay` span of media (or track end),
+ * then starts at the lowest group seen. Arrival-order track APIs have neither this window nor discard.
+ */
 export class Consumer {
 	#track: Moq.Track.Subscriber;
 	#format: Format;
 	#maxDelay: Getter<Time.Milli>;
 	#groups: Group[] = [];
 	#active?: number; // the active group sequence number
+	#startup: boolean; // the no-start floor is unsettled until a full media budget arrives
 	// Presentation end (max PTS + duration) of the group we most recently advanced past, so next()'s
 	// promotion guard can tell a timeline-continuous next group from one sitting after a gap.
 	// Maintained only via #recordPresented; see its comment for the invariant.
@@ -142,6 +147,14 @@ export class Consumer {
 		this.#track = track;
 		this.#format = props.format;
 		this.#maxDelay = getter(props.maxDelay ?? Moq.Time.Milli.zero);
+		const start = track.subscription.peek()?.groups?.start;
+		this.#active = start?.included ?? (start?.excluded === undefined ? undefined : start.excluded + 1);
+		this.#startup = this.#active === undefined;
+		this.#signals.subscribe(this.#maxDelay, () => {
+			this.#settleStartup();
+			this.#notify?.();
+			this.#notify = undefined;
+		});
 
 		this.#signals.spawn(this.#run.bind(this));
 		this.#signals.cleanup(() => {
@@ -155,6 +168,7 @@ export class Consumer {
 
 	#finish(end: Error | null): void {
 		if (this.#closed.peek() === undefined) this.#closed.set(end);
+		this.#settleStartup();
 		this.#notify?.();
 		this.#notify = undefined;
 	}
@@ -166,17 +180,11 @@ export class Consumer {
 				const consumer = await this.#track.recvGroup();
 				if (!consumer) break;
 
-				// To improve TTV, we always start with the first group.
-				// For higher latencies we might need to figure something else out, as its racey.
-				if (this.#active === undefined) {
-					this.#active = consumer.sequence;
+				if (!this.#startup && this.#active !== undefined && consumer.sequence < this.#active) {
+					consumer.close();
+					continue;
 				}
 
-				// Arriving below the delivery cursor is not a reason to drop a group. Groups are
-				// sent newest-first, so the head of a subscription arrives after the live edge it
-				// was served alongside. Audio can place older groups in its timestamp-indexed ring;
-				// video must reject older groups before decode to preserve codec references. How far back one
-				// may be is the subscription's own max delay, applied before it ever reaches here.
 				const group: Group = {
 					consumer,
 					frames: [],
@@ -258,8 +266,10 @@ export class Consumer {
 
 					if (!marker && this.#abortIfRewound(group, frame.timestamp)) return;
 
+					const settling = this.#startup;
+					this.#settleStartup();
 					let skipped = false;
-					if (group.consumer.sequence !== this.#active) {
+					if (!settling && group.consumer.sequence !== this.#active) {
 						// A non-active group can also be too slow to wait for. This runs even when
 						// the group is the delivery head, because that is exactly the stalled case
 						// (#active sits below every buffered group) where the max delay budget is
@@ -279,7 +289,7 @@ export class Consumer {
 					// buffered group is the delivery head regardless of id scheme; next()'s
 					// promotion guard advances #active to it. Works for sequential and
 					// non-sequential ids alike.
-					if (skipped || group.consumer.sequence === this.#active || group === this.#groups[0]) {
+					if (settling || skipped || group.consumer.sequence === this.#active || group === this.#groups[0]) {
 						this.#notify?.();
 						this.#notify = undefined;
 					}
@@ -295,8 +305,9 @@ export class Consumer {
 			if (!(err instanceof Moq.Error.Stream)) throw err;
 		} finally {
 			group.done = true;
+			this.#settleStartup();
 
-			if (group.consumer.sequence === this.#active) {
+			if (!this.#startup && group.consumer.sequence === this.#active) {
 				this.#recordPresented(group);
 
 				// Advance to the next buffered group's actual sequence, but ONLY if it continues this
@@ -334,8 +345,31 @@ export class Consumer {
 		if (group.end !== undefined) this.#presentedEnd = group.end;
 	}
 
+	#settleStartup(): void {
+		if (!this.#startup) return;
+		let empty = 0;
+		while (this.#groups[empty]?.done && this.#groups[empty].frames.length === 0) empty++;
+		if (empty > 0) this.#groups.splice(0, empty);
+		let first: Time.Micro | undefined;
+		let newest: Time.Micro | undefined;
+		for (const group of this.#groups) {
+			if (group.start !== undefined) first ??= Moq.Time.Micro.min(group.start, group.minMedia ?? group.start);
+			if (group.latest !== undefined && (newest === undefined || group.latest > newest)) newest = group.latest;
+		}
+		const budget = Moq.Time.Micro.fromMilli(this.#maxDelay.peek());
+		const ended = this.#closed.peek() !== undefined;
+		if (
+			(this.#groups.some((group) => !group.empty) &&
+				(budget === 0 || ended || (first !== undefined && newest !== undefined && newest - first >= budget))) ||
+			(ended && this.#groups.every((group) => group.done && group.empty))
+		) {
+			this.#active = this.#groups[0]?.consumer.sequence;
+			this.#startup = false;
+		}
+	}
+
 	#checkMaxDelay() {
-		if (this.#active === undefined) return;
+		if (this.#startup || this.#active === undefined) return;
 
 		let skipped = 0;
 		const start = this.#groups[0]?.consumer.sequence;
@@ -401,7 +435,7 @@ export class Consumer {
 	// fires when the active group is fully consumed and still open, so we never drop
 	// frames the consumer hasn't seen. Returns true if a group was skipped.
 	#tryDurationSkip(): boolean {
-		if (this.#active === undefined) return false;
+		if (this.#startup || this.#active === undefined) return false;
 
 		const active = this.#groups[0];
 		if (!active || active.consumer.sequence !== this.#active) return false;
@@ -458,6 +492,7 @@ export class Consumer {
 	 * Returns the next {@link Read} in delivery order, awaiting one if needed: a frame, a gap where
 	 * media after an earlier item will never arrive, or an end the publisher declared.
 	 * An unmarked forward timestamp jump is not a gap, since nothing on the wire says media is missing.
+	 * A declared start bypasses startup settlement; a zero budget settles on the first wire frame.
 	 * After buffered groups drain, a finished track returns undefined and an aborted track throws.
 	 */
 	async next(): Promise<Read | undefined> {
@@ -472,6 +507,7 @@ export class Consumer {
 			if (this.#error) throw this.#error;
 
 			const ended = this.#closed.peek();
+			this.#settleStartup();
 			if (this.#groups.length === 0) {
 				if (ended !== undefined) {
 					if (ended instanceof Error) throw ended;
@@ -479,34 +515,23 @@ export class Consumer {
 				}
 			}
 
-			// If #active points below all buffered groups -- e.g. the finally block's `+ 1`
-			// fallback fired because no later group was buffered yet, and the real (large-gap,
-			// non-sequential) next group has since arrived -- promote #active to the first real
-			// group so delivery resumes instead of stalling on a nonexistent sequence.
-			// Before any media is delivered there is no timeline hole to wait for, so this exception
-			// only applies at startup.
-			// Otherwise promote #active when the first buffered group continues the timeline we left off at,
-			// when a completed empty group can be walked (empty groups mean nothing), or when the hole
-			// is proven: the head already reaches past where presentation left off by more than the
-			// max delay, so anything still missing in between would arrive too old to play. Proving it
-			// here matters: #checkMaxDelay would instead drop the head, the very group to play next.
-			// After track termination no missing group can arrive, so drain across any remaining gap.
-			// Otherwise wait: #checkMaxDelay skips once the budget is spent, and #tryDurationSkip once
-			// the duration covers it.
-			if (this.#active !== undefined && this.#groups.length > 0) {
+			// A higher sequence can still be racing a missing group. Promote only on
+			// continuity, an empty completed group, track end, or a full budget of
+			// newest content beyond the successor's start (the missing group's reach).
+			if (!this.#startup && this.#active !== undefined && this.#groups.length > 0) {
 				const head = this.#groups[0];
 				if (head.consumer.sequence > this.#active) {
-					const startup = this.#start === undefined;
 					const contiguous = ptsContiguous(this.#presentedEnd, head.frames.at(0)?.timestamp);
 					const empty = head.empty && head.consumer.done;
 					const maxDelay = Moq.Time.Micro.fromMilli(this.#maxDelay.peek());
-					const skipHole =
-						head.frames.length > 0 &&
-						(maxDelay === 0 ||
-							(this.#presentedEnd !== undefined &&
-								head.latest !== undefined &&
-								head.latest - this.#presentedEnd > maxDelay));
-					if (startup || empty || contiguous || skipHole || ended !== undefined) {
+					let newest = head.latest;
+					for (const group of this.#groups) {
+						if (group.latest !== undefined && (newest === undefined || group.latest > newest))
+							newest = group.latest;
+					}
+					const nextStart = head.frames.at(0)?.timestamp;
+					const skipHole = nextStart !== undefined && newest !== undefined && newest - nextStart >= maxDelay;
+					if (empty || contiguous || skipHole || ended !== undefined) {
 						if (!contiguous && !empty) this.#lost = true;
 						this.#active = head.consumer.sequence;
 					}
@@ -514,6 +539,7 @@ export class Consumer {
 			}
 
 			if (
+				!this.#startup &&
 				this.#groups.length > 0 &&
 				this.#active !== undefined &&
 				this.#groups[0].consumer.sequence <= this.#active
@@ -537,7 +563,6 @@ export class Consumer {
 						this.#floor = this.#start?.timestamp;
 						this.#start = { group: seq, timestamp: frame.timestamp };
 					}
-					// Delayed history has its own earlier floor; this bound belongs to #start.group.
 					if (seq === this.#start.group && this.#floor !== undefined && frame.timestamp < this.#floor) {
 						this.#abort(new Error("frame timestamp is below the previous group start"));
 						throw this.#error;
@@ -546,13 +571,8 @@ export class Consumer {
 					return this.#emit({ kind: "frame", group: seq, frame });
 				}
 
-				// Check if the group is done and then remove it. A group is removable only
-				// once its #runGroup task has finished (done) and all frames are consumed:
-				// a below-#active group (a backlog group admitted behind the live edge) may
-				// still be downloading when its buffer momentarily drains, and removing it
-				// then silently truncates its tail. #runGroup notifies whenever the head
-				// group gains a frame, so waiting here is woken, and #checkMaxDelay bounds
-				// how long a stalled head can hold delivery up.
+				// A momentarily empty buffer is not FIN: the chosen window head may still be
+				// downloading its tail. Its reader wakes us on frames, FIN, or eviction.
 				if (this.#groups[0].done) {
 					if (this.#groups[0].consumer.sequence === this.#active) {
 						// The cursor moves past this group here rather than in #runGroup's finally

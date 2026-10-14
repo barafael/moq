@@ -149,7 +149,7 @@ export class Sync {
 		this.#out.delay.set(delay);
 	}
 
-	/** Anchor playback from ingress time and report whether the frame arrived late. */
+	/** Anchor playback from transport ingress, including time held by ordered startup, and report lateness. */
 	// Fold a newly received frame into the reference. The reference anchors playback to the
 	// wall clock; we lower it (skip ahead) only when keeping it would push the lookahead past `maxDelay`.
 	received(timestamp: Time.Milli, label = "", arrival = Time.Milli.now()): boolean {

@@ -55,8 +55,8 @@ function settle(ms = 20): Promise<void> {
 // exercise the consumer's own max delay policy against a complete retained track.
 // These tests write every group up front and only then read, so they ask for history
 // rather than the live edge.
-function replay(track: Track.Producer): Track.Subscriber {
-	return track.subscribe({ maxDelay: Time.Milli(30_000) });
+function replay(track: Track.Producer, start = 0): Track.Subscriber {
+	return track.subscribe({ maxDelay: Time.Milli(30_000), groups: { start: { included: start } } });
 }
 
 test("Consumer refuses maxAge before taking ownership of the track", () => {
@@ -1330,7 +1330,7 @@ test("Consumer does not duration-skip when the gap is not covered", async () => 
 // surface immediately, even while still open.
 test("Consumer delivers a PTS-contiguous next group whose sequence jumped (CMAF)", async () => {
 	const track = new Track.Producer("test");
-	const consumer = new Consumer(replay(track), {
+	const consumer = new Consumer(replay(track, 1_000_000), {
 		format: new CmafFormat(TEST_INIT),
 		maxDelay: 500 as Time.Milli,
 	});
@@ -1389,7 +1389,7 @@ test("Consumer delivers a PTS-contiguous next group whose sequence jumped (CMAF)
 test("Consumer waits on a PTS gap instead of skipping to a later buffered group (CMAF)", async () => {
 	const track = new Track.Producer("test");
 	// Large max delay so the gap can't be age-skipped during the test window.
-	const consumer = new Consumer(replay(track), {
+	const consumer = new Consumer(replay(track, 1_000_000), {
 		format: new CmafFormat(TEST_INIT),
 		maxDelay: 10_000 as Time.Milli,
 	});
@@ -1464,7 +1464,7 @@ test("Consumer waits on a PTS gap instead of skipping to a later buffered group 
 // blocks every later contiguous group.
 test("Consumer delivers a contiguous group after one that completed out of order (CMAF)", async () => {
 	const track = new Track.Producer("test");
-	const consumer = new Consumer(replay(track), {
+	const consumer = new Consumer(replay(track, 1_000_000), {
 		format: new CmafFormat(TEST_INIT),
 		maxDelay: 10_000 as Time.Milli,
 	});
@@ -1510,7 +1510,7 @@ test("Consumer delivers a contiguous group after one that completed out of order
 // arrive too old to play, so the head is the group to play next and must not be dropped as "slow".
 test("Consumer plays the head once a waited-out gap exceeds the budget (CMAF)", async () => {
 	const track = new Track.Producer("test");
-	const consumer = new Consumer(replay(track), {
+	const consumer = new Consumer(replay(track, 1000), {
 		format: new CmafFormat(TEST_INIT),
 		maxDelay: 100 as Time.Milli,
 	});
@@ -1542,7 +1542,7 @@ test("Consumer plays the head once a waited-out gap exceeds the budget (CMAF)", 
 // A gap still inside the budget is waited out: the missing group may yet arrive in time.
 test("Consumer waits on a gap within the budget, then plays the head once it exceeds it (CMAF)", async () => {
 	const track = new Track.Producer("test");
-	const consumer = new Consumer(replay(track), {
+	const consumer = new Consumer(replay(track, 1000), {
 		format: new CmafFormat(TEST_INIT),
 		maxDelay: 100 as Time.Milli,
 	});
@@ -1698,7 +1698,7 @@ test("Consumer reads a shed marker group as a gap", async () => {
 // The case the group-number heuristic got backwards: ids jump, but the PTS timeline is unbroken.
 test("Consumer yields no gap across a PTS-contiguous group id jump (CMAF)", async () => {
 	const track = new Track.Producer("test");
-	const consumer = new Consumer(replay(track), {
+	const consumer = new Consumer(replay(track, 1_000_000), {
 		format: new CmafFormat(TEST_INIT),
 		maxDelay: 10_000 as Time.Milli,
 	});
@@ -1722,7 +1722,7 @@ test("Consumer yields no gap across a PTS-contiguous group id jump (CMAF)", asyn
 
 test("a live video frame is delivered before its duration marker arrives", async () => {
 	const track = new Track.Producer("test");
-	const consumer = new Consumer(track.subscribe(), {
+	const consumer = new Consumer(track.subscribe({ groups: { start: { included: 0 } } }), {
 		format: new LegacyFormat("video"),
 		maxDelay: 500 as Time.Milli,
 	});

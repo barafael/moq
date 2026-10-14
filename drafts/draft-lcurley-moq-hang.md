@@ -626,6 +626,9 @@ The first timestamp of a group MUST NOT be lower than the first timestamp of any
 A group MAY start at the same timestamp as the previous group.
 Frames MAY present below the previous group's content (B-frames, or a keyframe overlapping the previous group's last frame).
 A publisher whose source restarts below the previous group's start begins a new broadcast instead.
+An ordered container reader MUST NOT deliver a group below its delivery cursor.
+Without a declared start, it waits until the newest content is a full maximum-delay budget ahead of the earliest seen content, or the track ends new groups, then selects the lowest group seen as its start.
+A zero budget settles immediately; arrival-order readers have neither this settlement nor the cursor discard.
 A delivered sequence hole is a playhead event unless the boundary is contiguous within 1 ms.
 A consumer re-applies startup delay and skip at a playhead event; it does not reset codec state.
 
@@ -1120,6 +1123,7 @@ This document has no IANA actions.
 - Specified MSF text metadata preservation and refusal of unrepresentable text packaging during gateway conversion.
 
 - Added optional audio and video `warmup` durations, rounded up to whole milliseconds, and allowed video groups to start at convergent random access pictures.
+- Defined startup settlement and backfill discard for ordered container reads; arrival-order reads keep every group.
 - Defined encoder `jitter` as flush lateness above the rendition's own recent minimum, replacing fixed frame-duration hints; container batches retain media-span estimates.
 - Timed CMAF samples from the frame timestamp, which is the fragment's earliest presentation time; `tfdt` is only relative within the fragment, and places the samples of an untimed frame. A timed CMAF track counts in its `mdhd` ticks.
 - Allowed a DVR to delete timeline objects no checkpoint recovery needs, oldest first.

@@ -11,10 +11,13 @@ afterEach(() => clock.mockRestore());
 
 function setup() {
 	const track = new Track.Producer("rewind");
-	const consumer = new Consumer(track.subscribe({ maxDelay: Time.Milli(30_000) }), {
-		format: new Format("video"),
-		maxDelay: Time.Milli(30_000),
-	});
+	const consumer = new Consumer(
+		track.subscribe({ maxDelay: Time.Milli(30_000), groups: { start: { included: 0 } } }),
+		{
+			format: new Format("video"),
+			maxDelay: Time.Milli(30_000),
+		},
+	);
 	return { track, consumer };
 }
 

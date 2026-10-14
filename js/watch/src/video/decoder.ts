@@ -569,9 +569,8 @@ class DecoderTrack {
 				}
 				const { frame } = next;
 
-				// An older keyframe would replace the codec references needed by live deltas. Group
-				// sequences only grow within a subscription, so a break (which a stale marker can
-				// raise) never resets this guard. Rejected payloads still count as received bytes.
+				// Defend codec references if a reader violates ordered group delivery. A break
+				// never restarts the sequence namespace; rejected bytes still count as received.
 				const stale = latest !== undefined && next.group < latest;
 				this.stats.update((current) => ({
 					frameCount: (current?.frameCount ?? 0) + (stale ? 0 : 1),
@@ -653,9 +652,8 @@ class DecoderTrack {
 				}
 				const { frame } = next;
 
-				// An older keyframe would replace the codec references needed by live deltas. Group
-				// sequences only grow within a subscription, so a break (which a stale marker can
-				// raise) never resets this guard. Rejected payloads still count as received bytes.
+				// Defend codec references if a reader violates ordered group delivery. A break
+				// never restarts the sequence namespace; rejected bytes still count as received.
 				const stale = latest !== undefined && next.group < latest;
 				this.stats.update((current) => ({
 					frameCount: (current?.frameCount ?? 0) + (stale ? 0 : 1),

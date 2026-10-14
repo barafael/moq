@@ -51,7 +51,7 @@ pub enum Kind {
 pub enum Read {
 	/// A media frame from `group`.
 	Frame {
-		/// The group's sequence number. Only equality means anything: numbers may skip.
+		/// The group's sequence number; delivered groups advance and may skip numbers.
 		group: u64,
 		frame: Frame,
 	},
@@ -72,7 +72,7 @@ pub enum Read {
 	/// packets (an audio codec's drain), whose output at or past `end` is padding. The next
 	/// group starts fresh.
 	End {
-		/// The group's sequence number. Only equality means anything: numbers may skip.
+		/// The group's sequence number; delivered groups advance and may skip numbers.
 		group: u64,
 		end: moq_net::Timestamp,
 	},

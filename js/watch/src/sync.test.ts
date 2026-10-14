@@ -1,5 +1,6 @@
-import { describe, expect, it } from "bun:test";
-import { Time } from "@moq/net";
+import { describe, expect, it, jest, spyOn } from "bun:test";
+import * as Container from "@moq/hang/container";
+import { Group, Time, Track } from "@moq/net";
 import { Signal } from "@moq/signals";
 import { type Delay, Sync } from "./sync";
 
@@ -216,4 +217,50 @@ describe("recorded ingress", () => {
 			sync.close();
 		}
 	});
+});
+
+it("ordered startup consumes the playout delay from original ingress", async () => {
+	jest.useFakeTimers();
+	const clock = spyOn(performance, "now").mockReturnValue(100);
+	const track = new Track.Producer("audio").accept({ timescale: Time.Timescale.MILLI, maxAge: Time.Milli(30_000) });
+	const sync = new Sync({ delay: Time.Milli(500) });
+	const consumer = new Container.Consumer(track.subscribe({ maxDelay: Time.Milli(30_000) }), {
+		format: new Container.Legacy.Format("audio"),
+		maxDelay: sync.out.maxDelay,
+	});
+	const drain = () => new Promise<void>((resolve) => setImmediate(resolve));
+	const write = (sequence: number, millis: number) => {
+		const group = new Group.Producer(sequence);
+		track.writeGroup(group);
+		group.writeFrame({
+			payload: Container.Legacy.encodeFrame(new Uint8Array([1]), Time.Micro.fromMilli(Time.Milli(millis))),
+			timestamp: Time.Timestamp.fromMillis(millis),
+		});
+		group.close();
+	};
+	try {
+		await drain();
+		const reading = consumer.next();
+		write(0, 1000);
+		await drain();
+		expect(Bun.peek.status(reading)).toBe("pending");
+		clock.mockReturnValue(600);
+		write(1, 1500);
+		const first = await reading;
+		if (!first || first.kind !== "frame") throw new Error("expected settled media");
+		expect(first.frame.arrival).toBe(Time.Milli(100));
+		const timestamp = Time.Milli.fromMicro(first.frame.timestamp);
+		sync.received(timestamp, "audio", first.frame.arrival);
+		expect(sync.out.reference.peek()).toBe(Time.Milli(-900));
+		const presented = sync.wait(timestamp);
+		await drain();
+		expect(Bun.peek.status(presented)).toBe("fulfilled");
+		await presented;
+	} finally {
+		consumer.close();
+		track.close();
+		sync.close();
+		clock.mockRestore();
+		jest.useRealTimers();
+	}
 });

@@ -40,3 +40,37 @@ for (const count of [1, 16, 256, 1024]) {
 		console.warn = warn;
 	}
 }
+
+// First-read cost, varying buffered groups and frames independently.
+for (const groups of [1, 16, 256]) {
+	for (const frames of [1, 4, 16]) {
+		const track = new Track.Producer("startup").accept({
+			timescale: Time.Timescale.MICRO,
+			maxAge: Time.Milli(30_000),
+		});
+		const consumer = new Consumer(track.subscribe({ maxDelay: Time.Milli(30_000) }), {
+			format: new Format("data"),
+			maxDelay: Time.Milli((groups * frames - 1) / 1000),
+		});
+		try {
+			for (let sequence = groups - 1; sequence >= 0; sequence--) {
+				const group = new Group.Producer(sequence);
+				track.writeGroup(group);
+				for (let frame = 0; frame < frames; frame++) {
+					group.writeFrame({
+						payload: Varint.encode(sequence * frames + frame),
+						timestamp: Time.Timestamp.fromMicros(Time.Micro(sequence * frames + frame)),
+					});
+				}
+				group.close();
+			}
+			const start = performance.now();
+			const read = await consumer.next();
+			if (read?.kind !== "frame" || read.group !== 0) throw new Error("startup lost the retained head");
+			console.log(JSON.stringify({ groups, frames, firstReadMs: performance.now() - start }));
+		} finally {
+			consumer.close();
+			track.close();
+		}
+	}
+}

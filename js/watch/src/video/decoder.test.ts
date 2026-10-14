@@ -423,7 +423,7 @@ it("clears the picture once no rendition is selectable", async () => {
 	}
 });
 
-// A late marker from older history breaks the timeline without making older groups newer.
+// Inject invalid backfill to check the decoder guard independently of the ordered consumer.
 function marker(group: number, end: number): Read {
 	return { kind: "end", group, end: Time.Micro(end) };
 }

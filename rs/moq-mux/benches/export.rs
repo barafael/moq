@@ -1,11 +1,11 @@
-//! Container export cost swept over independently varied tracks and queued frames.
+//! Export and ordered startup cost swept over independent track/group and frame counts.
 use std::time::Duration;
 
 use bytes::Bytes;
 use criterion::{BatchSize, BenchmarkId, Criterion, Throughput, criterion_group, criterion_main};
 use hang::catalog::{AAC, AudioConfig};
 use moq_mux::catalog::hang::Container;
-use moq_mux::container::{Frame, Kind};
+use moq_mux::container::{Container as _, Frame, Kind};
 use moq_net::Timestamp;
 
 /// What keeps a prepared broadcast served; dropping it stops the origin's tasks.
@@ -123,5 +123,69 @@ fn bench_export(c: &mut Criterion) {
 	group.finish();
 }
 
-criterion_group!(benches, bench_export);
+fn bench_startup(c: &mut Criterion) {
+	let runtime = tokio::runtime::Builder::new_current_thread()
+		.enable_all()
+		.build()
+		.unwrap();
+	let _entered = runtime.enter();
+	let mut group = c.benchmark_group("container-startup");
+	group.sample_size(10);
+	group.measurement_time(Duration::from_secs(1));
+	for groups in [1usize, 16, 256] {
+		for frames in [1usize, 4, 16] {
+			group.throughput(Throughput::Elements((groups * frames) as u64));
+			group.bench_function(BenchmarkId::new("first-read", format!("{groups}x{frames}")), |b| {
+				b.iter_batched(
+					|| {
+						let track = moq_net::broadcast::Info::new()
+							.produce()
+							.create_track("startup", hang::container::track_info(hang::catalog::PRIORITY.video))
+							.unwrap();
+						let budget = Duration::from_micros((groups * frames - 1) as u64);
+						let subscriber =
+							track.subscribe(moq_net::track::Subscription::default().with_max_delay(budget));
+						let format = Container::Legacy(Kind::Data);
+						// Reverse arrival order, like a retained window sent newest-first.
+						for sequence in (0..groups).rev() {
+							let mut group = track
+								.create_group(moq_net::group::Info {
+									sequence: sequence as u64,
+								})
+								.unwrap();
+							for index in 0..frames {
+								format
+									.write(
+										&mut group,
+										&[Frame {
+											timestamp: Timestamp::from_micros((sequence * frames + index) as u64)
+												.unwrap(),
+											payload: Bytes::from_static(&[1]),
+											keyframe: index == 0,
+											duration: None,
+										}],
+									)
+									.unwrap();
+							}
+							group.finish().unwrap();
+						}
+						(moq_mux::container::Consumer::new(subscriber, format), track)
+					},
+					|(mut consumer, track)| {
+						let waiter = kio::Waiter::new(std::task::Waker::noop().clone());
+						assert!(matches!(
+							consumer.poll_read(&waiter),
+							std::task::Poll::Ready(Ok(Some(moq_mux::container::Read::Frame { group: 0, .. })))
+						));
+						(consumer, track)
+					},
+					BatchSize::PerIteration,
+				);
+			});
+		}
+	}
+	group.finish();
+}
+
+criterion_group!(benches, bench_export, bench_startup);
 criterion_main!(benches);

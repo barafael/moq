@@ -93,6 +93,8 @@ test("a long subscription through the player path leaves nothing behind", async 
 		maxDelay: sync.out.maxDelay,
 	});
 	if (!sub) throw new Error("no subscription");
+	// The fixture creates the first group itself; this tests steady-state retention.
+	sub.update({ ...sub.subscription.peek(), groups: { start: { included: 0 } } });
 	const consumer = new Container.Consumer(sub, { format, maxDelay: sync.out.maxDelay });
 
 	// Presentations overlap, as a decoder's outputs do, so the clock's sleeps are shared.

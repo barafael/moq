@@ -34,7 +34,7 @@ test("Consumer waits on a non-sequential hang group because it has no per-frame 
 	// as a trailing frame carrying the group's end timestamp. Until the container carries that, expect
 	// the wait. The CMAF path (per-sample duration in the moof) is covered in consumer.test.ts.
 	const track = new Track.Producer("test");
-	const consumer = new Consumer(track.subscribe(), {
+	const consumer = new Consumer(track.subscribe({ groups: { start: { included: 1_000_000 } } }), {
 		format: new LegacyFormat("data"),
 		maxDelay: 5000 as Time.Milli,
 	});

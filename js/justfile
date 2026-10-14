@@ -100,3 +100,8 @@ qmux-bench:
 arrivals-bench:
     bun install --frozen-lockfile
     bun watch/bench/arrivals.ts
+
+# Measure ordered startup over groups x frames and warning traffic during catch-up.
+container-bench:
+    bun install --frozen-lockfile
+    bun hang/bench/slow-group.ts
