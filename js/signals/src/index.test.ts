@@ -1107,6 +1107,32 @@ describe("race", () => {
 		expect(await race([Promise.resolve("promise"), once])).toBe("done");
 	});
 
+	test("a loser after an already settled winner is still observed", async () => {
+		const unhandled: unknown[] = [];
+		const onUnhandled = (reason: unknown) => unhandled.push(reason);
+		process.on("unhandledRejection", onUnhandled);
+		try {
+			const once = new Once<string>();
+			once.set("done");
+			let fail!: (err: Error) => void;
+			const later = new Promise<never>((_, reject) => (fail = reject));
+			expect(await race([once, later])).toBe("done");
+			fail(new Error("late"));
+			await new Promise<void>((resolve) => {
+				const channel = new MessageChannel();
+				channel.port1.onmessage = () => {
+					channel.port1.close();
+					channel.port2.close();
+					resolve();
+				};
+				channel.port2.postMessage(null);
+			});
+			expect(unhandled).toEqual([]);
+		} finally {
+			process.off("unhandledRejection", onUnhandled);
+		}
+	});
+
 	test("resolves when a pending Once settles", async () => {
 		const once = new Once<number>();
 		const result = race([new Promise(() => {}), once]);
