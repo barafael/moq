@@ -122,6 +122,10 @@ jobs:
         if: ${{ !cancelled() }}
         run: nix develop --command just js bench track
 
+      - name: Latency observation benchmark
+        if: ${{ !cancelled() }}
+        run: nix develop --command just rs test -p moq-bench --release --run-ignored only -E 'test(benchmark_observation_contention)' --success-output immediate
+
       # Runs each moq-net Criterion routine once, so a bench that panics (an
       # unparsable version, a shape that deadlocks) fails here instead of on the
       # next manual run. Timing is not compared; nextest never runs a
