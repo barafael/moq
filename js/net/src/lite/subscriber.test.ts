@@ -1,12 +1,13 @@
 import { expect, spyOn, test } from "bun:test";
 import { Signal } from "@moq/signals";
 import type { Probe as ProbeStats } from "../connection/stats.ts";
-import { error, fromTransport, reason, StreamCode, StreamError } from "../error.ts";
+import { error, fromTransport, ProtocolViolation, reason, StreamCode, StreamError } from "../error.ts";
 import { HopSchema, isAnonymous, MAX_HOPS, Route, UNKNOWN_HOP } from "../hop.ts";
 import * as Path from "../path.ts";
-import { Writer } from "../stream.ts";
+import { Reader, Writer } from "../stream.ts";
 import * as Time from "../time.ts";
 import { type AnnounceBroadcast, AnnounceInit, AnnounceOk, encodeAnnounceBroadcast } from "./announce.ts";
+import { Group } from "./group.ts";
 import { Probe } from "./probe.ts";
 import { Subscriber } from "./subscriber.ts";
 import { TrackInfo } from "./track.ts";
@@ -737,22 +738,38 @@ interface FakeStream {
 	// Resolves once the subscriber waits on a read the test has not answered.
 	reading: Promise<void>;
 	aborted: Promise<unknown>;
+	// Resolves once the subscriber FINs its side.
+	finished: Promise<void>;
+	// Resolves on the first write, even if it stalls.
+	writing: Promise<void>;
+	// Every chunk the subscriber wrote.
+	written: Uint8Array[];
 	// Hands the stream to the subscriber, for an open the session was told to park.
 	release: () => void;
 }
 
 // A session whose streams the test answers by hand and that never fails them on its own, so
 // only Subscriber.close() can end a wait. Opens numbered in `park` wait for `release()`.
-function fakeSession(park: number[] = []) {
+// Delayed writes model transport credit arriving outside the microtask queue.
+function fakeSession(park: number[] = [], delayedWrites = false) {
 	const streams: FakeStream[] = [];
+	const count = new Signal(0);
+	async function opened(index: number): Promise<FakeStream> {
+		while (streams.length <= index) await count.changed();
+		return streams[index];
+	}
 	const quic = {
 		createBidirectionalStream: () => {
 			let inbound!: ReadableStreamDefaultController<Uint8Array>;
 			let onRead!: () => void;
 			let onAbort!: (reason: unknown) => void;
+			let onFinish!: () => void;
+			let onWrite!: () => void;
 			let release!: () => void;
 			const reading = new Promise<void>((resolve) => (onRead = resolve));
 			const aborted = new Promise<unknown>((resolve) => (onAbort = resolve));
+			const finished = new Promise<void>((resolve) => (onFinish = resolve));
+			const writing = new Promise<void>((resolve) => (onWrite = resolve));
 			// No high water mark, so pull() means the subscriber is blocked on a read.
 			const readable = new ReadableStream<Uint8Array>(
 				{
@@ -763,23 +780,43 @@ function fakeSession(park: number[] = []) {
 				},
 				{ highWaterMark: 0 },
 			);
-			const writable = new WritableStream<Uint8Array>({ abort: (reason) => void onAbort(reason) });
+			const written: Uint8Array[] = [];
+			const writable = new WritableStream<Uint8Array>({
+				write: (chunk) => {
+					written.push(new Uint8Array(chunk));
+					onWrite();
+					if (!delayedWrites) return;
+					return new Promise<void>((resolve) => {
+						// Transport credit can arrive in a task, outside the microtask queue.
+						const channel = new MessageChannel();
+						channel.port1.onmessage = () => {
+							channel.port1.close();
+							channel.port2.close();
+							resolve();
+						};
+						channel.port2.postMessage(null);
+					});
+				},
+				close: () => onFinish(),
+				abort: (reason) => void onAbort(reason),
+			});
 			const opened = new Promise((resolve) => (release = () => resolve({ readable, writable })));
 			if (!park.includes(streams.length)) release();
-			streams.push({ inbound, reading, aborted, release });
+			streams.push({ inbound, reading, aborted, finished, writing, written, release });
+			count.set(streams.length);
 			return opened;
 		},
 	} as unknown as WebTransport;
-	return { quic, streams };
+	return { quic, streams, opened };
 }
 
-async function answerTrackInfo(stream: FakeStream): Promise<void> {
+async function answerTrackInfo(stream: FakeStream, version: Version = Version.DRAFT_05): Promise<void> {
 	const chunks: Uint8Array[] = [];
 	const writer = new Writer(
 		new WritableStream<Uint8Array>({ write: (chunk) => void chunks.push(new Uint8Array(chunk)) }),
-		Version.DRAFT_05,
+		version,
 	);
-	await new TrackInfo({}).encode(writer, Version.DRAFT_05);
+	await new TrackInfo({}).encode(writer, version);
 	for (const chunk of chunks) stream.inbound.enqueue(chunk);
 	stream.inbound.close();
 }
@@ -948,4 +985,108 @@ test("the last reader leaving mid-response cancels the fetch", async () => {
 	expect(err.code).toBe(StreamCode.Cancel);
 
 	subscriber.close();
+});
+
+// Let all queued reactions finish without relying on host timers.
+function drainReactions(): Promise<void> {
+	return new Promise((resolve) => {
+		const channel = new MessageChannel();
+		channel.port1.onmessage = () => {
+			channel.port1.close();
+			channel.port2.close();
+			resolve();
+		};
+		channel.port2.postMessage(null);
+	});
+}
+
+test("a local unsubscribe owes no SUBSCRIBE_END", async () => {
+	const { quic, streams, opened } = fakeSession([], true);
+	const subscriber = new Subscriber(quic, Version.DRAFT_07, HopSchema.parse(1n));
+	const responseTask = Promise.withResolvers<void>();
+	const outcome = responseTask.promise.then(
+		() => undefined,
+		(err: unknown) => err,
+	);
+	// TypeScript-private so tests can observe the task without exporting a test hook.
+	const internal = subscriber as unknown as { runResponses: (...args: unknown[]) => Promise<void> };
+	const runResponses = internal.runResponses.bind(internal);
+	const responses = spyOn(internal, "runResponses").mockImplementation((...args) => {
+		const task = runResponses(...args);
+		responseTask.resolve(task);
+		return task;
+	});
+	const broadcast = subscriber.consume(Path.from("room"));
+	const track = broadcast.track("video").subscribe();
+	const ordered = track.ordered();
+	try {
+		await opened(0);
+		await answerTrackInfo(streams[0], Version.DRAFT_07);
+		await (await opened(1)).reading;
+		const next = ordered.nextGroup();
+		await subscriber.runGroup(
+			new Group({ subscribe: 0n, sequence: 0 }),
+			new Reader(
+				new ReadableStream({
+					start: (controller) => controller.close(),
+				}),
+				undefined,
+				Version.DRAFT_07,
+			),
+		);
+		(await next)?.close();
+		ordered.close();
+		track.close();
+		await streams[1].finished;
+		await drainReactions();
+		expect(await outcome).toBeUndefined();
+	} finally {
+		responses.mockRestore();
+		ordered.close();
+		track.close();
+		broadcast.close();
+		subscriber.close();
+	}
+});
+
+test("a publisher FIN without SUBSCRIBE_END still violates an open subscription", async () => {
+	const { quic, streams, opened } = fakeSession([], true);
+	const subscriber = new Subscriber(quic, Version.DRAFT_07, HopSchema.parse(1n));
+	const broadcast = subscriber.consume(Path.from("room"));
+	const track = broadcast.track("video").subscribe();
+	try {
+		await opened(0);
+		await answerTrackInfo(streams[0], Version.DRAFT_07);
+		await (await opened(1)).reading;
+		streams[1].inbound.close();
+		expect(await track.closed).toBeInstanceOf(ProtocolViolation);
+		expect((track.closed.peek() as Error).message).toBe("subscribe stream ended without SUBSCRIBE_END");
+	} finally {
+		track.close();
+		broadcast.close();
+		subscriber.close();
+	}
+});
+
+test("closing a broadcast while TRACK_INFO is pending leaves no unhandled rejection", async () => {
+	const { quic, streams, opened } = fakeSession([], true);
+	const subscriber = new Subscriber(quic, Version.DRAFT_07, HopSchema.parse(1n));
+	const unhandled: unknown[] = [];
+	const onUnhandled = (reason: unknown) => unhandled.push(reason);
+	const broadcast = subscriber.consume(Path.from("room"));
+	const track = broadcast.track("video").subscribe();
+	process.on("unhandledRejection", onUnhandled);
+	try {
+		await opened(0);
+		await streams[0].reading;
+		broadcast.close();
+		track.close();
+		await answerTrackInfo(streams[0], Version.DRAFT_07);
+		await (await opened(1)).finished;
+		await drainReactions();
+		expect(unhandled).toEqual([]);
+	} finally {
+		process.off("unhandledRejection", onUnhandled);
+		subscriber.close();
+	}
 });
