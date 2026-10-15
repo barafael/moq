@@ -1149,7 +1149,7 @@ async fn broadcast_route_migration() {
 
 	// The path was never retracted across the swap: any events delivered are
 	// active metadata updates (the standby's chain taking over).
-	while let Some(event) = announcements.try_next() {
+	while let Some(event) = announcements.try_next().expect("discovery failed") {
 		assert!(
 			!matches!(event, moq_net::announce::Event::End(_)),
 			"failover must not retract the route"
@@ -3778,7 +3778,7 @@ async fn abort_carries_its_code_to_the_peer() {
 
 /// The next route and whether it is active.
 async fn next_update(announced: &mut moq_net::announce::Consumer) -> Option<(moq_net::announce::Announce, bool)> {
-	match announced.next().await? {
+	match announced.next().await.expect("discovery failed")? {
 		moq_net::announce::Event::Start(route)
 		| moq_net::announce::Event::Update(route)
 		| moq_net::announce::Event::Restart(route) => Some((route, true)),

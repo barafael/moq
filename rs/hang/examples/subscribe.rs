@@ -42,7 +42,16 @@ async fn run_session(origin: moq_net::origin::Producer) -> anyhow::Result<()> {
 async fn run_subscribe(consumer: moq_net::origin::Consumer) -> anyhow::Result<()> {
 	let mut announced = consumer.announced();
 	let mut playing: Option<tokio::task::JoinHandle<()>> = None;
-	while let Some(event) = announced.next().await {
+	loop {
+		let next = announced.next().await;
+		if next.is_err()
+			&& let Some(old) = playing.take()
+		{
+			old.abort();
+		}
+		let Some(event) = next? else {
+			break;
+		};
 		match event {
 			// The convention is that a publisher announces each broadcast's exact path.
 			moq_net::announce::Event::Start(announce) | moq_net::announce::Event::Restart(announce) => {

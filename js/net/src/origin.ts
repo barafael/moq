@@ -2054,8 +2054,11 @@ export class Consumer {
 				await Signal.race(this.#state.local, this.#state.advertisedLocal, this.#state.routes, producer.closed);
 				if (producer.closed.peek() !== undefined) return;
 			}
-		} catch {
-			// The reader closed between the check and an append; nothing left to do.
+		} catch (error) {
+			// Preserve exact-scope refusal through the existing fallible reader;
+			// a reader that already closed keeps its earlier terminal result.
+			producer.close(error instanceof Error ? error : new Error(String(error)));
+			return;
 		}
 		producer.close();
 	}

@@ -1417,7 +1417,7 @@ async fn enforce_grant<S: crate::transport::poll::Session>(
 ) -> Result<(), Error> {
 	let mut announced = origin.announced();
 	let mut check = crate::auth::Enforce::default();
-	let Some(path) = kio::wait(|waiter| check.poll(&auth, &mut announced, waiter)).await else {
+	let Some(path) = kio::wait(|waiter| check.poll(&auth, &mut announced, waiter)).await? else {
 		return Ok(());
 	};
 	tracing::error!(broadcast = %origin.absolute(&path), "publishing outside our grant; closing the session");

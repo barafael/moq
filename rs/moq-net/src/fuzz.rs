@@ -1265,7 +1265,14 @@ mod tests {
 		let session = registry.tier(tier.clone()).session("root");
 		let _broadcast = origin.publish("room/1", crate::origin::Route::default()).unwrap();
 		let mut cursor = origin.consume().with_stats(session).announced();
-		while cursor.next().now_or_never().flatten().is_some() {}
+		while cursor
+			.next()
+			.now_or_never()
+			.transpose()
+			.expect("discovery failed")
+			.flatten()
+			.is_some()
+		{}
 
 		bump_publisher_bytes(&registry, "room/1", &tier, 5);
 		let mut report = crate::stats::Report::default();

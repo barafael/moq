@@ -201,7 +201,7 @@ impl Subscriber {
 	/// consumer's scope, or the origin closed). Otherwise waits for the broadcast
 	/// to be announced, so a caller may connect before the publisher does.
 	pub(crate) async fn new(origin: &origin::Consumer, path: &str, options: Options) -> Result<Option<Self>> {
-		if origin.routed(path).await.is_none() {
+		if origin.routed(path).await?.is_none() {
 			return Ok(None);
 		}
 

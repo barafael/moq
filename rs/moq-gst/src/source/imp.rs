@@ -599,15 +599,16 @@ async fn follow_path(
 			_ = shutdown.changed() => break Ok(()),
 			err = &mut lost => break Err(err),
 			event = follow.next() => match event {
+				Err(error) => break Err(error.into()),
 				// The origin is gone, so nothing can announce the path again.
-				None => break Ok(()),
-				Some(Event::Start(announce) | Event::Restart(announce)) => {
+				Ok(None) => break Ok(()),
+				Ok(Some(Event::Start(announce) | Event::Restart(announce))) => {
 					tracing::info!(%path, epoch = announce.route.epoch.as_ref().map(tracing::field::display), "online");
 					true
 				}
 				// The same instance, re-priced or failed over, which the run rides out.
-				Some(Event::Update(_)) => false,
-				Some(Event::End(_)) => {
+				Ok(Some(Event::Update(_))) => false,
+				Ok(Some(Event::End(_))) => {
 					tracing::info!(%path, "offline, holding pads until it returns");
 					false
 				}
@@ -2610,7 +2611,7 @@ mod session_tests {
 	/// Block until the path's announcements report an event `wanted` accepts.
 	fn await_event(follow: &mut moq_net::announce::Follow, wanted: impl Fn(&moq_net::announce::Event) -> bool) {
 		let next = async {
-			while let Some(event) = follow.next().await {
+			while let Some(event) = follow.next().await.expect("discovery failed") {
 				if wanted(&event) {
 					return;
 				}

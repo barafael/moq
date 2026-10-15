@@ -99,7 +99,11 @@ async fn learned_hop(dialer: &origin::Producer, path: &str) -> Hop {
 	let mut announced = dialer.consume().announced();
 	let event = moq_net_sim::timeout(SETTLE, async {
 		loop {
-			let event = announced.next().await.expect("announce cursor closed");
+			let event = announced
+				.next()
+				.await
+				.expect("discovery failed")
+				.expect("announce cursor closed");
 			let announce = match event {
 				moq_net::announce::Event::Start(announce)
 				| moq_net::announce::Event::Update(announce)
@@ -149,6 +153,7 @@ async fn dialed_anonymous_session_does_not_echo_or_route_subscribe_back() {
 	let subscriber_saw = moq_net_sim::timeout(SETTLE, subscriber_announced.next())
 		.await
 		.expect("the other edge never learned the namespace")
+		.expect("discovery failed")
 		.expect("announce cursor closed");
 	let moq_net::announce::Event::Start(subscriber_saw) = subscriber_saw else {
 		panic!("the other edge's first event was not the namespace: {subscriber_saw:?}");

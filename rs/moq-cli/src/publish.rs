@@ -1524,7 +1524,7 @@ pub(crate) mod tests {
 				res = &mut import => panic!("the import returned before its input ended: {res:?}"),
 				_ = tokio::time::sleep(Duration::from_secs(30)) => panic!("never announced"),
 				resolved = async {
-					let event = announced.next().await.expect("origin closed");
+					let event = announced.next().await.expect("discovery failed").expect("origin closed");
 					assert!(matches!(event, moq_net::announce::Event::Start(_)), "{event:?}");
 					let broadcast = consumer.request_broadcast("demo", None).await.unwrap();
 					let mut catalogs = hang::catalog::Catalog::<()>::subscribe(&broadcast).await.unwrap();

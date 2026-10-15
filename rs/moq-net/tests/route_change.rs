@@ -122,7 +122,7 @@ impl Topology {
 		let a_to_r = link(version, &relay_a, &subscriber).await;
 
 		let consumer = subscriber.consume();
-		consumer.routed("live").await.unwrap();
+		consumer.routed("live").await.unwrap().expect("route announced");
 		let remote = consumer.request_broadcast("live", None).await.unwrap();
 		let prefs = track::Subscription::default().with_max_delay(Duration::from_secs(60));
 		let sub = remote.track("video").unwrap().subscribe(prefs).await.unwrap();
@@ -378,7 +378,7 @@ async fn better_route_restarts(version: &str) {
 	topology.standby().await;
 	let consumer = topology.subscriber.consume();
 	let mut announced = consumer.announced();
-	match announced.next().await.expect("announced") {
+	match announced.next().await.expect("discovery failed").expect("announced") {
 		announce::Event::Start(announce) => assert_eq!(announce.prefix.as_str(), "live"),
 		other => panic!("{version}: expected the route, got {other:?}"),
 	}
@@ -389,7 +389,7 @@ async fn better_route_restarts(version: &str) {
 	let incumbent = consumer.request_broadcast("live", None).await.unwrap();
 
 	topology.trigger(Trigger::BetterRoute).await;
-	match announced.next().await.expect("announced") {
+	match announced.next().await.expect("discovery failed").expect("announced") {
 		announce::Event::Restart(announce) => {
 			assert_eq!(announce.prefix.as_str(), "live");
 			assert_eq!(announce.route.hops.len(), 1, "{version}: the direct route");
@@ -525,7 +525,7 @@ async fn lagging_route_dies(version: Version) -> mpsc::UnboundedReceiver<Deliver
 	}
 	async fn subscribe(origin: &origin::Producer) -> track::Subscriber {
 		let consumer = origin.consume();
-		consumer.routed("live").await.unwrap();
+		consumer.routed("live").await.unwrap().expect("route announced");
 		let remote = consumer.request_broadcast("live", None).await.unwrap();
 		let preferences = track::Subscription::default().with_max_delay(Duration::from_secs(60));
 		remote.track("video").unwrap().subscribe(preferences).await.unwrap()
@@ -773,7 +773,7 @@ async fn replaced_behind_a_relay(version: &str, epoch: Option<moq_net::Epoch>, r
 	let _r_to_d = link(version, &relay, &downstream).await;
 
 	let consumer = downstream.consume();
-	consumer.routed("live").await.unwrap();
+	consumer.routed("live").await.unwrap().expect("route announced");
 	let remote = consumer.request_broadcast("live", None).await.unwrap();
 	let prefs = track::Subscription::default().with_max_delay(Duration::from_secs(60));
 	let mut rx = read(remote.track("video").unwrap().subscribe(prefs).await.unwrap());
@@ -889,7 +889,7 @@ async fn producer_replaced(version: &str) {
 	let _a_to_r = link(version, &relay, &subscriber).await;
 
 	let consumer = subscriber.consume();
-	consumer.routed("live").await.unwrap();
+	consumer.routed("live").await.unwrap().expect("route announced");
 	let remote = consumer.request_broadcast("live", None).await.unwrap();
 	let prefs = track::Subscription::default().with_max_delay(Duration::from_secs(60));
 	let sub = remote.track("video").unwrap().subscribe(prefs).await.unwrap();

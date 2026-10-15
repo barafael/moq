@@ -68,7 +68,14 @@ fn fanout(publishers: usize, subscribers: usize) -> Fanout {
 	let mut subscribers: Vec<announce::Consumer> = (0..subscribers).map(|_| consumer.announced()).collect();
 	// Drain the replay so each iteration measures only what it adds.
 	for cursor in &mut subscribers {
-		while cursor.next().now_or_never().flatten().is_some() {}
+		while cursor
+			.next()
+			.now_or_never()
+			.transpose()
+			.expect("discovery failed")
+			.flatten()
+			.is_some()
+		{}
 	}
 	Fanout {
 		producer,
@@ -103,16 +110,39 @@ fn bench_scoped_announce(c: &mut Criterion) {
 					let view = producer.consume().scope("", scope).unwrap();
 					let mut cursors: Vec<_> = (0..subscribers).map(|_| view.announced()).collect();
 					for cursor in &mut cursors {
-						while cursor.next().now_or_never().flatten().is_some() {}
+						while cursor
+							.next()
+							.now_or_never()
+							.transpose()
+							.expect("discovery failed")
+							.flatten()
+							.is_some()
+						{}
 					}
 					b.iter(|| {
 						let route = producer.publish("room/incoming", origin::Route::default()).unwrap();
 						for cursor in &mut cursors {
-							assert!(cursor.next().now_or_never().flatten().is_some());
+							assert!(
+								cursor
+									.next()
+									.now_or_never()
+									.transpose()
+									.expect("discovery failed")
+									.flatten()
+									.is_some()
+							);
 						}
 						drop(route);
 						for cursor in &mut cursors {
-							assert!(cursor.next().now_or_never().flatten().is_some());
+							assert!(
+								cursor
+									.next()
+									.now_or_never()
+									.transpose()
+									.expect("discovery failed")
+									.flatten()
+									.is_some()
+							);
 						}
 					});
 				},
@@ -159,11 +189,23 @@ fn bench_announce(c: &mut Criterion) {
 					.publish("room/incoming", origin::Route::default())
 					.unwrap();
 				for cursor in &mut fleet.subscribers {
-					cursor.next().now_or_never().flatten().expect("announce delivered");
+					cursor
+						.next()
+						.now_or_never()
+						.transpose()
+						.expect("discovery failed")
+						.flatten()
+						.expect("announce delivered");
 				}
 				drop(handle);
 				for cursor in &mut fleet.subscribers {
-					cursor.next().now_or_never().flatten().expect("retract delivered");
+					cursor
+						.next()
+						.now_or_never()
+						.transpose()
+						.expect("discovery failed")
+						.flatten()
+						.expect("retract delivered");
 				}
 			});
 		});
@@ -192,7 +234,14 @@ fn bench_withdraw(c: &mut Criterion) {
 						.collect();
 					let mut cursors: Vec<_> = (0..subscribers).map(|_| producer.consume().announced()).collect();
 					for cursor in &mut cursors {
-						while cursor.next().now_or_never().flatten().is_some() {}
+						while cursor
+							.next()
+							.now_or_never()
+							.transpose()
+							.expect("discovery failed")
+							.flatten()
+							.is_some()
+						{}
 					}
 					(producer, driver, routes, cursors)
 				},
@@ -200,7 +249,13 @@ fn bench_withdraw(c: &mut Criterion) {
 					drop(routes);
 					for cursor in &mut cursors {
 						for _ in 0..publishers {
-							cursor.next().now_or_never().flatten().expect("retract delivered");
+							cursor
+								.next()
+								.now_or_never()
+								.transpose()
+								.expect("discovery failed")
+								.flatten()
+								.expect("retract delivered");
 						}
 					}
 					(producer, driver, cursors)
@@ -243,17 +298,36 @@ fn bench_announce_mounted(c: &mut Criterion) {
 				})
 				.collect();
 			for cursor in &mut cursors {
-				while cursor.next().now_or_never().flatten().is_some() {}
+				while cursor
+					.next()
+					.now_or_never()
+					.transpose()
+					.expect("discovery failed")
+					.flatten()
+					.is_some()
+				{}
 			}
 
 			b.iter(|| {
 				let handle = producer.publish(".svc/p0/incoming", origin::Route::default()).unwrap();
 				for cursor in &mut cursors {
-					cursor.next().now_or_never().flatten().expect("announce delivered");
+					cursor
+						.next()
+						.now_or_never()
+						.transpose()
+						.expect("discovery failed")
+						.flatten()
+						.expect("announce delivered");
 				}
 				drop(handle);
 				for cursor in &mut cursors {
-					cursor.next().now_or_never().flatten().expect("retract delivered");
+					cursor
+						.next()
+						.now_or_never()
+						.transpose()
+						.expect("discovery failed")
+						.flatten()
+						.expect("retract delivered");
 				}
 			});
 		});
@@ -329,7 +403,14 @@ fn bench_announce_duplicate(c: &mut Criterion) {
 				.map(|_| consumer.clone().with_hidden(true).announced())
 				.collect();
 			for cursor in &mut cursors {
-				while cursor.next().now_or_never().flatten().is_some() {}
+				while cursor
+					.next()
+					.now_or_never()
+					.transpose()
+					.expect("discovery failed")
+					.flatten()
+					.is_some()
+				{}
 			}
 
 			b.iter(|| {
@@ -337,11 +418,23 @@ fn bench_announce_duplicate(c: &mut Criterion) {
 					.dynamic(PATH, peer_route(duplicates as u64 + 1, INCUMBENT_COST - 1))
 					.unwrap();
 				for cursor in &mut cursors {
-					cursor.next().now_or_never().flatten().expect("announce delivered");
+					cursor
+						.next()
+						.now_or_never()
+						.transpose()
+						.expect("discovery failed")
+						.flatten()
+						.expect("announce delivered");
 				}
 				drop(handle);
 				for cursor in &mut cursors {
-					cursor.next().now_or_never().flatten().expect("incumbent restored");
+					cursor
+						.next()
+						.now_or_never()
+						.transpose()
+						.expect("discovery failed")
+						.flatten()
+						.expect("incumbent restored");
 				}
 			});
 		});
@@ -389,14 +482,27 @@ fn bench_reprice_duplicate(c: &mut Criterion) {
 					})
 					.collect();
 				for cursor in &mut cursors {
-					while cursor.next().now_or_never().flatten().is_some() {}
+					while cursor
+						.next()
+						.now_or_never()
+						.transpose()
+						.expect("discovery failed")
+						.flatten()
+						.is_some()
+					{}
 				}
 				b.iter(|| {
 					for cost in [incumbent_cost - 1, incumbent_cost + 1] {
 						route.update(peer_route(challenger, cost)).unwrap();
 						for cursor in &mut cursors {
 							// The winner switches between epochless routes, which is another instance.
-							let event = cursor.next().now_or_never().flatten().expect("winner changed");
+							let event = cursor
+								.next()
+								.now_or_never()
+								.transpose()
+								.expect("discovery failed")
+								.flatten()
+								.expect("winner changed");
 							let moq_net::announce::Event::Restart(update) = event else {
 								panic!("expected a restart: got {event:?}");
 							};
@@ -506,7 +612,13 @@ fn bench_subscribe(c: &mut Criterion) {
 			b.iter(|| {
 				let mut cursor = fleet.consumer.announced();
 				let mut replayed = 0;
-				while let Some(announce::Event::Start(_)) = cursor.next().now_or_never().flatten() {
+				while let Some(announce::Event::Start(_)) = cursor
+					.next()
+					.now_or_never()
+					.transpose()
+					.expect("discovery failed")
+					.flatten()
+				{
 					replayed += 1;
 				}
 				assert_eq!(replayed, publishers);
@@ -612,7 +724,14 @@ impl Pool {
 	/// Discard what the cursors were delivered, so each iteration measures only what it adds.
 	fn drain(&mut self) {
 		for cursor in &mut self.cursors {
-			while cursor.next().now_or_never().flatten().is_some() {}
+			while cursor
+				.next()
+				.now_or_never()
+				.transpose()
+				.expect("discovery failed")
+				.flatten()
+				.is_some()
+			{}
 		}
 	}
 }

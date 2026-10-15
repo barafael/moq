@@ -158,13 +158,15 @@ impl Session {
 		let consumer = self.consumer.clone();
 		future_to_promise(async move {
 			let request = pin!(async {
-				consumer.routed(path.as_str()).await?;
-				consumer.request_broadcast(path.as_str(), None).await.ok()
+				if consumer.routed(path.as_str()).await?.is_none() {
+					return Ok::<_, moq_net::Error>(None);
+				}
+				Ok(consumer.request_broadcast(path.as_str(), None).await.ok())
 			});
 			// The origin outlives the session, so its wait alone never ends on a close.
 			let closed = pin!(session.closed());
 			match select(request, closed).await {
-				Either::Left((inner, _)) => Ok(inner.map_or(JsValue::UNDEFINED, |inner| {
+				Either::Left((inner, _)) => Ok(inner.map_err(js_err)?.map_or(JsValue::UNDEFINED, |inner| {
 					Broadcast {
 						inner,
 						freed: Freed::new(),

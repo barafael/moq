@@ -31,7 +31,14 @@ fn registry(broadcasts: usize, tiers: usize) -> Registry {
 			let session = registry.tier(stats::Tier::new(format!("tier{t}"))).session("root");
 			let mut cursor = producer.consume().with_stats(session).announced();
 			// Each announce the cursor replays records under its tier.
-			while cursor.next().now_or_never().flatten().is_some() {}
+			while cursor
+				.next()
+				.now_or_never()
+				.transpose()
+				.expect("discovery failed")
+				.flatten()
+				.is_some()
+			{}
 			cursor
 		})
 		.collect();

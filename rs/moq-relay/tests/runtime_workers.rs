@@ -151,7 +151,7 @@ async fn workers_serve_quic_and_share_one_origin() {
 
 /// The next route and whether it is active.
 async fn next_update(announced: &mut moq_net::announce::Consumer) -> Option<(moq_net::announce::Announce, bool)> {
-	match announced.next().await? {
+	match announced.next().await.expect("discovery failed")? {
 		moq_net::announce::Event::Start(route)
 		| moq_net::announce::Event::Update(route)
 		| moq_net::announce::Event::Restart(route) => Some((route, true)),

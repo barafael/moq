@@ -36,6 +36,8 @@
 //! move with roots, and survive intersections. Its overlap and coverage checks are
 //! exact even when several exclusions jointly cover a positive pattern; operations
 //! exceeding the complexity budget return [`ScopeError`] rather than dropping a deny.
+//! The budget bounds visited states; work per state still grows with pattern count
+//! and segment text length.
 //!
 //! # CAT / C4M
 //!

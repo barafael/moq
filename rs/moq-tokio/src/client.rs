@@ -1551,7 +1551,12 @@ mod tests {
 		websocket_handle.abort();
 		let _ = websocket_handle.await;
 
-		let update = match announcements.next().await.expect("origin closed") {
+		let update = match announcements
+			.next()
+			.await
+			.expect("discovery failed")
+			.expect("origin closed")
+		{
 			moq_net::announce::Event::Start(update) => update,
 			event => panic!("expected announcement, got {event:?}"),
 		};

@@ -344,7 +344,10 @@ async fn goaway_keeps_new_subscribes(version: Version) {
 
 		// Subscribe BEFORE the GOAWAY and receive a first group.
 		let sub = sub_origin.consume();
-		sub.routed("test").await.expect("route announced");
+		sub.routed("test")
+			.await
+			.expect("discovery failed")
+			.expect("route announced");
 		let bc = sub.request_broadcast("test", None).await.expect("broadcast resolves");
 		let mut existing = bc.track("video").unwrap().subscribe(None).await.expect("subscribe");
 
@@ -444,7 +447,11 @@ async fn goaway_drains_routes(version: Version) {
 		let MockPair { client, server, .. } = connect_mock(opts).await;
 
 		let sub = sub_origin.consume();
-		let route = sub.routed("test").await.expect("route announced");
+		let route = sub
+			.routed("test")
+			.await
+			.expect("discovery failed")
+			.expect("route announced");
 		assert_ne!(
 			route.cost,
 			moq_net::origin::Cost::DRAIN,
@@ -460,7 +467,7 @@ async fn goaway_drains_routes(version: Version) {
 		let mut announced = sub.announced();
 		loop {
 			let (moq_net::announce::Event::Start(update) | moq_net::announce::Event::Update(update)) =
-				announced.next().await.expect("update")
+				announced.next().await.expect("discovery failed").expect("update")
 			else {
 				continue;
 			};

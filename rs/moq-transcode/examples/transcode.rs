@@ -60,7 +60,7 @@ async fn main() -> anyhow::Result<()> {
 	let consumer = remote.consume();
 	tokio::select! {
 		routed = consumer.routed(&source_path) => {
-			routed.context("origin closed before the source broadcast was announced")?;
+			routed?.context("origin closed before the source broadcast was announced")?;
 		}
 		closed = session.closed() => {
 			closed.context("session failed before the source broadcast was announced")?;

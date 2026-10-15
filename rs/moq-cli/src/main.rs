@@ -840,7 +840,7 @@ async fn run_stdout(consumer: moq_net::origin::Consumer, name: String, args: Sub
 	// (e.g. "./source") through the same origin.
 	consumer
 		.routed(&name)
-		.await
+		.await?
 		.ok_or_else(|| anyhow::anyhow!("origin closed before broadcast `{name}` was announced"))?;
 
 	Subscribe::new(consumer, &name, catalog, args).await?.run().await

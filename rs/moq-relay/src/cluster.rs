@@ -2072,7 +2072,7 @@ mod tests {
 
 	/// The next route and whether it is active.
 	async fn next_update(announced: &mut moq_net::announce::Consumer) -> Option<(moq_net::announce::Announce, bool)> {
-		match announced.next().await? {
+		match announced.next().await.expect("discovery failed")? {
 			moq_net::announce::Event::Start(route)
 			| moq_net::announce::Event::Update(route)
 			| moq_net::announce::Event::Restart(route) => Some((route, true)),
@@ -2082,7 +2082,7 @@ mod tests {
 
 	/// The next announcement without blocking.
 	fn try_next_announced(announced: &mut moq_net::announce::Consumer) -> Option<moq_net::announce::Announce> {
-		match announced.try_next()? {
+		match announced.try_next().expect("discovery failed")? {
 			moq_net::announce::Event::Start(route) => Some(route),
 			other => panic!("expected an announcement: got {other:?}"),
 		}
@@ -2171,6 +2171,7 @@ mod tests {
 		let route = tokio::time::timeout(std::time::Duration::from_secs(5), consumer.routed(&path))
 			.await
 			.expect("stats broadcast announced within 5s")
+			.expect("discovery failed")
 			.expect("stats broadcast present");
 		assert!(route.epoch.is_some(), "stats announce under an epoch");
 		let broadcast = consumer
@@ -2186,7 +2187,7 @@ mod tests {
 		tokio::time::sleep(std::time::Duration::from_millis(2500)).await;
 		let still_live = tokio::time::timeout(std::time::Duration::from_secs(2), consumer.routed(&path)).await;
 		assert!(
-			matches!(still_live, Ok(Some(_))),
+			matches!(still_live, Ok(Ok(Some(_)))),
 			"stats broadcast unannounced after the producer handle was dropped: \
 			 the publish task stopped while the cluster kept serving"
 		);

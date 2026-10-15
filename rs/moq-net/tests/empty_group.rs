@@ -44,7 +44,7 @@ async fn an_empty_group_arrives_empty() {
 		broadcast.announce(Default::default()).unwrap();
 
 		let consumer = subscriber.consume();
-		consumer.routed("room").await.unwrap();
+		consumer.routed("room").await.unwrap().expect("route announced");
 		let remote = moq_net_sim::timeout(TIMEOUT, consumer.request_broadcast("room", None))
 			.await
 			.expect("resolve timeout")

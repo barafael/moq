@@ -38,7 +38,7 @@ async fn after_abort(version: &str, hops: u32) {
 	options.client_subscribe = Some(far.clone());
 	let _pair2 = connect_mock(options).await;
 	let consumer = if hops == 2 { far.consume() } else { relay.consume() };
-	consumer.routed("bench").await.unwrap();
+	consumer.routed("bench").await.unwrap().expect("route announced");
 	let remote = consumer.request_broadcast("bench", None).await.unwrap();
 	let mut sub = remote.track("video").unwrap().subscribe(None).await.unwrap();
 	let mut open = track.append_group().unwrap();

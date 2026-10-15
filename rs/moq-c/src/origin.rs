@@ -149,7 +149,7 @@ impl Origin {
 			let event = tokio::select! {
 				biased;
 				_ = &mut close => return Ok(()),
-				next = consumer.next() => match next {
+				next = consumer.next() => match next? {
 					Some(event) => event,
 					None => return Ok(()),
 				},

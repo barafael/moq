@@ -117,7 +117,7 @@ pub async fn connect_export(origin: moq_net::origin::Consumer, url: Url, name: S
 	// the egress re-resolves it (and any referenced sibling broadcast) through the origin.
 	origin
 		.routed(&name)
-		.await
+		.await?
 		.with_context(|| format!("origin closed before broadcast `{name}` was announced"))?;
 
 	tracing::info!(url = %RedactedUrl::new(&url), %name, "WHIP client pushing");

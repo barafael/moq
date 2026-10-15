@@ -202,7 +202,11 @@ async fn cluster_continues_a_group_split_by_goaway_inner() {
 	let _session_b = within("B accepts", accepted_b.recv()).await.expect("B accepts");
 	within("routed via B", async {
 		loop {
-			let event = announced.next().await.expect("announce update");
+			let event = announced
+				.next()
+				.await
+				.expect("discovery failed")
+				.expect("announce update");
 			// Without an epoch, B's route is another source: a restart.
 			if let moq_net::announce::Event::Start(update)
 			| moq_net::announce::Event::Update(update)
@@ -560,7 +564,7 @@ async fn cluster_diamond_goaway_seamless_failover_inner() {
 
 	let bc = within("broadcast resolves on the subscriber origin", async {
 		let consumer = sub_origin.consume();
-		consumer.routed("diamond").await?;
+		consumer.routed("diamond").await.expect("discovery failed")?;
 		consumer.request_broadcast("diamond", None).await.ok()
 	})
 	.await
@@ -788,7 +792,7 @@ async fn cluster_reconnects_on_empty_uri_goaway_inner() {
 	// Downstream consumer sees group 0 through the first session.
 	let bc = within("broadcast announced", async {
 		let consumer = cluster.origin.consume();
-		consumer.routed("cam").await?;
+		consumer.routed("cam").await.expect("discovery failed")?;
 		consumer.request_broadcast("cam", None).await.ok()
 	})
 	.await
@@ -942,7 +946,7 @@ async fn goaway_handover_is_enforced_while_the_replacement_dial_hangs_inner() {
 
 /// The next route and whether it is active.
 async fn next_update(announced: &mut moq_net::announce::Consumer) -> Option<(moq_net::announce::Announce, bool)> {
-	match announced.next().await? {
+	match announced.next().await.expect("discovery failed")? {
 		moq_net::announce::Event::Start(route)
 		| moq_net::announce::Event::Update(route)
 		| moq_net::announce::Event::Restart(route) => Some((route, true)),

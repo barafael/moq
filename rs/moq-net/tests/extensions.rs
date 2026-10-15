@@ -52,7 +52,7 @@ fn assert_open(pair: &MockPair, context: &str) {
 fn announced(origin: &origin::Producer, path: &str) -> bool {
 	let mut announced = origin.consume().announced();
 	let mut live = false;
-	while let Some(event) = announced.try_next() {
+	while let Some(event) = announced.try_next().expect("discovery failed") {
 		match event {
 			moq_net::announce::Event::Start(update)
 			| moq_net::announce::Event::Update(update)

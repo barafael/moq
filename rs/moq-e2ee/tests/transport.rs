@@ -57,7 +57,7 @@ async fn connect_protected(version: Version, track: &str) -> Fixture {
 	// The subscriber knows the opaque path and takes the epoch from the announced route.
 	// A wire without epochs leaves it to the application's own channel.
 	let consumer = consumer_origin.consume();
-	let route = consumer.routed(&path).await.unwrap();
+	let route = consumer.routed(&path).await.expect("discovery failed").unwrap();
 	if version.to_string().starts_with("moq-lite-07") {
 		assert_eq!(
 			route.epoch.as_ref(),

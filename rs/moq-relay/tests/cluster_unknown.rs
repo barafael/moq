@@ -133,6 +133,7 @@ async fn read_first_frame(port: u16) -> Result<Vec<u8>, String> {
 	tokio::time::timeout(TIMEOUT, consumer.routed(PATH))
 		.await
 		.map_err(|_| "routed timed out".to_string())?
+		.map_err(|err| err.to_string())?
 		.ok_or_else(|| "origin closed before the broadcast was announced".to_string())?;
 	let broadcast = consumer
 		.request_broadcast(PATH, None)
@@ -372,7 +373,7 @@ async fn unknown_publisher_does_not_flap_across_a_lite04_cluster_triangle() {
 
 /// The next route and whether it is active.
 async fn next_update(announced: &mut moq_net::announce::Consumer) -> Option<(moq_net::announce::Announce, bool)> {
-	match announced.next().await? {
+	match announced.next().await.expect("discovery failed")? {
 		moq_net::announce::Event::Start(route)
 		| moq_net::announce::Event::Update(route)
 		| moq_net::announce::Event::Restart(route) => Some((route, true)),

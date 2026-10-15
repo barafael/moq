@@ -105,7 +105,12 @@ async fn first_broadcast(url: url::Url) -> String {
 	.expect("subscriber connect failed");
 
 	let update = tokio::time::timeout(TIMEOUT, async {
-		match announcements.next().await.expect("origin closed") {
+		match announcements
+			.next()
+			.await
+			.expect("discovery failed")
+			.expect("origin closed")
+		{
 			moq_net::announce::Event::Start(update) => update,
 			other => panic!("expected announce, got {other:?}"),
 		}

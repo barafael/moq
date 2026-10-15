@@ -54,7 +54,7 @@ let session = client.with_origin(origin.clone()).connect(url);
 // Subscribe: wait for a route, resolve the broadcast at its path, read the catalog.
 let consumer = origin.consume();
 let mut announced = consumer.announced();
-while let Some(event) = announced.next().await {
+while let Some(event) = announced.next().await? {
     // Skip updates and retractions.
     let moq_net::announce::Event::Start(update) = event else { continue };
     let broadcast = consumer.request_broadcast(&update.prefix, update.route.epoch).await?;
@@ -74,6 +74,22 @@ let mut broadcast = origin.publish("my-stream.hang", Default::default())?;
 // subtree on demand instead, `origin.dynamic("room", Default::default())?` yields
 // each requested path for the application to accept or reject.
 ```
+
+Origin views accept either positive `Patterns` or a shared `Scope` containing
+`include` and `exclude` unions. An exclusion wins over every include and moves
+with a view's root; it filters both announcements and exact requests. For example,
+`Scope::new(Pattern::all().into(), ".reserved/**".parse::<Pattern>()?.into())`
+keeps ordinary and hidden names while withholding that reserved subtree. The
+view's hidden-path switch remains a separate discovery setting.
+
+Discovery reads are fallible: `AnnounceConsumer::next`, `poll_next`, and `try_next`
+return a `Result`, as do `Follow` reads, `Consumer::routed`, and `Room` reads.
+A scope query exceeding the exact algebra's budget reports `BoundsExceeded`,
+then the announcement stream ends; its `Stream` adapter yields one `Err` item.
+This distinguishes a refused query from an empty or closed origin. A scoped
+origin whose exclusions cannot fit an in-band credential grant still enforces
+them locally and reports that grant as unknown; signed tokens and wire formats
+remain unchanged.
 
 The session and the origin work run concurrently (`tokio::select!` or
 `spawn`), since the announcement loop is live. Before exiting,

@@ -964,7 +964,10 @@ async fn serve_announced(
 	let mut announced = origin.consume().announced();
 	let mut broadcasts = Vec::new();
 
-	while let Some(event) = announced.try_next() {
+	while let Some(event) = announced.try_next().map_err(|err| {
+		tracing::warn!(%err, "route discovery failed");
+		StatusCode::INTERNAL_SERVER_ERROR
+	})? {
 		if let moq_net::announce::Event::Start(update)
 		| moq_net::announce::Event::Update(update)
 		| moq_net::announce::Event::Restart(update) = event

@@ -43,6 +43,7 @@ async fn next_event(announced: &mut announce::Consumer) -> announce::Event {
 	moq_net_sim::timeout(Duration::from_secs(10), announced.next())
 		.await
 		.expect("announce hung")
+		.expect("discovery failed")
 		.expect("announce ended")
 }
 
@@ -131,7 +132,7 @@ async fn replace(version: &str, epoch: Option<Epoch>) {
 		panic!("{version}: a retired handle served a request");
 	};
 	assert!(matches!(err, Error::Unroutable), "{version}: {err}");
-	match announced.try_next() {
+	match announced.try_next().expect("discovery failed") {
 		Some(announce::Event::Restart(announce)) => assert_eq!(announce.prefix.as_str(), "cam"),
 		other => panic!("{version}: retired before the restart was deliverable, got {other:?}"),
 	}

@@ -110,7 +110,7 @@ async fn main() -> anyhow::Result<()> {
 
 			loop {
 				tokio::select! {
-					Some(event) = announced.next() => match event {
+					event = announced.next() => match event?.context("announcements ended")? {
 						// A restart is a new broadcast: subscribe to it afresh.
 						announce::Event::Start(update) | announce::Event::Update(update) | announce::Event::Restart(update) => {
 							tracing::info!(broadcast = %update.prefix, "broadcast is online, subscribing to track");

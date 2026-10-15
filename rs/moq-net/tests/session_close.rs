@@ -104,7 +104,7 @@ async fn track_info_interest_precedes_a_subscription() {
 		options.client_subscribe = Some(subscriber.clone());
 		let _pair = connect_mock(options).await;
 		let consumer = subscriber.consume();
-		consumer.routed("bcast").await.unwrap();
+		consumer.routed("bcast").await.unwrap().expect("route announced");
 		let remote = consumer.request_broadcast("bcast", None).await.unwrap();
 		let copy = remote.track("video").unwrap();
 		copy.query().await.expect("TRACK_INFO");
@@ -223,7 +223,12 @@ async fn close_withdraws_announcements_before_closing_the_transport() {
 		options.client_publish = Some(publisher.consume());
 		options.server_subscribe = Some(subscriber.clone());
 		let pair = connect_mock(options).await;
-		subscriber.consume().routed("bcast").await.unwrap();
+		subscriber
+			.consume()
+			.routed("bcast")
+			.await
+			.unwrap()
+			.expect("route announced");
 		let before = pair.client_transport.finished_streams();
 		pair.client.close().await.unwrap();
 		assert!(
@@ -244,7 +249,12 @@ async fn close_times_out_waiting_for_announcement_acknowledgements() {
 		options.client_publish = Some(publisher.consume());
 		options.server_subscribe = Some(subscriber.clone());
 		let pair = connect_mock(options).await;
-		subscriber.consume().routed("bcast").await.unwrap();
+		subscriber
+			.consume()
+			.routed("bcast")
+			.await
+			.unwrap()
+			.expect("route announced");
 		pair.client_transport.hold_fin_acknowledgements();
 		let started = moq_net_sim::now();
 		assert!(matches!(pair.client.close().await, Err(Error::Timeout)), "{version}");

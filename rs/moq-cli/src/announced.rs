@@ -87,7 +87,7 @@ async fn follow(
 				closed?;
 				anyhow::bail!("connection closed");
 			}
-			event = announced.next() => event.context("announcements ended")?,
+			event = announced.next() => event?.context("announcements ended")?,
 		};
 
 		let (announce, active) = match event {

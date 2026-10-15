@@ -57,7 +57,7 @@ fn drain(watched: &mut mpsc::UnboundedReceiver<(String, Kind)>) -> HashMap<Strin
 fn watch(mut announced: announce::Consumer) -> mpsc::UnboundedReceiver<(String, Kind)> {
 	let (tx, rx) = mpsc::unbounded();
 	moq_net_sim::spawn(async move {
-		while let Some(event) = announced.next().await {
+		while let Some(event) = announced.next().await.expect("discovery failed") {
 			let (kind, announce) = match event {
 				announce::Event::Start(announce) => (Kind::Start, announce),
 				announce::Event::Update(announce) => (Kind::Update, announce),

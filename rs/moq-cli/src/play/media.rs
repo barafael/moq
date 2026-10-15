@@ -75,7 +75,7 @@ impl<O: Output> Media<O> {
 			tokio::select! {
 				event = follow.next() => {
 					// The origin is gone, so nothing can announce the path again.
-					let Some(event) = event else { return Ok(()) };
+					let Some(event) = event? else { return Ok(()) };
 					let announce = match event {
 						AnnounceEvent::Start(announce) | AnnounceEvent::Restart(announce) => announce,
 						AnnounceEvent::Update(_) => continue,

@@ -202,7 +202,7 @@ async fn read_frame(origin: &origin::Producer, path: &str) {
 fn routes(origin: &origin::Producer) -> BTreeMap<String, Vec<u64>> {
 	let mut announced = origin.consume().announced();
 	let mut routes = BTreeMap::new();
-	while let Some(event) = announced.try_next() {
+	while let Some(event) = announced.try_next().expect("discovery failed") {
 		let announce::Event::Start(announce) = event else {
 			panic!("an initial set is only starts: got {event:?}");
 		};

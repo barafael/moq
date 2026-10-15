@@ -174,7 +174,7 @@ impl OriginDynamic {
 
 impl Announced {
 	async fn next(&mut self) -> Result<Option<MoqAnnounceEvent>, MoqError> {
-		Ok(self.inner.next().await.map(Into::into))
+		Ok(self.inner.next().await?.map(Into::into))
 	}
 }
 

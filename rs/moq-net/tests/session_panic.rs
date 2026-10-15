@@ -78,7 +78,12 @@ async fn publish(version: Version, relay: &origin::Producer, hop: u64, name: &st
 async fn until(announced: &mut announce::Consumer, path: &str, active: bool) {
 	let wait = async {
 		loop {
-			let (announce, now_active) = match announced.next().await.expect("origin closed") {
+			let (announce, now_active) = match announced
+				.next()
+				.await
+				.expect("discovery failed")
+				.expect("origin closed")
+			{
 				announce::Event::Start(announce)
 				| announce::Event::Update(announce)
 				| announce::Event::Restart(announce) => (announce, true),
@@ -125,7 +130,14 @@ async fn a_panicking_session_leaves_the_others_serving() {
 		let later = healthy.origin.create_broadcast("later").unwrap();
 		later.announce(Default::default()).unwrap();
 		until(&mut announced, "later", true).await;
-		assert!(relay.consume().routed("healthy").await.is_some());
+		assert!(
+			relay
+				.consume()
+				.routed("healthy")
+				.await
+				.expect("discovery failed")
+				.is_some()
+		);
 		drop((healthy, broken.client, later));
 	}
 }

@@ -1,7 +1,7 @@
 use std::task::{Poll, ready};
 
 use super::origin_impl::{Announce, AnnounceConsumer, AnnounceEvent};
-use crate::PathOwned;
+use crate::{Error, PathOwned};
 
 /// The announcements covering one path, as one broadcast coming online, being replaced, and
 /// going offline. Created by [`Consumer::follow`](crate::origin::Consumer::follow).
@@ -52,7 +52,7 @@ impl Follow {
 
 	/// The next change to the route serving the path, or `None` once the origin closes.
 	#[cfg(feature = "async")]
-	pub async fn next(&mut self) -> Option<AnnounceEvent> {
+	pub async fn next(&mut self) -> Result<Option<AnnounceEvent>, Error> {
 		kio::wait(|waiter| self.poll_next(waiter)).await
 	}
 
@@ -66,45 +66,50 @@ impl Follow {
 	/// epoch. A route whose start came after the serving route's last event, with the cursor
 	/// never running dry in between, may have arrived after its end, so taking over from it is
 	/// reported as that gap.
-	pub fn poll_next(&mut self, waiter: &kio::Waiter) -> Poll<Option<AnnounceEvent>> {
+	pub fn poll_next(&mut self, waiter: &kio::Waiter) -> Poll<Result<Option<AnnounceEvent>, Error>> {
 		if self.idle {
 			let ended = loop {
 				match self.poll_announced(waiter) {
-					Poll::Ready(Some(event)) => {
+					Poll::Ready(Ok(Some(event))) => {
 						self.fold(event);
 					}
-					Poll::Ready(None) => break true,
+					Poll::Ready(Ok(None)) => break true,
+					Poll::Ready(Err(error)) => return Poll::Ready(Err(error)),
 					Poll::Pending => break false,
 				}
 			};
 			return match (self.serving().map(|standing| standing.announce.clone()), ended) {
 				(Some(serving), _) => {
 					self.idle = false;
-					Poll::Ready(Some(AnnounceEvent::Start(serving)))
+					Poll::Ready(Ok(Some(AnnounceEvent::Start(serving))))
 				}
-				(None, true) => Poll::Ready(None),
+				(None, true) => Poll::Ready(Ok(None)),
 				(None, false) => Poll::Pending,
 			};
 		}
 
 		loop {
-			let Some(event) = ready!(self.poll_announced(waiter)) else {
-				return Poll::Ready(None);
+			let Some(event) = ready!(self.poll_announced(waiter))? else {
+				return Poll::Ready(Ok(None));
 			};
 			if let Some(event) = self.fold(event) {
 				self.idle = matches!(event, AnnounceEvent::End(_));
-				return Poll::Ready(Some(event));
+				return Poll::Ready(Ok(Some(event)));
 			}
 		}
 	}
 
 	/// The cursor's next event, counting what it delivers and when it runs dry.
-	fn poll_announced(&mut self, waiter: &kio::Waiter) -> Poll<Option<AnnounceEvent>> {
+	fn poll_announced(&mut self, waiter: &kio::Waiter) -> Poll<Result<Option<AnnounceEvent>, Error>> {
 		let poll = self.announced.poll_next(waiter);
 		match poll {
-			Poll::Ready(Some(_)) => self.taken += 1,
+			Poll::Ready(Ok(Some(_))) => self.taken += 1,
 			Poll::Pending => self.dry = self.taken,
-			Poll::Ready(None) => {}
+			Poll::Ready(Ok(None)) => {}
+			Poll::Ready(Err(_)) => {
+				self.covering.clear();
+				self.idle = true;
+			}
 		}
 		poll
 	}
@@ -193,6 +198,7 @@ mod tests {
 		let event = moq_net_sim::timeout(Duration::from_secs(1), follow.next())
 			.await
 			.expect("no event")
+			.expect("discovery failed")
 			.expect("the origin closed");
 		match event {
 			AnnounceEvent::Start(announce) => ("start", announce.prefix.to_string()),
@@ -335,6 +341,7 @@ mod tests {
 		let event = moq_net_sim::timeout(Duration::from_secs(1), follow.next())
 			.await
 			.unwrap()
+			.unwrap()
 			.unwrap();
 		assert!(
 			matches!(&event, AnnounceEvent::Start(announce) if announce.route.cost == Cost::new(5)),
@@ -346,6 +353,7 @@ mod tests {
 		drop(first);
 		let event = moq_net_sim::timeout(Duration::from_secs(1), follow.next())
 			.await
+			.unwrap()
 			.unwrap()
 			.unwrap();
 		assert!(

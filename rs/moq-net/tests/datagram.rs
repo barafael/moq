@@ -54,7 +54,7 @@ async fn connect_datagram_track() -> Fixture {
 	let pair = connect_mock(options).await;
 
 	let consumer = consumer_origin.consume();
-	consumer.routed("bench").await.unwrap();
+	consumer.routed("bench").await.unwrap().expect("route announced");
 	let remote = consumer.request_broadcast("bench", None).await.unwrap();
 	let subscriber = remote.track("datagrams").unwrap().subscribe(None).await.unwrap();
 	// The subscriber is handed over once TRACK_INFO answers, before its SUBSCRIBE reaches
@@ -149,7 +149,7 @@ async fn ietf_delivers_datagrams_on(version: &str) {
 	let _pair = connect_mock(options).await;
 
 	let consumer = consumer_origin.consume();
-	consumer.routed("bench").await.unwrap();
+	consumer.routed("bench").await.unwrap().expect("route announced");
 	let remote = consumer.request_broadcast("bench", None).await.unwrap();
 	let mut subscriber = remote.track("datagrams").unwrap().subscribe(None).await.unwrap();
 
@@ -260,7 +260,7 @@ async fn a_fetched_datagram_is_refused_per_version() {
 		let sequence = producer.append_datagram(Timestamp::ZERO, &b"x"[..]).unwrap();
 
 		let consumer = nodes.last().unwrap().consume();
-		consumer.routed("room").await.unwrap();
+		consumer.routed("room").await.unwrap().expect("route announced");
 		let remote = consumer.request_broadcast("room", None).await.unwrap();
 		let err = match remote.track("datagrams").unwrap().fetch_group(sequence, None).await {
 			Ok(_) => panic!("{versions:?}: a datagram was fetched"),

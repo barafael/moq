@@ -2373,7 +2373,10 @@ mod tests {
 			run_client(TcpStream::connect(addr).await.unwrap(), ClientMode::Publish).await;
 		});
 		tokio::time::timeout(Duration::from_secs(5), async {
-			while !matches!(announced.next().await, Some(moq_net::announce::Event::Restart(_))) {}
+			while !matches!(
+				announced.next().await.expect("discovery failed"),
+				Some(moq_net::announce::Event::Restart(_))
+			) {}
 		})
 		.await
 		.expect("the reconnect restarts the broadcast");

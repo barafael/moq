@@ -227,14 +227,25 @@ async fn wait_announced(origin: &origin::Consumer, path: &str, active: bool) {
 	};
 	// Take in the replay first, so a retraction is judged against what is announced now
 	// rather than against an empty start.
-	while let Some(update) = futures::FutureExt::now_or_never(announced.next()).flatten() {
+	while let Some(update) = futures::FutureExt::now_or_never(announced.next())
+		.transpose()
+		.expect("discovery failed")
+		.flatten()
+	{
 		apply(&mut live, update);
 	}
 	loop {
 		if live.contains(path) == active {
 			return;
 		}
-		apply(&mut live, announced.next().await.expect("origin closed"));
+		apply(
+			&mut live,
+			announced
+				.next()
+				.await
+				.expect("discovery failed")
+				.expect("origin closed"),
+		);
 	}
 }
 
@@ -583,7 +594,14 @@ async fn a_revoked_grant_withdraws_and_can_be_restored(version: &'static str) {
 		wait_for(pair.client.auth().grant(), |g| g == &Some(Grant::default())).await;
 		wait_announced(&served, "a/x", false).await;
 		// Still published locally, and the session survives the empty union.
-		assert!(publisher.consume().routed("a/x").await.is_some());
+		assert!(
+			publisher
+				.consume()
+				.routed("a/x")
+				.await
+				.expect("discovery failed")
+				.is_some()
+		);
 		assert_eq!(pair.client_transport.close_reason(), None);
 
 		let _again = pair.client.auth().add("again").await.expect("re-authorized");

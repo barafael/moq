@@ -366,7 +366,7 @@ impl Subscribe {
 	async fn run_ts(self) -> anyhow::Result<()> {
 		let mut stdout = tokio::io::stdout();
 
-		self.origin.routed(&self.path).await.with_context(|| {
+		self.origin.routed(&self.path).await?.with_context(|| {
 			format!(
 				"broadcast `{}` is outside the session's scope, or the origin closed before it was announced",
 				self.path

@@ -55,7 +55,7 @@ async fn rejoin_recovers_the_group_reset_on_leave() {
 				let _pair = connect_mock(options).await;
 
 				let consumer = relay.consume();
-				consumer.routed("bench").await.unwrap();
+				consumer.routed("bench").await.expect("discovery failed").unwrap();
 				let remote = consumer.request_broadcast("bench", None).await.unwrap();
 
 				let ts = |ms| Timestamp::from_millis(ms).unwrap();
@@ -148,7 +148,7 @@ async fn rejoin_skips_a_cache_kept_by_another_handle() {
 			let _pair = connect_mock(options).await;
 
 			let consumer = relay.consume();
-			consumer.routed("bench").await.unwrap();
+			consumer.routed("bench").await.expect("discovery failed").unwrap();
 			let remote = consumer.request_broadcast("bench", None).await.unwrap();
 			let ts = |ms| Timestamp::from_millis(ms).unwrap();
 
@@ -220,7 +220,7 @@ async fn rejoin_mid_group_keeps_the_head_for_later_readers() {
 			let _downstream = connect_mock(options).await;
 
 			let consumer = client.consume();
-			consumer.routed("bench").await.unwrap();
+			consumer.routed("bench").await.expect("discovery failed").unwrap();
 			let remote = consumer.request_broadcast("bench", None).await.unwrap();
 			let mut sub = remote.track("video").unwrap().subscribe(None).await.unwrap();
 			let mut group = sub.recv_group().await.unwrap().unwrap();
@@ -292,7 +292,7 @@ async fn rejoin_goes_live_without_the_join_head() {
 			let _downstream = connect_mock(options).await;
 
 			let consumer = client.consume();
-			consumer.routed("bench").await.unwrap();
+			consumer.routed("bench").await.expect("discovery failed").unwrap();
 			let remote = consumer.request_broadcast("bench", None).await.unwrap();
 			let mut sub = remote.track("video").unwrap().subscribe(None).await.unwrap();
 			let mut group = sub.recv_group().await.unwrap().unwrap();
@@ -356,7 +356,7 @@ async fn rejoin_during_the_cancel_skips_the_cache() {
 			let _pair = connect_mock(options).await;
 
 			let consumer = relay.consume();
-			consumer.routed("bench").await.unwrap();
+			consumer.routed("bench").await.expect("discovery failed").unwrap();
 			let remote = consumer.request_broadcast("bench", None).await.unwrap();
 			let ts = |ms| Timestamp::from_millis(ms).unwrap();
 
@@ -416,7 +416,7 @@ async fn rejoin_waits_for_the_answers_first_frame() {
 			let pair = connect_mock(options).await;
 
 			let consumer = relay.consume();
-			consumer.routed("bench").await.unwrap();
+			consumer.routed("bench").await.expect("discovery failed").unwrap();
 			let remote = consumer.request_broadcast("bench", None).await.unwrap();
 			let ts = |ms| Timestamp::from_millis(ms).unwrap();
 
@@ -501,7 +501,7 @@ async fn leaving_after_the_cache_window_keeps_the_latest_group() {
 					options.client_subscribe = Some(client.clone());
 					let pair = connect_mock(options).await;
 					let consumer = client.consume();
-					consumer.routed("bench").await.unwrap();
+					consumer.routed("bench").await.expect("discovery failed").unwrap();
 					let remote = consumer.request_broadcast("bench", None).await.unwrap();
 					(remote, pair)
 				}
@@ -564,7 +564,7 @@ async fn rejoin_keeps_source_timestamps() {
 			let _pair = connect_mock(options).await;
 
 			let consumer = client.consume();
-			consumer.routed("bench").await.unwrap();
+			consumer.routed("bench").await.expect("discovery failed").unwrap();
 			let remote = consumer.request_broadcast("bench", None).await.unwrap();
 			// Far from any arrival time, so a frame stamped on arrival cannot pass.
 			let ts = |ms| Timestamp::from_millis(ms).unwrap();
@@ -667,7 +667,7 @@ async fn quiet_catalog_survives_cache_expiry(version: Version, takeover: bool) {
 				options.client_subscribe = Some(client.clone());
 				let pair = connect_mock(options).await;
 				let consumer = client.consume();
-				consumer.routed("bench").await.unwrap();
+				consumer.routed("bench").await.expect("discovery failed").unwrap();
 				let remote = consumer.request_broadcast("bench", None).await.unwrap();
 				let sub = remote.track("catalog").unwrap().subscribe(None).await.unwrap();
 				(sub, remote, pair)
@@ -682,11 +682,14 @@ async fn quiet_catalog_survives_cache_expiry(version: Version, takeover: bool) {
 			// The new connection is cheaper, so the relay reports its route taking over.
 			let mut follow = relay.consume().follow("bench").unwrap();
 			assert!(
-				matches!(follow.next().await, Some(announce::Event::Start(_))),
+				matches!(
+					follow.next().await.expect("discovery failed"),
+					Some(announce::Event::Start(_))
+				),
 				"{version}"
 			);
 			let replacement = upstream(1).await;
-			let event = follow.next().await;
+			let event = follow.next().await.expect("discovery failed");
 			assert!(
 				matches!(event, Some(announce::Event::Update(_) | announce::Event::Restart(_))),
 				"{version}: {event:?}"

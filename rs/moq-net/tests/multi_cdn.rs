@@ -272,7 +272,7 @@ async fn preferred_cdn_fails_over_and_back() {
 	moq_net_sim::timeout(TEST_TIMEOUT, async {
 		let mut topology = Topology::new("moq-lite-07-wip".parse().unwrap()).await;
 		let mut announced = topology.subscriber.consume().announced();
-		let start = announced.next().await.expect("announced");
+		let start = announced.next().await.expect("discovery failed").expect("announced");
 		assert!(
 			matches!(start, announce::Event::Start(_)) && via_a(&start),
 			"the preferred CDN wins over the cheaper one: {start:?}"
@@ -282,7 +282,7 @@ async fn preferred_cdn_fails_over_and_back() {
 		let mut seen = topology.group_through_a(&mut rx).await;
 
 		topology.lose_a().await;
-		let update = announced.next().await.expect("announced");
+		let update = announced.next().await.expect("discovery failed").expect("announced");
 		assert!(
 			matches!(update, announce::Event::Update(_)) && !via_a(&update),
 			"same epoch over B: {update:?}"
@@ -290,7 +290,7 @@ async fn preferred_cdn_fails_over_and_back() {
 		seen.extend(topology.group_anywhere(&mut rx).await);
 
 		topology.restore_a().await;
-		let update = announced.next().await.expect("announced");
+		let update = announced.next().await.expect("discovery failed").expect("announced");
 		assert!(
 			matches!(update, announce::Event::Update(_)) && via_a(&update),
 			"back on A: {update:?}"
@@ -314,7 +314,7 @@ async fn transport_secondary_restarts() {
 	moq_net_sim::timeout(TEST_TIMEOUT, async {
 		let mut topology = Topology::new("moq-transport-22".parse().unwrap()).await;
 		let mut announced = topology.subscriber.consume().announced();
-		let start = announced.next().await.expect("announced");
+		let start = announced.next().await.expect("discovery failed").expect("announced");
 		assert!(via_a(&start), "{start:?}");
 
 		let mut rx = topology.subscribe().await;
@@ -322,7 +322,7 @@ async fn transport_secondary_restarts() {
 		assert_continuous(&seen, 1);
 
 		topology.lose_a().await;
-		let restart = announced.next().await.expect("announced");
+		let restart = announced.next().await.expect("discovery failed").expect("announced");
 		assert!(
 			matches!(restart, announce::Event::Restart(_)) && !via_a(&restart),
 			"no epoch over B: {restart:?}"
@@ -344,7 +344,7 @@ async fn transport_secondary_restarts() {
 		while next(&mut rx).await.0 != 2 {}
 
 		topology.restore_a().await;
-		let restart = announced.next().await.expect("announced");
+		let restart = announced.next().await.expect("discovery failed").expect("announced");
 		assert!(
 			matches!(restart, announce::Event::Restart(_)) && via_a(&restart),
 			"back on A: {restart:?}"

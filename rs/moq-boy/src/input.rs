@@ -68,7 +68,13 @@ pub async fn handle_viewers(
 	// The command reader per viewer, so a restarted viewer replaces the old one's.
 	let mut readers: std::collections::HashMap<String, tokio::task::AbortHandle> = Default::default();
 	loop {
-		let (update, active, restart) = match announced.next().await {
+		let next = announced.next().await;
+		if next.is_err() {
+			for reader in readers.values() {
+				reader.abort();
+			}
+		}
+		let (update, active, restart) = match next? {
 			Some(moq_net::announce::Event::Start(update) | moq_net::announce::Event::Update(update)) => {
 				(update, true, false)
 			}

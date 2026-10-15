@@ -33,7 +33,7 @@ async fn acquisition(version: &str) {
 	let _old = link(version, &publisher, &subscriber, 100).await;
 	let remote = subscriber.consume().routed_broadcast("live").await.unwrap();
 	let mut announced = subscriber.consume().follow("live").unwrap();
-	let old_cost = match announced.next().await {
+	let old_cost = match announced.next().await.expect("discovery failed") {
 		Some(moq_net::announce::Event::Start(announce)) => announce.route.cost,
 		other => panic!("expected the first route, got {other:?}"),
 	};
@@ -47,7 +47,7 @@ async fn acquisition(version: &str) {
 	let _new = link(version, &publisher, &subscriber, 1).await;
 	// An epochless replacement restarts the advertisement; a matching epoch only updates it.
 	let lite07 = version == "moq-lite-07-wip".parse().unwrap();
-	let new_cost = match announced.next().await {
+	let new_cost = match announced.next().await.expect("discovery failed") {
 		Some(moq_net::announce::Event::Update(announce)) if lite07 => announce.route.cost,
 		Some(moq_net::announce::Event::Restart(announce)) if !lite07 => announce.route.cost,
 		other => panic!("{version}: unexpected route change {other:?}"),

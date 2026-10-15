@@ -30,7 +30,7 @@ fn produce_origin(hop: u64) -> origin::Producer {
 fn drain(announced: &mut moq_net::announce::Consumer) -> Vec<String> {
 	use moq_net::announce::Event;
 	let mut seen = Vec::new();
-	while let Some(event) = announced.try_next() {
+	while let Some(event) = announced.try_next().expect("discovery failed") {
 		let (kind, announce) = match event {
 			Event::Start(announce) => ("Start", announce),
 			Event::Update(announce) => ("Update", announce),

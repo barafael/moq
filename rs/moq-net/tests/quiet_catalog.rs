@@ -59,7 +59,7 @@ fn publish(origin: &origin::Producer) -> (broadcast::Producer, track::Producer) 
 
 async fn request(origin: &origin::Producer) -> broadcast::Consumer {
 	let consumer = origin.consume();
-	consumer.routed("live").await.unwrap();
+	consumer.routed("live").await.unwrap().expect("route announced");
 	consumer.request_broadcast("live", None).await.unwrap()
 }
 

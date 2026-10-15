@@ -223,7 +223,7 @@ async fn a_late_subscriber_receives_the_relays_cached_history() {
 	options.client_subscribe = Some(first.clone());
 	let first_pair = connect_mock(options).await;
 	let consumer = first.consume();
-	consumer.routed("bcast").await.unwrap();
+	consumer.routed("bcast").await.unwrap().expect("route announced");
 	let remote = consumer.request_broadcast("bcast", None).await.unwrap();
 	let subscription = Subscription::default()
 		.with_max_delay(FOREVER)
@@ -263,7 +263,7 @@ async fn a_late_subscriber_receives_the_relays_cached_history() {
 	options.client_subscribe = Some(late.clone());
 	let late_pair = connect_mock(options).await;
 	let consumer = late.consume();
-	consumer.routed("bcast").await.unwrap();
+	consumer.routed("bcast").await.unwrap().expect("route announced");
 	let remote = consumer.request_broadcast("bcast", None).await.unwrap();
 	let mut late_sub = remote.track("history").unwrap().subscribe(subscription).await.unwrap();
 	moq_net_sim::timeout(TIMEOUT, read_history(&mut late_sub))

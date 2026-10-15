@@ -28,7 +28,7 @@ async fn release(version: Version) {
 	let track = broadcast.create_track("t", None).unwrap();
 
 	let consumer = relay.consume();
-	consumer.routed("a/b").await.expect("routed");
+	consumer.routed("a/b").await.expect("routed").expect("route announced");
 	let remote = consumer.request_broadcast("a/b", None).await.expect("resolves");
 	let sub = remote.track("t").unwrap().subscribe(None).await.expect("subscribes");
 	track.demand().used().await.unwrap();

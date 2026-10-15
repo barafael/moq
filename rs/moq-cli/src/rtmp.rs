@@ -168,7 +168,7 @@ pub async fn connect_export(
 	// the FLV export re-resolves it (and any referenced sibling broadcast) through the origin.
 	origin
 		.routed(&name)
-		.await
+		.await?
 		.with_context(|| format!("origin closed before broadcast `{name}` was announced"))?;
 
 	// The stream key is the ingest credential, so log the dial target and app instead.

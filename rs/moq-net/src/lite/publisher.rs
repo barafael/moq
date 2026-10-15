@@ -602,7 +602,7 @@ impl Enforce {
 				self.announced.insert(origin.announced())
 			}
 		};
-		let Some(path) = ready!(self.check.poll(&shared.auth, announced, waiter)) else {
+		let Some(path) = ready!(self.check.poll(&shared.auth, announced, waiter))? else {
 			return Poll::Ready(Ok(()));
 		};
 		tracing::error!(
@@ -1041,7 +1041,7 @@ impl AnnounceRun {
 		// still waiting out its hold) arrives through the loop as usual.
 		let mut snapshot = origin.announced();
 		let mut current: HashMap<crate::PathOwned, crate::origin::Route> = HashMap::new();
-		while let Some(event) = snapshot.try_next() {
+		while let Some(event) = snapshot.try_next()? {
 			match event {
 				announce::Event::Start(update) | announce::Event::Update(update) | announce::Event::Restart(update) => {
 					current.insert(update.prefix, update.route);
@@ -1237,7 +1237,7 @@ impl AnnounceRun {
 
 				// Send ANNOUNCE_INIT as the first message with all currently active routes.
 				// We use `try_next()` to synchronously get the initial updates.
-				while let Some(event) = announced.try_next() {
+				while let Some(event) = announced.try_next()? {
 					let (update, active) = match event {
 						announce::Event::Start(update)
 						| announce::Event::Update(update)
@@ -1277,7 +1277,7 @@ impl AnnounceRun {
 				// them afterward. The receiver stamps our origin onto each hop chain, so we
 				// forward the stored chain as-is (no self push here).
 				let mut initial: Vec<(crate::PathOwned, Hops, crate::origin::Cost, Option<crate::Epoch>)> = Vec::new();
-				while let Some(event) = announced.try_next() {
+				while let Some(event) = announced.try_next()? {
 					let (update, active) = match event {
 						announce::Event::Start(update)
 						| announce::Event::Update(update)
@@ -1398,7 +1398,7 @@ impl AnnounceRun {
 				return Poll::Pending;
 			};
 
-			let (update, active, restart) = match next {
+			let (update, active, restart) = match next? {
 				Some(announce::Event::Start(update) | announce::Event::Update(update)) => (update, true, false),
 				Some(announce::Event::Restart(update)) => (update, true, true),
 				Some(announce::Event::End(update)) => (update, false, false),

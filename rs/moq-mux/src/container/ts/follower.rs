@@ -129,7 +129,7 @@ impl<E: catalog::Catalog + 'static> Follower<E> {
 		// Take the start naming the route the export resolved now, before anything else can
 		// fold into it. The cursor replays the routes on hand at once, so none means the route
 		// already went, and the next start is a return.
-		follower.poll_announced(&kio::Waiter::noop());
+		follower.poll_announced(&kio::Waiter::noop())?;
 		if !follower.started {
 			follower.started = true;
 			follower.serving = Serving::Gone;
@@ -184,7 +184,7 @@ impl<E: catalog::Catalog + 'static> Follower<E> {
 			match std::mem::replace(&mut self.state, State::Done) {
 				State::Done => return Poll::Ready(Ok(None)),
 				State::Running { mut awaiting } => {
-					self.poll_announced(waiter);
+					self.poll_announced(waiter)?;
 					// Subscriptions are sticky, so a replacement leaves the export on the old
 					// instance until it ends, unless asked to switch at once.
 					if self.stitch && matches!(self.serving, Serving::Other(_)) {
@@ -244,7 +244,7 @@ impl<E: catalog::Catalog + 'static> Follower<E> {
 					mut grace,
 					deadline,
 				} => {
-					self.poll_announced(waiter);
+					self.poll_announced(waiter)?;
 					// A broadcast that went, even one already back, was no failure of the export's own.
 					if grace.is_some() && (self.serving != Serving::Ours || self.ended) {
 						grace = None;
@@ -349,14 +349,16 @@ impl<E: catalog::Catalog + 'static> Follower<E> {
 	}
 
 	/// Apply every announcement on hand.
-	fn poll_announced(&mut self, waiter: &kio::Waiter) {
+	fn poll_announced(&mut self, waiter: &kio::Waiter) -> crate::Result<()> {
 		while !self.closed {
 			match self.announced.poll_next(waiter) {
-				Poll::Ready(Some(event)) => self.apply(event),
-				Poll::Ready(None) => self.closed = true,
-				Poll::Pending => return,
+				Poll::Ready(Ok(Some(event))) => self.apply(event),
+				Poll::Ready(Ok(None)) => self.closed = true,
+				Poll::Ready(Err(error)) => return Err(error.into()),
+				Poll::Pending => return Ok(()),
 			}
 		}
+		Ok(())
 	}
 
 	fn apply(&mut self, event: moq_net::announce::Event) {

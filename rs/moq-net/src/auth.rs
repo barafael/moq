@@ -1701,7 +1701,7 @@ impl Enforce {
 		handle: &Handle,
 		announced: &mut crate::announce::Consumer,
 		waiter: &kio::Waiter,
-	) -> Poll<Option<crate::PathOwned>> {
+	) -> Poll<Result<Option<crate::PathOwned>>> {
 		if !self.setup {
 			ready_or!(handle.poll_setup_answered(waiter));
 			self.setup = true;
@@ -1715,15 +1715,15 @@ impl Enforce {
 		};
 
 		loop {
-			let Some(event) = ready_or!(announced.poll_next(waiter)) else {
-				return Poll::Ready(None);
+			let Some(event) = ready_or!(announced.poll_next(waiter))? else {
+				return Poll::Ready(Ok(None));
 			};
 			match event {
 				crate::announce::Event::Start(update) | crate::announce::Event::Update(update)
 					if !self.live.contains(&update.prefix) =>
 				{
 					if !permit.matches(update.prefix.as_str()) {
-						return Poll::Ready(Some(update.prefix));
+						return Poll::Ready(Ok(Some(update.prefix)));
 					}
 					self.live.insert(update.prefix);
 				}

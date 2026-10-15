@@ -56,6 +56,28 @@ test("an excluded producer cannot publish, advertise, or escape through a broad 
 	origin.close();
 });
 
+test("an accepted scope reports later discovery complexity instead of hiding valid routes", async () => {
+	const origin = new Producer();
+	const allowed = scope(
+		["public/**", "secret/**"],
+		[`secret/${"a".repeat(Path.Pattern.MAX_INTERSECTIONS + 1)}`, "secret/x"],
+	);
+	expect(allowed.isEmpty()).toBe(false);
+	expect(allowed.matches("secret/y")).toBe(true);
+	const view = origin.scope(Path.empty(), allowed);
+	const publicRoute = origin.dynamic(Path.from("public"));
+	const announced = view.consume().announced();
+	expect((await announced.next())?.prefix).toBe(Path.from("public"));
+	const secretRoute = origin.dynamic(Path.from("secret"));
+	await expect(announced.next()).rejects.toBeInstanceOf(Path.ScopeError);
+	expect(await announced.closed).toBeInstanceOf(Path.ScopeError);
+	expect(() => view.dynamic(Path.from("secret"))).toThrow(Path.ScopeError);
+	announced.close();
+	publicRoute.close();
+	secretRoute.close();
+	origin.close();
+});
+
 for (const protocol of [Lite.ALPN_05, Lite.ALPN_07_WIP, Ietf.ALPN.DRAFT_16, Ietf.ALPN.DRAFT_17, Ietf.ALPN.DRAFT_22]) {
 	test(`${protocol}: an excluded view keeps media working with an unknown credential grant`, async () => {
 		const origin = new Producer();

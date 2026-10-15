@@ -951,9 +951,10 @@ fn withdrawal(c: &mut Criterion) {
 							let start = Instant::now();
 							drop(live);
 							let mut retracted = 0;
-							while let Ok(Some(event)) =
-								tokio::time::timeout(Duration::from_secs(1), announced.next()).await
-							{
+							while let Ok(next) = tokio::time::timeout(Duration::from_secs(1), announced.next()).await {
+								let Some(event) = next.expect("discovery failed") else {
+									break;
+								};
 								assert!(matches!(event, moq_net::announce::Event::End(_)), "{event:?}");
 								retracted += 1;
 							}

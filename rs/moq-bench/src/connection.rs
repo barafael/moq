@@ -308,7 +308,7 @@ async fn subscribe_named(
 ) -> anyhow::Result<()> {
 	consume
 		.routed(path.as_str())
-		.await
+		.await?
 		.ok_or_else(|| anyhow::anyhow!("target broadcast was never announced: {path}"))?;
 	let broadcast = consume.request_broadcast(path.as_str(), None).await?;
 	drain(broadcast, max_delay, &stats).await
@@ -350,7 +350,7 @@ async fn subscribe(
 			biased;
 			_ = &mut deadline => break,
 			update = announced.next() => {
-				let update = match update {
+				let update = match update? {
 					Some(
 						moq_net::announce::Event::Start(update)
 						| moq_net::announce::Event::Update(update)
@@ -380,7 +380,7 @@ async fn subscribe(
 	// Top up from late announcements, first-come: the pool was too small, so
 	// there is nothing to spread over.
 	while selected < want {
-		let update = match announced.next().await {
+		let update = match announced.next().await? {
 			Some(
 				moq_net::announce::Event::Start(update)
 				| moq_net::announce::Event::Update(update)

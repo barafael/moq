@@ -72,19 +72,19 @@ impl Room {
 	}
 
 	/// Poll for the next remote camera/screen (un)announce.
-	pub fn poll_next(&mut self, waiter: &kio::Waiter) -> Poll<Option<Event>> {
+	pub fn poll_next(&mut self, waiter: &kio::Waiter) -> Poll<Result<Option<Event>, moq_net::Error>> {
 		loop {
 			if let Some(event) = ready!(self.poll_inflight(waiter)) {
-				return Poll::Ready(Some(event));
+				return Poll::Ready(Ok(Some(event)));
 			}
 
-			let (update, active) = match ready!(self.announced.poll_next(waiter)) {
+			let (update, active) = match ready!(self.announced.poll_next(waiter))? {
 				// A restart resolves the new instance, replacing the one handed out before.
 				Some(
 					announce::Event::Start(update) | announce::Event::Update(update) | announce::Event::Restart(update),
 				) => (update, true),
 				Some(announce::Event::End(update)) => (update, false),
-				None => return Poll::Ready(None),
+				None => return Poll::Ready(Ok(None)),
 			};
 			let path = update.prefix;
 			let Some(parsed) = parse(&path) else {
@@ -94,23 +94,23 @@ impl Room {
 				continue;
 			}
 			if !active {
-				return Poll::Ready(Some(Event {
+				return Poll::Ready(Ok(Some(Event {
 					identity: parsed.identity,
 					kind: parsed.kind,
 					path,
 					broadcast: None,
-				}));
+				})));
 			}
 
 			let mut request = self.origin.request_broadcast(&path, None).into_inner();
 			match kio::Task::poll(&mut request, waiter) {
 				Poll::Ready(Ok(broadcast)) => {
-					return Poll::Ready(Some(Event {
+					return Poll::Ready(Ok(Some(Event {
 						identity: parsed.identity,
 						kind: parsed.kind,
 						path,
 						broadcast: Some(broadcast),
-					}));
+					})));
 				}
 				Poll::Ready(Err(_)) => continue,
 				Poll::Pending => {
@@ -148,7 +148,7 @@ impl Room {
 	}
 
 	/// Wait for the next remote camera/screen (un)announce.
-	pub async fn next(&mut self) -> Option<Event> {
+	pub async fn next(&mut self) -> Result<Option<Event>, moq_net::Error> {
 		kio::wait(|waiter| self.poll_next(waiter)).await
 	}
 }
@@ -178,13 +178,13 @@ mod tests {
 		let _bob = publish(&origin, "bob/camera");
 		let _noise = publish(&origin, "bob/chat");
 
-		let event = room.next().await.expect("bob camera");
+		let event = room.next().await.expect("discovery failed").expect("bob camera");
 		assert_eq!(event.identity.as_str(), "bob");
 		assert_eq!(event.kind, Kind::Camera);
 		assert!(event.broadcast.is_some());
 
 		drop(_bob);
-		let gone = room.next().await.expect("bob unannounce");
+		let gone = room.next().await.expect("discovery failed").expect("bob unannounce");
 		assert_eq!(gone.identity.as_str(), "bob");
 		assert_eq!(gone.kind, Kind::Camera);
 		assert!(gone.broadcast.is_none());
@@ -197,7 +197,7 @@ mod tests {
 
 		let _screen = publish(&origin, "bob/screen");
 
-		let event = room.next().await.expect("bob screen");
+		let event = room.next().await.expect("discovery failed").expect("bob screen");
 		assert_eq!(event.identity.as_str(), "bob");
 		assert_eq!(event.kind, Kind::Screen);
 		assert!(event.broadcast.is_some());

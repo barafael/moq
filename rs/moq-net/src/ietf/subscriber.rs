@@ -6945,7 +6945,12 @@ mod tests {
 	/// The current best route covering `path`, if any (synchronous peek).
 	fn routed_now(consumer: &crate::origin::Consumer, path: &str) -> Option<crate::origin::Route> {
 		use futures::FutureExt;
-		consumer.routed(path).now_or_never().flatten()
+		consumer
+			.routed(path)
+			.now_or_never()
+			.transpose()
+			.expect("discovery failed")
+			.flatten()
 	}
 
 	fn hop_path(ids: &[u64]) -> cluster::HopPath {

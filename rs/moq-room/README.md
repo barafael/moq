@@ -15,7 +15,7 @@ let token = key.sign(&claims("meet/demo", "alice")?, None)?;
 
 let origin = moq_tokio::origin::spawn();
 let mut room = Room::new(&origin.consume(), Some(Path::new("alice").to_owned()));
-while let Some(event) = room.next().await {
+while let Some(event) = room.next().await? {
     if event.kind == Kind::Camera {
         if let Some(broadcast) = &event.broadcast {
             if let Ok(mut chat) = chat::Subscriber::subscribe(broadcast).await {

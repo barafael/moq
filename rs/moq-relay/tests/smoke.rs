@@ -310,6 +310,7 @@ async fn announced_until(announcements: &mut moq_net::announce::Consumer, until:
 		let event = tokio::time::timeout(TIMEOUT, announcements.next())
 			.await
 			.expect("announcement timeout")
+			.expect("discovery failed")
 			.expect("origin closed");
 		if let moq_net::announce::Event::Start(announce) | moq_net::announce::Event::Update(announce) = event {
 			seen.push(announce.prefix.as_str().to_owned());
@@ -1210,7 +1211,7 @@ async fn connect_once(
 
 /// The next route and whether it is active.
 async fn next_update(announced: &mut moq_net::announce::Consumer) -> Option<(moq_net::announce::Announce, bool)> {
-	match announced.next().await? {
+	match announced.next().await.expect("discovery failed")? {
 		moq_net::announce::Event::Start(route)
 		| moq_net::announce::Event::Update(route)
 		| moq_net::announce::Event::Restart(route) => Some((route, true)),

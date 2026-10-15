@@ -3092,7 +3092,7 @@ where
 					kio::wait(|waiter| self.auth.poll_setup_answered(waiter)).await;
 				}
 				let (permit, _) = self.permit_now();
-				let initial = Self::snapshot(&mut announced);
+				let initial = Self::snapshot(&mut announced)?;
 				let count = initial
 					.iter()
 					.filter(|update| permit.matches(prefix.join(&update.prefix).as_str()))
@@ -3163,9 +3163,9 @@ where
 	///
 	/// A route announced and retracted within the snapshot is left out, and a repeat
 	/// keeps its latest metadata, so each path appears once.
-	fn snapshot(announced: &mut crate::announce::Consumer) -> Vec<crate::announce::Announce> {
+	fn snapshot(announced: &mut crate::announce::Consumer) -> Result<Vec<crate::announce::Announce>, Error> {
 		let mut initial = std::collections::BTreeMap::new();
-		while let Some(event) = announced.try_next() {
+		while let Some(event) = announced.try_next()? {
 			match event {
 				crate::announce::Event::Start(update)
 				| crate::announce::Event::Update(update)
@@ -3177,7 +3177,7 @@ where
 				}
 			}
 		}
-		initial.into_values().collect()
+		Ok(initial.into_values().collect())
 	}
 
 	/// Forward origin (un)announces to the peer until the loop ends.
@@ -3245,6 +3245,10 @@ where
 						return Poll::Ready(NamespaceEvent::Regrant(permit));
 					}
 					if let Poll::Ready(next) = announced.poll_next(waiter) {
+						let next = match next {
+							Ok(next) => next,
+							Err(error) => return Poll::Ready(NamespaceEvent::Closed(Err(error))),
+						};
 						return Poll::Ready(NamespaceEvent::Update(next.map(|event| match event {
 							crate::announce::Event::Start(update) | crate::announce::Event::Update(update) => {
 								(update, true, false)

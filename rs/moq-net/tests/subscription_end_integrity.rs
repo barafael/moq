@@ -217,7 +217,11 @@ async fn killed(version: &str, local: bool) -> (Option<moq_net::Error>, Option<m
 	let MockPair { client, server, .. } = connect_mock(options).await;
 
 	let consumer = subscriber.consume();
-	consumer.routed("bcast").await.expect("routed");
+	consumer
+		.routed("bcast")
+		.await
+		.expect("routed")
+		.expect("route announced");
 	let remote = consumer
 		.request_broadcast("bcast", None)
 		.await

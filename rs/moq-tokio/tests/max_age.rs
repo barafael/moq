@@ -98,7 +98,7 @@ async fn relay(version: moq_net::Version, javascript: Option<bool>) -> anyhow::R
 		while !matches!(
 			announced
 				.next()
-				.await
+				.await?
 				.ok_or_else(|| anyhow::anyhow!("announcements closed"))?,
 			moq_net::announce::Event::Start(_)
 		) {}

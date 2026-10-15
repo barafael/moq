@@ -47,6 +47,7 @@ async fn next_event(announced: &mut announce::Consumer) -> announce::Event {
 	moq_net_sim::timeout(Duration::from_secs(10), announced.next())
 		.await
 		.expect("announce hung")
+		.expect("discovery failed")
 		.expect("announce ended")
 }
 
@@ -311,7 +312,10 @@ async fn dynamic_epoch(version: &str, from: Option<Epoch>, to: Option<Epoch>) {
 	claim.dynamic.update(claim.dynamic.route().with_cost(5)).unwrap();
 	while let Ok(event) = moq_net_sim::timeout(Duration::from_secs(1), announced.next()).await {
 		assert!(
-			matches!(event, Some(announce::Event::Update(_))),
+			matches!(
+				event.as_ref().expect("discovery failed"),
+				Some(announce::Event::Update(_))
+			),
 			"{version}: a re-price delivered {event:?}"
 		);
 	}
@@ -402,7 +406,10 @@ async fn dynamic_epoch_second_route_keeps_winning() {
 	first.update_epoch(None);
 	while let Ok(event) = moq_net_sim::timeout(Duration::from_secs(1), announced.next()).await {
 		assert!(
-			matches!(event, Some(announce::Event::Update(_))),
+			matches!(
+				event.as_ref().expect("discovery failed"),
+				Some(announce::Event::Update(_))
+			),
 			"dropping a shared epoch delivered {event:?}"
 		);
 	}

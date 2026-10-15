@@ -115,8 +115,9 @@ impl Server {
 		// source resolves a rendition's sibling `broadcast` reference through the same origin.
 		tokio::time::timeout(RESOLVE_TIMEOUT, self.inner.origin.routed(name))
 			.await
-			.ok()
-			.flatten()?;
+			.ok()?
+			.map_err(|err| tracing::warn!(%name, %err, "route discovery failed"))
+			.ok()??;
 
 		let origin = self.inner.origin.consume();
 		// A covering dynamic route may never answer, so the request is bounded too.
