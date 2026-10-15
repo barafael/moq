@@ -280,23 +280,11 @@ jobs:
       contents: read
       id-token: write
 
-  release-kt-ffi:
-    name: Release Kotlin FFI
-    uses: ./.github/workflows/release-kt-ffi.yml
-    permissions:
-      contents: read
-
-  release-swift-ffi:
-    name: Release Swift FFI
-    uses: ./.github/workflows/release-swift-ffi.yml
+  release-shared-ffi:
+    name: Release FFI
+    uses: ./.github/workflows/release-shared-ffi.yml
     permissions:
       contents: write
-
-  release-go-ffi:
-    name: Release Go FFI
-    uses: ./.github/workflows/release-go-ffi.yml
-    permissions:
-      contents: read
 
   release-dart-ffi:
     name: Release Dart FFI
