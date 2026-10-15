@@ -47,6 +47,13 @@ and `send_fps`/`recv_fps`) plus delivery accounting for the subscribe side:
 - `loss`: `lost_groups` as a percentage.
 - `latency_p50_ms` / `latency_p90_ms` / `latency_p99_ms` / `latency_max_ms`:
   cumulative one-way delivery latency from each group's keyframe timestamp.
+  These cover every sample since the process started, including the
+  `--startup` ramp. `latency_samples` is that cumulative count.
+- `latency_interval_p50_ms` / `latency_interval_p90_ms` /
+  `latency_interval_p99_ms` / `latency_interval_max_ms`: the same figures for
+  samples since the previous report only. `latency_interval_samples` is how
+  many samples that interval contains. Do not read the interval percentiles
+  against the cumulative `latency_samples`.
 
 Subscribers read groups in arrival order (out-of-order included) and track each
 subscription's sequence span. A span wider than the count received means groups
@@ -194,7 +201,12 @@ pinning once the relay grows a thread-per-core mode.
 
 Run the load from one machine and the sampler on the relay's host, then join
 the two JSONL files on `timestamp_ms` over the same steady-state window. Skip
-the `--startup` window while connections ramp. `timestamp_ms` is wall clock from two different hosts,
+the `--startup` window while connections ramp. For latency on the lines inside
+the steady-state window, read `latency_interval_p50_ms`, `latency_interval_p90_ms`,
+`latency_interval_p99_ms`, and `latency_interval_max_ms`. Each is only the
+samples since the previous line, with `latency_interval_samples` as its count.
+The cumulative `latency_p*` fields still include the ramp, and `latency_samples`
+is not that count. `timestamp_ms` is wall clock from two different hosts,
 so keep both NTP-synced; the join only has to agree on the window boundaries,
 since every rate comes from deltas within a single file:
 
