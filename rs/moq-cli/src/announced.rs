@@ -67,7 +67,7 @@ async fn follow(
 	// Scoped to the prefix, so the session only asks the relay for what is followed.
 	let pattern = moq_net::Pattern::subtree(prefix).with_context(|| format!("invalid prefix `{prefix}`"))?;
 	let origin = moq_tokio::origin::spawn()
-		.scope("", &moq_net::Patterns::from(pattern))
+		.scope("", moq_net::Patterns::from(pattern))
 		.with_context(|| format!("failed to scope to `{prefix}`"))?;
 
 	// Subscribe-only: this session reads and never publishes.

@@ -26,7 +26,10 @@ async fn gateway_admission_scopes_origins_and_revoke_stops_work() {
 	request.role = Some(Role::Publisher);
 	let admitted = cluster.admit(&auth, request).await.unwrap();
 	assert_eq!(admitted.lease.token().root.as_str(), "canonical");
-	assert_eq!(admitted.publisher.as_ref().unwrap().allowed(), patterns(&["media/**"]));
+	assert_eq!(
+		admitted.publisher.as_ref().unwrap().allowed().include().clone(),
+		patterns(&["media/**"])
+	);
 	assert!(
 		admitted.subscriber.is_none(),
 		"publisher-only gateway must not subscribe"

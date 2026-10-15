@@ -20,18 +20,22 @@ async fn main() -> anyhow::Result<()> {
 
 	match args[1].as_str() {
 		"publish" => {
+			// Exercise an excluded origin view across the real transport. Its
+			// credential grant is unknown on a wire that cannot carry exclusions.
+			let view = origin.scope(
+				"",
+				moq_net::Scope::new(
+					moq_net::Pattern::all().into(),
+					".reserved/**".parse::<moq_net::Pattern>()?.into(),
+				),
+			)?;
 			let broadcast = origin.create_broadcast(&args[3])?;
 			let mut track = broadcast.create_track(
 				"tail",
 				moq_net::track::Info::default().with_timescale(moq_net::Timescale::MILLI),
 			)?;
 			broadcast.announce(Default::default())?;
-			let session = client
-				.clone()
-				.with_publisher(&origin)
-				.connect(url)
-				.established()
-				.await?;
+			let session = client.clone().with_publisher(&view).connect(url).established().await?;
 			track.demand().used().await?;
 			// Declare the end before the final group's payload is even available.
 			track.finish_at(moq_net::track::Position::group(GROUPS))?;

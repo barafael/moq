@@ -3018,7 +3018,7 @@ async fn announce_interest_unauthorized_keeps_session_alive() {
 		.consume()
 		.scope(
 			"",
-			&moq_net::Patterns::from(moq_net::Pattern::subtree("allowed").unwrap()),
+			moq_net::Patterns::from(moq_net::Pattern::subtree("allowed").unwrap()),
 		)
 		.expect("failed to scope publish origin");
 
@@ -3030,7 +3030,7 @@ async fn announce_interest_unauthorized_keeps_session_alive() {
 	let consume = sub_origin
 		.scope(
 			"",
-			&["allowed", "denied"]
+			["allowed", "denied"]
 				.into_iter()
 				.map(|prefix| moq_net::Pattern::subtree(prefix).unwrap())
 				.collect::<moq_net::Patterns>(),
@@ -3109,7 +3109,7 @@ async fn wildcard_scope_test(version: &str, server_scope: &str) {
 	// The server's own grant excludes bob: the client never learns of his chat.
 	let publish = pub_origin
 		.consume()
-		.scope("", &scope(server_scope))
+		.scope("", scope(server_scope))
 		.expect("scope publish origin");
 
 	let mut server_config = moq_tokio::listen::Config::default();
@@ -3123,7 +3123,7 @@ async fn wildcard_scope_test(version: &str, server_scope: &str) {
 	// ── subscriber (client): every room's chat ──
 	let sub_origin = moq_tokio::origin::spawn();
 	let consume = sub_origin
-		.scope("", &scope("room/*/chat"))
+		.scope("", scope("room/*/chat"))
 		.expect("scope consume origin");
 	let sub_consumer = consume.consume();
 	let mut announcements = sub_consumer.announced();
@@ -3238,7 +3238,7 @@ async fn publish_only_client_to_subscribe_only_server() {
 	let consume = sub_origin
 		.scope(
 			"",
-			&["allowed", "denied"]
+			["allowed", "denied"]
 				.into_iter()
 				.map(|prefix| moq_net::Pattern::subtree(prefix).unwrap())
 				.collect::<moq_net::Patterns>(),
@@ -3322,7 +3322,7 @@ async fn publish_only_client_to_subscribe_only_server() {
 		.consume()
 		.scope(
 			"",
-			&moq_net::Patterns::from(moq_net::Pattern::subtree("allowed").unwrap()),
+			moq_net::Patterns::from(moq_net::Pattern::subtree("allowed").unwrap()),
 		)
 		.expect("failed to scope publish origin");
 

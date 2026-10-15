@@ -32,7 +32,7 @@ use std::time::Duration;
 
 use criterion::{BatchSize, BenchmarkId, Criterion, Throughput, criterion_group, criterion_main};
 use futures::FutureExt;
-use moq_net::{Epoch, Hop, Hops, Pattern, Patterns, Timestamp, announce, auth, broadcast, kio, origin, track};
+use moq_net::{Epoch, Hop, Hops, Pattern, Patterns, Scope, Timestamp, announce, auth, broadcast, kio, origin, track};
 use support::harness::{MockConnectOptions, MockPair, connect_mock};
 
 /// A millisecond track: the frames written here carry timestamps.
@@ -77,6 +77,72 @@ fn fanout(publishers: usize, subscribers: usize) -> Fanout {
 		_publishers: publishers,
 		subscribers,
 	}
+}
+
+/// A filtered view still touches only the routes and cursors affected by a change.
+fn bench_scoped_announce(c: &mut Criterion) {
+	let mut group = c.benchmark_group("origin/scoped-announce");
+	group.sample_size(10);
+	group.warm_up_time(Duration::from_millis(100));
+	group.measurement_time(Duration::from_millis(300));
+	for (publishers, subscribers) in SHAPES {
+		for excludes in [0, 1, 16] {
+			group.bench_function(
+				BenchmarkId::new(format!("{publishers}p_{subscribers}s"), excludes),
+				|b| {
+					let (producer, _driver) = origin::Producer::new(origin::Config::default());
+					let _sources: Vec<_> = (0..publishers)
+						.map(|i| producer.publish(format!("room/{i}"), origin::Route::default()).unwrap())
+						.collect();
+					let scope = Scope::new(
+						Pattern::all().into(),
+						(0..excludes)
+							.map(|i| format!("room/reserved{i}/**").parse().unwrap())
+							.collect(),
+					);
+					let view = producer.consume().scope("", scope).unwrap();
+					let mut cursors: Vec<_> = (0..subscribers).map(|_| view.announced()).collect();
+					for cursor in &mut cursors {
+						while cursor.next().now_or_never().flatten().is_some() {}
+					}
+					b.iter(|| {
+						let route = producer.publish("room/incoming", origin::Route::default()).unwrap();
+						for cursor in &mut cursors {
+							assert!(cursor.next().now_or_never().flatten().is_some());
+						}
+						drop(route);
+						for cursor in &mut cursors {
+							assert!(cursor.next().now_or_never().flatten().is_some());
+						}
+					});
+				},
+			);
+		}
+	}
+	group.finish();
+}
+
+/// Scope path checks swept over exclusion count and path depth.
+fn bench_scope_match(c: &mut Criterion) {
+	let mut group = c.benchmark_group("origin/scope-match");
+	group.sample_size(10);
+	group.warm_up_time(Duration::from_millis(100));
+	group.measurement_time(Duration::from_millis(300));
+	for excludes in [1, 16, 128] {
+		let scope = Scope::new(
+			Pattern::all().into(),
+			(0..excludes)
+				.map(|i| format!("reserved/{i}/**").parse().unwrap())
+				.collect(),
+		);
+		for depth in [1, 8, 32] {
+			let path = std::iter::repeat_n("room", depth).collect::<Vec<_>>().join("/");
+			group.bench_function(BenchmarkId::new(excludes.to_string(), depth), |b| {
+				b.iter(|| std::hint::black_box(scope.matches(std::hint::black_box(&path))))
+			});
+		}
+	}
+	group.finish();
 }
 
 /// One publish delivered to every subscriber, then its retraction: the
@@ -169,7 +235,7 @@ fn bench_announce_mounted(c: &mut Criterion) {
 					producer
 						.mount(format!("p{project}/.svc"), ".svc/p0")
 						.unwrap()
-						.scope(format!("p{project}"), &Patterns::from(Pattern::all()))
+						.scope(format!("p{project}"), Patterns::from(Pattern::all()))
 						.unwrap()
 						.consume()
 						.with_hidden(true)
@@ -298,7 +364,7 @@ fn bench_reprice_duplicate(c: &mut Criterion) {
 						producer
 							.scope(
 								"",
-								&Patterns::from(Pattern::subtree(&format!("{PATH}/p{}", (peer - 1) % 2)).unwrap()),
+								Patterns::from(Pattern::subtree(&format!("{PATH}/p{}", (peer - 1) % 2)).unwrap()),
 							)
 							.unwrap()
 							.dynamic(PATH, peer_route(peer as u64, incumbent_cost))
@@ -315,7 +381,7 @@ fn bench_reprice_duplicate(c: &mut Criterion) {
 							.consume()
 							.scope(
 								"",
-								&Patterns::from(Pattern::subtree(&format!("{PATH}/p{}", peer % 2)).unwrap()),
+								Patterns::from(Pattern::subtree(&format!("{PATH}/p{}", peer % 2)).unwrap()),
 							)
 							.unwrap()
 							.with_hidden(true)
@@ -1253,6 +1319,8 @@ fn bench_resume_overlap(c: &mut Criterion) {
 criterion_group!(
 	benches,
 	bench_announce,
+	bench_scoped_announce,
+	bench_scope_match,
 	bench_withdraw,
 	bench_announce_mounted,
 	bench_announce_fleet,

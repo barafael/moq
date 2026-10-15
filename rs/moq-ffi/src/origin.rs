@@ -389,7 +389,7 @@ impl MoqOriginConsumer {
 		let filter = filter.rooted(&config.prefix)?;
 		let origin = self
 			.inner
-			.scope("", &moq_net::Patterns::from(filter))?
+			.scope("", moq_net::Patterns::from(filter))?
 			.with_hidden(config.hidden);
 		Ok(Arc::new(MoqAnnounceConsumer {
 			task: Task::new(Announced {
@@ -411,7 +411,7 @@ impl MoqOriginConsumer {
 		// Probe the permission eagerly so an unreachable path fails here, rather than
 		// surfacing later as a `Closed` the caller can't tell from the origin ending.
 		self.inner
-			.scope(&path, &moq_net::Patterns::from(moq_net::Pattern::all()))?;
+			.scope(&path, moq_net::Patterns::from(moq_net::Pattern::all()))?;
 
 		Ok(Arc::new(MoqAnnouncedBroadcast {
 			task: Task::new(AnnouncedBroadcast {

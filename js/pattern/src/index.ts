@@ -878,3 +878,200 @@ export class Patterns implements Iterable<Pattern> {
 		return this.size === other.size && this.#members.every((member, i) => member.equals(other.#members[i]));
 	}
 }
+
+/** Thrown when an exact scope operation exceeds the pattern complexity budget. */
+export class ScopeError extends Error {
+	constructor() {
+		super("scope operation exceeds the complexity limit");
+		this.name = "ScopeError";
+	}
+}
+
+/** Paths included by a pattern union, except those matched by its exclusions. */
+export class Scope {
+	readonly #include: Patterns;
+	readonly #exclude: Patterns;
+
+	/** Include these paths, with exclusions taking precedence. */
+	constructor(options: { include?: Patterns; exclude?: Patterns } = {}) {
+		this.#include = new Patterns(options.include);
+		this.#exclude = new Patterns(options.exclude);
+	}
+
+	/** A copy of the positive union, before exclusions. */
+	get include(): Patterns {
+		return new Patterns(this.#include);
+	}
+	/** A copy of the paths removed from the positive union. */
+	get exclude(): Patterns {
+		return new Patterns(this.#exclude);
+	}
+
+	/** Whether this exact path is included and not excluded. */
+	matches(path: string): boolean {
+		return this.#include.matches(path) && !this.#exclude.matches(path);
+	}
+
+	/** The paths in both scopes; either scope's exclusions still apply. */
+	intersect(other: Scope): Scope {
+		return new Scope({
+			include: this.#include.intersect(other.#include),
+			exclude: new Patterns([...this.#exclude, ...other.#exclude]),
+		});
+	}
+
+	/** Place both the included and excluded paths beneath this root. */
+	rooted(root: string): Scope {
+		return new Scope({ include: this.#include.rooted(root), exclude: this.#exclude.rooted(root) });
+	}
+
+	/** Name the included and excluded paths relative to this root. */
+	rebase(root: string): Scope {
+		return new Scope({ include: this.#include.rebase(root), exclude: this.#exclude.rebase(root) });
+	}
+
+	/** Whether no path is granted, including exclusions that jointly cover it. */
+	isEmpty(): boolean {
+		if (this.#exclude.size === 0) return this.#include.size === 0;
+		if (this.#exclude.covers(this.#include)) return true;
+		// One pattern's containment is exact; only a union needs language search.
+		if (this.#exclude.size === 1 || [...this.#include].some((pattern) => !this.#exclude.overlaps(pattern)))
+			return false;
+		return !witness([this], (accepted) => accepted[0]);
+	}
+
+	/** Whether at least one path is granted by both scopes. */
+	overlaps(other: Scope): boolean {
+		if (this.#exclude.size === 0 && other.#exclude.size === 0) {
+			return [...this.#include].some((pattern) => other.#include.overlaps(pattern));
+		}
+		return !this.intersect(other).isEmpty();
+	}
+
+	/** Whether every path granted by the other scope is granted here. */
+	covers(other: Scope): boolean {
+		if (this.#exclude.size === 0 && this.#include.covers(other.#include)) return true;
+		return !witness([this, other], (accepted) => accepted[1] && !accepted[0]);
+	}
+}
+
+// A product search preserves negative languages without spelling complements
+// using positive glob patterns. Refusal never drops an exclusion.
+const BUDGET = Pattern.MAX_INTERSECTIONS;
+type Letter = { exact: string } | { star: true };
+
+function closure(tokens: readonly Letter[], positions: Set<number>): number[] {
+	for (const at of positions) if (tokens[at] && "star" in tokens[at]) positions.add(at + 1);
+	return [...positions].sort((a, b) => a - b);
+}
+
+function segmentMasks(segments: readonly Segment[]): boolean[][] {
+	const exact = (text: string): Letter[] => Array.from(text, (exact) => ({ exact }));
+	const tokens = segments.map((segment): Letter[] => {
+		switch (segment.kind) {
+			case "literal":
+				return exact(segment.value);
+			case "wildcard":
+				return [{ star: true }];
+			case "partial":
+				return [...exact(segment.prefix), { star: true }, ...exact(segment.suffix)];
+			case "globstar":
+				throw new Error("globstars consume whole segments");
+			default:
+				throw new Error("unsupported segment kind");
+		}
+	});
+	const alphabet = new Set(tokens.flat().flatMap((token) => ("exact" in token ? [token.exact] : [])));
+	for (let code = 0; ; code++) {
+		const char = String.fromCodePoint(code);
+		if (char !== "/" && !alphabet.has(char)) {
+			alphabet.add(char);
+			break;
+		}
+	}
+	const initial = tokens.map((tokens) => closure(tokens, new Set([0])));
+	const seen = new Set([JSON.stringify(initial)]);
+	const pending = [initial];
+	const masks = new Map<string, boolean[]>();
+	for (let cursor = 0; cursor < pending.length; cursor++) {
+		const state = pending[cursor];
+		for (const letter of alphabet) {
+			const next = tokens.map((tokens, i) => {
+				const next = new Set<number>();
+				for (const at of state[i]) {
+					const token = tokens[at];
+					if (!token) continue;
+					if ("star" in token) next.add(at);
+					else if (token.exact === letter) next.add(at + 1);
+				}
+				return closure(tokens, next);
+			});
+			// Path segments are nonempty, even if a wildcard accepts empty text.
+			const mask = next.map((positions, i) => positions.includes(tokens[i].length));
+			masks.set(JSON.stringify(mask), mask);
+			const key = JSON.stringify(next);
+			if (!seen.has(key)) {
+				seen.add(key);
+				if (seen.size > BUDGET) throw new ScopeError();
+				pending.push(next);
+			}
+		}
+	}
+	return [...masks.values()];
+}
+
+function patternClosure(pattern: Pattern, state: bigint): bigint {
+	for (let at = 0; at < pattern.segments.length; at++) {
+		if (pattern.segments[at].kind === "globstar" && (state & (1n << BigInt(at))) !== 0n)
+			state |= 1n << BigInt(at + 1);
+	}
+	return state;
+}
+
+function witness(scopes: readonly Scope[], accepts: (accepted: boolean[]) => boolean): boolean {
+	const unions = scopes.map((scope) => ({ include: scope.include, exclude: scope.exclude }));
+	const patterns = unions.flatMap((scope) => [...scope.include, ...scope.exclude]);
+	const segments = new Map<string, Segment>();
+	for (const pattern of patterns)
+		for (const segment of pattern.segments)
+			if (segment.kind !== "globstar") segments.set(JSON.stringify(segment), segment);
+	const predicates = [...segments.values()];
+	const ids = new Map([...segments.keys()].map((key, at) => [key, at]));
+	const masks = segmentMasks(predicates);
+	const initial = patterns.map((pattern) => patternClosure(pattern, 1n));
+	const keyOf = (state: bigint[]) => state.join(",");
+	const seen = new Set([keyOf(initial)]);
+	const pending = [initial];
+	for (let cursor = 0; cursor < pending.length; cursor++) {
+		const state = pending[cursor];
+		const matched = patterns.map((pattern, i) => (state[i] & (1n << BigInt(pattern.segments.length))) !== 0n);
+		let at = 0;
+		const accepted = unions.map((scope) => {
+			const include = matched.slice(at, at + scope.include.size).some(Boolean);
+			at += scope.include.size;
+			const exclude = matched.slice(at, at + scope.exclude.size).some(Boolean);
+			at += scope.exclude.size;
+			return include && !exclude;
+		});
+		if (accepts(accepted)) return true;
+		for (const mask of masks) {
+			const next = patterns.map((pattern, i) => {
+				let next = 0n;
+				for (let at = 0; at < pattern.segments.length; at++) {
+					if ((state[i] & (1n << BigInt(at))) === 0n) continue;
+					const segment = pattern.segments[at];
+					if (segment.kind === "globstar") next |= 1n << BigInt(at);
+					else if (mask[ids.get(JSON.stringify(segment)) as number]) next |= 1n << BigInt(at + 1);
+				}
+				return patternClosure(pattern, next);
+			});
+			const key = keyOf(next);
+			if (!seen.has(key)) {
+				seen.add(key);
+				if (seen.size > BUDGET) throw new ScopeError();
+				pending.push(next);
+			}
+		}
+	}
+	return false;
+}

@@ -247,7 +247,7 @@ async fn run(config: &Config) -> Result<()> {
 	let viewer_path = format!("{viewer_prefix}/{name}");
 	let consume_origin = moq_tokio::origin::spawn();
 	let viewer_consumer = consume_origin
-		.scope(&viewer_path, &moq_net::Patterns::from(moq_net::Pattern::all()))
+		.scope(&viewer_path, moq_net::Patterns::from(moq_net::Pattern::all()))
 		.expect("viewer prefix should be valid")
 		.consume();
 

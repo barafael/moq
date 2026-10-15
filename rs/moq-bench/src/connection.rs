@@ -295,7 +295,7 @@ async fn produce(
 fn discover(consume: &moq_net::origin::Producer, name: &str) -> moq_net::origin::Consumer {
 	consume
 		.consume()
-		.scope(name, &moq_net::Patterns::from(moq_net::Pattern::all()))
+		.scope(name, moq_net::Patterns::from(moq_net::Pattern::all()))
 		.expect("origin must permit the bench namespace")
 }
 

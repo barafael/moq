@@ -336,6 +336,8 @@ export {
 	InvalidPattern,
 	Pattern,
 	Patterns,
+	Scope,
+	ScopeError,
 	type Segment,
 	type Specificity,
 } from "@moq/pattern";

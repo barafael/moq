@@ -129,7 +129,7 @@ pub use error::*;
 /// The session direction a client advertises in its SETUP (moq-lite-05+).
 pub use lite::Role;
 pub use model::*;
-pub use path::{AsPath, InvalidPattern, Path, PathOwned, Pattern, Patterns};
+pub use path::{AsPath, InvalidPattern, Path, PathOwned, Pattern, Patterns, Scope, ScopeError};
 #[cfg(feature = "async")]
 pub use server::Server;
 #[cfg(feature = "async")]

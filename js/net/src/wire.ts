@@ -78,7 +78,7 @@ export interface Advertised {
 	readonly identity: object;
 	readonly route: Route;
 	/** The paths a scoped route may serve beneath its prefix, relative like its key; unset for the whole subtree. */
-	readonly claim?: Path.Patterns;
+	readonly claim?: Path.Scope;
 }
 
 /** What names a publisher instance: an advertisement's identity and epoch. */

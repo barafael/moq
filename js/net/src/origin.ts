@@ -25,7 +25,6 @@ import {
 	hooks,
 	scopeCaptures,
 	scopeHead,
-	scopeOverlaps,
 	spreadHash,
 } from "./internal.ts";
 import * as Path from "./path.ts";
@@ -64,23 +63,24 @@ export const Preference = Object.assign(
 );
 
 /** The rooted permissions shared by a handle and every route it inserts. */
-class Scope {
-	static readonly all = new Scope(Path.empty());
+class View {
+	static readonly all = new View(Path.empty());
 
 	readonly root: Path.Valid;
-	readonly allowed?: Path.Patterns;
+	readonly allowed?: Path.Scope;
 
-	constructor(root: Path.Valid, allowed?: Path.Patterns) {
+	constructor(root: Path.Valid, allowed?: Path.Scope) {
 		this.root = root;
 		this.allowed = allowed;
 	}
 
-	narrow(root: Path.Valid, patterns: Path.Patterns): Scope {
+	narrow(root: Path.Valid, patterns: Path.Scope | Path.Patterns): View {
+		const selection = patterns instanceof Path.Scope ? patterns : new Path.Scope({ include: patterns });
 		const joined = Path.encode(Path.join(this.root, root));
-		const rooted = patterns.rooted(joined);
+		const rooted = selection.rooted(joined);
 		const allowed = this.allowed?.intersect(rooted) ?? rooted;
-		if (allowed.size === 0) throw new Error("origin scopes do not overlap");
-		return new Scope(joined, allowed);
+		if (allowed.isEmpty()) throw new Error("origin scopes do not overlap");
+		return new View(joined, allowed);
 	}
 
 	matches(path: Path.Valid): boolean {
@@ -95,21 +95,24 @@ class Scope {
 
 	prefix(prefix: Path.Valid): Path.Valid {
 		const joined = Path.encode(Path.join(this.root, prefix));
-		if (this.allowed && !this.allowed.overlaps(Path.Pattern.subtree(joined))) {
+		if (
+			this.allowed &&
+			!this.allowed.overlaps(new Path.Scope({ include: new Path.Patterns([Path.Pattern.subtree(joined)]) }))
+		) {
 			throw new Error("prefix is outside the origin scope");
 		}
 		return joined;
 	}
 
-	patterns(pattern: Path.Pattern = Path.Pattern.all()): Path.Patterns {
-		const rooted = new Path.Patterns([pattern.rooted(this.root)]);
+	select(pattern: Path.Pattern = Path.Pattern.all()): Path.Scope {
+		const rooted = new Path.Scope({ include: new Path.Patterns([pattern.rooted(this.root)]) });
 		return this.allowed?.intersect(rooted) ?? rooted;
 	}
 
 	/** Omit nested heads because the outer subscription already carries their routes. */
 	#heads(): Path.Valid[] {
 		if (!this.allowed) return [Path.empty()];
-		const heads = [...new Set([...this.allowed.rebase(this.root)].map(scopeHead))].sort();
+		const heads = [...new Set([...this.allowed.rebase(this.root).include].map(scopeHead))].sort();
 		return heads.filter((head) => !heads.some((other) => other !== head && Path.hasPrefix(other, head)));
 	}
 
@@ -121,7 +124,7 @@ class Scope {
 	 * watch inside one requests itself.
 	 */
 	interests(absolute: Path.Valid): Path.Valid[] {
-		if (this === Scope.all) return [absolute];
+		if (this === View.all) return [absolute];
 		this.#headsCache ??= this.#heads();
 		const relative = Path.stripPrefix(this.root, absolute);
 		if (relative === null) return Path.hasPrefix(absolute, this.root) ? [...this.#headsCache] : [];
@@ -135,12 +138,15 @@ class Scope {
 
 	/** Whether this scope allows anything beneath the absolute `prefix`. */
 	overlaps(prefix: Path.Valid): boolean {
-		return this.allowed?.overlaps(Path.Pattern.subtree(prefix)) ?? true;
+		return (
+			this.allowed?.overlaps(new Path.Scope({ include: new Path.Patterns([Path.Pattern.subtree(prefix)]) })) ??
+			true
+		);
 	}
 
 	/** The exact paths within this scope, relative to its root. */
 	projectPaths<T>(values: ReadonlyMap<Path.Valid, T> | undefined): ReadonlyMap<Path.Valid, T> | undefined {
-		if (!values || this === Scope.all) return values;
+		if (!values || this === View.all) return values;
 		const out = new Map<Path.Valid, T>();
 		for (const [path, value] of values) {
 			if (!this.matches(path)) continue;
@@ -156,16 +162,16 @@ class Scope {
 	 * a request beneath the root resolves in.
 	 */
 	projectRoutes(values: Advertisements | undefined): Advertisements | undefined {
-		if (!values || this === Scope.all) return values;
+		if (!values || this === View.all) return values;
 		const out = new Map<Path.Valid, readonly Advertised[]>();
 		const covering: [Path.Valid, Advertised[]][] = [];
-		const allowed = this.allowed && [...this.allowed];
+		const allowed = this.allowed;
 		for (const [path, candidates] of values) {
 			const relative = Path.stripPrefix(this.root, path);
 			const above = relative === null || relative === Path.empty();
 			if (above && !Path.hasPrefix(path, this.root)) continue;
 			const visible = candidates
-				.filter((value) => !allowed || allowed.some((pattern) => advertOverlaps(value, path, pattern)))
+				.filter((value) => !allowed || advertOverlaps(value, path, allowed))
 				// The claim moves with the key, so it compares against root-relative requests.
 				.map((value) => (value.claim ? { ...value, claim: value.claim.rebase(this.root) } : value));
 			if (visible.length === 0) continue;
@@ -189,8 +195,9 @@ class Scope {
 }
 
 /** Whether the route advertised at `prefix` may serve any path `pattern` admits. */
-function advertOverlaps(advert: Advertised, prefix: Path.Valid, pattern: Path.Pattern): boolean {
-	return advert.claim ? advert.claim.overlaps(pattern) : scopeOverlaps(pattern, prefix);
+function advertOverlaps(advert: Advertised, prefix: Path.Valid, scope: Path.Scope): boolean {
+	const claim = advert.claim ?? new Path.Scope({ include: new Path.Patterns([Path.Pattern.subtree(prefix)]) });
+	return claim.overlaps(scope);
 }
 
 /** One segment of the watched-prefix trie, kept while it or anything beneath it is watched. */
@@ -296,9 +303,9 @@ interface Resolution {
  */
 export interface RouteEntry {
 	readonly identity: object;
-	readonly scope: Scope;
+	readonly scope: View;
 	/** The paths the entry may serve beneath its prefix, when its producer is scoped. */
-	readonly claim?: Path.Patterns;
+	readonly claim?: Path.Scope;
 	readonly route: Signal<Route>;
 	/** The rank of the link the entry arrived on; see {@link Producer.withPreference}. */
 	readonly preference: Preference;
@@ -1057,6 +1064,9 @@ class OriginState {
  * @public
  */
 export interface Table {
+	/** The paths this handle permits, relative to its root. */
+	allowed(): Path.Scope;
+
 	/** Settles once the origin closes; see {@link Producer.closed}. */
 	readonly closed: GetPromise<Error | null>;
 
@@ -1107,7 +1117,7 @@ export interface RequestOptions {
  */
 export class Producer implements Table {
 	#state = new OriginState();
-	#scope = Scope.all;
+	#scope = View.all;
 	#preference = Preference.default;
 	#requests?: Getter<ReadonlyMap<Path.Valid, RequestSlot> | undefined>;
 
@@ -1128,7 +1138,7 @@ export class Producer implements Table {
 			attach: (discovery) => this.#attach(discovery),
 			expect: () => this.#expect(),
 			get requests() {
-				if (thisProducer.#scope === Scope.all) return thisProducer.#state.requests;
+				if (thisProducer.#scope === View.all) return thisProducer.#state.requests;
 				thisProducer.#requests ??= new Derived([thisProducer.#state.requests], (requests) =>
 					thisProducer.#scope.projectPaths(requests),
 				);
@@ -1141,8 +1151,16 @@ export class Producer implements Table {
 		});
 	}
 
+	/** The paths this handle permits, relative to its root. */
+	allowed(): Path.Scope {
+		return (
+			this.#scope.allowed?.rebase(this.#scope.root) ??
+			new Path.Scope({ include: new Path.Patterns([Path.Pattern.all()]) })
+		);
+	}
+
 	/** Narrow this handle to patterns beneath root, presenting paths relative to that root. */
-	scope(root: Path.Valid, patterns: Path.Patterns): Producer {
+	scope(root: Path.Valid, patterns: Path.Scope | Path.Patterns): Producer {
 		const scope = this.#scope.narrow(root, patterns);
 		const producer = new Producer();
 		producer.#state = this.#state;
@@ -1293,7 +1311,9 @@ export class Producer implements Table {
 		const entry: RouteEntry = {
 			identity: {},
 			scope: this.#scope,
-			claim: this.#scope.allowed?.intersect(new Path.Patterns([Path.Pattern.subtree(prefix)])),
+			claim: this.#scope.allowed?.intersect(
+				new Path.Scope({ include: new Path.Patterns([Path.Pattern.subtree(prefix)]) }),
+			),
 			route: new Signal(route),
 			preference: this.#preference,
 			originated,
@@ -1503,7 +1523,7 @@ export class Producer implements Table {
 
 // Constructs a Consumer from within this module without exposing a public constructor
 // that would leak the unexported OriginState. Assigned in the class's static block.
-let makeConsumer: (state: OriginState, scope: Scope) => Consumer;
+let makeConsumer: (state: OriginState, scope: View) => Consumer;
 
 // Same for Requesting: a public constructor would let a caller forge a handle that no origin
 // ever registered, whose lifecycle guarantees are then false. `@internal` alone would not
@@ -1596,9 +1616,9 @@ export class Requesting {
  */
 export class Consumer {
 	#state: OriginState;
-	#scope: Scope;
+	#scope: View;
 
-	private constructor(state: OriginState, scope: Scope) {
+	private constructor(state: OriginState, scope: View) {
 		this.#state = state;
 		this.#scope = scope;
 		// True only when every attached session announces. One session that cannot means the
@@ -1610,9 +1630,9 @@ export class Consumer {
 		registerWire(this, {
 			routes: (path) => this.#routes(scope.path(path)),
 			broadcasts:
-				scope === Scope.all ? state.local : new Derived([state.local], (local) => scope.projectPaths(local)),
+				scope === View.all ? state.local : new Derived([state.local], (local) => scope.projectPaths(local)),
 			advertised:
-				scope === Scope.all
+				scope === View.all
 					? state.originated
 					: new Derived([state.originated], (routes) => scope.projectRoutes(routes)),
 			local: (path, epoch) => this.#local(scope.path(path), epoch),
@@ -1622,6 +1642,14 @@ export class Consumer {
 
 	static {
 		makeConsumer = (state, scope) => new Consumer(state, scope);
+	}
+
+	/** The paths this handle permits, relative to its root. */
+	allowed(): Path.Scope {
+		return (
+			this.#scope.allowed?.rebase(this.#scope.root) ??
+			new Path.Scope({ include: new Path.Patterns([Path.Pattern.all()]) })
+		);
 	}
 
 	/** Settles once the origin closes; see {@link Producer.closed}. */
@@ -1941,17 +1969,17 @@ export class Consumer {
 	 */
 	announced(scope: Path.Pattern = Path.Pattern.all(), options?: announce.Options): announce.Consumer {
 		const producer = new announce.Producer();
-		const patterns = this.#scope.patterns(scope);
-		void producer.closed.then(this.#state.watch([...patterns].map(scopeHead)));
+		const patterns = this.#scope.select(scope);
+		void producer.closed.then(this.#state.watch([...patterns.include].map(scopeHead)));
 		void this.#runAnnounced(producer, patterns, options?.hidden ?? false);
 		return producer.consume();
 	}
 
 	/** The routes visible to one announcement watcher. */
-	#listed(patterns: Path.Patterns, hidden: boolean): Map<Path.Valid, Presented> {
+	#listed(patterns: Path.Scope, hidden: boolean): Map<Path.Valid, Presented> {
 		const next = new Map<Path.Valid, Presented>();
 		const covering = new CoveringRoot(this.#scope.root);
-		const scopes = [...patterns]
+		const scopes = [...patterns.include]
 			.sort((a, b) => Path.compareSpecificity(b.specificity(), a.specificity()))
 			.map((pattern) => ({ pattern, head: scopeHead(pattern) }));
 		for (const [path, candidates] of this.#state.snapshot()) {
@@ -1961,7 +1989,13 @@ export class Consumer {
 			for (const candidate of candidates) {
 				scope = scopes.find(
 					({ pattern, head }) =>
-						(candidate.exact ? pattern.matches(path) : advertOverlaps(candidate, path, pattern)) &&
+						(candidate.exact
+							? pattern.matches(path) && patterns.matches(path)
+							: advertOverlaps(
+									candidate,
+									path,
+									patterns.intersect(new Path.Scope({ include: new Path.Patterns([pattern]) })),
+								)) &&
 						(hidden || !hiddenBelow(head, path)),
 				);
 				if (scope) {
@@ -1981,7 +2015,7 @@ export class Consumer {
 		return next;
 	}
 
-	async #runAnnounced(producer: announce.Producer, patterns: Path.Patterns, hidden: boolean): Promise<void> {
+	async #runAnnounced(producer: announce.Producer, patterns: Path.Scope, hidden: boolean): Promise<void> {
 		// Keyed by the presented path (from the origin, not the scope), valued by identity
 		// plus route. Diffing the instance rather than mere presence means a republish emits a
 		// restart; a re-price of the same instance emits an update.

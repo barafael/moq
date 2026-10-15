@@ -1,0 +1,11 @@
+[
+  {"include":["**"],"exclude":["internal/**"],"paths":{"":true,"internal":false,"internal/x":false,"internalized/x":true,".private/x":true},"empty":false},
+  {"include":["room/**"],"exclude":["room","room/*","room/*/*/**"],"paths":{"room":false,"room/a":false,"room/a/b":false},"empty":true},
+  {"include":["**/chat"],"exclude":["*/chat"],"paths":{"chat":true,"a/chat":false,"a/b/chat":true},"empty":false},
+  {"include":["pre*suf"],"exclude":["presuf"],"paths":{"presuf":false,"preXsuf":true,"pre🦀suf":true},"empty":false},
+  {"include":["🦀*🐟"],"exclude":["🦀*🐟"],"paths":{"🦀🐟":false,"🦀x🐟":false},"empty":true},
+  {"include":["a/**/b"],"exclude":["a/b","a/*/b","a/*/*/**/b"],"paths":{"a/b":false,"a/x/b":false,"a/x/y/b":false},"empty":true},
+  {"include":["a/**"],"exclude":["a"],"paths":{"a":false,"a/b":true},"empty":false},
+  {"include":[""],"exclude":["**/*"],"paths":{"":true,"a":false},"empty":false},
+  {"include":[],"exclude":["**"],"paths":{"":false,"a":false},"empty":true}
+]

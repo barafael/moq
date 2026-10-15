@@ -11432,7 +11432,7 @@ mod tests {
 		let consume = match scoped {
 			true => origin
 				.consume()
-				.scope("", &crate::Pattern::subtree(".stats").unwrap().into())
+				.scope("", crate::Pattern::subtree(".stats").unwrap())
 				.unwrap(),
 			false => origin.consume(),
 		};

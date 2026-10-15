@@ -74,6 +74,25 @@ pub struct Grant {
 	pub expires: Option<Instant>,
 }
 
+/// The connection credential's positive grant, or unknown when a view has exclusions.
+pub(crate) fn peer_grant(
+	publish: Option<&crate::origin::Consumer>,
+	subscribe: Option<&crate::origin::Producer>,
+) -> Option<Grant> {
+	let positive = |scope: crate::Scope| scope.exclude().is_empty().then(|| scope.include().clone());
+	Some(Grant {
+		publish: match subscribe {
+			Some(origin) => positive(origin.allowed())?,
+			None => Patterns::new(),
+		},
+		subscribe: match publish {
+			Some(origin) => positive(origin.allowed())?,
+			None => Patterns::new(),
+		},
+		expires: None,
+	})
+}
+
 impl Grant {
 	/// A grant of everything that never expires.
 	pub fn all() -> Self {

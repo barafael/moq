@@ -13,10 +13,19 @@ if (!url || !path || !["publish", "subscribe"].includes(role)) {
 }
 
 const origin = new Moq.Origin.Producer();
+// Exercise an excluded view, including UNKNOWN/NOT_SUPPORTED credential grants,
+// without changing the finite track the opposite language reads.
+const view = origin.scope(
+	Moq.Path.empty(),
+	new Moq.Path.Scope({
+		include: new Moq.Path.Patterns([Moq.Path.Pattern.all()]),
+		exclude: new Moq.Path.Patterns([Moq.Path.Pattern.parse(".reserved/**")]),
+	}),
+);
 const connection = await Moq.Connection.connect({
 	url: new URL(url),
 	websocket: { enabled: false },
-	...(role === "publish" ? { publish: origin.consume() } : { consume: origin }),
+	...(role === "publish" ? { publish: view.consume() } : { consume: origin }),
 });
 try {
 	if (role === "publish") {

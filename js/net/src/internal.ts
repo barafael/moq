@@ -66,7 +66,11 @@ export function presented(
 		if (Path.hasPrefix(covered, prefix)) {
 			if (covered.length < rootLen) continue;
 			// A scoped route covers only what it claims, so the best one that can serve the prefix wins.
-			const snap = candidates.find((candidate) => !candidate.claim || candidate.claim.overlaps(requested));
+			const snap = candidates.find(
+				(candidate) =>
+					!candidate.claim ||
+					candidate.claim.overlaps(new Path.Scope({ include: new Path.Patterns([requested]) })),
+			);
 			if (!snap) continue;
 			rootLen = covered.length;
 			out.set(Path.empty(), snap);

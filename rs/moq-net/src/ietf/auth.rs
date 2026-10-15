@@ -221,12 +221,8 @@ fn from_code(code: u64) -> Error {
 pub(super) fn peer_grant(
 	publish: Option<&crate::origin::Consumer>,
 	subscribe: Option<&crate::origin::Producer>,
-) -> Grant {
-	Grant {
-		publish: subscribe.map(|origin| origin.allowed()).unwrap_or_default(),
-		subscribe: publish.map(|origin| origin.allowed()).unwrap_or_default(),
-		expires: None,
-	}
+) -> Option<Grant> {
+	crate::auth::peer_grant(publish, subscribe)
 }
 
 /// Present every token this side adds, one AUTH request each, once the peer's SETUP
@@ -426,7 +422,7 @@ pub(super) struct Serve {
 	pub runtime: crate::time::Clock,
 	pub handle: Handle,
 	/// What the peer's connection credential earns by default.
-	pub peer_grant: Grant,
+	pub peer_grant: Option<Grant>,
 }
 
 impl Serve {
@@ -447,10 +443,10 @@ impl Serve {
 			}
 			// Only the connection's own credential has a default answer; a token needs
 			// someone to verify it.
-			None if !msg.token.is_empty() => {
+			None if !msg.token.is_empty() || self.peer_grant.is_none() => {
 				let reply = AuthError {
 					code: NOT_SUPPORTED,
-					reason: "tokens are not verified in band".to_string(),
+					reason: "credential grant cannot be described in band".to_string(),
 				};
 				if stream.writer.encode_message(&reply).await.is_ok() {
 					let _ = stream.writer.close().await;
@@ -458,7 +454,12 @@ impl Serve {
 				return Ok(());
 			}
 			// Re-sent whenever a new limit changes it.
-			None => default = Some(crate::auth::DefaultGrant::new(self.handle.clone(), self.peer_grant)),
+			None => {
+				default = Some(crate::auth::DefaultGrant::new(
+					self.handle.clone(),
+					self.peer_grant.expect("positive grant checked"),
+				))
+			}
 		}
 
 		let err = match serve_issue(&self.runtime, issue, default.as_mut(), &mut stream, version).await {

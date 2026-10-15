@@ -257,7 +257,7 @@ export interface AuthSessionProps {
 	/** How this session's wire carries the exchange, or undefined when it carries none. */
 	wire?: AuthWire;
 	/** What the default acceptor grants the peer's connection credential. */
-	peerGrant: Grant;
+	peerGrant?: Grant;
 }
 
 /**
@@ -270,7 +270,7 @@ export class AuthSession implements AuthApi {
 	/** The peer sent a malformed AUTH message; the owning connection closes the session. */
 	readonly violated = new Once<ProtocolViolation>();
 	#wire?: AuthWire;
-	#peerGrant: Grant;
+	#peerGrant?: Grant;
 
 	#union = new Signal<Grant | undefined>(undefined);
 	// The peer replied to some token, so the union is known even when empty.
@@ -349,10 +349,10 @@ export class AuthSession implements AuthApi {
 		if (this.#acceptor instanceof RequestQueue) {
 			const request = new PeerRequest(token, issued);
 			this.#acceptor.push(request);
-		} else if (token.byteLength > 0) {
+		} else if (token.byteLength > 0 || this.#peerGrant === undefined) {
 			// Only the connection's own credential has a default answer; a token needs
 			// someone to verify it.
-			await wire.unsupported(stream, "no acceptor for tokens");
+			await wire.unsupported(stream, "credential grant cannot be described in band");
 			return;
 		} else {
 			issued.update(this.#peerGrant);

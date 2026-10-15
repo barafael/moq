@@ -52,6 +52,7 @@ macro_rules! cases {
 
 cases!(
 	both_sides_learn_their_grant_from_scoped_origins,
+	an_excluded_view_keeps_media_working_with_an_unknown_grant,
 	a_publish_only_session_grants_no_subscribe,
 	an_out_of_scope_announce_aborts_with_the_path,
 	a_broadcast_published_before_the_grant_is_checked,
@@ -69,6 +70,45 @@ cases!(
 	a_grant_update_too_large_for_one_message_is_unsupported,
 	nothing_outside_the_grant_reaches_the_peer,
 );
+
+/// An unrepresentable default grant is unknown, not a refusal of the connection.
+async fn an_excluded_view_keeps_media_working_with_an_unknown_grant(version: &'static str) {
+	within(async {
+		let source = produce_origin(1);
+		let broadcast = source.create_broadcast("tenant/cam").unwrap();
+		let track = broadcast.create_track("video", timed()).unwrap();
+		broadcast.announce(Default::default()).unwrap();
+		let mut group = track.append_group().unwrap();
+		group.write_frame(moq_net::Timestamp::ZERO, b"scoped".as_ref()).unwrap();
+		group.finish().unwrap();
+		let view = source
+			.scope(
+				"tenant",
+				moq_net::Scope::new(Pattern::all().into(), ".reserved/**".parse::<Pattern>().unwrap().into()),
+			)
+			.unwrap();
+		let destination = produce_origin(2);
+		let pair = connect(Options {
+			version: Some(version),
+			client_publish: Some(view),
+			server_subscribe: Some(destination.clone()),
+			..Default::default()
+		})
+		.await;
+		let received = destination.consume().routed_broadcast("cam").await.unwrap();
+		let mut subscription = received.track("video").unwrap().subscribe(None).await.unwrap();
+		let mut group = subscription.recv_group().await.unwrap().unwrap();
+		assert_eq!(group.read_frame().await.unwrap().unwrap().payload.as_ref(), b"scoped");
+		assert_eq!(
+			pair.server.auth().grant().peek(),
+			None,
+			"an unencodable grant stays unknown"
+		);
+		assert!(granted(&pair.client).await.publish.matches("cam"));
+	})
+	.await
+	.expect("excluded view media timed out");
+}
 
 /// Run each case on moq-transport alone, whose namespace prefixes cannot carry every
 /// pattern.
@@ -309,8 +349,8 @@ async fn both_sides_learn_their_grant_from_scoped_origins(version: &'static str)
 			version: Some(version),
 			client_publish: Some(produce_origin(2)),
 			client_subscribe: Some(produce_origin(3)),
-			server_publish: Some(relay.scope("", &patterns(&["room"])).unwrap()),
-			server_subscribe: Some(relay.scope("", &patterns(&["room/alice"])).unwrap()),
+			server_publish: Some(relay.scope("", patterns(&["room"])).unwrap()),
+			server_subscribe: Some(relay.scope("", patterns(&["room/alice"])).unwrap()),
 			..Default::default()
 		})
 		.await;
@@ -352,7 +392,7 @@ async fn an_out_of_scope_announce_aborts_with_the_path(version: &'static str) {
 		let pair = connect(Options {
 			version: Some(version),
 			client_publish: Some(publisher.clone()),
-			server_subscribe: Some(relay.scope("", &patterns(&["baz"])).unwrap()),
+			server_subscribe: Some(relay.scope("", patterns(&["baz"])).unwrap()),
 			..Default::default()
 		})
 		.await;
@@ -388,7 +428,7 @@ async fn a_broadcast_published_before_the_grant_is_checked(version: &'static str
 		let pair = connect(Options {
 			version: Some(version),
 			client_publish: Some(publisher.clone()),
-			server_subscribe: Some(produce_origin(1).scope("", &patterns(&["baz"])).unwrap()),
+			server_subscribe: Some(produce_origin(1).scope("", patterns(&["baz"])).unwrap()),
 			..Default::default()
 		})
 		.await;
@@ -1200,7 +1240,7 @@ async fn a_narrowing_deafens_one_path(version: &'static str) {
 		let pair = connect(Options {
 			version: Some(version),
 			client_subscribe: Some(received.clone()),
-			server_publish: Some(relay.scope("", &patterns(&["room"])).unwrap()),
+			server_publish: Some(relay.scope("", patterns(&["room"])).unwrap()),
 			..Default::default()
 		})
 		.await;
@@ -1383,7 +1423,7 @@ async fn a_widening_brings_back_a_deafened_path(version: &'static str) {
 		let pair = connect(Options {
 			version: Some(version),
 			client_subscribe: Some(received.clone()),
-			server_publish: Some(relay.scope("", &patterns(&["room"])).unwrap()),
+			server_publish: Some(relay.scope("", patterns(&["room"])).unwrap()),
 			..Default::default()
 		})
 		.await;

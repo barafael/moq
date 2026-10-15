@@ -65,7 +65,7 @@ async fn fetch(
 	// segment such as `.stats` would keep it out of an unscoped listing.
 	let pattern = moq_net::Pattern::subtree(&broadcast).with_context(|| format!("invalid broadcast `{broadcast}`"))?;
 	let origin = moq_tokio::origin::spawn()
-		.scope("", &moq_net::Patterns::from(pattern))
+		.scope("", moq_net::Patterns::from(pattern))
 		.with_context(|| format!("failed to scope to `{broadcast}`"))?;
 
 	// Subscribe-only: this session reads and never publishes.

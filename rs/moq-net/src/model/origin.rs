@@ -17,7 +17,7 @@ use super::{
 	front::{Action, Candidate, Event, Front, Refusal},
 };
 use crate::{
-	AsPath, Error, InvalidPattern, Path, PathOwned, Pattern, Patterns,
+	AsPath, Error, InvalidPattern, Path, PathOwned, Pattern, Patterns, Scope,
 	coding::{BoundsExceeded, Decode, DecodeError, Decoder, Encode, EncodeError, Encoder},
 	path::Segment,
 	time::{Clock, Instant},
@@ -994,7 +994,7 @@ struct RouteEntry {
 	prefix: PathOwned,
 	/// The absolute patterns the announcing producer may serve. The prefix is
 	/// only the wire-visible covering claim; this scope remains authoritative.
-	scope: Patterns,
+	scope: Scope,
 	hops: Hops,
 	cost: Cost,
 	/// The rank of the link the entry arrived on; see [`Producer::with_preference`].
@@ -1077,12 +1077,10 @@ impl RouteEntry {
 	}
 
 	/// Whether this route and `allowed` share any path beneath the advertised prefix.
-	fn overlaps(&self, allowed: &Patterns) -> bool {
-		self.scope.iter().any(|scope| {
-			scope
-				.intersect(&self.claim)
-				.is_ok_and(|scoped| scoped.iter().any(|restriction| allowed.overlaps(restriction)))
-		})
+	fn overlaps(&self, allowed: &Scope) -> bool {
+		self.scope
+			.intersect(&Scope::from(self.claim.clone()))
+			.is_ok_and(|scope| scope.overlaps(allowed).unwrap_or(false))
 	}
 }
 
@@ -1217,7 +1215,7 @@ struct TableCursor {
 	/// The prefix stripped from every delivered path.
 	root: PathOwned,
 	/// The absolute patterns this cursor is scoped to (its token / scope).
-	allowed: Patterns,
+	allowed: Scope,
 	/// Where the cursor hangs in the [`RouteTable`]: the literal heads of
 	/// `allowed`. A route the cursor can see sits at or under one of them, or on
 	/// the walk down to one.
@@ -1237,7 +1235,7 @@ struct TableCursor {
 	holes: Vec<PathOwned>,
 	/// For a cursor reading through a mount: the mount and the handle's own
 	/// patterns, so a wildcard captures what the handle names rather than the target.
-	named: Option<(Mount, Patterns)>,
+	named: Option<(Mount, Scope)>,
 	/// The last delivered best route per presented (relative) prefix, for change
 	/// detection. Servability is part of the dedupe key but never leaves the model.
 	current: HashMap<PathOwned, CursorRoute>,
@@ -1250,7 +1248,7 @@ impl TableCursor {
 	/// building one allocates, and the sweeps below ask this per route per
 	/// cursor.
 	fn presented(&self, prefix: &Path, claim: &Pattern) -> Option<PathOwned> {
-		if !self.allowed.overlaps(claim) {
+		if !self.allowed.overlaps(&Scope::from(claim.clone())).unwrap_or(false) {
 			return None;
 		}
 
@@ -1268,6 +1266,7 @@ impl TableCursor {
 			None => (Pattern::literal(prefix.as_str()).ok()?, &self.allowed),
 		};
 		allowed
+			.include()
 			.iter()
 			.filter_map(|allowed| {
 				allowed
@@ -1361,7 +1360,7 @@ impl TableCursor {
 struct OriginScope {
 	// The paths this handle may reach, absolute, named as the handle sees them:
 	// a path under a mount is authorized here, before it is resolved.
-	allowed: Patterns,
+	allowed: Scope,
 	// The subtrees that resolve elsewhere; see [`Producer::mount`]. Disjoint.
 	mounts: Arc<[Mount]>,
 }
@@ -1402,24 +1401,27 @@ impl Mount {
 	/// A member too deep to root matches no valid path and drops, except that a
 	/// `**` one segment past the limit can only match nothing and is dropped instead,
 	/// so a deep target keeps its exact path.
-	fn translate(&self, patterns: &Patterns) -> Patterns {
-		let target = self.target.as_str();
-		patterns
-			.rebase(self.at.as_str())
-			.iter()
-			.filter_map(|member| {
-				member
-					.rooted(target)
-					.or_else(|_| {
-						let segments = member
-							.segments()
-							.iter()
-							.filter(|segment| **segment != Segment::Globstar);
-						Pattern::new(segments.cloned())?.rooted(target)
-					})
-					.ok()
-			})
-			.collect()
+	fn translate(&self, scope: &Scope) -> Scope {
+		let translate = |patterns: &Patterns| -> Patterns {
+			let target = self.target.as_str();
+			patterns
+				.rebase(self.at.as_str())
+				.iter()
+				.filter_map(|member| {
+					member
+						.rooted(target)
+						.or_else(|_| {
+							let segments = member
+								.segments()
+								.iter()
+								.filter(|segment| **segment != Segment::Globstar);
+							Pattern::new(segments.cloned())?.rooted(target)
+						})
+						.ok()
+				})
+				.collect()
+		};
+		Scope::new(translate(scope.include()), translate(scope.exclude()))
 	}
 
 	/// A handle-side interest head as an origin-side one: a head beneath the mount
@@ -1437,18 +1439,18 @@ impl OriginScope {
 	#[cfg_attr(not(feature = "async"), allow(dead_code))]
 	fn empty() -> Self {
 		Self {
-			allowed: Patterns::new(),
+			allowed: Scope::default(),
 			mounts: Arc::from([]),
 		}
 	}
 
 	/// This view narrowed to the absolute `patterns`: the paths in both.
-	fn narrow(&self, patterns: &Patterns) -> Option<Self> {
-		let allowed = self.allowed.intersect(patterns).ok()?;
-		if allowed.is_empty() {
-			None
+	fn narrow(&self, patterns: &Scope) -> Result<Self, Error> {
+		let allowed = self.allowed.intersect(patterns).map_err(|_| BoundsExceeded)?;
+		if allowed.is_empty().map_err(|_| BoundsExceeded)? {
+			Err(Error::Unauthorized)
 		} else {
-			Some(Self {
+			Ok(Self {
 				allowed,
 				mounts: self.mounts.clone(),
 			})
@@ -1481,7 +1483,7 @@ impl OriginScope {
 	}
 
 	/// What this view reaches, named from `root`.
-	fn relative(&self, root: &Path) -> Patterns {
+	fn relative(&self, root: &Path) -> Scope {
 		self.allowed.rebase(root.as_str())
 	}
 }
@@ -1489,7 +1491,7 @@ impl OriginScope {
 impl Default for OriginScope {
 	fn default() -> Self {
 		Self {
-			allowed: Patterns::from(Pattern::all()),
+			allowed: Scope::from(Pattern::all()),
 			mounts: Arc::from([]),
 		}
 	}
@@ -1497,8 +1499,9 @@ impl Default for OriginScope {
 
 /// The announce-interest prefixes that cover a pattern scope on a prefix-only
 /// wire: each member's literal head, minus heads another already covers.
-pub(crate) fn interest_prefixes(allowed: &Patterns) -> Vec<PathOwned> {
+pub(crate) fn interest_prefixes(allowed: &Scope) -> Vec<PathOwned> {
 	let mut heads: Vec<PathOwned> = allowed
+		.include()
 		.iter()
 		.map(|pattern| Path::new(pattern.head()).to_owned())
 		.collect();
@@ -1948,13 +1951,14 @@ impl Producer {
 	/// Returns a producer rooted at `root` and restricted to matching `patterns`.
 	///
 	/// `root` is relative to this producer's root, and `patterns` are relative to
-	/// the new root. Returns [`Error::Unauthorized`] when the requested scope has
-	/// no overlap with this producer's scope, or [`Error::BoundsExceeded`] when
-	/// rooting the patterns would exceed the path limit.
-	pub fn scope(&self, root: impl AsPath, patterns: &Patterns) -> Result<Producer, Error> {
+	/// the new root. A [`Scope`] retains exclusions; positive [`Patterns`] are a
+	/// shorthand without exclusions. Returns [`Error::Unauthorized`] when no
+	/// path remains, or [`Error::BoundsExceeded`] when rooting or exact scope
+	/// algebra exceeds its limit.
+	pub fn scope(&self, root: impl AsPath, patterns: impl Into<Scope>) -> Result<Producer, Error> {
 		let root = self.root.join(root).to_owned();
-		let rooted = patterns.rooted(root.as_str()).map_err(|_| BoundsExceeded)?;
-		let scope = self.scope.narrow(&rooted).ok_or(Error::Unauthorized)?;
+		let rooted = patterns.into().rooted(root.as_str()).map_err(|_| BoundsExceeded)?;
+		let scope = self.scope.narrow(&rooted)?;
 		Ok(Producer {
 			hop: self.hop,
 			scope,
@@ -2002,7 +2006,8 @@ impl Producer {
 		if !self
 			.scope
 			.allowed
-			.covers(&Patterns::from(Pattern::subtree(target.as_str())?))
+			.covers(&Scope::from(Pattern::subtree(target.as_str())?))
+			.map_err(|_| BoundsExceeded)?
 		{
 			return Err(Error::Unauthorized);
 		}
@@ -2050,8 +2055,8 @@ impl Producer {
 		&self.root
 	}
 
-	/// The patterns this producer may publish under, relative to its root.
-	pub fn allowed(&self) -> Patterns {
+	/// The included and excluded paths this producer may publish, relative to its root.
+	pub fn allowed(&self) -> Scope {
 		self.scope.relative(&self.root)
 	}
 
@@ -2074,7 +2079,7 @@ struct Announcing {
 	/// route's prefix shape.
 	prefixes: Vec<(PathOwned, Pattern)>,
 	/// The absolute paths the producer is authorized to serve.
-	scope: Patterns,
+	scope: Scope,
 	local: bool,
 	/// The link the producer's routes arrive on.
 	link: Link,
@@ -2091,7 +2096,13 @@ impl Announcing {
 			return Err(BoundsExceeded.into());
 		}
 		let claim = prefix_claim(&requested)?;
-		if !producer.scope.allowed.overlaps(&claim) || !producer.scope.publishes(&requested) {
+		if !producer
+			.scope
+			.allowed
+			.overlaps(&Scope::from(claim.clone()))
+			.unwrap_or(false)
+			|| !producer.scope.publishes(&requested)
+		{
 			return Err(Error::Unauthorized);
 		}
 		Ok(Self {
@@ -4964,7 +4975,7 @@ impl Consumer {
 	pub fn announced(&self) -> AnnounceConsumer {
 		let state = kio::Producer::<OriginConsumerState>::default();
 		let cursor = |root: PathOwned,
-		              allowed: Patterns,
+		              allowed: Scope,
 		              hidden: Hidden,
 		              mount: Option<&Mount>,
 		              under: PathOwned,
@@ -5026,7 +5037,7 @@ impl Consumer {
 			let allowed = mount.translate(&self.scope.allowed);
 			// Hidden at the mount point means hidden throughout: the dot segment is above
 			// everything the mount holds. A top-up feed's rule moves onto the target.
-			if allowed.is_empty()
+			if allowed.is_empty().unwrap_or(true)
 				|| !(self.hidden.include
 					|| !hides(
 						self.hidden.from.as_ref().map(std::slice::from_ref).unwrap_or(&heads),
@@ -5123,7 +5134,7 @@ impl Consumer {
 		// the rest of the origin never wakes it, and a route claiming only paths beneath it
 		// (a scoped dynamic at the same prefix) never masks the one that serves it, just as a
 		// request skips it.
-		let consumer = self.scope("", &Patterns::from(Pattern::literal(path.as_str())?))?;
+		let consumer = self.scope("", Scope::from(Pattern::literal(path.as_str())?))?;
 
 		// `scope` keeps narrower permissions intact: on a consumer limited to
 		// `foo/specific`, no route can ever cover `foo`.
@@ -5168,13 +5179,14 @@ impl Consumer {
 	/// Returns a consumer rooted at `root` and restricted to matching `patterns`.
 	///
 	/// `root` is relative to this consumer's root, and `patterns` are relative to
-	/// the new root. Returns [`Error::Unauthorized`] when the requested scope has
-	/// no overlap with this consumer's scope, or [`Error::BoundsExceeded`] when
-	/// rooting the patterns would exceed the path limit.
-	pub fn scope(&self, root: impl AsPath, patterns: &Patterns) -> Result<Consumer, Error> {
+	/// the new root. A [`Scope`] retains exclusions; positive [`Patterns`] are a
+	/// shorthand without exclusions. Returns [`Error::Unauthorized`] when no
+	/// path remains, or [`Error::BoundsExceeded`] when rooting or exact scope
+	/// algebra exceeds its limit.
+	pub fn scope(&self, root: impl AsPath, patterns: impl Into<Scope>) -> Result<Consumer, Error> {
 		let root = self.root.join(root).to_owned();
-		let rooted = patterns.rooted(root.as_str()).map_err(|_| BoundsExceeded)?;
-		let scope = self.scope.narrow(&rooted).ok_or(Error::Unauthorized)?;
+		let rooted = patterns.into().rooted(root.as_str()).map_err(|_| BoundsExceeded)?;
+		let scope = self.scope.narrow(&rooted)?;
 		Ok(Consumer {
 			scope,
 			root,
@@ -5354,8 +5366,8 @@ impl Consumer {
 		&self.root
 	}
 
-	/// The patterns this consumer may reach, relative to its root.
-	pub fn allowed(&self) -> Patterns {
+	/// The included and excluded paths this consumer may reach, relative to its root.
+	pub fn allowed(&self) -> Scope {
 		self.scope.relative(&self.root)
 	}
 
@@ -5806,6 +5818,115 @@ mod tests {
 			.collect()
 	}
 
+	fn excluding(include: &[&str], exclude: &[&str]) -> Scope {
+		let patterns = |values: &[&str]| values.iter().map(|value| value.parse().unwrap()).collect();
+		Scope::new(patterns(include), patterns(exclude))
+	}
+
+	#[moq_net_sim::test]
+	#[cfg(feature = "async")]
+	async fn excluded_paths_never_announce_or_resolve_through_a_rooted_view() {
+		let origin = origin(1).produce();
+		let public = origin.publish("tenant/cam", Route::default()).unwrap();
+		let private = origin.publish("tenant/.private/cam", Route::default()).unwrap();
+		let reserved = origin.publish("tenant/.reserved/cam", Route::default()).unwrap();
+		let boundary = origin.publish("tenant/.reserved-other/cam", Route::default()).unwrap();
+		let view = origin
+			.consume()
+			.scope("tenant", excluding(&["**"], &[".reserved/**"]))
+			.unwrap()
+			.with_hidden(true);
+		let mut announced = view.announced();
+		announced.assert_next_active(".private/cam");
+		announced.assert_next_active(".reserved-other/cam");
+		announced.assert_next_active("cam");
+		announced.assert_next_wait();
+		assert!(matches!(
+			view.request_broadcast(".reserved/cam", None).await,
+			Err(Error::Unauthorized)
+		));
+		assert!(view.request_broadcast(".private/cam", None).await.is_ok());
+		let nested = view.scope(".reserved", Pattern::all());
+		assert!(matches!(nested, Err(Error::Unauthorized)));
+		drop((public, private, reserved, boundary));
+	}
+
+	#[test]
+	fn excluded_publisher_and_jointly_empty_scope_are_refused() {
+		let origin = origin(1).produce();
+		let view = origin.scope("tenant", excluding(&["**"], &[".reserved/**"])).unwrap();
+		assert!(matches!(
+			view.publish(".reserved/cam", Route::default()),
+			Err(Error::Unauthorized)
+		));
+		assert!(matches!(
+			view.dynamic(".reserved", Route::default()),
+			Err(Error::Unauthorized)
+		));
+		assert!(
+			view.dynamic("", Route::default()).is_ok(),
+			"a broad capability still serves permitted paths"
+		);
+		assert!(matches!(
+			origin.scope("", excluding(&["room/**"], &["room", "room/*", "room/*/*/**"])),
+			Err(Error::Unauthorized)
+		));
+	}
+
+	#[moq_net_sim::test]
+	#[cfg(feature = "async")]
+	async fn mounted_views_keep_exclusions_in_the_handles_coordinates() {
+		let origin = origin(1).produce();
+		let public = origin.publish("source/cam", Route::default()).unwrap();
+		let secret = origin.publish("source/secret/cam", Route::default()).unwrap();
+		let mounted = origin.mount("alias", "source").unwrap();
+		let view = mounted
+			.scope("alias", excluding(&["**"], &["secret/**"]))
+			.unwrap()
+			.consume();
+		let mut announced = view.announced();
+		announced.assert_next_active("cam");
+		announced.assert_next_wait();
+		assert!(view.request_broadcast("cam", None).await.is_ok());
+		assert!(matches!(
+			view.request_broadcast("secret/cam", None).await,
+			Err(Error::Unauthorized)
+		));
+		let restricted = origin.scope("", excluding(&["**"], &["source/secret/**"])).unwrap();
+		assert!(
+			matches!(restricted.mount("alias", "source"), Err(Error::Unauthorized)),
+			"a mount cannot bypass a target exclusion"
+		);
+		drop((public, secret));
+	}
+
+	#[moq_net_sim::test]
+	#[cfg(feature = "async")]
+	async fn a_broad_excluded_route_receives_only_permitted_demand() {
+		let producer = origin(1).produce();
+		let view = producer.scope("", excluding(&["**"], &["reserved/**"])).unwrap();
+		let dynamic = view.dynamic("", Route::default()).unwrap();
+		let refused = producer
+			.consume()
+			.request_broadcast("reserved/cam", None)
+			.now_or_never();
+		assert!(matches!(refused, Some(Err(Error::Unroutable))));
+		assert!(dynamic.requested_broadcast().now_or_never().is_none());
+		let _pending = producer.consume().request_broadcast("cam", None);
+		let request = queued(&dynamic).await;
+		assert_eq!(request.path().as_str(), "cam");
+	}
+
+	#[test]
+	fn a_scope_budget_refusal_is_bounds_exceeded_not_an_empty_permission() {
+		let producer = origin(1).produce();
+		let long = "a".repeat(Pattern::MAX_INTERSECTIONS + 1);
+		assert!(matches!(
+			producer.scope("", excluding(&["**"], &[&long, "b"])),
+			Err(Error::BoundsExceeded(_))
+		));
+	}
+
 	/// Ending a logical track must finish its metadata producer as well as its routes,
 	/// without losing the source's final group or warning about an unfinished writer.
 	#[test]
@@ -5958,12 +6079,12 @@ mod tests {
 
 		// Naming the dot segment lists what is under it, by root or by pattern.
 		let mut announced = consumer
-			.scope(".stats", &Patterns::from(Pattern::all()))
+			.scope(".stats", Patterns::from(Pattern::all()))
 			.unwrap()
 			.announced();
 		announced.assert_next_active("node");
 		announced.assert_next_wait();
-		let mut announced = consumer.scope("", &scopes(&["room/.internal"])).unwrap().announced();
+		let mut announced = consumer.scope("", scopes(&["room/.internal"])).unwrap().announced();
 		announced.assert_next_active("room/.internal");
 		announced.assert_next_wait();
 
@@ -5973,10 +6094,10 @@ mod tests {
 		announced.assert_next_active(".stats/node");
 		announced.assert_next_active("room/.internal");
 		announced.assert_next_wait();
-		let room = consumer.scope("", &scopes(&["room"])).unwrap().beyond(&consumer);
+		let room = consumer.scope("", scopes(&["room"])).unwrap().beyond(&consumer);
 		let mut announced = room.announced();
 		announced.assert_next_wait();
-		let stats = consumer.scope("", &scopes(&[".stats"])).unwrap().beyond(&consumer);
+		let stats = consumer.scope("", scopes(&[".stats"])).unwrap().beyond(&consumer);
 		let mut announced = stats.announced();
 		announced.assert_next_active(".stats/node");
 		announced.assert_next_wait();
@@ -6058,7 +6179,7 @@ mod tests {
 
 		// Rooted inside the mount, the claim covers the root itself.
 		let mut inside = project
-			.scope(".svc", &Patterns::from(Pattern::all()))
+			.scope(".svc", Patterns::from(Pattern::all()))
 			.unwrap()
 			.announced();
 		inside.assert_next_active("");
@@ -6124,7 +6245,7 @@ mod tests {
 		assert_eq!(update.prefix.as_str(), ".svc/foo");
 		assert_eq!(update.captures, Some(vec![".svc/foo".parse::<Pattern>().unwrap()]));
 
-		let inside = project.scope(".svc", &Patterns::from(Pattern::all())).unwrap();
+		let inside = project.scope(".svc", Patterns::from(Pattern::all())).unwrap();
 		let Some(AnnounceEvent::Start(update)) = inside.announced().try_next() else {
 			panic!("expected foo to start");
 		};
@@ -6143,7 +6264,7 @@ mod tests {
 		let project = producer
 			.mount("p1/.svc", deep.as_str())
 			.unwrap()
-			.scope("p1", &Patterns::from(Pattern::all()))
+			.scope("p1", Patterns::from(Pattern::all()))
 			.unwrap()
 			.consume()
 			.with_hidden(true);
@@ -6155,7 +6276,7 @@ mod tests {
 		// Beneath the mount the target has no room: refused, never handed to a route.
 		let err = project.request_broadcast(".svc/x", None).await.err().unwrap();
 		assert!(matches!(err, Error::BoundsExceeded(_)), "{err:?}");
-		let inside = project.scope(".svc/x", &Patterns::from(Pattern::all())).unwrap();
+		let inside = project.scope(".svc/x", Patterns::from(Pattern::all())).unwrap();
 		inside.announced().assert_next_wait();
 	}
 
@@ -6170,7 +6291,7 @@ mod tests {
 		let project = producer
 			.mount("p1/a/b", "t")
 			.unwrap()
-			.scope("p1", &Patterns::from(Pattern::all()))
+			.scope("p1", Patterns::from(Pattern::all()))
 			.unwrap()
 			.consume();
 
@@ -6192,7 +6313,7 @@ mod tests {
 		let project = producer
 			.mount("p1/.svc", ".svc/p1")
 			.unwrap()
-			.scope("p1", &Patterns::from(Pattern::all()))
+			.scope("p1", Patterns::from(Pattern::all()))
 			.unwrap();
 		assert!(matches!(project.create_broadcast(".svc/foo"), Err(Error::Unauthorized)));
 		assert!(matches!(
@@ -6210,7 +6331,7 @@ mod tests {
 	#[test]
 	fn mount_never_widens_a_scope() {
 		let (producer, _driver) = Producer::new(Config::new(origin(1)));
-		let project = producer.scope("", &scopes(&["p1"])).unwrap();
+		let project = producer.scope("", scopes(&["p1"])).unwrap();
 		assert!(matches!(project.mount("p1/.svc", ".svc/p1"), Err(Error::Unauthorized)));
 
 		let mounted = producer.mount("p1/.svc", ".svc/p1").unwrap();
@@ -6390,7 +6511,7 @@ mod tests {
 	#[test]
 	fn announce_keeps_its_prefix_under_a_producer_scope() {
 		let producer = origin(1).produce();
-		let scoped = producer.scope("", &scopes(&["room"])).unwrap();
+		let scoped = producer.scope("", scopes(&["room"])).unwrap();
 
 		// Prefix advertisements stay prefixes. The scope filters requests locally.
 		let _a = scoped.announce("", Route::default()).unwrap();
@@ -6409,7 +6530,7 @@ mod tests {
 		let producer = origin(1).produce();
 		let _a = producer.announce("", Route::default()).unwrap();
 
-		let consumer = producer.consume().scope("", &scopes(&["room"])).unwrap();
+		let consumer = producer.consume().scope("", scopes(&["room"])).unwrap();
 		let mut announced = consumer.announced();
 		announced.assert_next_active("");
 	}
@@ -6421,7 +6542,7 @@ mod tests {
 
 		let consumer = producer
 			.consume()
-			.scope("room", &Patterns::from(Pattern::all()))
+			.scope("room", Patterns::from(Pattern::all()))
 			.unwrap();
 		let mut announced = consumer.announced();
 		announced.assert_next_active("alice");
@@ -6614,7 +6735,7 @@ mod tests {
 		let claims = producer.clone();
 		let claim = move |prefix: &str, scope: &str, hop: u64, cost: u64| {
 			claims
-				.scope("", &scopes(&[scope]))
+				.scope("", scopes(&[scope]))
 				.unwrap()
 				.dynamic(prefix, Route::default().with_hops(hops(&[hop])).with_cost(cost))
 				.unwrap()
@@ -6661,11 +6782,7 @@ mod tests {
 		let _a = claim("room", "room/video/a", 10, 5);
 		let b = claim("room", "room/video/b", 11, 9);
 		let chat = claim("room", "room/chat", 12, 1);
-		let mut video = consumer
-			.clone()
-			.scope("", &scopes(&["room/video"]))
-			.unwrap()
-			.announced();
+		let mut video = consumer.clone().scope("", scopes(&["room/video"])).unwrap().announced();
 		assert_eq!(video.assert_next_active("room").cost, Cost::new(5));
 		let _sticky = hold(&consumer, "room/video/b", &b).await;
 
@@ -6952,7 +7069,7 @@ mod tests {
 
 		let consumer = producer
 			.consume()
-			.scope("room/alice", &Patterns::from(Pattern::all()))
+			.scope("room/alice", Patterns::from(Pattern::all()))
 			.unwrap();
 		let mut announced = consumer.announced();
 		let route = announced.assert_next_active("");
@@ -6968,9 +7085,9 @@ mod tests {
 		let exact = producer.announce("room/alice", Route::default()).unwrap();
 		let consumer = producer
 			.consume()
-			.scope("", &Patterns::from("room/*".parse::<Pattern>().unwrap()))
+			.scope("", Patterns::from("room/*".parse::<Pattern>().unwrap()))
 			.unwrap()
-			.scope("room/alice", &Patterns::from(Pattern::all()))
+			.scope("room/alice", Patterns::from(Pattern::all()))
 			.unwrap();
 		let mut announced = consumer.announced();
 
@@ -7927,7 +8044,7 @@ mod tests {
 	#[test]
 	fn dynamic_may_cover_a_scope_but_disjoint_prefixes_are_refused() {
 		let producer = origin(1).produce();
-		let scoped = producer.scope("", &scopes(&["room"])).unwrap();
+		let scoped = producer.scope("", scopes(&["room"])).unwrap();
 		let _broad = scoped
 			.dynamic("", Route::default())
 			.expect("an overlapping prefix is accepted");
@@ -7951,13 +8068,13 @@ mod tests {
 
 		let mut matching = producer
 			.consume()
-			.scope("", &scopes(&["room/chat"]))
+			.scope("", scopes(&["room/chat"]))
 			.unwrap()
 			.announced();
 		matching.assert_next_active("");
 		let mut outside = producer
 			.consume()
-			.scope("", &scopes(&["room/video"]))
+			.scope("", scopes(&["room/video"]))
 			.unwrap()
 			.announced();
 		outside.assert_next_wait();
@@ -7980,7 +8097,7 @@ mod tests {
 		let producer = origin(1).produce();
 		let scoped = |pattern: &str| {
 			producer
-				.scope("", &Patterns::from(pattern.parse::<Pattern>().unwrap()))
+				.scope("", Patterns::from(pattern.parse::<Pattern>().unwrap()))
 				.unwrap()
 		};
 		let _chat = scoped("*/chat").dynamic("", Route::default().with_cost(1)).unwrap();
@@ -7988,7 +8105,7 @@ mod tests {
 
 		let mut video = producer
 			.consume()
-			.scope("", &scopes(&["room/video"]))
+			.scope("", scopes(&["room/video"]))
 			.unwrap()
 			.announced();
 		assert_eq!(video.assert_next_active("").cost, Cost::new(5));
@@ -8003,16 +8120,16 @@ mod tests {
 		let mut excluded = consumer.clone().excluding(origin(7)).announced();
 		let mut video = consumer
 			.clone()
-			.scope("", &scopes(&["room/live/video"]))
+			.scope("", scopes(&["room/live/video"]))
 			.unwrap()
 			.announced();
 		let mut rooted = consumer
-			.scope("room/live", &Patterns::from(Pattern::all()))
+			.scope("room/live", Patterns::from(Pattern::all()))
 			.unwrap()
 			.announced();
 
 		let chat = producer
-			.scope("", &scopes(&["room/live/chat"]))
+			.scope("", scopes(&["room/live/chat"]))
 			.unwrap()
 			.dynamic("room/live", Route::default().with_hops(hops(&[7])).with_cost(1))
 			.unwrap();
@@ -8022,7 +8139,7 @@ mod tests {
 		video.assert_next_wait();
 
 		let video_route = producer
-			.scope("", &scopes(&["room/live/video"]))
+			.scope("", scopes(&["room/live/video"]))
 			.unwrap()
 			.dynamic("room/live", Route::default().with_hops(hops(&[8])).with_cost(5))
 			.unwrap();
@@ -8053,7 +8170,7 @@ mod tests {
 		let narrow = producer.dynamic("room/live", Route::default().with_cost(9)).unwrap();
 		let mut announced = producer
 			.consume()
-			.scope("room/live/video", &Patterns::from(Pattern::all()))
+			.scope("room/live/video", Patterns::from(Pattern::all()))
 			.unwrap()
 			.announced();
 		assert_eq!(announced.assert_next_active("").cost, Cost::new(9));
@@ -8302,7 +8419,7 @@ mod tests {
 		assert_eq!(announced.assert_next_active("gateway").source(), Source::Local);
 
 		// The mark survives narrowing the handle.
-		let scoped = peer.scope("room", &Patterns::from(Pattern::all())).unwrap();
+		let scoped = peer.scope("room", Patterns::from(Pattern::all())).unwrap();
 		let _nested = scoped.dynamic("x", Route::default().with_via(origin(8))).unwrap();
 		assert_eq!(announced.assert_next_active("room/x").source(), Source::Peer(origin(8)));
 	}
@@ -8968,7 +9085,7 @@ mod tests {
 	fn out_of_scope_request_never_reaches_the_dynamic_handler() {
 		let producer = origin(1).produce();
 		let dynamic = producer.dynamic("", Route::default()).unwrap();
-		let scoped = producer.consume().scope("", &scopes(&["tenant-a"])).unwrap();
+		let scoped = producer.consume().scope("", scopes(&["tenant-a"])).unwrap();
 
 		// `tenant-a-other` shares a character prefix but not a segment, so this
 		// also pins that the check is segment-aware rather than textual.
@@ -10568,7 +10685,7 @@ mod tests {
 		let producer = origin(1).produce();
 		let _a = producer.announce("", Route::default()).unwrap();
 
-		let consumer = producer.consume().scope("", &scopes(&["alpha", "beta"])).unwrap();
+		let consumer = producer.consume().scope("", scopes(&["alpha", "beta"])).unwrap();
 		let mut announced = consumer.announced();
 		announced.assert_next_active("");
 		announced.assert_next_wait();
@@ -10579,26 +10696,36 @@ mod tests {
 		let producer = origin(1).produce();
 
 		// The root grant is `**`, the old empty prefix.
-		let root = producer.scope("", &Patterns::from(Pattern::all())).unwrap();
-		assert_eq!(root.allowed(), Patterns::from(Pattern::all()));
+		let root = producer.scope("", Patterns::from(Pattern::all())).unwrap();
+		assert_eq!(root.allowed(), Scope::from(Pattern::all()));
 
 		// `foo/**` keeps the old `foo` prefix meaning.
-		let scoped = producer.scope("", &scopes(&["room"])).unwrap();
-		assert_eq!(scoped.allowed(), scopes(&["room"]));
+		let scoped = producer.scope("", scopes(&["room"])).unwrap();
+		assert_eq!(scoped.allowed().include().clone(), scopes(&["room"]));
 
 		// Multiple prefixes round-trip, with overlap collapsed.
-		let multi = producer.scope("", &scopes(&["room", "room/chat", "anon"])).unwrap();
-		assert_eq!(multi.allowed(), scopes(&["room", "anon"]));
+		let multi = producer.scope("", scopes(&["room", "room/chat", "anon"])).unwrap();
+		assert_eq!(multi.allowed().include().clone(), scopes(&["room", "anon"]));
 
 		// The consumer side reports the same way.
-		let consumer = producer.consume().scope("", &scopes(&["room"])).unwrap();
-		assert_eq!(consumer.allowed(), scopes(&["room"]));
+		let consumer = producer.consume().scope("", scopes(&["room"])).unwrap();
+		assert_eq!(consumer.allowed().include().clone(), scopes(&["room"]));
 
 		for text in ["room", "", "*room", "room/*", "*", "**/room", "room/**/chat", "*.hang"] {
 			let union = Patterns::from(text.parse::<Pattern>().unwrap());
-			assert_eq!(producer.scope("", &union).expect(text).allowed(), union, "{text}");
 			assert_eq!(
-				producer.consume().scope("", &union).expect(text).allowed(),
+				producer.scope("", &union).expect(text).allowed().include().clone(),
+				union,
+				"{text}"
+			);
+			assert_eq!(
+				producer
+					.consume()
+					.scope("", &union)
+					.expect(text)
+					.allowed()
+					.include()
+					.clone(),
 				union,
 				"{text}"
 			);
@@ -10607,7 +10734,7 @@ mod tests {
 		let mixed: Patterns = ["room/**".parse().unwrap(), "other".parse().unwrap()]
 			.into_iter()
 			.collect();
-		assert_eq!(producer.scope("", &mixed).unwrap().allowed(), mixed);
+		assert_eq!(producer.scope("", &mixed).unwrap().allowed().include().clone(), mixed);
 	}
 
 	#[test]
@@ -10618,7 +10745,7 @@ mod tests {
 		// Routes and cursors hang at their prefixes; the nodes on the way exist
 		// only while something is there.
 		let cursor = consumer
-			.scope("", &scopes(&["room/a", "other/deep/head"]))
+			.scope("", scopes(&["room/a", "other/deep/head"]))
 			.unwrap()
 			.announced();
 		let route = producer.announce("room/a/b/c", Route::default()).unwrap();
@@ -10881,9 +11008,9 @@ mod tests {
 		let producer = origin(1).produce();
 
 		// An empty union grants nothing: scoping is refused, like a disjoint prefix.
-		assert!(matches!(producer.scope("", &Patterns::new()), Err(Error::Unauthorized)));
+		assert!(matches!(producer.scope("", Patterns::new()), Err(Error::Unauthorized)));
 		assert!(matches!(
-			producer.consume().scope("", &Patterns::new()),
+			producer.consume().scope("", Patterns::new()),
 			Err(Error::Unauthorized)
 		));
 	}
@@ -10893,19 +11020,16 @@ mod tests {
 		let producer = origin(1).produce();
 
 		// Narrowing twice intersects; the grant stays in the new vocabulary.
-		let scoped = producer.scope("", &scopes(&["room"])).unwrap();
-		let nested = scoped.scope("", &scopes(&["room/chat"])).unwrap();
-		assert_eq!(nested.allowed(), scopes(&["room/chat"]));
+		let scoped = producer.scope("", scopes(&["room"])).unwrap();
+		let nested = scoped.scope("", scopes(&["room/chat"])).unwrap();
+		assert_eq!(nested.allowed().include().clone(), scopes(&["room/chat"]));
 
 		// A disjoint nesting is refused, not widened.
-		assert!(matches!(
-			scoped.scope("", &scopes(&["other"])),
-			Err(Error::Unauthorized)
-		));
+		assert!(matches!(scoped.scope("", scopes(&["other"])), Err(Error::Unauthorized)));
 
 		// A literal root rebases the grant without changing its meaning.
-		let rooted = nested.scope("room/chat", &Patterns::from(Pattern::all())).unwrap();
-		assert_eq!(rooted.allowed(), scopes(&[""]));
+		let rooted = nested.scope("room/chat", Patterns::from(Pattern::all())).unwrap();
+		assert_eq!(rooted.allowed().include().clone(), scopes(&[""]));
 
 		// Publishing through the nested view lands where the root says.
 		let broadcast = nested.create_broadcast("room/chat/live").unwrap();
@@ -10917,20 +11041,26 @@ mod tests {
 	fn scope_intersects_and_rebases_arbitrary_grants() {
 		let producer = origin(1).produce();
 		let rooms = producer
-			.scope("", &Patterns::from("room/*".parse::<Pattern>().unwrap()))
+			.scope("", Patterns::from("room/*".parse::<Pattern>().unwrap()))
 			.unwrap();
 		let chats = rooms
-			.scope("", &Patterns::from("*/chat".parse::<Pattern>().unwrap()))
+			.scope("", Patterns::from("*/chat".parse::<Pattern>().unwrap()))
 			.unwrap();
-		assert_eq!(chats.allowed(), Patterns::from("room/chat".parse::<Pattern>().unwrap()));
+		assert_eq!(
+			chats.allowed().include().clone(),
+			Patterns::from("room/chat".parse::<Pattern>().unwrap())
+		);
 
 		let exact = producer
-			.scope("", &Patterns::from("room/alice".parse::<Pattern>().unwrap()))
+			.scope("", Patterns::from("room/alice".parse::<Pattern>().unwrap()))
 			.unwrap();
-		let rooted = exact.scope("room", &Patterns::from(Pattern::all())).unwrap();
-		assert_eq!(rooted.allowed(), Patterns::from("alice".parse::<Pattern>().unwrap()));
+		let rooted = exact.scope("room", Patterns::from(Pattern::all())).unwrap();
+		assert_eq!(
+			rooted.allowed().include().clone(),
+			Patterns::from("alice".parse::<Pattern>().unwrap())
+		);
 		assert!(matches!(
-			exact.scope("room/bob", &Patterns::from(Pattern::all())),
+			exact.scope("room/bob", Patterns::from(Pattern::all())),
 			Err(Error::Unauthorized)
 		));
 
@@ -10948,7 +11078,7 @@ mod tests {
 		let producer = origin(1).produce();
 		let consumer = producer
 			.consume()
-			.scope("", &Patterns::from("room/*/chat".parse::<Pattern>().unwrap()))
+			.scope("", Patterns::from("room/*/chat".parse::<Pattern>().unwrap()))
 			.unwrap();
 		let mut announced = consumer.announced();
 

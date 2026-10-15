@@ -114,7 +114,7 @@ impl Origin {
 		let origin = self.active.get_mut(origin).ok_or(Error::OriginNotFound)?;
 		let consumer = origin
 			.consume()
-			.scope("", &moq_net::Patterns::from(scope))?
+			.scope("", moq_net::Patterns::from(scope))?
 			.with_hidden(hidden)
 			.announced();
 		let channel = oneshot::channel();

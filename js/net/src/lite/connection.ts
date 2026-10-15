@@ -150,10 +150,13 @@ export class Connection implements Established {
 		// since we consume on demand, and subscribing to whatever we publish.
 		this.#auth = new AuthSession({
 			wire: hasAuth(version) ? new LiteAuthWire(quic, version) : undefined,
-			peerGrant: {
-				publish: new Path.Patterns([Path.Pattern.all()]),
-				subscribe: new Path.Patterns(publish ? [Path.Pattern.all()] : []),
-			},
+			peerGrant:
+				publish && publish.allowed().exclude.size > 0
+					? undefined
+					: {
+							publish: new Path.Patterns([Path.Pattern.all()]),
+							subscribe: publish?.allowed().include ?? new Path.Patterns(),
+						},
 		});
 		this.#auth.violated.subscribe((err) => {
 			if (!err) return;

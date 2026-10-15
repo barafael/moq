@@ -8,7 +8,7 @@
 //! interests can share one dialect. Literal path construction and wire
 //! decoding retain their existing behavior.
 
-pub use moq_pattern::{InvalidPattern, Pattern, Patterns, Segment, Specificity};
+pub use moq_pattern::{InvalidPattern, Pattern, Patterns, Scope, ScopeError, Segment, Specificity};
 
 use std::borrow::Cow;
 use std::fmt::{self, Display};

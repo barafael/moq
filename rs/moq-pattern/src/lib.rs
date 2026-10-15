@@ -4,7 +4,8 @@
 //! reduced by exact containment. Matching is linear. [`Pattern::literal`] rejects `*`
 //! because it is reserved for pattern syntax.
 //!
-//! `moq-net` and `moq-auth` re-export this crate. The TypeScript twin is `@moq/pattern`.
+//! `moq-net` re-exports these types; `moq-auth` re-exports the positive pattern types.
+//! The TypeScript twin is `@moq/pattern`.
 //!
 //! # Grammar
 //!
@@ -30,6 +31,11 @@
 //! both the empty pattern and `**/a`, and an intersection never picks one lossy
 //! overlap: `a/**` with `**/a` is both `a` and `a/**/a`. A union reduces per member; a
 //! candidate covered only jointly by several members is refused.
+//!
+//! [`Scope`] combines an included union with an excluded union. Exclusions always win,
+//! move with roots, and survive intersections. Its overlap and coverage checks are
+//! exact even when several exclusions jointly cover a positive pattern; operations
+//! exceeding the complexity budget return [`ScopeError`] rather than dropping a deny.
 //!
 //! # CAT / C4M
 //!
@@ -66,6 +72,8 @@
 
 mod pattern;
 mod patterns;
+mod scope;
 
 pub use pattern::{IntersectionError, InvalidPattern, Pattern, Segment, Specificity};
 pub use patterns::Patterns;
+pub use scope::{Scope, ScopeError};

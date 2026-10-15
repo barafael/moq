@@ -158,6 +158,13 @@ A subscriber watching under a root sees advertisements named relative to that
 root. When several routes advertise one prefix, each reader sees the best route
 its scope can use.
 
+Embedded origins can combine included and excluded patterns in a `Scope` to
+filter both discovery and requests. Exclusions win and follow nested roots, so
+a view can retain hidden application paths while withholding a reserved subtree.
+This is local view policy; it adds no exclusion fields to signed tokens or AUTH
+grants. A connection credential whose view cannot be described by the negotiated
+AUTH format reports an unknown grant, while the origin still enforces its scope.
+
 ## Authorization
 
 On moq-lite 07 (`moq-lite-07-wip`, opt-in) each side presents a token on its

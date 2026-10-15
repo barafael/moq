@@ -189,10 +189,13 @@ export class Connection implements Established {
 		const session = this.#session;
 		this.#auth = new AuthSession({
 			wire: auth && authSupported(version) ? new IetfAuthWire(session) : undefined,
-			peerGrant: {
-				publish: new Path.Patterns([Path.Pattern.all()]),
-				subscribe: new Path.Patterns(publish ? [Path.Pattern.all()] : []),
-			},
+			peerGrant:
+				publish && publish.allowed().exclude.size > 0
+					? undefined
+					: {
+							publish: new Path.Patterns([Path.Pattern.all()]),
+							subscribe: publish?.allowed().include ?? new Path.Patterns(),
+						},
 		});
 		this.#client = client;
 
