@@ -283,8 +283,16 @@ fn spawn_serve(
 	});
 }
 
-#[tokio::main]
-async fn main() -> anyhow::Result<()> {
+fn main() -> anyhow::Result<()> {
+	let runtime = tokio::runtime::Builder::new_multi_thread().enable_all().build()?;
+	let result = runtime.block_on(run());
+	// Tokio's stdin read cannot be cancelled. Async cleanup has finished, so
+	// runtime teardown must not wait for a pipe its producer still holds open.
+	runtime.shutdown_background();
+	result
+}
+
+async fn run() -> anyhow::Result<()> {
 	moq_tokio::crypto::install_default().expect("failed to install default crypto provider");
 
 	let mut cli = Invocation::parse().await;
