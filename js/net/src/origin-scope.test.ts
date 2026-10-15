@@ -26,7 +26,7 @@ test("rooted exclusions hide reserved paths and retain private names and boundar
 	const announces = await announcedView(consumer, undefined, { hidden: true });
 	try {
 		expect([...announces.peek().keys()].sort()).toEqual(
-			[".private/cam", ".reserved-other/cam", "cam"].map(Path.from),
+			[".private/cam", ".reserved-other/cam", "cam"].map((path) => Path.from(path)),
 		);
 		expect(() => consumer.request(Path.from(".reserved/cam"))).toThrow("outside the origin scope");
 		expect(() => view.scope(Path.from(".reserved"), new Path.Patterns([Path.Pattern.all()]))).toThrow(
