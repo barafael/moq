@@ -1,5 +1,6 @@
 use crate::runtime::Timers as _;
 use crate::{frame, group, origin, track};
+use futures::FutureExt as _;
 use std::{
 	collections::HashMap,
 	ops::Bound,
@@ -60,7 +61,7 @@ struct FetchedGroup {
 	/// The Object ID of the first frame.
 	first: u64,
 	frames: Vec<frame::Frame>,
-	/// The group ended within the range, so every frame it will ever hold was read.
+	/// The fetched range reached the finished group's final object.
 	complete: bool,
 }
 
@@ -102,16 +103,16 @@ async fn read_fetch(
 	// longer holds it.
 	let first = group.index();
 	let mut frames = Vec::new();
-	let mut complete = false;
 	while until.is_none_or(|until| first + (frames.len() as u64) < until) {
-		match group.read_frame().await? {
-			Some(frame) => frames.push(frame),
-			None => {
-				complete = true;
-				break;
-			}
-		}
+		let Some(frame) = group.read_frame().await? else {
+			break;
+		};
+		frames.push(frame);
 	}
+	// A bounded range can reach the group's end without reading its terminal None, and a
+	// start past the end is already there.
+	let complete =
+		matches!(group.finished().now_or_never(), Some(Ok(_))) && group.index() >= group.frame_count() as u64;
 
 	Ok(FetchedGroup {
 		sequence,
@@ -4551,6 +4552,32 @@ mod serve_tests {
 			assert_eq!(ok.end_location, end_location(version, 4, 1), "{version}");
 			assert!(ok.end_of_track, "{version}");
 			assert_eq!(objects, pairs([4])[1..].to_vec(), "{version}");
+		}
+	}
+
+	/// A bounded range ending at the last object still reports the track's end; a
+	/// shorter prefix must not claim that the track ends there.
+	#[tokio::test(start_paused = true)]
+	async fn a_fetch_ending_at_the_final_object_reports_the_end_of_track() {
+		for version in FETCH_DRAFTS {
+			for end in [1, 2] {
+				let mut h = serve(version);
+				publish_pairs(&mut h, 5, None);
+				h.track.finish().unwrap();
+				settle().await;
+
+				let buf = standalone_fetch(
+					&h,
+					Location { group: 4, object: 0 },
+					Location { group: 4, object: end },
+					GroupOrder::Ascending,
+				)
+				.await;
+				let (ok, objects) = fetch_answer(buf, version);
+				assert_eq!(ok.end_location, end_location(version, 4, end - 1), "{version}");
+				assert_eq!(ok.end_of_track, end == 2, "{version}: exclusive end {end}");
+				assert_eq!(objects, pairs([4])[..end as usize].to_vec(), "{version}");
+			}
 		}
 	}
 
