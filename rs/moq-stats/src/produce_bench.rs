@@ -7,6 +7,7 @@ use moq_net::{PathOwned, origin, stats::Registry, track};
 use web_async::time::Instant;
 
 use super::{Drain, PendingPair, Task};
+use crate::DETAIL;
 
 /// Plain and compressed publisher-frame sizes from one tick, in bytes.
 ///
@@ -63,5 +64,20 @@ impl Driver {
 		let root = PathOwned::from(root.to_string());
 		group.adopt_presence(&self.drain.report, root.clone(), PendingPair::default());
 		group.presence[&root].pair.plain.track.subscribe(None)
+	}
+
+	/// Hold the detail track as a reader would, so every tick updates it.
+	/// Keep the returned subscriber: dropping it lets a tick reclaim the track.
+	pub fn hold_detail(&mut self) -> track::Subscriber {
+		let group = self.drain.groups.get_mut("").expect("the depth 0 broadcast");
+		let pair = PendingPair::default()
+			.adopt(&group.broadcast, DETAIL, group.traffic.sequence.clone())
+			.expect("detail track");
+		group.detail.insert(pair).plain.track.subscribe(None)
+	}
+
+	/// The plain detail snapshot still held, in bytes; zero when not held.
+	pub fn detail_bytes(&self) -> usize {
+		self.drain.groups[""].detail.as_ref().map_or(0, |pair| pair.held)
 	}
 }

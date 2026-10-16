@@ -14,7 +14,8 @@ use web_async::spawn;
 use web_async::time::Instant;
 
 use crate::{
-	COMPRESSED_SUFFIX, Totals, parse_presence_track, presence_track, sessions_track, totals_track, traffic_track,
+	COMPRESSED_SUFFIX, DETAIL, Totals, parse_detail_track, parse_presence_track, presence_track, sessions_track,
+	totals_track, traffic_track,
 };
 
 /// Settings for a [`Producer`]. Construct with [`Config::new`] and chain
@@ -445,6 +446,25 @@ impl<V: Serialize> Serialize for Frame<V> {
 	}
 }
 
+/// One tier's entry on the detail track: copies of the frames its per-tier
+/// pairs publish on the same drain. Serializes like [`crate::Detail`].
+#[derive(Default, Serialize)]
+struct DetailEntry {
+	publisher: Frame<Traffic>,
+	subscriber: Frame<Traffic>,
+	sessions: Frame<Presence>,
+}
+
+/// Copy a pair's pending entries into `out`, sorted by key as the pair will
+/// publish them.
+fn copy_frame<V: Copy>(pair: Option<&TrackPair<V>>, out: &mut Frame<V>) {
+	if let Some(pair) = pair {
+		out.entries
+			.extend(pair.frame.entries.iter().map(|(key, value)| (key.clone(), *value)));
+		out.entries.sort_unstable_by(|a, b| a.0.cmp(&b.0));
+	}
+}
+
 /// Writes encoded snapshots with group numbers from its group broadcast's
 /// allocator. The allocator outlives on-demand tracks, so a recreated track
 /// resumes past any group a subscriber has cached, without retaining a
@@ -642,6 +662,11 @@ impl PendingPair {
 			None => broadcast.create_track(format!("{name}{COMPRESSED_SUFFIX}").as_str(), info())?,
 		};
 		Ok(TrackPair::from_tracks(plain_track, compressed_track, sequence))
+	}
+
+	/// Whether either flavor holds a request.
+	fn is_requested(&self) -> bool {
+		self.plain.is_some() || self.compressed.is_some()
 	}
 
 	fn reject(self, err: moq_net::Error) {
@@ -857,6 +882,11 @@ struct GroupPublisher {
 	totals: TotalsTrack,
 	/// Held presence tracks, keyed by auth root.
 	presence: HashMap<PathOwned, PresenceTrack>,
+	/// The held detail track, while anyone reads it.
+	detail: Option<TrackPair<DetailEntry>>,
+	/// Detail requests popped by the last drain, adopted by the next flush so
+	/// the first frame carries that drain's maps rather than an empty one.
+	detail_pending: PendingPair,
 	/// This drain's entries for the group, as indices into the report.
 	traffic_rows: Vec<usize>,
 	session_rows: Vec<usize>,
@@ -1015,6 +1045,8 @@ impl GroupPublisher {
 			names: HashMap::new(),
 			totals,
 			presence: HashMap::new(),
+			detail: None,
+			detail_pending: PendingPair::default(),
 			traffic_rows: Vec::new(),
 			session_rows: Vec::new(),
 			empty_since: None,
@@ -1110,6 +1142,7 @@ impl GroupPublisher {
 	/// Publish the pending frames, then drop change-detection state for
 	/// entries this drain did not carry (the registry pruned them).
 	fn flush(&mut self, tick: u64) {
+		self.flush_detail();
 		self.traffic.flush();
 		self.sessions.flush();
 
@@ -1126,6 +1159,36 @@ impl GroupPublisher {
 		});
 	}
 
+	/// Adopt pending detail requests, then publish every tier's pending maps on
+	/// the held detail track. Runs before the per-tier pairs publish and clear
+	/// the same frames, so both layouts carry identical maps for the drain.
+	fn flush_detail(&mut self) {
+		if self.detail.is_none() && self.detail_pending.is_requested() {
+			let pending = std::mem::take(&mut self.detail_pending);
+			match pending.adopt(&self.broadcast, DETAIL, self.traffic.sequence.clone()) {
+				Ok(pair) => self.detail = Some(pair),
+				Err(err) => tracing::warn!(?err, "stats: failed to adopt detail track"),
+			}
+		}
+		let Some(detail) = &mut self.detail else {
+			return;
+		};
+		for (tier, names) in &self.names {
+			let mut entry = DetailEntry::default();
+			copy_frame(self.traffic.tracks.get(&names.publisher), &mut entry.publisher);
+			copy_frame(self.traffic.tracks.get(&names.subscriber), &mut entry.subscriber);
+			copy_frame(self.sessions.tracks.get(&names.sessions), &mut entry.sessions);
+			if entry.publisher.entries.is_empty()
+				&& entry.subscriber.entries.is_empty()
+				&& entry.sessions.entries.is_empty()
+			{
+				continue;
+			}
+			detail.frame.entries.push((tier.label().clone(), entry));
+		}
+		detail.publish(DETAIL);
+	}
+
 	/// Serve consumer requests for tracks no drain has created yet.
 	///
 	/// A tier's tracks are created lazily, on the tier's first recorded byte, so
@@ -1140,7 +1203,8 @@ impl GroupPublisher {
 	/// A presence track is held only while requested, for a root in this group,
 	/// and answered at once with the root's current counters from `report`.
 	/// It is reclaimed once its last consumer leaves, so the held set follows
-	/// live readers. Any other name is rejected.
+	/// live readers. The detail track is likewise held only while requested,
+	/// adopted by the next flush. Any other name is rejected.
 	fn serve_requests(&mut self, report: &Report, depth: usize) {
 		// Reclaim before parking and adopting, so a freed slot is usable by
 		// this very drain.
@@ -1153,6 +1217,9 @@ impl GroupPublisher {
 			track.pair.finish();
 			false
 		});
+		if let Some(mut detail) = self.detail.take_if(|detail| !detail.is_used()) {
+			detail.finish();
+		}
 
 		// Pop everything queued, grouping the two flavors of one plain name so
 		// a pair is built from the actual requests where present. Only tier
@@ -1160,6 +1227,20 @@ impl GroupPublisher {
 		let mut roots: HashMap<PathOwned, PendingPair> = HashMap::new();
 		let noop = kio::Waiter::noop();
 		while let Poll::Ready(Ok(request)) = self.dynamic.poll_requested_track(&noop) {
+			if let Some(compressed) = parse_detail_track(request.name()) {
+				// A request racing a live track is dropped into a retry, never
+				// refused: a reader takes NotFound to mean an older producer.
+				if self.detail.is_none() {
+					let slot = match compressed {
+						true => &mut self.detail_pending.compressed,
+						false => &mut self.detail_pending.plain,
+					};
+					if slot.is_none() {
+						*slot = Some(request);
+					}
+				}
+				continue;
+			}
 			if let Some((root, compressed)) = parse_presence_track(request.name()) {
 				if group_key(root.as_str(), depth) != self.key.as_str() {
 					request.reject(moq_net::Error::NotFound);
@@ -1234,6 +1315,9 @@ impl GroupPublisher {
 		self.totals.pair.finish();
 		for track in self.presence.values_mut() {
 			track.pair.finish();
+		}
+		if let Some(detail) = &mut self.detail {
+			detail.finish();
 		}
 		self.broadcast.close();
 	}
@@ -2290,6 +2374,124 @@ mod tests {
 			.subscribe(None);
 		drive_tick().await;
 		subscribing.await.expect("the compressed sibling of a held root");
+	}
+
+	/// Subscribe to the detail track on `broadcast`, driving the drain that
+	/// pops the request and the one whose flush adopts it.
+	async fn hold_detail(broadcast: &moq_net::broadcast::Consumer, compressed: bool) -> track::Subscriber {
+		let subscribing = broadcast
+			.track(&crate::detail_track(compressed))
+			.expect("track")
+			.subscribe(None);
+		drive_tick().await;
+		drive_tick().await;
+		subscribing.await.expect("held")
+	}
+
+	/// The detail track carries, per tier, exactly the maps the per-tier
+	/// tracks publish on the same drain, in both encodings.
+	#[tokio::test(start_paused = true)]
+	async fn detail_track_matches_the_tier_tracks() {
+		let (producer, origin) = test_producer(Some("sjc"));
+		let registry = producer.registry();
+		let _moq = feed(registry, Tier::default(), "acme/live", true, 2, 100).await;
+		let _rtmp = feed(registry, Tier::new("rtmp"), "acme/cam", true, 1, 7).await;
+		let _session = registry.tier(Tier::new("rtmp")).session("acme");
+		drive_tick().await;
+		let (_, broadcast) = announced(&origin).await;
+
+		let mut plain = hold_detail(&broadcast, false).await.ordered();
+		let mut last = next_frame(&mut plain).await;
+		while let Some(frame) = try_next_frame(&mut plain) {
+			last = frame;
+		}
+		let detail: crate::DetailFrame = serde_json::from_slice(&last.payload).expect("json parse");
+
+		let mut keys: Vec<_> = detail.keys().cloned().collect();
+		keys.sort();
+		assert_eq!(keys, ["", "rtmp"], "only tiers with entries");
+		assert_eq!(
+			detail[""].publisher,
+			read_last_frame(&broadcast, "publisher.json").await
+		);
+		assert_eq!(detail[""].publisher["acme/live"].bytes, 200);
+		assert_eq!(
+			detail[""].sessions,
+			read_session_frame_last(&broadcast, "sessions.json").await
+		);
+		assert_eq!(
+			detail["rtmp"].publisher,
+			read_last_frame(&broadcast, "rtmp/publisher.json").await
+		);
+		assert_eq!(
+			detail["rtmp"].sessions,
+			read_session_frame_last(&broadcast, "rtmp/sessions.json").await
+		);
+		assert_eq!(detail["rtmp"].sessions["acme"].active(), 1);
+
+		// The compressed flavor decodes to the same frame.
+		let consumer = crate::Consumer::new(broadcast.clone(), crate::consume::Config::new().with_compression(true));
+		let mut compressed = consumer.detail().await.expect("held");
+		assert_eq!(compressed.next().await.expect("ok").expect("frame"), detail);
+	}
+
+	/// The detail track is held only while read: answered once the next drain
+	/// flushes, at `{}` with nothing recorded, and reclaimed once its last
+	/// consumer leaves.
+	#[tokio::test(start_paused = true)]
+	async fn detail_track_is_held_then_reclaimed() {
+		let registry = Registry::new(moq_net::stats::Config::new());
+		let origin = produce_origin();
+		let mut drain = Drain::new(Task {
+			registry: registry.clone(),
+			origin: origin.clone(),
+			prefix: PathOwned::from(".stats"),
+			node: None,
+			depth: 0,
+			linger: DEFAULT_LINGER,
+			interval: Duration::from_secs(1),
+		})
+		.expect("drain");
+		let mut tick = || {
+			drain.collect();
+			drain.publish(Instant::now());
+			drain.groups[""].detail.is_some()
+		};
+		let broadcast = origin
+			.consume()
+			.request_broadcast(".stats/node", None)
+			.await
+			.expect("resolve");
+
+		let subscribing = broadcast
+			.track(&crate::detail_track(false))
+			.expect("track")
+			.subscribe(None);
+		for _ in 0..8 {
+			tokio::task::yield_now().await;
+		}
+		assert!(!tick(), "popped, adopted by the next flush");
+		assert!(tick(), "held");
+		let mut track = subscribing.await.expect("held").ordered();
+		let frame = try_next_frame(&mut track).expect("answered");
+		assert_eq!(&frame.payload[..], b"{}");
+
+		// A session records while held: the same subscription carries it.
+		let _session = registry.tier(Tier::default()).session("acme");
+		tick();
+		let frame = try_next_frame(&mut track).expect("recorded");
+		let detail: crate::DetailFrame = serde_json::from_slice(&frame.payload).expect("json parse");
+		assert_eq!(detail[""].sessions["acme"].active(), 1);
+
+		drop(track);
+		for _ in 0..4 {
+			tokio::task::yield_now().await;
+		}
+		tokio::time::advance(Duration::from_secs(31)).await;
+		for _ in 0..4 {
+			tokio::task::yield_now().await;
+		}
+		assert!(!tick(), "reclaimed");
 	}
 
 	#[tokio::test(start_paused = true)]

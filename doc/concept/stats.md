@@ -67,6 +67,7 @@ comes in two encodings:
 | `[<tier>/]subscriber.json` | broadcast path | [Traffic](#traffic) this node received (ingress) |
 | `[<tier>/]sessions.json` | auth root | [Sessions](#sessions) connected now |
 | `[<root>/]presence.json` | tier | [Sessions](#sessions) under one auth root |
+| `detail.json` | tier | [Detail](#detail): the tier's three per-tier frames |
 
 The default tier's per-tier tracks are unprefixed. A named tier prefixes each
 name with its label and a slash: tier `region/sjc` publishes
@@ -84,6 +85,11 @@ for any auth root in the group (`presence.json` for the empty root). The relay
 answers with the root's current sessions and counts from there, holding a root
 with no sessions open at `{}`, and stops producing it once the last subscriber
 leaves. A root outside the group, or any other name, is refused.
+
+The detail track also exists only while subscribed. It is answered on the
+drain after the request, and stops being produced once the last subscriber
+leaves. A producer predating it refuses the name, so a reader can fall back to
+the per-tier tracks on that refusal.
 
 ## Frames
 
@@ -126,6 +132,22 @@ key missing from a frame had no counters, and one that returns starts from
 zero; the totals keep what it counted. A sessions entry appears while a
 session or HTTP request holds its context and on the tick its last one ends. While a group
 lingers empty, these tracks hold `{}`.
+
+### Detail
+
+```json
+{
+  "": { "publisher": { "acme/live": { ... } }, "subscriber": { ... }, "sessions": { "acme": { ... } } },
+  "rtmp": { ... }
+}
+```
+
+Every tier's `publisher.json`, `subscriber.json`, and `sessions.json` frames
+from the same drain, keyed by tier label, so a reader holding every tier holds
+one track instead of three per tier. Each map follows the
+[per-tier tracks](#per-tier-tracks)' rules exactly; a tier with no entries in
+any of its three is left out. One frame holds the whole group, so it is the
+largest the producer writes.
 
 ### Presence
 

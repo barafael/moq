@@ -4,8 +4,8 @@ use moq_net::stats::{Role, Tier};
 use moq_net::{AsPath, broadcast};
 
 use crate::{
-	PresenceFrame, Result, SessionsFrame, TotalsFrame, TrafficFrame, presence_track, sessions_track, totals_track,
-	traffic_track,
+	DetailFrame, PresenceFrame, Result, SessionsFrame, TotalsFrame, TrafficFrame, detail_track, presence_track,
+	sessions_track, totals_track, traffic_track,
 };
 
 /// Configuration for a [`Consumer`]. Construct with [`Config::new`]
@@ -36,9 +36,10 @@ impl Config {
 /// yielding typed frames per track.
 ///
 /// Subscribe to the tracks you care about with [`Self::totals`],
-/// [`Self::traffic`], [`Self::sessions`], and [`Self::presence`]. A named
-/// tier's tracks are held open with an empty frame until the tier records, and
-/// a root's presence track is produced only while subscribed.
+/// [`Self::traffic`], [`Self::sessions`], [`Self::presence`], and
+/// [`Self::detail`]. A named tier's tracks are held open with an empty frame
+/// until the tier records, and a root's presence track and the detail track
+/// are produced only while subscribed.
 pub struct Consumer {
 	broadcast: broadcast::Consumer,
 	config: Config,
@@ -83,6 +84,16 @@ impl Consumer {
 	pub async fn presence(&self, root: impl AsPath) -> Result<Presence> {
 		let name = presence_track(root, self.config.compression);
 		Ok(Presence {
+			inner: self.subscribe(&name).await?,
+		})
+	}
+
+	/// Subscribe to the detail track, every tier's per-path and per-root maps
+	/// in one frame, awaiting the subscription handshake. A producer predating
+	/// the track refuses it with [`NotFound`](moq_net::Error::NotFound).
+	pub async fn detail(&self) -> Result<Detail> {
+		let name = detail_track(self.config.compression);
+		Ok(Detail {
 			inner: self.subscribe(&name).await?,
 		})
 	}
@@ -144,6 +155,19 @@ impl Presence {
 	/// The next frame, or `None` once the track ends (the producer went away
 	/// or its group unannounced).
 	pub async fn next(&mut self) -> Result<Option<PresenceFrame>> {
+		Ok(self.inner.next().await?)
+	}
+}
+
+/// A typed reader over the detail track; see [`Traffic`].
+pub struct Detail {
+	inner: moq_json::snapshot::Consumer<DetailFrame>,
+}
+
+impl Detail {
+	/// The next frame, or `None` once the track ends (the producer went away
+	/// or its group unannounced).
+	pub async fn next(&mut self) -> Result<Option<DetailFrame>> {
 		Ok(self.inner.next().await?)
 	}
 }

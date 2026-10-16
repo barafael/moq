@@ -24,10 +24,12 @@
 //! `totals.json` track of each [`Tier`]'s [`Totals`] for the epoch, each tier
 //! carries `publisher.json` and `subscriber.json` tracks of per-path
 //! [`Traffic`] and a `sessions.json` track of per-root [`Presence`], and a
-//! reader may request any auth root's `<root>/presence.json` track. Every
-//! track has a `.z` sibling encoded with [`moq_json::snapshot`]; compute names
-//! with [`totals_track`], [`traffic_track`], [`sessions_track`], and
-//! [`presence_track`]. The full
+//! reader may request any auth root's `<root>/presence.json` track, or the
+//! `detail.json` track carrying every tier's per-path and per-root maps in one
+//! [`DetailFrame`]. Every track has a `.z` sibling encoded with
+//! [`moq_json::snapshot`]; compute names with [`totals_track`],
+//! [`traffic_track`], [`sessions_track`], [`presence_track`], and
+//! [`detail_track`]. The full
 //! contract (paths, tracks, both encodings, and counter semantics) is at
 //! <https://doc.moq.dev/concept/stats>.
 
@@ -60,6 +62,24 @@ pub type TotalsFrame = BTreeMap<String, Totals>;
 /// (`""` for the default tier).
 pub type PresenceFrame = BTreeMap<String, Presence>;
 
+/// One frame off the detail track: each tier's per-path and per-root maps,
+/// keyed by tier label (`""` for the default tier).
+pub type DetailFrame = BTreeMap<String, Detail>;
+
+/// One tier's entry on the detail track: the frames its `publisher.json`,
+/// `subscriber.json`, and `sessions.json` tracks carry on the same drain.
+#[derive(Debug, Default, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
+#[non_exhaustive]
+pub struct Detail {
+	/// Egress per broadcast path, as on the tier's `publisher.json`.
+	pub publisher: TrafficFrame,
+	/// Ingress per broadcast path, as on the tier's `subscriber.json`.
+	pub subscriber: TrafficFrame,
+	/// Sessions per auth root, as on the tier's `sessions.json`.
+	pub sessions: SessionsFrame,
+}
+
 /// One tier's cumulative counters for a whole group: everything its entries
 /// sent, received, and connected since the group's epoch began, including
 /// entries that have since ended.
@@ -89,6 +109,9 @@ pub const COMPRESSED_SUFFIX: &str = ".z";
 
 /// The totals track's plain name.
 pub(crate) const TOTALS: &str = "totals.json";
+
+/// The detail track's plain name.
+pub(crate) const DETAIL: &str = "detail.json";
 
 /// The last segment of a presence track's plain name.
 const PRESENCE: &str = "presence.json";
@@ -123,6 +146,26 @@ pub fn totals_track(compressed: bool) -> String {
 		name.push_str(COMPRESSED_SUFFIX);
 	}
 	name
+}
+
+/// The detail track name: `detail.json`, plus [`COMPRESSED_SUFFIX`] when
+/// `compressed`. Served only while requested.
+pub fn detail_track(compressed: bool) -> String {
+	let mut name = DETAIL.to_string();
+	if compressed {
+		name.push_str(COMPRESSED_SUFFIX);
+	}
+	name
+}
+
+/// Whether `name` requests the detail track, and if so whether the compressed
+/// flavor; `None` for any other name. The inverse of [`detail_track`].
+pub(crate) fn parse_detail_track(name: &str) -> Option<bool> {
+	match name.strip_suffix(COMPRESSED_SUFFIX) {
+		Some(DETAIL) => Some(true),
+		_ if name == DETAIL => Some(false),
+		_ => None,
+	}
 }
 
 /// The presence track name for an auth root: `<root>/presence.json`, or
@@ -291,6 +334,25 @@ mod tests {
 		assert_eq!(totals_track(true), "totals.json.z");
 		assert_eq!(presence_track("acme/live", false), "acme/live/presence.json");
 		assert_eq!(presence_track("", true), "presence.json.z");
+		assert_eq!(detail_track(false), "detail.json");
+		assert_eq!(detail_track(true), "detail.json.z");
+	}
+
+	#[test]
+	fn detail_track_names_round_trip() {
+		assert_eq!(parse_detail_track(&detail_track(false)), Some(false));
+		assert_eq!(parse_detail_track(&detail_track(true)), Some(true));
+		for name in [
+			"acme/detail.json",
+			"detail.json.z.z",
+			"xdetail.json",
+			"detail",
+			"totals.json",
+		] {
+			assert_eq!(parse_detail_track(name), None, "{name}");
+		}
+		// A detail name is neither a tier track nor a presence track.
+		assert_eq!(parse_presence_track(DETAIL), None);
 	}
 
 	#[test]

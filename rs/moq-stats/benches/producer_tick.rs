@@ -13,6 +13,11 @@
 //! `stats/presence` sweeps the same tick over connected auth roots and the
 //! presence tracks held for them.
 //!
+//! `stats/detail` repeats the tick with the detail track held, swept over held
+//! paths and tiers with a tenth of them changing. `detailB` is its plain
+//! snapshot, every tier's publisher and subscriber maps in one frame, so it
+//! reaches the cap first.
+//!
 //! Run `cargo bench -p moq-stats --features bench --bench producer_tick`.
 
 use std::alloc::{GlobalAlloc, Layout, System};
@@ -327,5 +332,56 @@ fn presence(c: &mut Criterion) {
 	group.finish();
 }
 
-criterion_group!(benches, bench, presence);
+/// Held paths for the detail sweep. The plain detail frame carries every
+/// tier, so it nears the cap at a fraction of [`PATHS`].
+const DETAIL_PATHS: [usize; 3] = [100, 1_000, 10_000];
+
+/// What holding the detail track adds to a tick, swept over held paths and
+/// tiers: each drain copies every tier's pending maps once and encodes them as
+/// one frame.
+fn detail(c: &mut Criterion) {
+	let cap = moq_net::group::MAX_CACHE_BYTES;
+	println!("paths tiers allocs/tick us/tick detailB cap%");
+
+	let mut group = c.benchmark_group("stats/detail");
+	group.sample_size(10);
+	group.warm_up_time(Duration::from_millis(200));
+	group.measurement_time(Duration::from_secs(1));
+	for &tiers in &TIERS {
+		for &paths in &DETAIL_PATHS {
+			let id = BenchmarkId::from_parameter(format!("{paths}p_{tiers}t"));
+			group.throughput(Throughput::Elements((paths * tiers) as u64));
+			let mut relay = None;
+			group.bench_function(id, |b| {
+				let (relay, _held) = relay.get_or_insert_with(|| {
+					let mut relay = Relay::build(paths, tiers, 10);
+					let held = relay.driver.hold_detail();
+					let row = sample(&mut relay);
+					let detail = relay.driver.detail_bytes();
+					assert!(detail > row.bytes.held, "detail carries every tier's maps");
+					println!(
+						"{paths:>5} {tiers:>5} {allocs:>11} {micros:>8.1} {detail:>8} {ratio:>4.0}",
+						allocs = row.allocs,
+						micros = row.elapsed.as_secs_f64() * 1e6,
+						ratio = detail as f64 * 100.0 / cap as f64,
+					);
+					(relay, held)
+				});
+				b.iter_custom(|iters| {
+					let mut total = Duration::ZERO;
+					for _ in 0..iters {
+						relay.touch();
+						let start = Instant::now();
+						black_box(relay.driver.tick());
+						total += start.elapsed();
+					}
+					total
+				});
+			});
+		}
+	}
+	group.finish();
+}
+
+criterion_group!(benches, bench, presence, detail);
 criterion_main!(benches);
