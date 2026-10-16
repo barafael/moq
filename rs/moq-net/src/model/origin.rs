@@ -4801,7 +4801,8 @@ pub struct Consumer {
 	hop: Hop,
 	scope: OriginScope,
 	// Absolute paths, named as this handle sees them, omitted from discovery and
-	// refused by lookup. Producers use the same scope type but never filter reads.
+	// refused by lookup. Matched against exact paths only, never pattern against
+	// pattern, so several exclusions jointly covering a scope need no algebra.
 	excluded: Patterns,
 
 	// A prefix that is automatically stripped from all paths.
@@ -4893,8 +4894,11 @@ impl Consumer {
 
 	/// A view that omits matching paths from discovery and refuses their lookup.
 	///
-	/// `patterns` are relative to this consumer's root. The exclusion stays in
-	/// effect on consumers later derived with [`Self::scope`].
+	/// `patterns` are relative to this consumer's root and match whole paths, so
+	/// exclude a subtree with `name/**`. Exclusions accumulate and stay in effect on
+	/// consumers later derived with [`Self::scope`]. A session publishing this view
+	/// cannot spell its grant as positive patterns, so it answers the peer's in-band
+	/// AUTH for the connection credential as unsupported.
 	pub fn exclude(&self, patterns: &Patterns) -> Result<Self, Error> {
 		let rooted = patterns.rooted(self.root.as_str()).map_err(|_| BoundsExceeded)?;
 		let mut excluded = self.excluded.clone();
@@ -5164,8 +5168,14 @@ impl Consumer {
 
 		// Untagged: this is a lookup, not egress announce forwarding, so it must not drive
 		// the announce guards. Hiding narrows discovery, not lookup, so a hidden path
-		// follows like any other.
-		let announced = consumer.untagged().with_hidden(true).announced();
+		// follows like any other. The path itself passed the exclusions above; a covering
+		// route at an excluded prefix still serves it.
+		let announced = Consumer {
+			excluded: Patterns::new(),
+			..consumer.untagged()
+		}
+		.with_hidden(true)
+		.announced();
 		Ok(crate::announce::Follow::new(announced, path.to_owned()))
 	}
 
@@ -5390,6 +5400,13 @@ impl Consumer {
 	/// The patterns this consumer may reach, relative to its root.
 	pub fn allowed(&self) -> Patterns {
 		self.scope.relative(&self.root)
+	}
+
+	/// What this view grants a peer, relative to its root, or `None` when an
+	/// exclusion makes that unrepresentable as positive patterns.
+	#[cfg_attr(not(feature = "async"), allow(dead_code))]
+	pub(crate) fn grant(&self) -> Option<Patterns> {
+		self.excluded.is_empty().then(|| self.allowed())
 	}
 
 	/// Converts a relative path to an absolute path.
@@ -9050,6 +9067,28 @@ mod tests {
 			.expect("a derived scope must retain the exclusion");
 		assert!(matches!(refused, Err(Error::Unauthorized)));
 		assert!(dynamic.requested_broadcast().now_or_never().is_none());
+	}
+
+	#[test]
+	#[cfg(feature = "async")]
+	fn an_excluded_prefix_still_routes_the_paths_beneath_it() {
+		let producer = origin(1).produce();
+		let consumer = producer
+			.consume()
+			.exclude(&Patterns::from("room".parse::<Pattern>().unwrap()))
+			.unwrap();
+		let mut announced = consumer.announced();
+		let _room = producer.announce("room", Route::default().with_cost(3)).unwrap();
+
+		// The excluded name stays out of discovery, but it covers a permitted path.
+		announced.assert_next_wait();
+		let route = consumer
+			.routed("room/alice")
+			.now_or_never()
+			.expect("covered")
+			.expect("routed");
+		assert_eq!(route.cost, Cost::new(3));
+		assert!(consumer.routed("room").now_or_never().expect("refused").is_none());
 	}
 
 	#[test]

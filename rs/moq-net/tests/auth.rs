@@ -52,6 +52,7 @@ macro_rules! cases {
 
 cases!(
 	both_sides_learn_their_grant_from_scoped_origins,
+	an_excluded_view_leaves_its_grant_unknown,
 	a_publish_only_session_grants_no_subscribe,
 	an_out_of_scope_announce_aborts_with_the_path,
 	a_broadcast_published_before_the_grant_is_checked,
@@ -201,6 +202,8 @@ async fn wait_announced(origin: &origin::Consumer, path: &str, active: bool) {
 #[derive(Default)]
 struct Options {
 	client_publish: Option<origin::Producer>,
+	/// Paths the client's publish view excludes.
+	client_exclude: Option<Patterns>,
 	client_subscribe: Option<origin::Producer>,
 	server_publish: Option<origin::Producer>,
 	server_subscribe: Option<origin::Producer>,
@@ -227,7 +230,10 @@ async fn connect(opts: Options) -> Pair {
 
 	let mut client = Client::new().with_versions(version.into());
 	if let Some(publish) = &opts.client_publish {
-		client = client.with_publisher(publish);
+		client = match &opts.client_exclude {
+			Some(excluded) => client.with_publisher(publish.consume().exclude(excluded).unwrap()),
+			None => client.with_publisher(publish),
+		};
 	}
 	if let Some(subscribe) = opts.client_subscribe {
 		client = client.with_subscriber(subscribe);
@@ -320,6 +326,47 @@ async fn both_sides_learn_their_grant_from_scoped_origins(version: &'static str)
 		assert_eq!(granted(&pair.client).await, grant(&["room/alice"], &["room"]));
 		// The empty prefix: an unscoped origin grants everything.
 		assert_eq!(granted(&pair.server).await, grant(&[""], &[""]));
+	})
+	.await
+	.expect("timed out");
+}
+
+/// A positive grant cannot spell an exclusion, so the view answers that it cannot say
+/// rather than overstate what it serves, and media still flows.
+async fn an_excluded_view_leaves_its_grant_unknown(version: &'static str) {
+	within(async {
+		let prefs = || moq_net::track::Subscription::default().with_max_delay(Duration::from_secs(10));
+		let source = produce_origin(2);
+		let broadcast = source.create_broadcast("cam").unwrap();
+		let track = broadcast.create_track("video", timed()).unwrap();
+		broadcast.announce(Default::default()).unwrap();
+
+		let destination = produce_origin(1);
+		let pair = connect(Options {
+			version: Some(version),
+			client_publish: Some(source.clone()),
+			client_exclude: Some(patterns(&[".reserved"])),
+			server_subscribe: Some(destination.clone()),
+			..Default::default()
+		})
+		.await;
+
+		let err = pair
+			.server
+			.auth()
+			.add("")
+			.await
+			.err()
+			.expect("an excluded view has no grant");
+		assert!(matches!(err, Error::Unsupported), "{err:?}");
+		assert_eq!(granted(&pair.client).await, grant(&[""], &[]));
+
+		let mut group = track.append_group().unwrap();
+		group.write_frame(moq_net::Timestamp::ZERO, b"scoped".as_ref()).unwrap();
+		let remote = destination.consume().routed_broadcast("cam").await.unwrap();
+		let mut sub = remote.track("video").unwrap().subscribe(prefs()).await.unwrap();
+		let mut group = sub.recv_group().await.unwrap().unwrap();
+		assert_eq!(group.read_frame().await.unwrap().unwrap().payload.as_ref(), b"scoped");
 	})
 	.await
 	.expect("timed out");
@@ -771,6 +818,7 @@ async fn a_revoked_grant_cancels_its_subscriptions(version: &'static str) {
 			server_publish: Some(server_origin.clone()),
 			server_subscribe: Some(server_origin.clone()),
 			server_requests: true,
+			..Default::default()
 		})
 		.await;
 		let mut issued = serve(pair.requests.take().unwrap(), |token| {

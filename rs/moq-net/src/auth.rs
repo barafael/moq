@@ -74,6 +74,25 @@ pub struct Grant {
 	pub expires: Option<Instant>,
 }
 
+/// What the peer's connection credential earns by default: publishing what our
+/// subscribe half accepts, and subscribing to what our publish half serves. A missing
+/// half grants nothing. `None` when the publish half excludes paths, which a positive
+/// grant cannot spell: the grant is then unknown rather than overstated.
+#[cfg_attr(not(feature = "async"), allow(dead_code))]
+pub(crate) fn peer_grant(
+	publish: Option<&crate::origin::Consumer>,
+	subscribe: Option<&crate::origin::Producer>,
+) -> Option<Grant> {
+	Some(Grant {
+		publish: subscribe.map(|origin| origin.allowed()).unwrap_or_default(),
+		subscribe: match publish {
+			Some(origin) => origin.grant()?,
+			None => Patterns::new(),
+		},
+		expires: None,
+	})
+}
+
 impl Grant {
 	/// A grant of everything that never expires.
 	pub fn all() -> Self {

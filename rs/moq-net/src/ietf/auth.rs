@@ -216,19 +216,6 @@ fn from_code(code: u64) -> Error {
 	}
 }
 
-/// What the peer's connection credential earns by default: publishing what our
-/// subscribe half accepts, and subscribing to what our publish half serves.
-pub(super) fn peer_grant(
-	publish: Option<&crate::origin::Consumer>,
-	subscribe: Option<&crate::origin::Producer>,
-) -> Grant {
-	Grant {
-		publish: subscribe.map(|origin| origin.allowed()).unwrap_or_default(),
-		subscribe: publish.map(|origin| origin.allowed()).unwrap_or_default(),
-		expires: None,
-	}
-}
-
 /// Present every token this side adds, one AUTH request each, once the peer's SETUP
 /// says it negotiated the extension. Never returns: a session without it just fails
 /// the tokens as unsupported.
@@ -425,8 +412,8 @@ async fn read_message<S: crate::transport::poll::Session>(
 pub(super) struct Serve {
 	pub runtime: crate::time::Clock,
 	pub handle: Handle,
-	/// What the peer's connection credential earns by default.
-	pub peer_grant: Grant,
+	/// What the peer's connection credential earns by default, when a grant can say it.
+	pub peer_grant: Option<Grant>,
 }
 
 impl Serve {
@@ -446,11 +433,11 @@ impl Serve {
 				requests.push(Request::new(msg.token, issue.clone()));
 			}
 			// Only the connection's own credential has a default answer; a token needs
-			// someone to verify it.
-			None if !msg.token.is_empty() => {
+			// someone to verify it. A view with exclusions has no positive answer either.
+			None if !msg.token.is_empty() || self.peer_grant.is_none() => {
 				let reply = AuthError {
 					code: NOT_SUPPORTED,
-					reason: "tokens are not verified in band".to_string(),
+					reason: "grant not describable in band".to_string(),
 				};
 				if stream.writer.encode_message(&reply).await.is_ok() {
 					let _ = stream.writer.close().await;
@@ -458,7 +445,10 @@ impl Serve {
 				return Ok(());
 			}
 			// Re-sent whenever a new limit changes it.
-			None => default = Some(crate::auth::DefaultGrant::new(self.handle.clone(), self.peer_grant)),
+			None => {
+				let grant = self.peer_grant.expect("checked above");
+				default = Some(crate::auth::DefaultGrant::new(self.handle.clone(), grant))
+			}
 		}
 
 		let err = match serve_issue(&self.runtime, issue, default.as_mut(), &mut stream, version).await {

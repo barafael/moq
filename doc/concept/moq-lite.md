@@ -158,6 +158,12 @@ A subscriber watching under a root sees advertisements named relative to that
 root. When several routes advertise one prefix, each reader sees the best route
 its scope can use.
 
+An embedded origin can also exclude patterns from a read view, such as a
+reserved `.platform/**` subtree, while still listing other hidden names.
+Excluded paths are left out of announcements and refused on request. This is
+local policy: no token or AUTH grant carries an exclusion, so a session serving
+such a view answers the peer's connection credential as unsupported.
+
 ## Authorization
 
 On moq-lite 07 (`moq-lite-07-wip`, opt-in) each side presents a token on its

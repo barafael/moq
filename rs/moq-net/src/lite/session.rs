@@ -238,14 +238,9 @@ where
 			.filter(|hop| hop.id() != 0);
 	}
 
-	// What the peer's connection credential earns by default: publishing what our
-	// subscribe half accepts, and subscribing to what our publish half serves. A
-	// missing half grants nothing.
-	let peer_grant = crate::auth::Grant {
-		publish: subscribe.as_ref().map(|origin| origin.allowed()).unwrap_or_default(),
-		subscribe: publish.as_ref().map(|origin| origin.allowed()).unwrap_or_default(),
-		expires: None,
-	};
+	// What the peer's connection credential earns by default, from the caller's real
+	// handles before the empty-half defaulting below.
+	let peer_grant = crate::auth::peer_grant(publish.as_ref(), subscribe.as_ref());
 
 	// Always run both loops so inbound control (Subscribe/Announce/Probe/Goaway)
 	// and GROUP streams are accepted regardless of which halves the caller wired.

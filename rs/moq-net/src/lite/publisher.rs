@@ -43,8 +43,9 @@ pub(super) struct PublisherConfig<S: crate::transport::poll::Session> {
 	/// Our tokens' grants, which bound what we announce and serve, and the app's
 	/// claim on answering the peer's tokens.
 	pub auth: crate::auth::Handle,
-	/// What the default acceptor grants the peer's connection credential.
-	pub peer_grant: crate::auth::Grant,
+	/// What the default acceptor grants the peer's connection credential, when a grant
+	/// can say it.
+	pub peer_grant: Option<crate::auth::Grant>,
 	/// The supervisor's estimate, which a PROBE stream follows.
 	pub estimate: kio::ProducerWeak<crate::session::Estimate>,
 	/// Whether we dialed: only then does a publication outside our grant abort.
@@ -77,7 +78,7 @@ struct Shared<S: crate::transport::poll::Session> {
 	version: Version,
 	goaway: crate::goaway::Protocol,
 	auth: crate::auth::Handle,
-	peer_grant: crate::auth::Grant,
+	peer_grant: Option<crate::auth::Grant>,
 	// Control streams still serving the peer data, which a draining close waits for.
 	owed: AtomicUsize,
 	interests: Interests,
@@ -474,8 +475,9 @@ impl<S: crate::transport::poll::Session> AuthServe<S> {
 						requests.push(crate::auth::Request::new(msg.token, issue.clone()));
 					}
 					// Only the connection's own credential has a default answer; a token
-					// needs someone to verify it. Tell the presenter explicitly.
-					None if !msg.token.is_empty() => {
+					// needs someone to verify it. A view with exclusions has no positive
+					// answer either. Tell the presenter explicitly.
+					None if !msg.token.is_empty() || self.shared.peer_grant.is_none() => {
 						let mut state = issue.lock();
 						state.outbox.push_back(crate::auth::Reply::Refuse {
 							code: crate::SessionError::Unsupported,
@@ -487,7 +489,7 @@ impl<S: crate::transport::poll::Session> AuthServe<S> {
 					None => {
 						self.default = Some(crate::auth::DefaultGrant::new(
 							self.shared.auth.clone(),
-							self.shared.peer_grant.clone(),
+							self.shared.peer_grant.clone().expect("checked above"),
 						));
 					}
 				}
@@ -5163,7 +5165,7 @@ mod tests {
 			goaway,
 			peer_hop: Some(assigned),
 			auth: crate::auth::Handle::new(false),
-			peer_grant: Default::default(),
+			peer_grant: Some(Default::default()),
 			client: false,
 			subscriptions: Default::default(),
 			fetches: Default::default(),
@@ -5334,7 +5336,7 @@ mod tests {
 			goaway,
 			peer_hop: None,
 			auth: crate::auth::Handle::new(false),
-			peer_grant: Default::default(),
+			peer_grant: Some(Default::default()),
 			client: false,
 			subscriptions: Default::default(),
 			fetches: Default::default(),
@@ -5633,7 +5635,7 @@ mod tests {
 			goaway,
 			peer_hop: None,
 			auth: crate::auth::Handle::new(false),
-			peer_grant: Default::default(),
+			peer_grant: Some(Default::default()),
 			client: false,
 			subscriptions: Default::default(),
 			fetches: Default::default(),
@@ -5770,7 +5772,7 @@ mod tests {
 						subscriptions: Default::default(),
 						fetches: Default::default(),
 						auth: crate::auth::Handle::new(false),
-						peer_grant: Default::default(),
+						peer_grant: Some(Default::default()),
 						client: false,
 					});
 
@@ -5848,7 +5850,7 @@ mod tests {
 			goaway,
 			peer_hop: None,
 			auth: crate::auth::Handle::new(false),
-			peer_grant: Default::default(),
+			peer_grant: Some(Default::default()),
 			client: false,
 			subscriptions: Default::default(),
 			fetches: Default::default(),
@@ -5944,7 +5946,7 @@ mod tests {
 			subscriptions: Default::default(),
 			fetches: Default::default(),
 			auth: crate::auth::Handle::new(false),
-			peer_grant: Default::default(),
+			peer_grant: Some(Default::default()),
 			client: false,
 		});
 
@@ -6099,7 +6101,7 @@ mod tests {
 				subscriptions: crate::session::Slots::new(0),
 				fetches: Default::default(),
 				auth: crate::auth::Handle::new(false),
-				peer_grant: Default::default(),
+				peer_grant: Some(Default::default()),
 				client: false,
 			});
 
@@ -6137,7 +6139,7 @@ mod tests {
 			goaway,
 			peer_hop: None,
 			auth: crate::auth::Handle::new(false),
-			peer_grant: Default::default(),
+			peer_grant: Some(Default::default()),
 			client: false,
 			subscriptions: crate::session::Slots::new(0),
 			fetches: crate::session::Slots::new(2),

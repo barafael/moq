@@ -142,7 +142,7 @@ where
 
 	// What the peer's connection credential earns by default, from the caller's real
 	// handles before the empty-half defaulting below.
-	let peer_grant = auth::peer_grant(publish.as_ref(), subscribe.as_ref());
+	let peer_grant = crate::auth::peer_grant(publish.as_ref(), subscribe.as_ref());
 
 	// Present the connection's own credential (the empty token) right away, so both
 	// sides learn their grant without waiting on the app. Draft-17+ only; the peer's
