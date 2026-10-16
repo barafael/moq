@@ -1218,6 +1218,8 @@ struct TableCursor {
 	root: PathOwned,
 	/// The absolute patterns this cursor is scoped to (its token / scope).
 	allowed: Patterns,
+	/// The absolute paths this cursor omits from discovery.
+	excluded: Patterns,
 	/// Where the cursor hangs in the [`RouteTable`]: the literal heads of
 	/// `allowed`. A route the cursor can see sits at or under one of them, or on
 	/// the walk down to one.
@@ -1253,6 +1255,9 @@ impl TableCursor {
 		if !self.allowed.overlaps(claim) {
 			return None;
 		}
+		if self.excluded.matches(prefix.as_str()) {
+			return None;
+		}
 
 		if let Some(relative) = prefix.strip_prefix(&self.root) {
 			return Some(relative.to_owned());
@@ -1285,6 +1290,7 @@ impl TableCursor {
 		entry.live()
 			&& self.horizon.admits(entry)
 			&& entry.overlaps(&self.allowed)
+			&& !self.excluded.matches(entry.prefix.as_str())
 			&& self.discovers(&entry.prefix)
 			&& !self.holes.iter().any(|hole| entry.prefix.has_prefix(hole))
 			&& self.named.as_ref().is_none_or(|(mount, _)| mount.names(&entry.prefix))
@@ -4792,6 +4798,9 @@ pub struct Consumer {
 	// Identity of the origin this consumer was derived from.
 	hop: Hop,
 	scope: OriginScope,
+	// Absolute paths, named as this handle sees them, omitted from discovery and
+	// refused by lookup. Producers use the same scope type but never filter reads.
+	excluded: Patterns,
 
 	// A prefix that is automatically stripped from all paths.
 	root: PathOwned,
@@ -4836,6 +4845,7 @@ impl Consumer {
 			hop: producer.hop,
 			scope: producer.scope.clone(),
 			root: producer.root.clone(),
+			excluded: Patterns::new(),
 			shared: producer.shared.clone(),
 			stats,
 			horizon: Horizon {
@@ -4877,6 +4887,20 @@ impl Consumer {
 	pub fn local(mut self) -> Self {
 		self.horizon.local = true;
 		self
+	}
+
+	/// A view that omits matching paths from discovery and refuses their lookup.
+	///
+	/// `patterns` are relative to this consumer's root. The exclusion stays in
+	/// effect on consumers later derived with [`Self::scope`].
+	pub fn exclude(&self, patterns: &Patterns) -> Result<Self, Error> {
+		let rooted = patterns.rooted(self.root.as_str()).map_err(|_| BoundsExceeded)?;
+		let mut excluded = self.excluded.clone();
+		excluded.extend(rooted);
+		Ok(Self {
+			excluded,
+			..self.clone()
+		})
 	}
 
 	/// A clone whose [`announced`](Self::announced) also reports hidden routes:
@@ -4965,6 +4989,7 @@ impl Consumer {
 		let state = kio::Producer::<OriginConsumerState>::default();
 		let cursor = |root: PathOwned,
 		              allowed: Patterns,
+		              excluded: Patterns,
 		              hidden: Hidden,
 		              mount: Option<&Mount>,
 		              under: PathOwned,
@@ -4972,6 +4997,7 @@ impl Consumer {
 			root,
 			heads: interest_prefixes(&allowed),
 			allowed,
+			excluded,
 			horizon: self.horizon,
 			hidden,
 			state: state.clone(),
@@ -4998,6 +5024,7 @@ impl Consumer {
 			let cursors = vec![cursor(
 				root,
 				mount.translate(&self.scope.allowed),
+				mount.translate(&self.excluded),
 				self.hidden.translate(mount),
 				Some(mount),
 				PathOwned::default(),
@@ -5037,6 +5064,7 @@ impl Consumer {
 			cursors.push(cursor(
 				mount.target.clone(),
 				allowed,
+				mount.translate(&self.excluded),
 				self.hidden.translate(mount),
 				Some(mount),
 				under.to_owned(),
@@ -5048,6 +5076,7 @@ impl Consumer {
 			cursor(
 				self.root.clone(),
 				self.scope.allowed.clone(),
+				self.excluded.clone(),
 				self.hidden.clone(),
 				None,
 				PathOwned::default(),
@@ -5074,7 +5103,7 @@ impl Consumer {
 	#[cfg(test)]
 	pub(crate) fn get_broadcast(&self, path: impl AsPath) -> Option<broadcast::Consumer> {
 		let full = self.root.join(path).to_owned();
-		if !self.scope.permits(&full) {
+		if !self.scope.permits(&full) || self.excluded.matches(full.as_str()) {
 			return None;
 		}
 		let full = self.scope.resolve(&full)?;
@@ -5127,7 +5156,7 @@ impl Consumer {
 
 		// `scope` keeps narrower permissions intact: on a consumer limited to
 		// `foo/specific`, no route can ever cover `foo`.
-		if !consumer.allowed().matches(path.as_str()) {
+		if !consumer.allowed().matches(path.as_str()) || consumer.excluded.matches(consumer.root.join(&path).as_str()) {
 			return Err(Error::Unauthorized);
 		}
 
@@ -5156,7 +5185,9 @@ impl Consumer {
 
 		// `allowed` keeps narrower permissions intact: if the whole path is not
 		// reachable, no route can ever cover it, so bail rather than loop forever.
-		let request = (!self.allowed().matches(path.as_str())).then(|| Requesting::failed(Error::Unauthorized));
+		let named = self.root.join(&path);
+		let request = (!self.allowed().matches(path.as_str()) || self.excluded.matches(named.as_str()))
+			.then(|| Requesting::failed(Error::Unauthorized));
 		kio::Pending::new(Routing {
 			consumer: self.clone(),
 			path,
@@ -5243,7 +5274,7 @@ impl Consumer {
 		let requested = path.to_owned();
 
 		// Routes only cover paths within this consumer's scope.
-		if !self.scope.permits(&named) {
+		if !self.scope.permits(&named) || self.excluded.matches(named.as_str()) {
 			return kio::Pending::new(Requesting::failed(Error::Unauthorized));
 		}
 
@@ -8983,6 +9014,41 @@ mod tests {
 				"the dynamic handler was asked to create a broadcast the requester may not read"
 			);
 		}
+	}
+
+	#[test]
+	#[cfg(feature = "async")]
+	fn excluded_paths_are_not_announced_or_requested() {
+		let producer = origin(1).produce();
+		let project = producer
+			.consume()
+			.scope("p1", &Patterns::from(Pattern::all()))
+			.unwrap()
+			.exclude(&Patterns::from(".pro/**".parse::<Pattern>().unwrap()))
+			.unwrap()
+			.with_hidden(true);
+		let mut announced = project.announced();
+
+		let _platform = producer.announce("p1/.pro/cam", Route::default()).unwrap();
+		let _customer = producer.announce("p1/.private/cam", Route::default()).unwrap();
+		announced.assert_next_active(".private/cam");
+		announced.assert_next_wait();
+		let dynamic = producer.dynamic("", Route::default()).unwrap();
+
+		let refused = project
+			.request_broadcast(".pro/cam", None)
+			.now_or_never()
+			.expect("an excluded request must be refused synchronously");
+		assert!(matches!(refused, Err(Error::Unauthorized)));
+		assert!(dynamic.requested_broadcast().now_or_never().is_none());
+
+		let nested = project.scope(".pro", &Patterns::from(Pattern::all())).unwrap();
+		let refused = nested
+			.request_broadcast("cam", None)
+			.now_or_never()
+			.expect("a derived scope must retain the exclusion");
+		assert!(matches!(refused, Err(Error::Unauthorized)));
+		assert!(dynamic.requested_broadcast().now_or_never().is_none());
 	}
 
 	#[test]
