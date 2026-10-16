@@ -675,6 +675,12 @@ impl<S: crate::transport::poll::Session> kio::Task for UniServe<S> {
 	fn poll(&mut self, waiter: &kio::Waiter) -> Poll<()> {
 		if let Err(err) = ready!(self.poll_serve(waiter)) {
 			tracing::debug!(%err, "error running uni stream");
+			if matches!(err, Error::ProtocolViolation) {
+				self.subscriber
+					.session
+					.clone()
+					.close(crate::SessionError::ProtocolViolation.to_code(), &err.to_string());
+			}
 		}
 		Poll::Ready(())
 	}
@@ -703,7 +709,12 @@ impl<S: crate::transport::poll::Session> UniServe<S> {
 					};
 					self.state = match kind {
 						lite::DataType::Group => UniState::Group(GroupRecv::new(self.subscriber.clone(), reader)),
-						lite::DataType::Setup => UniState::Setup { reader },
+						lite::DataType::Setup => {
+							if self.subscriber.version.has_setup_stream() {
+								self.subscriber.peer_setup.claim()?;
+							}
+							UniState::Setup { reader }
+						}
 					};
 				}
 				UniState::Setup { reader } => {
@@ -721,8 +732,9 @@ impl<S: crate::transport::poll::Session> UniServe<S> {
 							return Poll::Ready(Ok(()));
 						}
 						Err(err) => {
+							tracing::debug!(%err, "failed to read peer setup");
 							self.abort(&err);
-							return Poll::Ready(Ok(()));
+							return Poll::Ready(Err(Error::ProtocolViolation));
 						}
 					}
 				}

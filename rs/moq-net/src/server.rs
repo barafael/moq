@@ -1183,6 +1183,31 @@ mod tests {
 	}
 
 	#[tokio::test(start_paused = true)]
+	async fn repeated_lite_setup_parameter_closes_the_session() {
+		// SETUP type, five-byte message, then two empty parameters with id 0.
+		let session = FakeSession::new(ALPN_LITE_05, [vec![1, 5, 2, 0, 0, 0, 0]]);
+		let result = Server::new()
+			.accept_request(tokio::time::Instant::now().into_std(), session.clone())
+			.await;
+		assert!(result.is_err());
+		assert_eq!(session.closed(), Some(SessionError::ProtocolViolation.to_code()));
+	}
+
+	#[tokio::test(start_paused = true)]
+	async fn accepted_lite_setup_refuses_a_second_setup_stream() {
+		let session = FakeSession::new(ALPN_LITE_05, [lite05_setup(None, None, None)]);
+		let transport = session.clone();
+		let request = Server::new()
+			.accept_request(tokio::time::Instant::now().into_std(), session)
+			.await
+			.unwrap();
+		let (_session, mut driver) = request.ok().await.unwrap();
+		transport.uni.lock().unwrap().push_back(vec![1]);
+		let _ = driver.poll(tokio::time::Instant::now().into_std(), &kio::Waiter::noop());
+		assert_eq!(transport.closed(), Some(SessionError::ProtocolViolation.to_code()));
+	}
+
+	#[tokio::test(start_paused = true)]
 	async fn accept_request_reads_lite05_role() {
 		let session = FakeSession::new(
 			ALPN_LITE_05,
