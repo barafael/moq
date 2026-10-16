@@ -21,7 +21,9 @@
 //! `subscriber.json`, and `sessions.json` tracks of cumulative [`Traffic`] and
 //! [`Presence`] counters, plus `.json.z` siblings encoded with
 //! [`moq_json::snapshot`]; compute names with [`traffic_track`] /
-//! [`sessions_track`]. The full contract (paths, tracks, both encodings, and
+//! [`sessions_track`]. A reader may also request the `detail.json` track,
+//! carrying every tier's maps in one [`DetailFrame`] ([`detail_track`]). The
+//! full contract (paths, tracks, both encodings, and
 //! counter semantics) is at <https://doc.moq.dev/concept/stats>.
 
 pub mod aggregate;
@@ -45,8 +47,49 @@ pub type TrafficFrame = BTreeMap<String, Traffic>;
 /// One frame off a sessions track: connect/disconnect gauges keyed by auth root.
 pub type SessionsFrame = BTreeMap<String, Presence>;
 
+/// One frame off the detail track: each tier's per-path and per-root maps,
+/// keyed by tier label (`""` for the default tier).
+pub type DetailFrame = BTreeMap<String, Detail>;
+
+/// One tier's entry on the detail track: the frames its `publisher.json`,
+/// `subscriber.json`, and `sessions.json` tracks carry on the same drain.
+#[derive(Debug, Default, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
+#[non_exhaustive]
+pub struct Detail {
+	/// Egress per broadcast path, as on the tier's `publisher.json`.
+	pub publisher: TrafficFrame,
+	/// Ingress per broadcast path, as on the tier's `subscriber.json`.
+	pub subscriber: TrafficFrame,
+	/// Sessions per auth root, as on the tier's `sessions.json`.
+	pub sessions: SessionsFrame,
+}
+
 /// Suffix appended to a plain track name for its compressed sibling.
 pub const COMPRESSED_SUFFIX: &str = ".z";
+
+/// The detail track's plain name.
+pub(crate) const DETAIL: &str = "detail.json";
+
+/// The detail track name: `detail.json`, plus [`COMPRESSED_SUFFIX`] when
+/// `compressed`. Served only while requested.
+pub fn detail_track(compressed: bool) -> String {
+	let mut name = DETAIL.to_string();
+	if compressed {
+		name.push_str(COMPRESSED_SUFFIX);
+	}
+	name
+}
+
+/// Whether `name` requests the detail track, and if so whether the compressed
+/// flavor; `None` for any other name. The inverse of [`detail_track`].
+pub(crate) fn parse_detail_track(name: &str) -> Option<bool> {
+	match name.strip_suffix(COMPRESSED_SUFFIX) {
+		Some(DETAIL) => Some(true),
+		_ if name == DETAIL => Some(false),
+		_ => None,
+	}
+}
 
 /// The traffic track name for a tier and role: `<role>.json` at the prefix root
 /// on the default tier (`publisher.json` / `subscriber.json`), `<tier>/<role>.json`

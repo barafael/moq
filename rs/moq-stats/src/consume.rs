@@ -3,7 +3,7 @@
 use moq_net::broadcast;
 use moq_net::stats::{Role, Tier};
 
-use crate::{Result, SessionsFrame, TrafficFrame, sessions_track, traffic_track};
+use crate::{DetailFrame, Result, SessionsFrame, TrafficFrame, detail_track, sessions_track, traffic_track};
 
 /// Configuration for a [`Consumer`]. Construct with [`Config::new`]
 /// and chain the `with_*` setters.
@@ -66,6 +66,16 @@ impl Consumer {
 		})
 	}
 
+	/// Subscribe to the detail track, every tier's per-path and per-root maps
+	/// in one frame, awaiting the subscription handshake. A producer predating
+	/// the track refuses it with [`NotFound`](moq_net::Error::NotFound).
+	pub async fn detail(&self) -> Result<Detail> {
+		let name = detail_track(self.config.compression);
+		Ok(Detail {
+			inner: self.subscribe(&name).await?,
+		})
+	}
+
 	async fn subscribe<T: serde::de::DeserializeOwned>(&self, name: &str) -> Result<moq_json::snapshot::Consumer<T>> {
 		let track = self.broadcast.track(name)?.subscribe(None).await?;
 		let mut config = moq_json::snapshot::consumer::Config::default();
@@ -98,6 +108,19 @@ pub struct Sessions {
 impl Sessions {
 	/// The next frame, or `None` once the track ends (the producer went away).
 	pub async fn next(&mut self) -> Result<Option<SessionsFrame>> {
+		Ok(self.inner.next().await?)
+	}
+}
+
+/// A typed reader over the detail track; see [`Traffic`].
+pub struct Detail {
+	inner: moq_json::snapshot::Consumer<DetailFrame>,
+}
+
+impl Detail {
+	/// The next frame, or `None` once the track ends (the producer went away
+	/// or its group unannounced).
+	pub async fn next(&mut self) -> Result<Option<DetailFrame>> {
 		Ok(self.inner.next().await?)
 	}
 }

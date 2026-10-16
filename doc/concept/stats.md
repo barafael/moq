@@ -66,7 +66,13 @@ track: `publisher.json.z`.
 The default tier's six tracks always exist. A named tier's are created on its
 first recorded traffic, but a subscriber may ask for them earlier: any name of
 the shape `[<tier>/]{publisher,subscriber,sessions}.json[.z]` is accepted and
-held open with `{}` until the tier records. Any other name is refused.
+held open with `{}` until the tier records.
+
+A reader may also request `detail.json` (and `detail.json.z`), which carries
+every tier's three frames in one [Detail](#detail) frame. It exists only while
+subscribed and is answered on the drain after the request. A producer
+predating it refuses the name, so a reader can fall back to the per-tier
+tracks on that refusal. Any other name is refused.
 
 ## Frames
 
@@ -116,6 +122,21 @@ return later as a new broadcast.
 The last six fields are legacy spellings of the `*_started` and `*_ended`
 counters, still written so an older consumer reads a newer relay. A reader
 should prefer the canonical name and fall back to the legacy one.
+
+### Detail
+
+```json
+{
+  "": { "publisher": { "acme/live": { ... } }, "subscriber": { ... }, "sessions": { "acme": { ... } } },
+  "rtmp": { ... }
+}
+```
+
+Every tier's `publisher.json`, `subscriber.json`, and `sessions.json` frames
+from the same drain, keyed by tier label, so a reader holding every tier holds
+one track instead of three per tier. Each map follows the per-tier tracks'
+rules exactly; a tier with no entries in any of its three is left out. One
+frame holds the whole group, so it is the largest the producer writes.
 
 ### Presence
 
