@@ -701,3 +701,87 @@ fn cancelling_a_dial_releases_its_connection() {
 		})
 		.expect("worker");
 }
+
+/// Streams keep connection state alive but cannot keep a dropped session open.
+fn dropped_raw_session_closes_connection(explicit: bool) {
+	let Some(mut worker) = worker() else { return };
+	let handle = worker.handle();
+	let certs = support::certs().expect("certificates");
+	let socket = || {
+		handle
+			.udp(UdpSocket::bind("127.0.0.1:0").expect("bind"), udp::Config::default())
+			.expect("socket")
+	};
+	let server = quic::Endpoint::new(
+		socket(),
+		quic::endpoint::Config::default().with_server(server_config(&certs)),
+	)
+	.expect("server");
+	let client = quic::Endpoint::new(socket(), quic::endpoint::Config::default()).expect("client");
+	worker
+		.block_on(async {
+			let conn = client.connect(&dial_config(server.local_addr())).await.expect("dial");
+			let mut peer = server.accept().await.expect("accept");
+			let session = quic::web::Session::raw(conn);
+			let mut survivor = session.clone();
+			drop(session);
+			// A live exchange after one clone drops proves that only the last handle closes.
+			let mut send = std::future::poll_fn(|cx| survivor.poll_open_uni(cx))
+				.await
+				.expect("open");
+			assert_eq!(
+				std::future::poll_fn(|cx| send.poll_write(cx, b"x"))
+					.await
+					.expect("write"),
+				1
+			);
+			let mut recv = std::future::poll_fn(|cx| peer.poll_accept_uni(cx))
+				.await
+				.expect("accept stream");
+			let mut bytes = [0];
+			assert_eq!(
+				std::future::poll_fn(|cx| recv.poll_read(cx, &mut bytes))
+					.await
+					.expect("read"),
+				Some(1)
+			);
+			assert_eq!(&bytes, b"x");
+			let (code, reason) = if explicit {
+				(CLOSE_CODE, CLOSE_REASON)
+			} else {
+				(0, "session dropped")
+			};
+			if explicit {
+				survivor.close(code, reason);
+			}
+			drop(survivor);
+			let err = within(
+				&handle,
+				"the dropped raw session to close",
+				std::future::poll_fn(|cx| peer.poll_closed(cx)),
+			)
+			.await;
+			match err {
+				quic::Error::App {
+					code: actual,
+					reason: message,
+				} => {
+					assert_eq!(actual, u64::from(code));
+					assert_eq!(message, reason);
+				}
+				other => panic!("expected an application close, got {other:?}"),
+			}
+			drop((send, recv));
+		})
+		.expect("worker");
+}
+
+#[test]
+fn the_last_dropped_raw_session_closes_the_connection() {
+	dropped_raw_session_closes_connection(false);
+}
+
+#[test]
+fn a_dropped_raw_session_preserves_its_explicit_close() {
+	dropped_raw_session_closes_connection(true);
+}

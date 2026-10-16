@@ -591,8 +591,7 @@ async fn read_more(recv: &mut quic::RecvStream, out: &mut Vec<u8>) {
 /// before the capsule goes out: RFC 9114 makes that a connection error, and a
 /// browser reports it in place of the code and reason. No Rust client treats
 /// it as fatal, so this one is hand-rolled and checks the stream directly.
-#[test]
-fn a_dropped_session_delivers_its_close() {
+fn dropped_session_delivers_close(explicit: bool) {
 	use bytes::Buf as _;
 
 	let Some(mut worker) = worker() else { return };
@@ -636,7 +635,7 @@ fn a_dropped_session_delivers_its_close() {
 			let request = within(&handle, "the CONNECT", quic::web::Request::accept(conn))
 				.await
 				.expect("handshake");
-			let mut session = request.ok().await.expect("respond");
+			let session = request.ok().await.expect("respond");
 
 			let mut response = Vec::new();
 			let consumed = loop {
@@ -666,8 +665,22 @@ fn a_dropped_session_delivers_its_close() {
 				}
 			}
 
-			session.close(CLOSE_CODE, CLOSE_REASON);
+			let mut survivor = session.clone();
 			drop(session);
+			let mut cx = std::task::Context::from_waker(std::task::Waker::noop());
+			assert!(
+				survivor.poll_closed(&mut cx).is_pending(),
+				"another session handle remains"
+			);
+			let (code, reason) = if explicit {
+				(CLOSE_CODE, CLOSE_REASON)
+			} else {
+				(0, "session dropped")
+			};
+			if explicit {
+				survivor.close(code, reason);
+			}
+			drop(survivor);
 
 			let capsule = within(&handle, "the close capsule", async {
 				loop {
@@ -685,8 +698,8 @@ fn a_dropped_session_delivers_its_close() {
 			assert_eq!(
 				capsule,
 				web_transport_proto::Capsule::CloseWebTransportSession {
-					code: CLOSE_CODE,
-					reason: CLOSE_REASON.to_string(),
+					code,
+					reason: reason.to_string(),
 				}
 			);
 
@@ -710,6 +723,16 @@ fn a_dropped_session_delivers_its_close() {
 			drop(control);
 		})
 		.expect("worker");
+}
+
+#[test]
+fn a_dropped_session_delivers_its_close() {
+	dropped_session_delivers_close(true);
+}
+
+#[test]
+fn the_last_dropped_web_session_closes_the_connection() {
+	dropped_session_delivers_close(false);
 }
 
 /// A pending HTTP/3 handshake owns the connection even before it has read
