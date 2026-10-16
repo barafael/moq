@@ -733,6 +733,11 @@ impl<E: CatalogExt> Producer<E> {
 		}
 	}
 
+	/// Mint a media name without reusing any earlier track's content identity.
+	pub(crate) fn fresh_track(&self, info: moq_net::track::Info) -> crate::Result<moq_net::track::Producer> {
+		self.timeline.fresh_track(info)
+	}
+
 	/// Build the media [`container::Producer`](crate::container::Producer) for `track`,
 	/// enrolling it in the broadcast's timelines so its groups are indexed.
 	///

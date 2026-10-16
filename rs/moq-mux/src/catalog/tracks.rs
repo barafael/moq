@@ -353,6 +353,38 @@ impl<E: CatalogExt> RenditionConfig<E> for hang::catalog::TextConfig {
 	}
 }
 
+/// Whether a video decoder can keep reading the same track under this config.
+pub(crate) fn same_video_identity(previous: &hang::catalog::VideoConfig, next: &hang::catalog::VideoConfig) -> bool {
+	previous.codec == next.codec
+		&& previous.description == next.description
+		&& previous.container == next.container
+		&& previous.display_aspect_width == next.display_aspect_width
+		&& previous.display_aspect_height == next.display_aspect_height
+}
+
+/// Whether an audio decoder can keep reading the same track under this config.
+fn same_audio_identity(previous: &hang::catalog::AudioConfig, next: &hang::catalog::AudioConfig) -> bool {
+	previous.codec == next.codec
+		&& previous.description == next.description
+		&& previous.container == next.container
+		&& previous.sample_rate == next.sample_rate
+		&& previous.channel_count == next.channel_count
+}
+
+fn check_identity<E: CatalogExt>(previous: &Catalog<E>, next: &Catalog<E>, name: &str) -> crate::Result<()> {
+	if let (Some(previous), Some(next)) = (previous.video.renditions.get(name), next.video.renditions.get(name))
+		&& !same_video_identity(previous, next)
+	{
+		return Err(crate::Error::IdentityChanged(name.to_string()));
+	}
+	if let (Some(previous), Some(next)) = (previous.audio.renditions.get(name), next.audio.renditions.get(name))
+		&& !same_audio_identity(previous, next)
+	{
+		return Err(crate::Error::IdentityChanged(name.to_string()));
+	}
+	Ok(())
+}
+
 /// A clonable reservation context handed to importers so they declare their tracks up front.
 ///
 /// Made via [`Producer::reserve`]. While any `Reserved` clone is alive the track set may still
@@ -522,6 +554,15 @@ pub(crate) type VideoTrack<E = ()> = Rendition<E, hang::catalog::VideoConfig>;
 pub(crate) type AudioTrack<E = ()> = Rendition<E, hang::catalog::AudioConfig>;
 /// A single text (caption/subtitle) track's catalog rendition. See [`Rendition`].
 impl<E: CatalogExt, C: RenditionConfig<E>> Rendition<E, C> {
+	pub(crate) fn fresh(
+		&self,
+		container: super::hang::Container,
+		info: moq_net::track::Info,
+	) -> crate::Result<crate::container::Producer<super::hang::Container, C>> {
+		let track = self.catalog.fresh_track(info)?;
+		self.catalog.track(track, container, None)
+	}
+
 	fn new(reserved: Reserved<E>, name: String) -> crate::Result<Self> {
 		Self::owned(reserved.producer(), Some(reserved), name)
 	}
@@ -583,6 +624,7 @@ impl<E: CatalogExt, C: RenditionConfig<E>> Rendition<E, C> {
 			let mut guard = self.catalog.modify()?;
 			let mut next = (*guard).clone();
 			config.insert(&mut next, &self.name);
+			check_identity(&guard, &next, &self.name)?;
 			// Serialization must succeed before the reserved snapshot retains the edit.
 			serde_json::to_writer(std::io::sink(), &next).map_err(moq_json::Error::from)?;
 			self.present = true;
@@ -699,6 +741,7 @@ impl<E: CatalogExt, C: RenditionConfig<E>> Rendition<E, C> {
 		let mut guard = self.catalog.modify()?;
 		let mut next = (*guard).clone();
 		config.insert(&mut next, &self.name);
+		check_identity(&guard, &next, &self.name)?;
 		serde_json::to_writer(std::io::sink(), &next).map_err(moq_json::Error::from)?;
 		*guard = next;
 		Ok(guard)
@@ -812,6 +855,9 @@ mod tests {
 	fn audio_identity_edits_are_refused_without_changing_the_catalog() {
 		let original = hang::catalog::AudioConfig::new(hang::catalog::AudioCodec::Opus, 48_000, 2);
 		let mut changed = Vec::new();
+		let mut codec = original.clone();
+		codec.codec = hang::catalog::AudioCodec::Flac;
+		changed.push(codec);
 		let mut description = original.clone();
 		description.description = Some(bytes::Bytes::from_static(&[1, 2, 3]));
 		changed.push(description);

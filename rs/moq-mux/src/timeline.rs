@@ -502,6 +502,11 @@ impl Timelines {
 		}
 	}
 
+	/// Mint a media name that this broadcast has never used.
+	pub(crate) fn fresh_track(&self, info: moq_net::track::Info) -> crate::Result<moq_net::track::Producer> {
+		Ok(self.broadcast.unique_track("/media", info)?)
+	}
+
 	/// Enroll the track `name`, its records cut by `config`.
 	///
 	/// Creates its timeline track, named by [`hang::timeline::default_name`], on first enrollment.

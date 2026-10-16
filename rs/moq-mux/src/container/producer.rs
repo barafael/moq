@@ -106,6 +106,11 @@ trait Rendition<R>: Send {
 	fn config(&self) -> crate::Result<R>;
 	fn replace(&mut self, config: R) -> crate::Result<()>;
 	fn estimate(&mut self, estimate: crate::catalog::Estimate) -> crate::Result<()>;
+	fn fresh(
+		&self,
+		container: crate::catalog::hang::Container,
+		info: moq_net::track::Info,
+	) -> crate::Result<Producer<crate::catalog::hang::Container, R>>;
 }
 
 impl<E, R> Rendition<R> for crate::catalog::tracks::Rendition<E, R>
@@ -115,6 +120,14 @@ where
 {
 	fn name(&self) -> &str {
 		self.name()
+	}
+
+	fn fresh(
+		&self,
+		container: crate::catalog::hang::Container,
+		info: moq_net::track::Info,
+	) -> crate::Result<Producer<crate::catalog::hang::Container, R>> {
+		self.fresh(container, info)
 	}
 
 	fn timestamp(&self, hint: Option<moq_net::Timestamp>) -> crate::Result<moq_net::Timestamp> {
@@ -254,6 +267,28 @@ where
 	/// A watch-only handle to this track's subscriber demand.
 	pub fn demand(&self) -> moq_net::track::Demand {
 		self.inner.demand()
+	}
+}
+
+impl Producer<crate::catalog::hang::Container, hang::catalog::VideoConfig> {
+	/// Publish a decoder change under a fresh raw track name.
+	pub(crate) fn reconfigure(&mut self, config: hang::catalog::VideoConfig) -> crate::Result<()> {
+		let rendition = self.rendition.as_ref().ok_or(crate::Error::NotPublished)?;
+		let previous = match rendition.config() {
+			Ok(previous) => previous,
+			Err(crate::Error::NotPublished) => return self.set(config),
+			Err(err) => return Err(err),
+		};
+		if crate::catalog::tracks::same_video_identity(&previous, &config) {
+			return self.set(config);
+		}
+		let container = crate::catalog::hang::Container::try_from(&config)?;
+		let mut next = rendition.fresh(container, self.inner.info().clone())?;
+		next.buffer_duration = self.buffer_duration;
+		next.set(config)?;
+		self.finish()?;
+		*self = next;
+		Ok(())
 	}
 }
 

@@ -79,16 +79,81 @@ impl Catalog {
 	}
 
 	/// Overlay the hint onto `config` and publish it to `rendition`, unless it matches the last
-	/// publish. A changed config just re-mirrors the rendition; there are no fixed tracks to
-	/// reject a reconfiguration.
+	/// publish. Decoder identity changes finish the previous track and mint a fresh name.
 	pub(crate) fn publish(&mut self, track: &mut Track, mut config: hang::catalog::VideoConfig) -> crate::Result<()> {
 		self.hint.apply(&mut config);
 		if self.last.as_ref() == Some(&config) {
 			return Ok(());
 		}
 		tracing::debug!(name = ?track.name(), ?config, "starting track");
-		track.set(config.clone())?;
+		track.reconfigure(config.clone())?;
 		self.last = Some(config);
 		Ok(())
+	}
+}
+
+#[cfg(test)]
+mod tests {
+	use super::*;
+	use crate::container::Frame;
+
+	#[test]
+	fn decoder_changes_mint_fresh_names_but_size_and_estimates_stay_in_place() {
+		let mut broadcast = moq_net::broadcast::Info::new().produce();
+		let catalog = crate::catalog::Producer::<()>::new(&mut broadcast, Default::default()).unwrap();
+		let raw = broadcast
+			.create_track("video", catalog.track_info(hang::catalog::PRIORITY.video))
+			.unwrap();
+		let mut track = catalog
+			.video(
+				raw,
+				crate::catalog::hang::Container::Legacy(crate::container::Kind::Video),
+				None,
+			)
+			.unwrap();
+		let mut publishing = Catalog::new(VideoHint::default());
+		let mut config = hang::catalog::VideoConfig::new("avc1.42c01e".parse::<hang::catalog::VideoCodec>().unwrap());
+		config.description = Some(bytes::Bytes::from_static(b"first"));
+		publishing.publish(&mut track, config.clone()).unwrap();
+		track
+			.write(Frame {
+				timestamp: moq_net::Timestamp::ZERO,
+				payload: bytes::Bytes::from_static(b"old"),
+				keyframe: true,
+				duration: None,
+			})
+			.unwrap();
+		let old = track.consume();
+		config.coded_width = Some(640);
+		config.coded_height = Some(360);
+		config.bitrate = Some(500_000);
+		config.framerate = Some(30.0);
+		publishing.publish(&mut track, config.clone()).unwrap();
+		assert_eq!(track.name(), "video");
+		config.bitrate = Some(250_000);
+		config.framerate = Some(15.0);
+		publishing.publish(&mut track, config.clone()).unwrap();
+		assert_eq!(track.name(), "video");
+		config.description = Some(bytes::Bytes::from_static(b"second"));
+		publishing.publish(&mut track, config.clone()).unwrap();
+		let second = track.name().to_string();
+		assert_ne!(second, "video");
+		assert!(!catalog.snapshot().video.renditions.contains_key("video"));
+		assert_eq!(catalog.snapshot().video.renditions[&second], config);
+		assert_eq!(old.latest(), Some(0));
+		track
+			.write(Frame {
+				timestamp: moq_net::Timestamp::ZERO,
+				payload: bytes::Bytes::from_static(b"new"),
+				keyframe: true,
+				duration: None,
+			})
+			.unwrap();
+		assert_eq!(track.track().latest(), Some(0));
+		config.description = Some(bytes::Bytes::from_static(b"first"));
+		publishing.publish(&mut track, config).unwrap();
+		assert_ne!(track.name(), "video");
+		assert_ne!(track.name(), second);
+		track.finish().unwrap();
 	}
 }

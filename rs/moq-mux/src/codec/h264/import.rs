@@ -178,10 +178,7 @@ impl Import {
 		Ok(())
 	}
 
-	/// Apply a resolved config, updating the catalog rendition in place.
-	///
-	/// A changed config (new avcC, or a new inline SPS) just re-mirrors the
-	/// rendition; there are no fixed tracks to reject a reconfiguration.
+	/// Apply a resolved config, minting a track when the decoder identity changes.
 	fn apply_config(&mut self, config: hang::catalog::VideoConfig) -> crate::Result<()> {
 		self.catalog.publish(&mut self.track, config)
 	}
