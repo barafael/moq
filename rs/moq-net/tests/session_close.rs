@@ -300,24 +300,48 @@ async fn close_requires_subscriber_fin() {
 	assert_eq!(moq_net_sim::now() - started, Duration::from_secs(1));
 }
 
-/// Released drafts retain ACK-based close even when application delivery is delayed.
+/// A transport ACK only means delivery; the peer still drains its buffered group after close.
 #[moq_net_sim::test]
 async fn older_lite_close_keeps_ack_drain() {
-	for version in ["moq-lite-05", "moq-lite-06"] {
-		let Setup {
-			pair,
-			track,
-			reader: _reader,
-			..
-		} = setup(version).await;
-		pair.client_transport.ack_fins();
-		pair.client_transport.hold_unis();
-		let mut group = track.append_group().unwrap();
-		group.write_frame(Timestamp::ZERO, b"last".as_slice()).unwrap();
-		group.finish().unwrap();
-		track.finish().unwrap();
-		pair.client.close().await.expect("released draft still drains on ACKs");
+	for version in [
+		"moq-lite-01",
+		"moq-lite-02",
+		"moq-lite-03",
+		"moq-lite-04",
+		"moq-lite-05",
+		"moq-lite-06",
+	] {
+		buffered_tail_after_close(version).await;
 	}
+}
+
+#[moq_net_sim::test]
+async fn ietf14_buffered_tail_after_close() {
+	buffered_tail_after_close("moq-transport-14").await;
+}
+
+#[moq_net_sim::test]
+async fn ietf17_buffered_tail_after_close() {
+	buffered_tail_after_close("moq-transport-17").await;
+}
+
+async fn buffered_tail_after_close(version: &str) {
+	let Setup {
+		pair, track, reader, ..
+	} = setup(version).await;
+	pair.client_transport.ack_fins();
+	pair.client_transport.hold_unis();
+	let mut group = track.append_group().unwrap();
+	group.write_frame(Timestamp::ZERO, b"last".as_slice()).unwrap();
+	group.finish().unwrap();
+	track.finish().unwrap();
+	pair.client.close().await.expect("released draft still drains on ACKs");
+	pair.client_transport.release_unis();
+	let (got, _) = moq_net_sim::timeout(TIMEOUT, reader)
+		.await
+		.expect("reader completes")
+		.unwrap();
+	assert_eq!(got, vec![b"last".to_vec()], "{version}");
 }
 
 /// A locally unsupported feature uses only the negotiated session registry.
