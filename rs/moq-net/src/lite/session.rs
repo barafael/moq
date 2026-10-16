@@ -529,3 +529,36 @@ impl<S: crate::transport::poll::Session> SendGoaway<S> {
 		}
 	}
 }
+
+#[cfg(test)]
+mod tests {
+	use super::*;
+
+	/// A SETUP read on the session's own Setup Stream (the client side) that repeats a
+	/// Parameter ID fails to decode, so nothing can satisfy the claimed slot.
+	#[tokio::test(start_paused = true)]
+	async fn repeated_setup_parameter_closes_the_session() {
+		// SETUP type, five-byte message, then two empty parameters with id 0.
+		let session = crate::lite::test_transport::ScriptedSession::eof(Vec::new())
+			.with_incoming_unis(vec![vec![1, 5, 2, 0, 0, 0, 0]]);
+		let log = session.log.clone();
+		let mut started = start(Config {
+			runtime: crate::time::Clock::tokio(),
+			session,
+			setup_stream: None,
+			publish: None,
+			subscribe: None,
+			peer_hop: None,
+			version: Version::Lite05,
+			our_setup: Setup::default(),
+			peer_setup: None,
+		})
+		.unwrap();
+		let _ = started.driver.poll(&kio::Waiter::noop());
+		assert!(
+			log.closes()
+				.iter()
+				.any(|(code, _)| *code == SessionError::ProtocolViolation.to_code())
+		);
+	}
+}
