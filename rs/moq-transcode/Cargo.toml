@@ -48,4 +48,4 @@ moq-tokio = { path = "../moq-tokio", default-features = false, features = ["noq"
 # test-util unlocks tokio::time::pause for the deterministic live-feed tests.
 tokio = { workspace = true, features = ["full", "test-util"] }
 url = { workspace = true }
-usage = { workspace = true }
+usage-rs = { workspace = true }

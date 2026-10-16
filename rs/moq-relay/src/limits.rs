@@ -3,7 +3,7 @@
 use serde::{Deserialize, Serialize};
 
 /// Request caps for ordinary client sessions.
-#[derive(usage::Args, Clone, Debug, Deserialize, Serialize)]
+#[derive(usage_rs::Args, Clone, Debug, Deserialize, Serialize)]
 #[serde(default, deny_unknown_fields)]
 #[non_exhaustive]
 pub struct Session {
@@ -50,7 +50,7 @@ impl Session {
 }
 
 /// Request caps for authenticated cluster peer sessions.
-#[derive(usage::Args, Clone, Debug, Deserialize, Serialize)]
+#[derive(usage_rs::Args, Clone, Debug, Deserialize, Serialize)]
 #[serde(default, deny_unknown_fields)]
 #[non_exhaustive]
 pub struct Peer {
