@@ -757,6 +757,94 @@ mod tests {
 	}
 
 	#[test]
+	fn video_identity_edits_are_refused_without_changing_the_catalog() {
+		let original = config(Some(1_000_000), None);
+		let mut changed = Vec::new();
+		let mut codec = original.clone();
+		codec.codec = "avc1.42c01e".parse().unwrap();
+		changed.push(codec);
+		let mut description = original.clone();
+		description.description = Some(bytes::Bytes::from_static(&[1, 2, 3]));
+		changed.push(description);
+		let mut container = original.clone();
+		container.container = hang::catalog::Container::Loc;
+		changed.push(container);
+		let mut width = original.clone();
+		width.display_aspect_width = Some(4);
+		changed.push(width);
+		let mut height = original.clone();
+		height.display_aspect_height = Some(3);
+		changed.push(height);
+		for next in changed {
+			for operation in ["set", "replace", "stage"] {
+				let (_broadcast, catalog, mut rendition) = video_track();
+				rendition.set(original.clone()).unwrap();
+				let refused = match operation {
+					"set" => rendition.set(next.clone()).is_err(),
+					"replace" => rendition.replace(next.clone()).is_err(),
+					"stage" => rendition.stage(next.clone()).is_err(),
+					_ => unreachable!(),
+				};
+				assert!(refused, "{operation} retained identity change {next:?}");
+				assert_eq!(catalog.snapshot().video.renditions["v"], original);
+			}
+		}
+	}
+
+	#[test]
+	fn video_size_and_estimates_can_change_in_place() {
+		let (_broadcast, catalog, mut rendition) = video_track();
+		let mut original = config(Some(1_000_000), None);
+		original.coded_width = Some(1280);
+		original.coded_height = Some(720);
+		original.framerate = Some(60.0);
+		rendition.set(original.clone()).unwrap();
+		let mut next = original;
+		next.coded_width = Some(1920);
+		next.coded_height = Some(1080);
+		next.bitrate = Some(500_000);
+		next.framerate = Some(30.0);
+		rendition.set(next.clone()).unwrap();
+		assert_eq!(catalog.snapshot().video.renditions["v"], next);
+	}
+
+	#[test]
+	fn audio_identity_edits_are_refused_without_changing_the_catalog() {
+		let original = hang::catalog::AudioConfig::new(hang::catalog::AudioCodec::Opus, 48_000, 2);
+		let mut changed = Vec::new();
+		let mut description = original.clone();
+		description.description = Some(bytes::Bytes::from_static(&[1, 2, 3]));
+		changed.push(description);
+		let mut container = original.clone();
+		container.container = hang::catalog::Container::Loc;
+		changed.push(container);
+		let mut sample_rate = original.clone();
+		sample_rate.sample_rate = 44_100;
+		changed.push(sample_rate);
+		let mut channels = original.clone();
+		channels.channel_count = 1;
+		changed.push(channels);
+		for next in changed {
+			for operation in ["set", "replace", "stage"] {
+				let mut broadcast = moq_net::broadcast::Info::new().produce();
+				let catalog = super::super::Producer::new(&mut broadcast, super::super::Config::default()).unwrap();
+				let reserved = catalog.reserve();
+				let mut rendition = reserved.init::<hang::catalog::AudioConfig>("a").unwrap();
+				drop(reserved);
+				rendition.set(original.clone()).unwrap();
+				let refused = match operation {
+					"set" => rendition.set(next.clone()).is_err(),
+					"replace" => rendition.replace(next.clone()).is_err(),
+					"stage" => rendition.stage(next.clone()).is_err(),
+					_ => unreachable!(),
+				};
+				assert!(refused, "{operation} retained identity change {next:?}");
+				assert_eq!(catalog.snapshot().audio.renditions["a"], original);
+			}
+		}
+	}
+
+	#[test]
 	fn rejected_jitter_is_not_retained() {
 		let (_broadcast, catalog, mut rendition) = video_track();
 		for jitter in [Duration::ZERO, Duration::MAX] {
