@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.15](https://github.com/moq-dev/moq/compare/moq-e2ee-v0.0.14...moq-e2ee-v0.0.15) - 2026-10-16
+
+### Other
+
+- updated the following local packages: moq-net
+
 ## [0.0.14](https://github.com/moq-dev/moq/compare/moq-e2ee-v0.0.13...moq-e2ee-v0.0.14) - 2026-10-14
 
 ### Other

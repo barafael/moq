@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.15](https://github.com/moq-dev/moq/compare/moq-rtmp-v0.3.14...moq-rtmp-v0.3.15) - 2026-10-16
+
+### Other
+
+- updated the following local packages: moq-net, hang, moq-mux
+
 ## [0.3.14](https://github.com/moq-dev/moq/compare/moq-rtmp-v0.3.13...moq-rtmp-v0.3.14) - 2026-10-14
 
 ### Other
