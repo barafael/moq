@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.15](https://github.com/moq-dev/moq/compare/moq-net-v0.3.14...moq-net-v0.3.15) - 2026-10-16
+
+### Fixed
+
+- *(net)* reject invalid Lite SETUP on release
+
+### Other
+
+- Merge pull request #5661 from moq-dev/quest/m1/lite-setup-backport
+- *(net)* cover a repeated SETUP parameter on the session path
+
 ## [0.3.14](https://github.com/moq-dev/moq/compare/moq-net-v0.3.13...moq-net-v0.3.14) - 2026-10-16
 
 ### Fixed

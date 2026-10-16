@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.15](https://github.com/moq-dev/moq/compare/moq-audio-v0.1.14...moq-audio-v0.1.15) - 2026-10-16
+
+### Other
+
+- updated the following local packages: moq-net, hang, moq-mux
+
 ## [0.1.14](https://github.com/moq-dev/moq/compare/moq-audio-v0.1.13...moq-audio-v0.1.14) - 2026-10-16
 
 ### Other
