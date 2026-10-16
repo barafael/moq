@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.14.6](https://github.com/moq-dev/moq/compare/moq-cli-v0.14.5...moq-cli-v0.14.6) - 2026-10-16
+
+### Fixed
+
+- *(cli)* exit after shutdown with an open stdin writer
+
 ## [0.14.5](https://github.com/moq-dev/moq/compare/moq-cli-v0.14.4...moq-cli-v0.14.5) - 2026-10-14
 
 ### Other
