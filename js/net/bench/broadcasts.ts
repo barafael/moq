@@ -112,11 +112,13 @@ for (const trackCount of [8, 128, 1024]) {
 		}
 		const start = performance.now();
 		for (let index = 0; index < created; index++) {
-			broadcast.createTrack(`new-${index}`);
+			const track = broadcast.createTrack(`new-${index}`);
 			for (const watcher of watchers) {
 				if ((await watcher.next()) !== `new-${index}`) throw new Error("watcher missed a track");
 				checksum++;
 			}
+			// Keep the live track count at `trackCount` for the whole measurement.
+			track.close();
 		}
 		console.log(`${trackCount},${watcherCount},${(((performance.now() - start) * 1000) / created).toFixed(1)}`);
 		broadcast.close();
