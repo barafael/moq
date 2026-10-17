@@ -557,9 +557,10 @@ mod tests {
 		let physical = reader.name("video0.avc3").unwrap().to_string();
 		assert_eq!(protected.video.renditions.keys().collect::<Vec<_>>(), [&physical]);
 		let timelines = &protected.archive.as_ref().expect("timelines").timelines;
+		// The catalog's own timeline: a media track's waits for its duration to be declared.
 		assert_eq!(
-			timelines[&physical],
-			reader.name("video0.avc3.timeline.z").unwrap().to_string()
+			timelines[reader.name(hang::Catalog::DEFAULT_NAME).unwrap().as_str()].track,
+			reader.name("catalog.json.timeline.z").unwrap().to_string()
 		);
 
 		let compressed = read(&consumer, &reader, hang::Catalog::COMPRESSED_NAME).await;

@@ -35,6 +35,12 @@ pub(super) fn protect(
 	if let Some(m2ts) = &mut catalog.m2ts {
 		m2ts.track = carry(std::mem::take(&mut m2ts.track))?;
 	}
+	if let Some(stats) = &mut catalog.stats {
+		stats.track = carry(std::mem::take(&mut stats.track))?;
+	}
+	if catalog.echo.is_some() {
+		return Err(crate::Error::Unencryptable("an echo prefix"));
+	}
 
 	if let Some(archive) = &mut catalog.archive {
 		if archive.replay.is_some() {
@@ -44,14 +50,15 @@ pub(super) fn protect(
 			return Err(crate::Error::Unencryptable("an archive store"));
 		}
 		let mut timelines = BTreeMap::new();
-		for (track, timeline) in std::mem::take(&mut archive.timelines) {
+		for (track, mut timeline) in std::mem::take(&mut archive.timelines) {
 			// The key indexes a track, carried like any other unless it is a catalog track the
 			// producer publishes itself.
 			let track = match track.as_str() {
 				hang::Catalog::DEFAULT_NAME | hang::Catalog::COMPRESSED_NAME => generation.name(&track)?.to_string(),
 				_ => carry(track)?,
 			};
-			timelines.insert(track, carry(timeline)?);
+			timeline.track = carry(timeline.track)?;
+			timelines.insert(track, timeline);
 		}
 		archive.timelines = timelines;
 	}
@@ -84,7 +91,7 @@ fn rename<C>(
 #[cfg(test)]
 mod tests {
 	use super::*;
-	use hang::catalog::{JsonConfig, M2ts, VideoCodec, VideoConfig};
+	use hang::catalog::{JsonConfig, M2ts, Stats, Timeline, VideoCodec, VideoConfig};
 
 	fn generation() -> generation::Producer {
 		moq_e2ee::Credential::new(moq_e2ee::credential::Config {
@@ -108,17 +115,18 @@ mod tests {
 		chat.track = Some("chat.json".to_string());
 		catalog.json.tracks.insert("chat".to_string(), chat);
 		catalog.m2ts = Some(M2ts::new("0.ts"));
+		catalog.stats = Some(Stats::new("stats.json"));
 		let mut archive = hang::catalog::Archive::new();
 		archive
 			.timelines
-			.insert("video0.avc3".to_string(), "video0.avc3.timeline.z".to_string());
+			.insert("video0.avc3".to_string(), Timeline::new("video0.avc3.timeline.z", 33));
 		archive
 			.timelines
-			.insert("catalog.json".to_string(), "catalog.json.timeline.z".to_string());
+			.insert("catalog.json".to_string(), Timeline::new("catalog.json.timeline.z", 33));
 		// Indexed but listed in no section.
 		archive
 			.timelines
-			.insert("raw".to_string(), "raw.timeline.z".to_string());
+			.insert("raw".to_string(), Timeline::new("raw.timeline.z", 33));
 		catalog.archive = Some(archive);
 
 		let tracks = protect(&mut catalog, &generation).unwrap();
@@ -133,6 +141,7 @@ mod tests {
 				"chat.json",
 				"raw",
 				"raw.timeline.z",
+				"stats.json",
 				"video0.avc3",
 				"video0.avc3.timeline.z"
 			]
@@ -141,10 +150,17 @@ mod tests {
 		let chat = &catalog.json.tracks[&name("chat.json")];
 		assert_eq!(chat.track, None, "the key is the track");
 		assert_eq!(catalog.m2ts.unwrap().track, name("0.ts"));
+		assert_eq!(catalog.stats.unwrap().track, name("stats.json"));
 		let timelines = &catalog.archive.unwrap().timelines;
-		assert_eq!(timelines[&name("video0.avc3")], name("video0.avc3.timeline.z"));
-		assert_eq!(timelines[&name("catalog.json")], name("catalog.json.timeline.z"));
-		assert_eq!(timelines[&name("raw")], name("raw.timeline.z"));
+		assert_eq!(
+			timelines[&name("video0.avc3")],
+			Timeline::new(name("video0.avc3.timeline.z"), 33)
+		);
+		assert_eq!(
+			timelines[&name("catalog.json")],
+			Timeline::new(name("catalog.json.timeline.z"), 33)
+		);
+		assert_eq!(timelines[&name("raw")], Timeline::new(name("raw.timeline.z"), 33));
 	}
 
 	#[test]
@@ -156,6 +172,16 @@ mod tests {
 		assert!(matches!(
 			protect(&mut catalog, &generation()),
 			Err(crate::Error::ForeignBroadcast)
+		));
+	}
+
+	#[test]
+	fn refuses_an_echo_prefix() {
+		let mut catalog = Catalog::<Extra>::default();
+		catalog.echo = Some(hang::catalog::Echo::new("echo"));
+		assert!(matches!(
+			protect(&mut catalog, &generation()),
+			Err(crate::Error::Unencryptable("an echo prefix"))
 		));
 	}
 

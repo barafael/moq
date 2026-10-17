@@ -14,8 +14,8 @@
 //!   name) never reaches the output. Every group keeps its sequence and every frame its index,
 //!   so the timelines stay valid.
 //!
-//! Protected broadcasts are outside recording and replay, so a catalog that references another
-//! broadcast or an archive replay is refused. So is one naming a track the source does not carry,
+//! Protected broadcasts are outside recording, replay, and viewer feedback, so a catalog that
+//! references another broadcast, an archive replay, or an echo prefix is refused. So is one naming a track the source does not carry,
 //! or one consumers would reject once renamed.
 
 mod catalog;
