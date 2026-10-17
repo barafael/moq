@@ -190,16 +190,13 @@ impl Producer {
 			if !self.named.insert(name.clone()) {
 				continue;
 			}
-			match self.source.track(name) {
-				Ok(track) => {
-					let pending = track.subscribe(subscription());
-					let physical = *physical;
-					self.subscribing.insert(name.clone(), Subscribing { physical, pending });
-				}
-				Err(err) => {
-					tracing::warn!(track = %name, %err, "the catalog names a track the broadcast does not carry")
-				}
-			}
+			// Publishing an entry with no output track behind it would hand subscribers a dangling name.
+			let track = self.source.track(name).inspect_err(
+				|err| tracing::warn!(track = %name, %err, "the catalog names a track the broadcast does not carry"),
+			)?;
+			let pending = track.subscribe(subscription());
+			let physical = *physical;
+			self.subscribing.insert(name.clone(), Subscribing { physical, pending });
 		}
 
 		self.catalog.staged = Some(Staged {
@@ -234,6 +231,8 @@ impl Producer {
 				source: subscriber.ordered(),
 				output: Some(self.generation.produce(track)?),
 				groups: Vec::new(),
+				next_group: None,
+				next_datagram: None,
 				ended: false,
 				failed: self.failed.clone(),
 			});
@@ -335,6 +334,9 @@ struct Forward {
 	/// Taken when the track finishes or aborts.
 	output: Option<moq_e2ee::track::Producer>,
 	groups: Vec<Group>,
+	/// The next group and datagram read from the source, held until the lower sequence goes out.
+	next_group: Option<moq_net::group::Consumer>,
+	next_datagram: Option<moq_net::Datagram>,
 	ended: bool,
 	failed: Failed,
 }
@@ -367,35 +369,50 @@ impl Forward {
 			return Poll::Ready(Ok(()));
 		};
 
-		while !self.ended {
-			match self.source.poll_next_group(waiter) {
-				Poll::Ready(Ok(Some(source))) => {
+		// Groups and datagrams share one sequence space, which the output only allocates upward, so
+		// whichever is lower goes first; draining one kind first would drop the other as reuse.
+		loop {
+			if self.next_group.is_none() && !self.ended {
+				match self.source.poll_next_group(waiter) {
 					// Joined part way through: frame indices would no longer match the timeline.
-					if source.index() != 0 {
-						continue;
+					Poll::Ready(Ok(Some(source))) if source.index() != 0 => continue,
+					Poll::Ready(Ok(Some(source))) => self.next_group = Some(source),
+					Poll::Ready(Ok(None)) => self.ended = true,
+					Poll::Ready(Err(err)) => {
+						tracing::debug!(track = %self.name, %err, "the plaintext track failed");
+						self.abort();
+						return Poll::Ready(Ok(()));
 					}
-					match output.create_group(source.sequence) {
-						Ok(output) => self.groups.push(Group { source, output }),
-						// Below a datagram already carried; encrypting it would reuse that sequence.
-						Err(moq_e2ee::Error::Reuse) => continue,
-						Err(err) => return Poll::Ready(Err(err.into())),
-					}
+					Poll::Pending => {}
 				}
-				Poll::Ready(Ok(None)) => self.ended = true,
-				Poll::Ready(Err(err)) => {
-					tracing::debug!(track = %self.name, %err, "the plaintext track failed");
-					self.abort();
-					return Poll::Ready(Ok(()));
-				}
-				Poll::Pending => break,
 			}
-		}
+			if self.next_datagram.is_none()
+				&& let Poll::Ready(Ok(Some(datagram))) = self.source.poll_recv_datagram(waiter)
+			{
+				self.next_datagram = Some(datagram);
+			}
 
-		while let Poll::Ready(Ok(Some(datagram))) = self.source.poll_recv_datagram(waiter) {
-			match output.insert_datagram(datagram.sequence, datagram.timestamp, &datagram.payload) {
-				// Datagrams are lossy: one below a sequence already carried is dropped.
-				Ok(()) | Err(moq_e2ee::Error::Reuse) => {}
-				Err(err) => return Poll::Ready(Err(err.into())),
+			let group_first = match (&self.next_group, &self.next_datagram) {
+				(Some(group), Some(datagram)) => group.sequence < datagram.sequence,
+				(Some(_), None) => true,
+				(None, Some(_)) => false,
+				(None, None) => break,
+			};
+			if group_first {
+				let source = self.next_group.take().expect("checked above");
+				match output.create_group(source.sequence) {
+					Ok(output) => self.groups.push(Group { source, output }),
+					// The source wrote it below a sequence already carried; encrypting it would reuse that.
+					Err(moq_e2ee::Error::Reuse) => {}
+					Err(err) => return Poll::Ready(Err(err.into())),
+				}
+			} else {
+				let datagram = self.next_datagram.take().expect("checked above");
+				match output.insert_datagram(datagram.sequence, datagram.timestamp, &datagram.payload) {
+					// Datagrams are lossy: one below a sequence already carried is dropped.
+					Ok(()) | Err(moq_e2ee::Error::Reuse) => {}
+					Err(err) => return Poll::Ready(Err(err.into())),
+				}
 			}
 		}
 
@@ -563,6 +580,85 @@ mod tests {
 		drop(stats);
 		catalog.finish().unwrap();
 		run.await.unwrap().unwrap();
+	}
+
+	/// A plaintext broadcast, its catalog track, and an empty untimed video track per name it lists.
+	fn catalogued(
+		semantic: &[&str],
+	) -> (
+		moq_net::broadcast::Producer,
+		moq_net::track::Producer,
+		Vec<moq_net::track::Producer>,
+	) {
+		let local = moq_net::broadcast::Info::new().produce();
+		let mut catalog = hang::Catalog::<()>::default();
+		let tracks = semantic
+			.iter()
+			.map(|name| {
+				catalog
+					.video
+					.renditions
+					.insert(name.to_string(), VideoConfig::new(VideoCodec::VP8));
+				local.create_track(*name, None).unwrap()
+			})
+			.collect();
+		let track = local
+			.create_track(hang::Catalog::DEFAULT_NAME, hang::Catalog::default_track_info())
+			.unwrap();
+		let mut group = track.append_group().unwrap();
+		let json = serde_json::to_vec(&catalog).unwrap();
+		group
+			.write_frame(moq_net::Timestamp::from_micros(0).unwrap(), json)
+			.unwrap();
+		group.finish().unwrap();
+		(local, track, tracks)
+	}
+
+	#[tokio::test]
+	async fn carries_a_datagram_below_a_buffered_group() {
+		let credential = credential();
+		let generation = credential.produce();
+		let reader = credential.consume(generation.epoch().clone());
+		let (local, _catalog, mut tracks) = catalogued(&["v"]);
+		let output = moq_net::broadcast::Info::new().produce();
+		let consumer = output.consume();
+		let mut producer = Producer::new(local.consume(), generation, output.clone()).unwrap();
+		let waiter = kio::Waiter::noop();
+		assert!(producer.poll_run(&waiter).is_pending());
+
+		let name = reader.name("v").unwrap();
+		let subscriber = consumer.track(name.as_str()).unwrap().subscribe(None).await.unwrap();
+		let mut protected = reader.consume(subscriber).unwrap();
+
+		// Both land before the producer looks, so it sees the group and the lower datagram together.
+		let track = &mut tracks[0];
+		track.insert_datagram(0, None, Bytes::from_static(b"datagram")).unwrap();
+		let mut group = track.create_group(moq_net::group::Info { sequence: 1 }).unwrap();
+		group.write_frame(None, Bytes::from_static(b"frame")).unwrap();
+		group.finish().unwrap();
+		assert!(producer.poll_run(&waiter).is_pending());
+
+		let event = protected.recv_datagram().await.unwrap().expect("a datagram");
+		let moq_e2ee::datagram::Event::Datagram(datagram) = event else {
+			panic!("the datagram authenticates: {event:?}");
+		};
+		assert_eq!((datagram.sequence, &datagram.plaintext[..]), (0, &b"datagram"[..]));
+		let mut group = protected.recv_group().await.unwrap().expect("a group");
+		assert_eq!(group.sequence(), 1);
+		let frame = group.read_frame().await.unwrap().expect("a frame");
+		assert_eq!(&frame.plaintext[..], b"frame");
+	}
+
+	#[tokio::test]
+	async fn refuses_a_catalog_naming_a_missing_track() {
+		let (local, _catalog, tracks) = catalogued(&["v"]);
+		drop(tracks);
+		let output = moq_net::broadcast::Info::new().produce();
+		let producer = Producer::new(local.consume(), credential().produce(), output).unwrap();
+		assert!(matches!(
+			producer.run().await,
+			Err(crate::Error::Moq(moq_net::Error::NotFound))
+		));
 	}
 
 	#[tokio::test]
