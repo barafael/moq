@@ -899,3 +899,17 @@ test("tracks relists a name taken by a new track", async () => {
 	broadcast.close();
 	expect(await empty.next()).toBeUndefined();
 });
+
+test("leaving a tracks loop early closes the watcher", async () => {
+	const broadcast = new BroadcastProducer();
+	broadcast.createTrack("a");
+	const tracks = broadcast.tracks();
+	for await (const name of tracks) {
+		expect(name).toBe("a");
+		break;
+	}
+	expect(tracks.closed.peek()).toBeNull();
+	broadcast.createTrack("b");
+	expect(await tracks.next()).toBeUndefined();
+	broadcast.close();
+});

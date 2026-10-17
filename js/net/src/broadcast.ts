@@ -384,12 +384,16 @@ export class Tracks {
 		return this.#watcher.closed;
 	}
 
-	/** The track names as they arrive, until the broadcast closes. */
+	/** The track names as they arrive, until the broadcast closes; leaving the loop early closes the watcher. */
 	async *[Symbol.asyncIterator](): AsyncGenerator<string, void, undefined> {
-		for (;;) {
-			const name = await this.next();
-			if (name === undefined) return;
-			yield name;
+		try {
+			for (;;) {
+				const name = await this.next();
+				if (name === undefined) return;
+				yield name;
+			}
+		} finally {
+			this.close();
 		}
 	}
 
