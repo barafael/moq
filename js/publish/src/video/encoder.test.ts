@@ -325,6 +325,15 @@ test("a rung stops below its band and resumes after its viewers left", async () 
 		await settle();
 		expect(encoder.out.catalog.peek()).toEqual(advertised);
 		expect(encoder.out.resolved.peek()?.bitrate).toBe(415_040);
+
+		// Stopped again, then its track closes. Its replacement is only handed over on demand, so the
+		// rendition is advertised again rather than left stopped where no viewer would subscribe.
+		estimate.set(300_000);
+		await settle();
+		expect(encoder.out.catalog.peek()?.enabled).toBe(false);
+		track.close();
+		await settle();
+		expect(encoder.out.catalog.peek()).toEqual(advertised);
 	} finally {
 		encoder.close();
 		bandwidth.close();

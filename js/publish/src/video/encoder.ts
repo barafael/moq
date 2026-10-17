@@ -357,11 +357,17 @@ export class Encoder {
 		});
 
 		// The broadcast keeps a rendition's track across demand gaps, so the last one served is still the
-		// one a returning subscriber gets.
+		// one a returning subscriber gets, until it closes. A closed one's replacement is only handed over
+		// on demand, so forget it: the rate policy starts over, re-advertising a stopped rendition rather
+		// than leaving it stopped on a track nobody can reach.
 		const served = new Signal<Moq.Track.Producer | undefined>(undefined);
 		effect.run((effect) => {
 			const track = effect.get(rendition.track);
 			if (track) served.set(track);
+		});
+		effect.run((effect) => {
+			const track = effect.get(served);
+			if (track && effect.get(track.closed) !== undefined) served.set(undefined);
 		});
 
 		// Reserve against the connection from the first subscriber on, across demand gaps: an idle track
