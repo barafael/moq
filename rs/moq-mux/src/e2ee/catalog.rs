@@ -7,8 +7,8 @@ use crate::catalog::hang::{Catalog, Extra};
 /// Rewrite every track `catalog` names to its physical name, returning the plaintext tracks to carry.
 ///
 /// Rendition keys become the physical name of the track they reference and drop their `track`
-/// override, as the draft requires. Application sections are kept verbatim: a track named only
-/// there is not carried.
+/// override, as the draft requires. A track an archive timeline indexes is carried too.
+/// Application sections are kept verbatim: a track named only there is not carried.
 pub(super) fn protect(
 	catalog: &mut Catalog<Extra>,
 	generation: &generation::Producer,
@@ -45,8 +45,13 @@ pub(super) fn protect(
 		}
 		let mut timelines = BTreeMap::new();
 		for (track, timeline) in std::mem::take(&mut archive.timelines) {
-			// The key names a track carried through its own section (or the catalog itself).
-			timelines.insert(generation.name(&track)?.to_string(), carry(timeline)?);
+			// The key indexes a track, carried like any other unless it is a catalog track the
+			// producer publishes itself.
+			let track = match track.as_str() {
+				hang::Catalog::DEFAULT_NAME | hang::Catalog::COMPRESSED_NAME => generation.name(&track)?.to_string(),
+				_ => carry(track)?,
+			};
+			timelines.insert(track, carry(timeline)?);
 		}
 		archive.timelines = timelines;
 	}
@@ -110,6 +115,10 @@ mod tests {
 		archive
 			.timelines
 			.insert("catalog.json".to_string(), "catalog.json.timeline.z".to_string());
+		// Indexed but listed in no section.
+		archive
+			.timelines
+			.insert("raw".to_string(), "raw.timeline.z".to_string());
 		catalog.archive = Some(archive);
 
 		let tracks = protect(&mut catalog, &generation).unwrap();
@@ -122,6 +131,8 @@ mod tests {
 				"0.ts",
 				"catalog.json.timeline.z",
 				"chat.json",
+				"raw",
+				"raw.timeline.z",
 				"video0.avc3",
 				"video0.avc3.timeline.z"
 			]
@@ -133,6 +144,7 @@ mod tests {
 		let timelines = &catalog.archive.unwrap().timelines;
 		assert_eq!(timelines[&name("video0.avc3")], name("video0.avc3.timeline.z"));
 		assert_eq!(timelines[&name("catalog.json")], name("catalog.json.timeline.z"));
+		assert_eq!(timelines[&name("raw")], name("raw.timeline.z"));
 	}
 
 	#[test]

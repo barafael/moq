@@ -188,6 +188,15 @@ impl Producer {
 		catalog.check_renditions()?;
 		let json = Bytes::from(serde_json::to_vec(&catalog).map_err(hang::Error::from)?);
 
+		// A track this snapshot dropped before it was carried would hold it back, so cancel it.
+		self.subscribing.retain(|name, _| {
+			let named = tracks.contains_key(name);
+			if !named {
+				self.named.remove(name);
+			}
+			named
+		});
+
 		for (name, physical) in &tracks {
 			if !self.named.insert(name.clone()) {
 				continue;
@@ -590,27 +599,54 @@ mod tests {
 		Vec<moq_net::track::Producer>,
 	) {
 		let local = moq_net::broadcast::Info::new().produce();
-		let mut catalog = hang::Catalog::<()>::default();
 		let tracks = semantic
 			.iter()
-			.map(|name| {
-				catalog
-					.video
-					.renditions
-					.insert(name.to_string(), VideoConfig::new(VideoCodec::VP8));
-				local.create_track(*name, None).unwrap()
-			})
+			.map(|name| local.create_track(*name, None).unwrap())
 			.collect();
 		let track = local
 			.create_track(hang::Catalog::DEFAULT_NAME, hang::Catalog::default_track_info())
 			.unwrap();
+		write_catalog(&track, semantic);
+		(local, track, tracks)
+	}
+
+	/// Write a catalog snapshot listing a video rendition per name.
+	fn write_catalog(track: &moq_net::track::Producer, semantic: &[&str]) {
+		let mut catalog = hang::Catalog::<()>::default();
+		for name in semantic {
+			catalog
+				.video
+				.renditions
+				.insert(name.to_string(), VideoConfig::new(VideoCodec::VP8));
+		}
 		let mut group = track.append_group().unwrap();
 		let json = serde_json::to_vec(&catalog).unwrap();
 		group
 			.write_frame(moq_net::Timestamp::from_micros(0).unwrap(), json)
 			.unwrap();
 		group.finish().unwrap();
-		(local, track, tracks)
+	}
+
+	#[tokio::test]
+	async fn cancels_a_track_a_newer_catalog_drops() {
+		let (local, catalog, tracks) = catalogued(&[]);
+		let gone = local.reserve_track("gone").unwrap();
+		let kept = local.create_track("kept", None).unwrap();
+		let output = moq_net::broadcast::Info::new().produce();
+		let mut producer = Producer::new(local.consume(), credential().produce(), output).unwrap();
+		let waiter = kio::Waiter::noop();
+
+		write_catalog(&catalog, &["gone"]);
+		assert!(producer.poll_run(&waiter).is_pending());
+		write_catalog(&catalog, &["kept"]);
+		assert!(producer.poll_run(&waiter).is_pending());
+
+		// The superseded subscription neither holds the run open nor fails it.
+		gone.reject(moq_net::Error::NotFound);
+		catalog.finish().unwrap();
+		kept.finish().unwrap();
+		drop(tracks);
+		producer.run().await.unwrap();
 	}
 
 	#[tokio::test]
