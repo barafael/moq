@@ -602,7 +602,7 @@ mod tests {
 			let track = broadcast
 				.create_track(name, track::Info::default().with_priority(priority))
 				.unwrap();
-			let viewer = track.consume();
+			let viewer = track.subscribe(None);
 			renditions.push((track, viewer));
 		}
 		let low = allocator.reserve(&renditions[0].0.demand(), bps(2_500_000));
