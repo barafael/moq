@@ -15,7 +15,8 @@
 //!   so the timelines stay valid.
 //!
 //! Protected broadcasts are outside recording and replay, so a catalog that references another
-//! broadcast or an archive replay is refused.
+//! broadcast or an archive replay is refused. So is one naming a track the source does not carry,
+//! or one consumers would reject once renamed.
 
 mod catalog;
 mod producer;

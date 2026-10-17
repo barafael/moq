@@ -184,6 +184,8 @@ impl Producer {
 	fn stage(&mut self, sequence: u64, frame: moq_net::frame::Frame) -> crate::Result<()> {
 		let mut catalog = Catalog::<Extra>::from_slice(&frame.payload)?;
 		let tracks = super::catalog::protect(&mut catalog, &self.generation)?;
+		// Renaming can merge IDs that were distinct, so check the protected form consumers will read.
+		catalog.check_renditions()?;
 		let json = Bytes::from(serde_json::to_vec(&catalog).map_err(hang::Error::from)?);
 
 		for (name, physical) in &tracks {
@@ -218,13 +220,10 @@ impl Producer {
 		}
 		for (name, physical, res) in resolved {
 			self.subscribing.remove(&name);
-			let subscriber = match res {
-				Ok(subscriber) => subscriber,
-				Err(err) => {
-					tracing::warn!(track = %name, %err, "the catalog names a track that ended before it was carried");
-					continue;
-				}
-			};
+			// The staged catalog names it, so carrying on would publish a dangling entry.
+			let subscriber = res.inspect_err(
+				|err| tracing::warn!(track = %name, %err, "the catalog names a track that ended before it was carried"),
+			)?;
 			let track = self.output.create_track(physical.as_str(), subscriber.info().clone())?;
 			self.forwards.push(Forward {
 				name,
@@ -658,6 +657,34 @@ mod tests {
 		assert!(matches!(
 			producer.run().await,
 			Err(crate::Error::Moq(moq_net::Error::NotFound))
+		));
+	}
+
+	#[tokio::test]
+	async fn refuses_renditions_merged_by_renaming() {
+		let local = moq_net::broadcast::Info::new().produce();
+		let _media = local.create_track("media", None).unwrap();
+		let mut catalog = hang::Catalog::<()>::default();
+		let mut video = VideoConfig::new(VideoCodec::VP8);
+		video.track = Some("media".to_string());
+		catalog.video.renditions.insert("video".to_string(), video);
+		let mut audio = hang::catalog::AudioConfig::new(hang::catalog::AudioCodec::Opus, 48_000, 2);
+		audio.track = Some("media".to_string());
+		catalog.audio.renditions.insert("audio".to_string(), audio);
+		let track = local
+			.create_track(hang::Catalog::DEFAULT_NAME, hang::Catalog::default_track_info())
+			.unwrap();
+		let mut group = track.append_group().unwrap();
+		let json = serde_json::to_vec(&catalog).unwrap();
+		group
+			.write_frame(moq_net::Timestamp::from_micros(0).unwrap(), json)
+			.unwrap();
+
+		let output = moq_net::broadcast::Info::new().produce();
+		let producer = Producer::new(local.consume(), credential().produce(), output).unwrap();
+		assert!(matches!(
+			producer.run().await,
+			Err(crate::Error::Hang(hang::Error::DuplicateRendition(_)))
 		));
 	}
 
