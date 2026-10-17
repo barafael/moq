@@ -55,9 +55,16 @@ impl Producer {
 			let track = output.create_track(name.as_str(), hang::Catalog::default_track_info())?;
 			Ok(generation.produce(track)?)
 		};
-		let hang = catalog_track(hang::Catalog::DEFAULT_NAME)?;
-		let hangz = catalog_track(hang::Catalog::COMPRESSED_NAME)?;
 		let subscribing = source.track(hang::Catalog::DEFAULT_NAME)?.subscribe(subscription());
+		let hang = catalog_track(hang::Catalog::DEFAULT_NAME)?;
+		// Its subscribers should see the construction fail, not the track vanish.
+		let hangz = match catalog_track(hang::Catalog::COMPRESSED_NAME) {
+			Ok(hangz) => hangz,
+			Err(err) => {
+				let _ = hang.abort();
+				return Err(err);
+			}
+		};
 
 		Ok(Self {
 			source,
