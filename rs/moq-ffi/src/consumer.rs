@@ -11,7 +11,7 @@ pub(crate) fn timestamp_us(timestamp: moq_net::Timestamp) -> Result<u64, MoqErro
 	timestamp.as_micros().try_into().map_err(|_| MoqError::TimeOverflow)
 }
 
-fn raw_frame(frame: moq_net::frame::Frame) -> Result<MoqFrame, MoqError> {
+pub(crate) fn raw_frame(frame: moq_net::frame::Frame) -> Result<MoqFrame, MoqError> {
 	let timestamp_us = frame.timestamp.map(timestamp_us).transpose()?;
 	Ok(MoqFrame {
 		payload: frame.payload.to_vec(),

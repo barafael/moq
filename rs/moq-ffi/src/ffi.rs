@@ -511,6 +511,8 @@ impl<T: kio::MaybeSend + 'static> Task<T> {
 				}
 			});
 			std::future::poll_fn(|cx| {
+				#[cfg(not(target_arch = "wasm32"))]
+				crate::spike::POLLS.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
 				let Some(_polling) = Polling::start() else {
 					return std::task::Poll::Ready(Err(MoqError::Cancelled));
 				};

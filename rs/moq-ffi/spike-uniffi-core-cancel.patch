@@ -1,0 +1,11 @@
+--- a/uniffi_core/src/ffi/rustfuture/future.rs
++++ b/uniffi_core/src/ffi/rustfuture/future.rs
+@@ -223,6 +223,8 @@
+ 
+     pub fn cancel(&self) {
+         self.scheduler.cancel();
++        // Spike (mozilla/uniffi-rs#2771): drop the future at cancel, not at free.
++        self.future.lock().unwrap().free();
+     }
+ 
+     pub fn complete(&self, call_status: &mut RustCallStatus) -> FfiType

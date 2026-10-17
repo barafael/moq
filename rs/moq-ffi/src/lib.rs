@@ -31,6 +31,8 @@ pub mod producer;
 #[cfg(not(target_arch = "wasm32"))]
 pub mod server;
 pub mod session;
+#[cfg(not(target_arch = "wasm32"))]
+pub mod spike;
 #[cfg(target_arch = "wasm32")]
 mod transport;
 #[cfg(all(feature = "video", not(target_arch = "wasm32")))]
