@@ -107,15 +107,56 @@ struct BroadcastState {
 	// Set once the broadcast ends: `Producer::close()` or the last producer-side
 	// handle dropping. Every lookup after it answers `Unroutable`.
 	closing: bool,
+
+	// One queue per live [`Tracks`] watcher, fed each name as it enters `tracks`. A
+	// dropped watcher closes its queue, which is pruned as the list grows.
+	watchers: Vec<kio::Queue<Arc<str>>>,
 }
 
 impl BroadcastState {
 	/// Insert a track weak handle into the lookup, returning an error if a live
 	/// track already holds the name. A closed entry under the name is reclaimed.
 	fn insert_track(&mut self, weak: track::TrackWeak) -> Result<(), Error> {
-		match self.tracks.insert(weak.name().clone(), weak) {
-			Some(_) => Err(Error::Duplicate),
-			None => Ok(()),
+		let name = weak.name().clone();
+		if self.tracks.insert(name.clone(), weak).is_some() {
+			return Err(Error::Duplicate);
+		}
+		// A failed push is a dropped watcher, so it leaves the list here.
+		self.watchers.retain(|watcher| watcher.try_push(name.clone()).is_ok());
+		Ok(())
+	}
+
+	/// A watcher seeded with every live track name. See [`Producer::tracks`].
+	fn watch(&mut self) -> Tracks {
+		let queue = kio::Queue::new();
+		if self.closing {
+			queue.close();
+			return Tracks { queue };
+		}
+		use super::WeakEntry;
+		for track in self.tracks.iter().filter(|track| !track.is_closed()) {
+			let _ = queue.try_push(track.name().clone());
+		}
+		// Prune dropped watchers as the list grows, so repeated calls on a broadcast that
+		// adds no tracks stay bounded by the live count. Keeping as much slack as there are
+		// live watchers puts the next sweep as far off as this one cost.
+		if self.watchers.len() == self.watchers.capacity() {
+			self.watchers.retain(|watcher| !watcher.is_closed());
+			self.watchers.reserve(self.watchers.len());
+		}
+		self.watchers.push(queue.clone());
+		Tracks { queue }
+	}
+
+	/// End the broadcast. See [`Producer::close`].
+	fn end(&mut self) {
+		self.closing = true;
+		// A name that was reserved or queued but never served can't arrive now, and
+		// `Consumer::track` answers `Unroutable` for one asked about after this point.
+		// Say the same to whoever asked earlier.
+		self.reject_unserved(Error::Unroutable);
+		for watcher in self.watchers.drain(..) {
+			watcher.close();
 		}
 	}
 
@@ -290,6 +331,11 @@ impl Producer {
 		}
 	}
 
+	/// Watch the names of this broadcast's live tracks, without keeping it alive. See [`Tracks`].
+	pub fn tracks(&self) -> Tracks {
+		self.state.lock().watch()
+	}
+
 	/// Produce a new track and insert it into the broadcast.
 	///
 	/// Pass a name and an optional [`track::Info`], so a bare name works:
@@ -313,7 +359,7 @@ impl Producer {
 			// Cache it like a served request so concurrent lookups coalesce; a
 			// live same-name entry cannot exist (its presence would have kept
 			// the request from queuing).
-			let _ = state.tracks.insert(name, track.weak());
+			let _ = state.insert_track(track.weak());
 			return Ok(track);
 		}
 
@@ -483,13 +529,10 @@ impl Alive {
 	fn close(&self) {
 		{
 			let mut state = self.state.lock();
-			if std::mem::replace(&mut state.closing, true) {
+			if state.closing {
 				return;
 			}
-			// A name that was reserved or queued but never served can't arrive now,
-			// and `Consumer::track` answers `Unroutable` for one asked about after this
-			// point. Say the same to whoever asked earlier.
-			state.reject_unserved(Error::Unroutable);
+			state.end();
 		}
 		let _ = self.token.close();
 		self.retract();
@@ -513,8 +556,7 @@ impl Alive {
 				kio::Unused::Used => return false,
 				kio::Unused::Closed => return true,
 			};
-			state.closing = true;
-			state.reject_unserved(Error::Unroutable);
+			state.end();
 			token
 		};
 		token.close();
@@ -534,6 +576,38 @@ impl Alive {
 impl Drop for Alive {
 	fn drop(&mut self) {
 		self.close();
+	}
+}
+
+/// An add-only watcher of a broadcast's track names, from [`Producer::tracks`].
+///
+/// Yields every live track name once, those present when it was created first, then
+/// each name as a track is created, reserved, or served on request. A name comes again
+/// only after its track closed and another took the name. Nothing reports a removal.
+/// Ends once the broadcast closes.
+///
+/// It reports what this broadcast holds now and never waits on a peer: a relay's
+/// producer for a remote broadcast lists only the tracks it has served so far.
+pub struct Tracks {
+	queue: kio::Queue<Arc<str>>,
+}
+
+impl Tracks {
+	/// Poll for the next track name, or `None` once the broadcast has closed.
+	pub fn poll_next(&mut self, waiter: &kio::Waiter) -> Poll<Option<Arc<str>>> {
+		self.queue.poll_pop(waiter).map(Result::ok)
+	}
+
+	/// Wait for the next track name, or `None` once the broadcast has closed.
+	#[cfg(feature = "async")]
+	pub async fn next(&mut self) -> Option<Arc<str>> {
+		kio::wait(|waiter| self.poll_next(waiter)).await
+	}
+}
+
+impl Drop for Tracks {
+	fn drop(&mut self) {
+		self.queue.close();
 	}
 }
 
@@ -742,8 +816,8 @@ impl Dynamic {
 		let name = state.requests.pop().expect("predicate guaranteed a request");
 		let pending = state.requests.remove(&name).expect("popped key must be pending");
 		// Cache the served track so concurrent lookups coalesce onto it. If a live track already
-		// holds the name (a publish raced the request), `insert` keeps it rather than shadowing it.
-		let _ = state.tracks.insert(name, pending.weak());
+		// holds the name (a publish raced the request), the insert keeps it rather than shadowing it.
+		let _ = state.insert_track(pending.weak());
 		// Attribute the served track to this broadcast's ingress scope (no-op untagged).
 		Poll::Ready(Ok(pending.claim().with_stats(self.stats.clone())))
 	}
@@ -1149,6 +1223,128 @@ mod test {
 	use super::*;
 	#[cfg(feature = "async")]
 	use std::time::Duration;
+
+	fn next_track(tracks: &mut Tracks) -> Poll<Option<String>> {
+		tracks
+			.poll_next(&kio::Waiter::noop())
+			.map(|name| name.map(|name| name.to_string()))
+	}
+
+	fn drain_tracks(tracks: &mut Tracks) -> Vec<String> {
+		let mut names = Vec::new();
+		while let Poll::Ready(Some(name)) = next_track(tracks) {
+			names.push(name);
+		}
+		names.sort();
+		names
+	}
+
+	#[test]
+	fn tracks_lists_existing_names_then_new_ones() {
+		let producer = Info::new().produce();
+		let _a = producer.create_track("a", None).unwrap();
+		let _b = producer.create_track("b", None).unwrap();
+
+		let mut tracks = producer.tracks();
+		assert_eq!(drain_tracks(&mut tracks), ["a", "b"]);
+		assert_eq!(next_track(&mut tracks), Poll::Pending);
+
+		let _c = producer.create_track("c", None).unwrap();
+		let _d = producer.reserve_track("d").unwrap();
+		assert!(producer.create_track("c", None).is_err());
+		assert_eq!(drain_tracks(&mut tracks), ["c", "d"]);
+
+		producer.close();
+		assert_eq!(next_track(&mut tracks), Poll::Ready(None));
+		assert_eq!(next_track(&mut producer.tracks()), Poll::Ready(None));
+	}
+
+	/// A parked watcher wakes when a name arrives and when the broadcast ends.
+	#[test]
+	fn tracks_wakes_on_new_name_and_close() {
+		struct Flag(std::sync::atomic::AtomicBool);
+		impl std::task::Wake for Flag {
+			fn wake(self: Arc<Self>) {
+				self.0.store(true, std::sync::atomic::Ordering::SeqCst);
+			}
+		}
+		let flag = Arc::new(Flag(Default::default()));
+		let waiter = kio::Waiter::new(flag.clone().into());
+		let woken = || flag.0.swap(false, std::sync::atomic::Ordering::SeqCst);
+
+		let producer = Info::new().produce();
+		let mut tracks = producer.tracks();
+		assert_eq!(tracks.poll_next(&waiter), Poll::Pending);
+		let _a = producer.create_track("a", None).unwrap();
+		assert!(woken());
+		assert_eq!(tracks.poll_next(&waiter), Poll::Ready(Some("a".into())));
+
+		assert_eq!(tracks.poll_next(&waiter), Poll::Pending);
+		drop(producer);
+		assert!(woken());
+		assert_eq!(tracks.poll_next(&waiter), Poll::Ready(None));
+	}
+
+	/// A relay-side producer reports the tracks it has served, not ones merely asked for.
+	#[test]
+	fn tracks_lists_a_request_once_served() {
+		let producer = Info::new().produce();
+		let mut dynamic = producer.dynamic();
+		let consumer = producer.consume();
+		let mut tracks = producer.tracks();
+
+		let _subscriber = consumer.track("video").unwrap().subscribe(None);
+		assert_eq!(next_track(&mut tracks), Poll::Pending);
+		let _video = dynamic.assert_request().accept(crate::track::Info::timed());
+		assert_eq!(drain_tracks(&mut tracks), ["video"]);
+
+		// A queued request the producer fulfills itself is listed too.
+		let _subscriber = consumer.track("audio").unwrap().subscribe(None);
+		let _audio = producer.create_track("audio", None).unwrap();
+		assert_eq!(drain_tracks(&mut tracks), ["audio"]);
+	}
+
+	/// A closed track leaves the listing, and a new track taking its name is listed again.
+	#[test]
+	fn tracks_relists_a_replaced_name() {
+		let producer = Info::new().produce();
+		let a = producer.create_track("a", None).unwrap();
+		let mut tracks = producer.tracks();
+		assert_eq!(drain_tracks(&mut tracks), ["a"]);
+
+		drop(a);
+		assert!(drain_tracks(&mut producer.tracks()).is_empty());
+		let _a = producer.create_track("a", None).unwrap();
+		assert_eq!(drain_tracks(&mut tracks), ["a"]);
+	}
+
+	/// The watcher does not keep the broadcast alive, and a dropped one stops being fed.
+	#[test]
+	fn tracks_is_weak() {
+		let producer = Info::new().produce();
+		let consumer = producer.consume();
+		let tracks = producer.tracks();
+		drop(tracks);
+		let _a = producer.create_track("a", None).unwrap();
+		assert!(producer.state.read().watchers.is_empty());
+
+		let mut tracks = producer.tracks();
+		drop(producer);
+		consumer.assert_closed();
+		assert_eq!(drain_tracks(&mut tracks), ["a"]);
+		assert_eq!(next_track(&mut tracks), Poll::Ready(None));
+	}
+
+	/// Watchers dropped on a broadcast that adds no tracks are still reclaimed.
+	#[test]
+	fn tracks_prunes_dropped_watchers_without_new_names() {
+		let producer = Info::new().produce();
+		let _live = producer.tracks();
+		for _ in 0..1_000 {
+			drop(producer.tracks());
+		}
+		assert!(producer.state.read().watchers.len() <= 64);
+	}
 
 	#[test]
 	fn unique_names_are_never_reused() {
