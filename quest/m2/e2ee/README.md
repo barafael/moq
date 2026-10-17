@@ -56,6 +56,8 @@ The Rust and TypeScript cores expose the same surface, and nothing else:
 - [Cross-language encrypted proof](/quest/m2/e2ee/interop.md) - browser
   TypeScript and native Rust exchange encrypted media both ways, with relays
   forwarding and metering blind
+- [Encrypted viewer feedback](/quest/m2/e2ee/echo.md) - a protected broadcast
+  solicits `.echo` reports that relays cannot read
 
 ## Closes
 
