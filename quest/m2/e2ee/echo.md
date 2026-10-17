@@ -17,10 +17,6 @@ Today `moq_mux::e2ee::Producer` refuses a catalog with an `echo` section, and th
   - Letting a protected catalog solicit plaintext feedback, which breaks the epic's rule that every application payload is confidential.
 - Cover a protected publisher reading two encrypted viewers' reports, a plaintext reader finding nothing it can parse, a wrong credential failing authentication, and Rust and TypeScript viewers interoperating.
 
-## Required
-
-- [TypeScript E2EE core](/quest/m2/e2ee/typescript.md) - browser viewers need `@moq/e2ee` to encrypt their reports
-
 ## Related
 
 - [Media stats and viewer feedback](/quest/m2/stats/README.md) - the plaintext `echo` design this extends

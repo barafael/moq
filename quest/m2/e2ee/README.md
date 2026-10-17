@@ -45,8 +45,6 @@ The Rust and TypeScript cores expose the same surface, and nothing else:
 
 ## Required
 
-- [TypeScript E2EE core](/quest/m2/e2ee/typescript.md) - the `@moq/e2ee` package
-  mirroring the Rust surface, with WebCrypto in a serial pump
 - [Encrypted browser components](/quest/m2/e2ee/browser.md) - browser publish
   and watch components handle encrypted audio and video without leaking
   credentials into browser-owned surfaces
