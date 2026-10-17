@@ -131,9 +131,6 @@ export class Encoder {
 	/** The full track name of this rendition, e.g. `"video/hd"`. */
 	readonly name: string;
 
-	/** The track priority, higher served first. */
-	readonly priority: number | undefined;
-
 	readonly in: Readonlys<EncoderInput>;
 
 	/** The live-editable encoder tuning knobs (codec, dimensions, bitrate, frame rate). */
@@ -148,6 +145,9 @@ export class Encoder {
 	get capture(): Capture | undefined {
 		return this.in.capture.peek();
 	}
+
+	// The track priority, higher served first, or undefined for the broadcast's default.
+	readonly #priority: number | undefined;
 
 	readonly #out: EncoderOutput = {
 		error: new Signal<Error | undefined>(undefined),
@@ -223,7 +223,7 @@ export class Encoder {
 
 	constructor(name: string, props?: EncoderProps) {
 		this.name = name;
-		this.priority = props?.priority;
+		this.#priority = props?.priority;
 		this.in = {
 			enabled: getter(props?.enabled ?? true),
 			broadcast: getter(props?.broadcast),
@@ -338,7 +338,7 @@ export class Encoder {
 		const broadcast = effect.get(this.in.broadcast);
 		if (!broadcast) return;
 
-		const rendition = broadcast.video(this.name, { priority: this.priority });
+		const rendition = broadcast.video(this.name, { priority: this.#priority });
 		errors.set(rendition, failure);
 		effect.cleanup(() => rendition.close());
 
