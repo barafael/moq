@@ -3,8 +3,9 @@
 //!
 //! `broadcast/tracks_create` creates one track and drains its name from every
 //! watcher: the fan-out is inherent, so the cost should grow with watchers and not
-//! with the tracks already held. `broadcast/tracks_watch` opens a watcher and drains
-//! the snapshot: the cost should grow with tracks and not with the other watchers.
+//! with the tracks already held. `broadcast/tracks_watch` opens a watcher, drains
+//! the snapshot, and drops it: the cost should grow with tracks and not with the
+//! other watchers.
 //!
 //! Run with `cargo bench -p moq-net --bench broadcast`.
 

@@ -109,8 +109,8 @@ struct BroadcastState {
 	closing: bool,
 
 	// One queue per live [`Tracks`] watcher, fed each name as it enters `tracks`. A
-	// dropped watcher closes its queue, which is pruned as the list grows.
-	watchers: Vec<kio::Queue<Arc<str>>>,
+	// watcher removes its own queue on drop, and the broadcast's end drains the rest.
+	watchers: slab::Slab<kio::Queue<Arc<str>>>,
 }
 
 impl BroadcastState {
@@ -121,31 +121,26 @@ impl BroadcastState {
 		if self.tracks.insert(name.clone(), weak).is_some() {
 			return Err(Error::Duplicate);
 		}
-		// A failed push is a dropped watcher, so it leaves the list here.
-		self.watchers.retain(|watcher| watcher.try_push(name.clone()).is_ok());
+		for (_, watcher) in &self.watchers {
+			let _ = watcher.try_push(name.clone());
+		}
 		Ok(())
 	}
 
-	/// A watcher seeded with every live track name. See [`Producer::tracks`].
-	fn watch(&mut self) -> Tracks {
+	/// A watcher's queue seeded with every live track name, and its key in `watchers`
+	/// (`None` once the broadcast has ended). See [`Producer::tracks`].
+	fn watch(&mut self) -> (kio::Queue<Arc<str>>, Option<usize>) {
 		let queue = kio::Queue::new();
 		if self.closing {
 			queue.close();
-			return Tracks { queue };
+			return (queue, None);
 		}
 		use super::WeakEntry;
 		for track in self.tracks.iter().filter(|track| !track.is_closed()) {
 			let _ = queue.try_push(track.name().clone());
 		}
-		// Prune dropped watchers as the list grows, so repeated calls on a broadcast that
-		// adds no tracks stay bounded by the live count. Keeping as much slack as there are
-		// live watchers puts the next sweep as far off as this one cost.
-		if self.watchers.len() == self.watchers.capacity() {
-			self.watchers.retain(|watcher| !watcher.is_closed());
-			self.watchers.reserve(self.watchers.len());
-		}
-		self.watchers.push(queue.clone());
-		Tracks { queue }
+		let key = self.watchers.insert(queue.clone());
+		(queue, Some(key))
 	}
 
 	/// End the broadcast. See [`Producer::close`].
@@ -155,7 +150,7 @@ impl BroadcastState {
 		// `Consumer::track` answers `Unroutable` for one asked about after this point.
 		// Say the same to whoever asked earlier.
 		self.reject_unserved(Error::Unroutable);
-		for watcher in self.watchers.drain(..) {
+		for watcher in self.watchers.drain() {
 			watcher.close();
 		}
 	}
@@ -333,7 +328,12 @@ impl Producer {
 
 	/// Watch the names of this broadcast's live tracks, without keeping it alive. See [`Tracks`].
 	pub fn tracks(&self) -> Tracks {
-		self.state.lock().watch()
+		let (queue, key) = self.state.lock().watch();
+		Tracks {
+			queue,
+			key,
+			state: self.state.clone(),
+		}
 	}
 
 	/// Produce a new track and insert it into the broadcast.
@@ -590,6 +590,11 @@ impl Drop for Alive {
 /// producer for a remote broadcast lists only the tracks it has served so far.
 pub struct Tracks {
 	queue: kio::Queue<Arc<str>>,
+	// The queue's slot in the broadcast's watchers, freed on drop. Keys can't be reused
+	// once the broadcast ends, since its end drains them and no watcher registers after.
+	key: Option<usize>,
+	// Only to unregister on drop; a `kio::Shared` carries no liveness.
+	state: kio::Shared<BroadcastState>,
 }
 
 impl Tracks {
@@ -607,7 +612,12 @@ impl Tracks {
 
 impl Drop for Tracks {
 	fn drop(&mut self) {
-		self.queue.close();
+		let Some(key) = self.key else { return };
+		let mut state = self.state.lock();
+		// Checked through a read, so a watcher the broadcast's end already drained wakes nobody.
+		if state.watchers.contains(key) {
+			state.watchers.remove(key);
+		}
 	}
 }
 
@@ -1335,15 +1345,18 @@ mod test {
 		assert_eq!(next_track(&mut tracks), Poll::Ready(None));
 	}
 
-	/// Watchers dropped on a broadcast that adds no tracks are still reclaimed.
+	/// A dropped watcher unregisters at once, holding nothing until the next track arrives.
 	#[test]
-	fn tracks_prunes_dropped_watchers_without_new_names() {
+	fn tracks_unregisters_on_drop() {
 		let producer = Info::new().produce();
-		let _live = producer.tracks();
+		let _a = producer.create_track("a", None).unwrap();
+		let live = producer.tracks();
 		for _ in 0..1_000 {
 			drop(producer.tracks());
 		}
-		assert!(producer.state.read().watchers.len() <= 64);
+		let watchers = &producer.state.read().watchers;
+		assert_eq!(watchers.len(), 1);
+		assert!(watchers[live.key.unwrap()].same_channel(&live.queue));
 	}
 
 	#[test]
