@@ -295,7 +295,7 @@ test("a rung stops below its band and resumes after its viewers left", async () 
 		await settle();
 		expect(encoder.out.active.peek()).toBe(true);
 		const advertised = encoder.out.catalog.peek();
-		expect(advertised?.bitrate).toBe(645_120);
+		expect(advertised?.bitrate).toBe(Catalog.u53(645_120));
 		expect(advertised?.enabled).toBeUndefined();
 
 		// Squeezed within the band: it adapts like any rendition.

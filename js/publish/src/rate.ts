@@ -8,7 +8,7 @@
  *
  * @module
  */
-import type { Milli } from "@moq/clock";
+import { Instant, Nano } from "@moq/clock";
 
 // Ignore moves smaller than this fraction of the current target, so a jittering estimate doesn't
 // reconfigure the sender on every sample.
@@ -36,7 +36,7 @@ export class Control {
 	readonly policy: Policy;
 	#target: number;
 	// When the target last moved, anchoring the ramp. Undefined until the first change.
-	#applied: Milli | undefined;
+	#applied: Instant | undefined;
 
 	/** Start at {@link Policy.max}: until a grant says otherwise, send what was configured. */
 	constructor(policy: Policy) {
@@ -54,7 +54,7 @@ export class Control {
 	 * applying. An undefined grant holds the current target: losing the estimate is not evidence the
 	 * uplink got better.
 	 */
-	update(estimate: number | undefined, now: Milli): number | undefined {
+	update(estimate: number | undefined, now: Instant): number | undefined {
 		if (estimate === undefined) return undefined;
 
 		const min = Math.min(this.policy.min, this.policy.max);
@@ -66,7 +66,7 @@ export class Control {
 		} else {
 			// Suppressed raises leave the anchor alone, so the allowance keeps growing until one clears
 			// the deadband instead of being starved by a per-tick allowance smaller than it.
-			const elapsed = Math.max(now - this.#applied, 0) / 1000;
+			const elapsed = Nano.toSecond(Instant.durationSince(now, this.#applied));
 			const grown = Math.floor(this.#target * (1 + RAMP * elapsed));
 			next = Math.min(Math.max(Math.min(grown, desired), min), this.policy.max);
 		}
@@ -84,7 +84,7 @@ export class Control {
 	}
 
 	// Restart at `target` as of `now`, for a rung turning back on.
-	restart(target: number, now: Milli): void {
+	restart(target: number, now: Instant): void {
 		this.#target = target;
 		this.#applied = now;
 	}
@@ -126,7 +126,7 @@ export class Rung {
 	}
 
 	/** Feed a new grant, returning the new target when it changed enough to apply. See {@link Control.update}. */
-	update(estimate: number | undefined, now: Milli): Target | undefined {
+	update(estimate: number | undefined, now: Instant): Target | undefined {
 		if (!this.#enabled) {
 			if (estimate === undefined) return undefined;
 			const max = this.#control.policy.max;

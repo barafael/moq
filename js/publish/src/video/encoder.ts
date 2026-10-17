@@ -1,4 +1,4 @@
-import { Micro, Milli, type Second } from "@moq/clock";
+import { Micro, Milli, now, type Second } from "@moq/clock";
 import * as Catalog from "@moq/hang/catalog";
 import * as Container from "@moq/hang/container";
 import type * as Moq from "@moq/net";
@@ -670,9 +670,9 @@ export class Encoder {
 		const rung = lower === undefined ? undefined : new Rate.Rung(policy, lower);
 		const control = new Rate.Control(policy);
 		const update = (grant: number | undefined): Rate.Target | undefined => {
-			const now = Milli(performance.now());
-			if (rung) return rung.update(grant, now);
-			const bitrate = control.update(grant, now);
+			const at = now();
+			if (rung) return rung.update(grant, at);
+			const bitrate = control.update(grant, at);
 			return bitrate === undefined ? undefined : { enabled: true, bitrate };
 		};
 

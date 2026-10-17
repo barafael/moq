@@ -1,8 +1,8 @@
 import { expect, test } from "bun:test";
-import { Milli } from "@moq/clock";
+import { Instant, Milli, Nano } from "@moq/clock";
 import { Control, policy, Rung } from "./rate";
 
-const at = (ms: number) => Milli(ms);
+const at = (ms: number) => Instant(Nano.fromMilli(Milli(ms)));
 
 // 5 Mbps above a 2.5 Mbps rendition, so the cutoff lands on 3_333_333.
 function rung(): Rung {

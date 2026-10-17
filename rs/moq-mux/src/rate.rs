@@ -489,7 +489,10 @@ mod tests {
 	fn the_lowest_rung_disables_below_a_third() {
 		let mut rung = Rung::new(Policy::new(bps(350_000)), bandwidth::Rate::ZERO);
 		let now = Instant::now();
-		assert_eq!(rung.update(Some(bps(120_000)), now), Some(Target::Enabled(bps(120_000))));
+		assert_eq!(
+			rung.update(Some(bps(120_000)), now),
+			Some(Target::Enabled(bps(120_000)))
+		);
 		assert_eq!(
 			rung.update(Some(bps(110_000)), now + Duration::from_millis(100)),
 			Some(Target::Disabled)
@@ -546,7 +549,10 @@ mod tests {
 		assert_eq!(rung.update(Some(bps(3_000_000)), off), Some(Target::Disabled));
 		for tick in 1..=100u64 {
 			let estimate = if tick % 2 == 0 { 3_250_000 } else { 3_430_000 };
-			assert_eq!(rung.update(Some(bps(estimate)), off + Duration::from_millis(100 * tick)), None);
+			assert_eq!(
+				rung.update(Some(bps(estimate)), off + Duration::from_millis(100 * tick)),
+				None
+			);
 		}
 		assert_eq!(rung.target(), Target::Disabled);
 	}
@@ -607,7 +613,11 @@ mod tests {
 		let start = Instant::now();
 
 		estimate.set(Some(bps(4_000_000))).unwrap();
-		assert_eq!(low_control.update(low.peek(), start), None, "the lower rendition keeps its ceiling");
+		assert_eq!(
+			low_control.update(low.peek(), start),
+			None,
+			"the lower rendition keeps its ceiling"
+		);
 		assert_eq!(high_rung.update(high.peek(), start), Some(Target::Disabled));
 
 		// Its viewers fall back to the lower rendition and leave.
