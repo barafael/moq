@@ -4,6 +4,12 @@ How to update your code for each breaking change, newest first.
 
 ## Unreleased
 
+### Ranges filter reads, and anchors can name a time (#5929)
+
+A subscription now reads only the groups its own `ranges` cover.
+`Anchor` gains a `Time` case holding `timestamp_us`, the group containing that presentation time, so exhaustive visits need a case for it.
+`TrackConsumer::update` now returns a result, failing with `TimestampMismatch` on a time anchor an untimed track can't serve.
+
 ### Subscriptions carry group ranges (#5732)
 
 `Subscription::group_start` and `group_end` are replaced by `ranges`, a list of `Range` whose ends are an `Anchor` (an absolute group and frame, or a count of groups before the latest), and an optional `order`.
