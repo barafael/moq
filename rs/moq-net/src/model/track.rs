@@ -564,13 +564,12 @@ impl Slot {
 		}
 	}
 
-	/// Where the copy readers get starts in presentation time, if it has started.
+	/// Where the group starts in presentation time, from a live copy holding frame 0. A
+	/// copy joined mid-group stamps a later frame, which proves nothing about the start.
 	fn start(&self) -> Option<Timestamp> {
-		let group = self.serving();
-		match group.is_aborted() {
-			true => None,
-			false => group.timestamp(),
-		}
+		self.copies()
+			.filter(|group| group.live_first_frame() == Some(0))
+			.find_map(group::Producer::timestamp)
 	}
 
 	/// The checked start of whichever copy began at frame 0.
@@ -5123,6 +5122,11 @@ impl Cursor {
 	/// group past the cap, nothing holds it for a later raise.
 	fn poll_recv_datagram(&mut self, waiter: &kio::Waiter) -> Poll<Result<Option<super::datagram::Stored>>> {
 		loop {
+			// Refuse before reading, so a refused subscription consumes no datagram.
+			self.sync();
+			if let Some(err) = &self.filter.refused {
+				return Poll::Ready(Err(err.clone()));
+			}
 			let Some((datagram, found_index)) =
 				ready!(self.poll(waiter, |state| state.poll_recv_datagram(self.datagram_index))?)
 			else {
@@ -13661,11 +13665,34 @@ mod test {
 		assert_eq!(drain(&mut live), vec![4]);
 	}
 
+	/// A group joined mid-group stamps a later frame than its start, so it never proves a
+	/// time end falls before it.
+	#[test]
+	#[cfg(feature = "async")]
+	fn a_partial_group_proves_no_start() {
+		let mut producer = track_producer("test", Info::timed());
+		append_at(&mut producer, 0);
+		append_at(&mut producer, 1000);
+		let mut partial = producer.append_group().unwrap();
+		partial.start_at(1).unwrap();
+		partial
+			.write_frame(Timestamp::from_millis(2500).unwrap(), bytes::Bytes::from_static(b"x"))
+			.unwrap();
+		partial.finish().unwrap();
+
+		let time = |millis| Anchor::Time(Timestamp::from_millis(millis).unwrap());
+		let mut seek = producer.subscribe(replay().with_ranges([Range {
+			start: time(1500),
+			end: Some(time(2200)),
+		}]));
+		assert_eq!(drain(&mut seek), vec![1, 2]);
+	}
+
 	/// An untimed track refuses a time anchor wherever the ranges reach it.
 	#[test]
 	#[cfg(feature = "async")]
 	fn an_untimed_track_refuses_time_anchors() {
-		let producer = untimed_producer();
+		let mut producer = untimed_producer();
 		let timed = replay().with_ranges([Range {
 			start: Anchor::Time(Timestamp::from_millis(0).unwrap()),
 			end: None,
@@ -13693,12 +13720,21 @@ mod test {
 			refused.recv_group().now_or_never(),
 			Some(Err(Error::TimestampMismatch))
 		));
+		producer.append_datagram(None, &b"x"[..]).unwrap();
+		assert!(matches!(
+			refused.recv_datagram().now_or_never(),
+			Some(Err(Error::TimestampMismatch))
+		));
 
 		// Ranges it can serve lift the refusal.
 		refused.update(replay()).unwrap();
 		let group = producer.append_group().unwrap();
 		group.finish().unwrap();
 		let read = refused.recv_group().now_or_never().expect("the group is cached");
-		assert_eq!(read.unwrap().map(|group| group.sequence), Some(0));
+		assert_eq!(
+			read.unwrap().map(|group| group.sequence),
+			Some(1),
+			"the datagram took sequence 0"
+		);
 	}
 }
