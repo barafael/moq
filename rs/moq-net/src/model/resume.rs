@@ -562,6 +562,13 @@ impl Reader {
 				from,
 				..
 			}) if *from == self.mirrored.ranges => sub.resolved_ranges(),
+			// One still unanswered passes on what it was handed.
+			Some(Copy {
+				sub: Sub::Pending(_),
+				from,
+				resolved,
+				..
+			}) if *from == self.mirrored.ranges => resolved.clone(),
 			_ => Vec::new(),
 		};
 		// The replaced copies finish the groups they had when replaced, and nothing newer.
@@ -1950,6 +1957,29 @@ mod test {
 		}
 		rest.sort();
 		assert_eq!(rest, vec![10, 11]);
+	}
+
+	/// A replacement updated to a time range it cannot resolve yet asks for that range,
+	/// not everything from the floor: before it answers, and once it answers with nothing
+	/// to resolve it against.
+	#[test]
+	fn a_replacement_keeps_an_updated_time_start() {
+		let routes = Producer::new();
+		let a = copy();
+		routes.serve(a.consume());
+		let sub = routes.consume().subscribe(kio::Producer::new(Subscription::default()).into());
+		let mut reader = sub.reader.lock().unwrap();
+		let copy = &mut reader.copies[0];
+		copy.floor = Some(Position::group(0));
+		let ranges = vec![track::Range {
+			start: track::Anchor::Time(ts(10_000)),
+			end: None,
+		}];
+		let updated = Subscription::default().with_ranges(ranges.clone());
+		assert!(matches!(copy.sub, Sub::Pending(_)));
+		assert_eq!(copy.wire(&updated).ranges, ranges);
+		assert!(copy.poll_ready((0, Cap::from(..)), &kio::Waiter::noop()).is_ready());
+		assert_eq!(copy.wire(&updated).ranges, ranges);
 	}
 
 	#[test]

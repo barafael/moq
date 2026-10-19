@@ -400,12 +400,12 @@ impl Subscription {
 	}
 
 	/// These preferences with every range raised to start no earlier than `floor` and
-	/// stop no later than `end`, the exclusive end.
+	/// stop no later than `end`, the exclusive end, without ever widening one.
 	///
 	/// `resolved` names where each range resolved, by index, so a relative or time anchor
-	/// becomes its own group, raised to `floor` or capped at `end`, rather than the bound
-	/// itself: clamping never widens a range. One not resolved becomes the bound, which
-	/// asks for no less than the range would.
+	/// becomes its own group, raised to `floor` or capped at `end`. A start not resolved
+	/// keeps its anchor, since the floor may lie before it; an end not resolved becomes
+	/// the bound.
 	pub(super) fn clamped(
 		&self,
 		floor: Option<Position>,
@@ -433,9 +433,8 @@ impl Subscription {
 				};
 				Range {
 					start: match (start, floor) {
-						(start, None) => start,
 						(Anchor::Absolute(start), Some(floor)) => Anchor::Absolute(start.max(floor)),
-						(Anchor::Relative(_) | Anchor::Time(_), Some(floor)) => Anchor::Absolute(floor),
+						(start, _) => start,
 					},
 					end: match (requested, end) {
 						(requested, None) => requested,
