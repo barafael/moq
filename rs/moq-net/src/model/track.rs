@@ -5040,7 +5040,14 @@ impl Cursor {
 				.window
 				.runs(floor.max(state.live_floor.unwrap_or(0)))
 				.take_while(|run| *run.start() < self.passed)
-				.flat_map(|run| state.lookup.range(run).map(|(_, slot)| slot.serving()))
+				// Only what the walk could have read: never a fetched or withheld group.
+				.flat_map(|run| {
+					state
+						.lookup
+						.range(run)
+						.filter(|(_, slot)| slot.is_shown())
+						.map(|(_, slot)| slot.serving())
+				})
 				.take_while(|group| group.sequence < self.passed)
 				.filter(|group| !group.is_aborted())
 				.cloned()
@@ -5486,7 +5493,7 @@ impl Subscriber {
 			state
 				.lookup
 				.range(floor..cursor.passed.max(floor))
-				.any(|(sequence, slot)| eligible(*sequence) && !slot.is_aborted())
+				.any(|(sequence, slot)| eligible(*sequence) && slot.is_shown() && !slot.is_aborted())
 		};
 		cursor
 			.parked
@@ -12838,6 +12845,56 @@ mod test {
 			.expect("an aborted slot releases its sequence")
 			.finish()
 			.unwrap();
+	}
+
+	/// Lowering the floor re-offers only what the arrival walk could have read: a fetched
+	/// group stays out of arrival order, and a withheld one waits until it is revealed.
+	#[moq_clock::test]
+	#[cfg(feature = "async")]
+	async fn a_lowered_floor_reoffers_neither_fetched_nor_withheld_groups() {
+		let (producer, _pool) = pooled_producer(1 << 40);
+		let dynamic = producer.dynamic();
+		let consumer = producer.consume();
+		producer.create_group(5u64.into()).unwrap().finish().unwrap();
+		let mut subscriber = producer.subscribe(replay().with_groups(5..));
+		assert_eq!(subscriber.assert_group().sequence, 5);
+
+		let pending = consumer.fetch_group(2, None);
+		let req = dynamic
+			.requested_group()
+			.now_or_never()
+			.expect("should not block")
+			.unwrap();
+		let mut fetched = req.accept(Info::timed()).unwrap();
+		fetched
+			.write_frame(Timestamp::ZERO, bytes::Bytes::from_static(b"backfill"))
+			.unwrap();
+		fetched.finish().unwrap();
+		pending.await.unwrap();
+		let mut withheld = producer.receive_group(group::Info { sequence: 3 }).unwrap();
+
+		subscriber.update(replay().with_groups(0..)).unwrap();
+		subscriber.assert_no_group();
+
+		withheld
+			.write_frame(Timestamp::from_millis(3).unwrap(), bytes::Bytes::from_static(b"x"))
+			.unwrap();
+		producer.reveal_group(&withheld);
+		assert_eq!(subscriber.assert_group().sequence, 3, "shown once revealed");
+		subscriber.assert_no_group();
+
+		// A cursor floor lowered before the next read counts only shown groups as unread.
+		let mut lowered = producer.subscribe(replay());
+		lowered.start_at(5);
+		assert_eq!(lowered.assert_group().sequence, 5);
+		lowered.start_at(0);
+		let delivered = super::super::delivered::Delivered::default();
+		let unread = Unread {
+			start: 0,
+			end: Some(3),
+			delivered: &delivered,
+		};
+		assert!(!lowered.has_unread_group(&unread), "the fetched group 2 is not unread");
 	}
 
 	/// A fetched (backfill) group is served by sequence but never replayed to
