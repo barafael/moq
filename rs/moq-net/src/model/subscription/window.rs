@@ -156,7 +156,7 @@ impl Window {
 
 	/// The groups in range from `from` on, lowest first.
 	pub fn runs(&self, from: u64) -> impl Iterator<Item = ops::RangeInclusive<u64>> + '_ {
-		let all = self.pending.then(|| from..=u64::MAX);
+		let all = self.pending.then_some(from..=u64::MAX);
 		let runs = (!self.pending).then(|| {
 			self.groups
 				.overlapping(from..=u64::MAX)
@@ -181,7 +181,12 @@ impl Window {
 
 	fn place(&mut self, latest: Option<u64>, holdings: &impl Holdings) -> Result<()> {
 		let time = |anchor: Option<Anchor>| matches!(anchor, Some(Anchor::Time(_)));
-		if !holdings.timed() && self.ranges.iter().any(|range| time(Some(range.start)) || time(range.end)) {
+		if !holdings.timed()
+			&& self
+				.ranges
+				.iter()
+				.any(|range| time(Some(range.start)) || time(range.end))
+		{
 			return Err(Error::TimestampMismatch);
 		}
 		self.spans.clear();

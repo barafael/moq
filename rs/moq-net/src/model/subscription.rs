@@ -426,9 +426,9 @@ impl Subscription {
 
 	/// Whether any range ends at a presentation time, which an untimed track refuses.
 	pub(super) fn has_time(&self) -> bool {
-		self.ranges.iter().any(|range| {
-			matches!(range.start, Anchor::Time(_)) || matches!(range.end, Some(Anchor::Time(_)))
-		})
+		self.ranges
+			.iter()
+			.any(|range| matches!(range.start, Anchor::Time(_)) || matches!(range.end, Some(Anchor::Time(_))))
 	}
 }
 

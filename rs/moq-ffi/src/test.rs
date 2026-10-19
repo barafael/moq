@@ -911,15 +911,17 @@ async fn raw_track_update_does_not_wait_for_pending_read() {
 		tokio::spawn(async move { consumer.read_frame().await })
 	};
 
-	consumer.update(MoqSubscription {
-		priority: 10,
-		max_delay_us: 25_000,
-		ranges: Some(vec![MoqRange {
-			start: MoqAnchor::Absolute { group: 0, frame: 0 },
-			end: None,
-		}]),
-		order: None,
-	}).unwrap();
+	consumer
+		.update(MoqSubscription {
+			priority: 10,
+			max_delay_us: 25_000,
+			ranges: Some(vec![MoqRange {
+				start: MoqAnchor::Absolute { group: 0, frame: 0 },
+				end: None,
+			}]),
+			order: None,
+		})
+		.unwrap();
 
 	let payload = b"updated subscription".to_vec();
 	track
@@ -3903,15 +3905,17 @@ async fn raw_track_update_during_pending_group_still_reads_datagram() {
 		spawn_parked(async move { consumer.next_group().await }).await
 	};
 
-	consumer.update(MoqSubscription {
-		priority: 10,
-		max_delay_us: 25_000,
-		ranges: Some(vec![MoqRange {
-			start: MoqAnchor::Absolute { group: 0, frame: 0 },
-			end: None,
-		}]),
-		order: None,
-	}).unwrap();
+	consumer
+		.update(MoqSubscription {
+			priority: 10,
+			max_delay_us: 25_000,
+			ranges: Some(vec![MoqRange {
+				start: MoqAnchor::Absolute { group: 0, frame: 0 },
+				end: None,
+			}]),
+			order: None,
+		})
+		.unwrap();
 
 	let sequence = track.append_datagram(datagram_frame(b"after-update")).unwrap();
 	let datagram = tokio::time::timeout(TIMEOUT, consumer.recv_datagram())
