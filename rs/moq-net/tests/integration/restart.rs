@@ -575,3 +575,46 @@ async fn a_more_specific_source_cannot_fill_a_held_covering_track() {
 		assert_eq!(read(&mut subscription).await, "old:1");
 	}
 }
+
+/// The first subscription creates demand before TRACK_INFO has been answered.
+/// Promotion identifies that same publisher; it must not invalidate the request
+/// which caused it to become active.
+async fn pending_subscription_survives_promotion(version: &str) {
+	let publisher = produce_origin(1);
+	let reader = produce_origin(2);
+	let broadcast = publisher.create_broadcast("live").unwrap();
+	let mut dynamic = broadcast.dynamic();
+	broadcast.announce(origin::Route::default()).unwrap();
+	let _pair = link(version.parse().unwrap(), &publisher, &reader).await;
+	let remote = reader.consume().routed_broadcast("live").await.unwrap();
+	let mut subscribing = Box::pin(remote.track("video").unwrap().subscribe(None));
+	let request = match futures::future::select(std::pin::pin!(dynamic.requested_track()), &mut subscribing).await {
+		futures::future::Either::Left((request, _)) => request.unwrap(),
+		futures::future::Either::Right(_) => panic!("no track answered the subscription"),
+	};
+	broadcast
+		.announce(origin::Route::default().with_epoch(Epoch::mint()))
+		.unwrap();
+	settle().await;
+	let track = request.accept(timed());
+	let mut subscription = subscribing
+		.await
+		.unwrap_or_else(|err| panic!("{version}: promotion cancelled cold-start subscription: {err}"));
+	write(&track, "same publisher");
+	assert_eq!(read(&mut subscription).await, "same publisher");
+}
+
+macro_rules! cold_start_promotion_tests {
+    ($($name:ident: $version:literal,)*) => { $(
+        #[moq_clock::test]
+        async fn $name() {
+            moq_clock::timeout(TEST_TIMEOUT, pending_subscription_survives_promotion($version)).await.expect("promotion hung");
+        }
+    )* };
+}
+
+cold_start_promotion_tests! {
+	cold_start_promotion_lite06: "moq-lite-06",
+	cold_start_promotion_lite07: "moq-lite-07-wip",
+	cold_start_promotion_ietf17: "moq-transport-17",
+}
