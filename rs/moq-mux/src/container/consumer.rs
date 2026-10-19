@@ -311,7 +311,7 @@ impl<F: Container> Consumer<F> {
 		// A relative start names its floor once the first group to arrive resolves it.
 		if self.startup
 			&& !self.newest
-			&& let Some(start) = self.track.floor()
+			&& let Some(start) = self.subscriber().floor()
 		{
 			self.pending.retain(|group| group.sequence >= start);
 			self.current = start;
