@@ -10,6 +10,11 @@ A subscription now reads only the groups its own `ranges` cover.
 `Anchor` gains a time variant, so exhaustive switches need a case for it.
 `TrackConsumer.update` now throws on a time anchor an untimed track can't serve.
 
+### Key logging is opt-in (#5907)
+
+`SSLKEYLOGFILE` alone no longer writes TLS session secrets.
+Set `ConnectOptions.keylog` or `ListenOptions.keylog` as well to capture them; without `SSLKEYLOGFILE` the connect or listen fails.
+
 ### Subscriptions carry group ranges (#5732)
 
 `Subscription.groupStart` and `groupEnd` are replaced by `ranges`, a list of `Range` whose ends are an `Anchor` (an absolute group and frame, or a count of groups before the latest), and an optional `order`.

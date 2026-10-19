@@ -10,6 +10,11 @@ A subscription now reads only the groups its own `ranges` cover.
 `Anchor` gains `AnchorTime`, so exhaustive `when` expressions need a branch for it.
 `TrackConsumer.update` now throws `MoqException` on a time anchor an untimed track can't serve.
 
+### Key logging is opt-in (#5907)
+
+`SSLKEYLOGFILE` alone no longer writes TLS session secrets.
+Set `QuicConfig.keylog` to `true` as well to capture them; without `SSLKEYLOGFILE` the client or server refuses to build.
+
 ### Subscriptions carry group ranges (#5732)
 
 `Subscription.groupStart` and `groupEnd` are replaced by `ranges`, a list of `Range` whose ends are `AnchorAbsolute` or `AnchorRelative` (an absolute group and frame, or a count of groups before the latest), and an optional `order`.

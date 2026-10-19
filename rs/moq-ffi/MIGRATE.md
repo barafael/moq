@@ -11,6 +11,11 @@ A subscription now reads only the groups its own `ranges` cover, rather than sta
 `MoqAnchor` gains `Time { timestamp_us }`, the group containing that presentation time, so exhaustive matches need an arm for it.
 `MoqTrackConsumer::update` now returns `Result<(), MoqError>`, failing with `TimestampMismatch` on a time anchor an untimed track can't serve.
 
+### Key logging is opt-in (#5907)
+
+`SSLKEYLOGFILE` alone no longer writes TLS session secrets.
+Set `MoqQuicConfig::keylog` to `true` as well to capture them; without `SSLKEYLOGFILE` `MoqClient::new` and `MoqServer::new` fail.
+
 ### OpenH264 is a build feature (#5771)
 
 The published libraries still carry the software H.264 fallback.

@@ -10,6 +10,11 @@ A raw track consumer now reads only the groups its `ranges` cover, rather than e
 `moq_anchor` gains `timestamp_us`, read with the new `MOQ_ANCHOR_TIME` kind, which changes its ABI.
 `moq_consume_track_update` fails with a negative code when the track refuses an update, such as a time anchor on an untimed track, leaving the subscription as it was.
 
+### Key logging is opt-in (#5907)
+
+`SSLKEYLOGFILE` alone no longer writes TLS session secrets.
+Set `moq_client_config::quic_keylog` or `moq_server_config::quic_keylog` as well to capture them, each a field appended to its struct; without `SSLKEYLOGFILE` the dial or listen fails.
+
 ### OpenH264 is a build feature (#5771)
 
 The release archives and the CMake build still carry the software H.264 fallback.
