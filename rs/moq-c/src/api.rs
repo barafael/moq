@@ -605,11 +605,12 @@ pub struct moq_anchor {
 	/// `moq_anchor_kind` discriminant.
 	pub kind: u32,
 	/// The group, or with `MOQ_ANCHOR_RELATIVE` how many groups before the latest one
-	/// (0 is the latest, and an offset past the first group clamps to it), or with
-	/// `MOQ_ANCHOR_TIME` a presentation time in microseconds.
+	/// (0 is the latest, and an offset past the first group clamps to it).
 	pub group: u64,
 	/// The frame within `group`, read only with `MOQ_ANCHOR_ABSOLUTE`.
 	pub frame: u64,
+	/// The presentation time in microseconds, read only with `MOQ_ANCHOR_TIME`.
+	pub timestamp_us: u64,
 }
 
 /// How a [moq_anchor] names its position.
@@ -646,7 +647,7 @@ fn parse_anchor(anchor: &moq_anchor) -> Result<moq_net::track::Anchor, Error> {
 		}
 		v if v == moq_anchor_kind::MOQ_ANCHOR_RELATIVE as u32 => moq_net::track::Anchor::Relative(anchor.group),
 		v if v == moq_anchor_kind::MOQ_ANCHOR_TIME as u32 => {
-			moq_net::track::Anchor::Time(moq_net::Timestamp::from_micros(anchor.group)?)
+			moq_net::track::Anchor::Time(moq_net::Timestamp::from_micros(anchor.timestamp_us)?)
 		}
 		_ => return Err(Error::InvalidCode),
 	})

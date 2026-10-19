@@ -1729,11 +1729,13 @@ fn raw_track_subscription_options_and_update() {
 			kind: moq_anchor_kind::MOQ_ANCHOR_ABSOLUTE as u32,
 			group: 1,
 			frame: 0,
+			timestamp_us: 0,
 		},
 		end: moq_anchor {
 			kind: moq_anchor_kind::MOQ_ANCHOR_ABSOLUTE as u32,
 			group: 2,
 			frame: 0,
+			timestamp_us: 0,
 		},
 		end_present: true,
 	}];
@@ -1836,13 +1838,15 @@ fn raw_track_time_anchor() {
 	let ranges = [moq_range {
 		start: moq_anchor {
 			kind: moq_anchor_kind::MOQ_ANCHOR_TIME as u32,
-			group: 30_000,
+			group: 0,
 			frame: 0,
+			timestamp_us: 30_000,
 		},
 		end: moq_anchor {
 			kind: moq_anchor_kind::MOQ_ANCHOR_ABSOLUTE as u32,
 			group: 0,
 			frame: 0,
+			timestamp_us: 0,
 		},
 		end_present: false,
 	}];

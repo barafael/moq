@@ -4,6 +4,11 @@ How to update your code for each breaking change, newest first.
 
 ## Unreleased
 
+### Ranges filter reads, and anchors can name a time (#5929)
+
+A raw track consumer now reads only the groups its `ranges` cover, rather than every group from the lowest start to the last absolute end.
+`moq_anchor` gains `timestamp_us`, read with the new `MOQ_ANCHOR_TIME` kind, which changes its ABI.
+
 ### OpenH264 is a build feature (#5771)
 
 The release archives and the CMake build still carry the software H.264 fallback.
