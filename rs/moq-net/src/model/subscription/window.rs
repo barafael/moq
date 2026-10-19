@@ -11,6 +11,14 @@ use rangemap::RangeInclusiveSet;
 use super::{Anchor, Range};
 use crate::{Error, Result, Timestamp};
 
+/// One range resolved to groups: from `start` up to the exclusive `end`, `None` while it
+/// stays open.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(in crate::model) struct Resolved {
+	pub start: u64,
+	pub end: Option<u64>,
+}
+
 /// When a serving hop's groups start, for resolving time anchors.
 pub(in crate::model) trait Holdings {
 	/// Whether the track carries timestamps at all.
@@ -52,6 +60,8 @@ pub(in crate::model) struct Window {
 /// One non-empty range, resolved.
 #[derive(Clone, Copy, Debug)]
 struct Span {
+	/// Which of the ranges it came from.
+	index: usize,
 	start: u64,
 	end: End,
 	/// Whether the start names a group, rather than reaching back to the oldest one.
@@ -143,6 +153,22 @@ impl Window {
 		self.spans.iter().map(|span| span.start).min()
 	}
 
+	/// Each range resolved, in the order given: `None` for one that is empty or still
+	/// waits on a first group.
+	pub fn resolved(&self) -> Vec<Option<Resolved>> {
+		let mut resolved = vec![None; self.ranges.len()];
+		for span in &self.spans {
+			resolved[span.index] = Some(Resolved {
+				start: span.start,
+				end: match span.end {
+					End::Before(end) => Some(end),
+					End::Open | End::Time(_) => None,
+				},
+			});
+		}
+		resolved
+	}
+
 	/// The exclusive end past every group in range, `None` when one stays open.
 	pub fn end(&self) -> Option<u64> {
 		if self.pending {
@@ -191,7 +217,7 @@ impl Window {
 		}
 		self.spans.clear();
 		self.pending = false;
-		for range in self.ranges.iter().filter(|range| !range.is_empty()) {
+		for (index, range) in self.ranges.iter().enumerate().filter(|(_, range)| !range.is_empty()) {
 			let (Some((start, floored)), Some(end)) = (start(range.start, latest, holdings), end(range.end, latest))
 			else {
 				self.pending = true;
@@ -201,7 +227,12 @@ impl Window {
 				End::Time(pts) => holdings.after(pts, start).map_or(end, End::Before),
 				end => end,
 			};
-			self.spans.push(Span { start, end, floored });
+			self.spans.push(Span {
+				index,
+				start,
+				end,
+				floored,
+			});
 		}
 		self.rebuild();
 		Ok(())
@@ -331,6 +362,13 @@ mod tests {
 		assert_eq!(window.clip(0..10), Some(2..4));
 		assert_eq!(window.clip(4..10), Some(7..10));
 		assert_eq!(window.clip(4..7), None);
+		assert_eq!(
+			window.resolved(),
+			vec![
+				Some(Resolved { start: 2, end: Some(4) }),
+				Some(Resolved { start: 7, end: None }),
+			]
+		);
 
 		// A mid-group end includes its group, a head-of-group end excludes it.
 		let window = Window::new(

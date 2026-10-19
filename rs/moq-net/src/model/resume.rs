@@ -24,7 +24,7 @@ use std::task::{Poll, ready};
 use crate::{Error, Result, StreamError, group, stats, track};
 
 use super::delivered::Delivered;
-use super::subscription::{Cap, Position, Subscription};
+use super::subscription::{Cap, Position, Resolved, Subscription};
 
 /// What the front says about a logical track: the copy to read now, and how it ended.
 #[derive(Default)]
@@ -269,6 +269,11 @@ struct Copy {
 	sub: Sub,
 	/// Where the subscription was asked to start, so demand updates never ask for less.
 	floor: Option<Position>,
+	/// The reader's ranges [`Self::resolved`] are for.
+	from: Vec<track::Range>,
+	/// Each of those ranges resolved, by index, so clamping never widens one: as the
+	/// serving copy had them when this one was subscribed, until this one answers.
+	resolved: Vec<Option<Resolved>>,
 	/// Replaced by a newer route: nothing past this group, the newest it had then, is
 	/// taken from it.
 	until: Option<Option<u64>>,
@@ -293,8 +298,19 @@ enum Sub {
 impl Copy {
 	/// What this copy is asked for: the reader's own preferences, from no earlier than
 	/// where it was asked to start, and through no later than where it was replaced.
-	fn wire(&self, reader: &Subscription) -> Subscription {
-		let mut wire = reader.clamped(self.floor, self.end().map(Position::group));
+	fn wire(&mut self, reader: &Subscription) -> Subscription {
+		match &mut self.sub {
+			// Its own resolution, which capping its end must not move.
+			Sub::Ready(sub) if reader.ranges == self.from => self.resolved = sub.resolved_ranges(),
+			// Replaced ranges resolve against this copy's cache now, as any subscriber's do.
+			Sub::Ready(sub) => {
+				self.resolved = sub.resolve_ranges(&reader.ranges);
+				self.from = reader.ranges.clone();
+			}
+			Sub::Pending(_) if reader.ranges == self.from => {}
+			Sub::Pending(_) => self.resolved.clear(),
+		}
+		let mut wire = reader.clamped(self.floor, self.end().map(Position::group), &self.resolved);
 		// A replaced copy only finishes what it had, so a new group from it never arrives.
 		if self.until.is_some() {
 			wire.new_group = None;
@@ -537,6 +553,17 @@ impl Reader {
 		if self.copies.last().is_some_and(|copy| copy.generation == generation) {
 			return;
 		}
+		// Where the serving copy resolved the reader's ranges: the floor raises each start
+		// there, never lowering a later range to the floor. Read before capping that copy
+		// below, which replaces its ranges and so resolves them again as of now.
+		let resolved = match self.copies.last_mut() {
+			Some(Copy {
+				sub: Sub::Ready(sub),
+				from,
+				..
+			}) if *from == self.mirrored.ranges => sub.resolved_ranges(),
+			_ => Vec::new(),
+		};
 		// The replaced copies finish the groups they had when replaced, and nothing newer.
 		for copy in &mut self.copies {
 			if copy.until.is_none() {
@@ -547,12 +574,14 @@ impl Reader {
 		let floor = self.newest.map(Position::group);
 		// The wire request carries the floor from the first message: some sessions read
 		// the demand only once.
-		let wire = self.mirrored.clamped(floor, None);
+		let wire = self.mirrored.clamped(floor, None, &resolved);
 		self.copies.push(Copy {
 			generation,
 			sub: Sub::Pending(track.subscribe(wire)),
 			track,
 			floor,
+			from: self.mirrored.ranges.clone(),
+			resolved,
 			until: None,
 			done: None,
 			datagrams_done: None,
@@ -1711,6 +1740,58 @@ mod test {
 
 		sub.start_at(0);
 		assert_eq!(recv(&mut sub).sequence, 6);
+	}
+
+	/// A replacement copy keeps each range where the serving copy resolved it: the floor
+	/// raises a later time range's start rather than lowering it to the floor, and capping
+	/// the replaced copy never widens a time end.
+	#[test]
+	#[cfg(feature = "async")]
+	fn a_replacement_keeps_a_later_time_range_disjoint() {
+		let routes = Producer::new();
+		let logical = logical(&routes);
+		let a = copy();
+		routes.serve(a.consume());
+		let ranges = [
+			track::Range::groups(0..1),
+			track::Range {
+				start: track::Anchor::Time(ts(10_000)),
+				end: Some(track::Anchor::Time(ts(11_000))),
+			},
+		];
+		let subscription = Subscription::default()
+			.with_max_delay(Duration::from_secs(30))
+			.with_ranges(ranges);
+		let mut sub = logical
+			.consume()
+			.subscribe(subscription)
+			.now_or_never()
+			.unwrap()
+			.unwrap();
+		for sequence in 0..13 {
+			let mut group = a.create_group(group::Info { sequence }).unwrap();
+			group.write_frame(ts(sequence * 1000), b"x".as_ref()).unwrap();
+			group.finish().unwrap();
+		}
+		assert_eq!(recv(&mut sub).sequence, 0);
+
+		let b = copy();
+		routes.serve(b.consume());
+		// The read subscribes the replacement while the replaced copy still serves.
+		let mut rest = Vec::new();
+		while let Some(Ok(Some(group))) = sub.recv_group().now_or_never() {
+			rest.push(group.sequence);
+		}
+		for sequence in 0..13 {
+			let mut group = b.create_group(group::Info { sequence }).unwrap();
+			group.write_frame(ts(sequence * 1000), b"x".as_ref()).unwrap();
+			group.finish().unwrap();
+		}
+		while let Some(Ok(Some(group))) = sub.recv_group().now_or_never() {
+			rest.push(group.sequence);
+		}
+		rest.sort();
+		assert_eq!(rest, vec![10, 11]);
 	}
 
 	#[test]

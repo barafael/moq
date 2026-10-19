@@ -6,7 +6,7 @@ use std::{
 use crate::Timestamp;
 
 mod window;
-pub(super) use window::{Containing, Holdings, Window};
+pub(super) use window::{Containing, Holdings, Resolved, Window};
 
 /// Subscriber-side preferences for receiving a track.
 ///
@@ -402,24 +402,47 @@ impl Subscription {
 	/// These preferences with every range raised to start no earlier than `floor` and
 	/// stop no later than `end`, the exclusive end.
 	///
-	/// A relative or time anchor becomes the bound itself, since which of the two is tighter
-	/// depends on groups this hop may not know. That asks for no less than the
-	/// range would.
-	pub(super) fn clamped(&self, floor: Option<Position>, end: Option<Position>) -> Self {
+	/// `resolved` names where each range resolved, by index, so a relative or time anchor
+	/// becomes its own group, raised to `floor` or capped at `end`, rather than the bound
+	/// itself: clamping never widens a range. One not resolved becomes the bound, which
+	/// asks for no less than the range would.
+	pub(super) fn clamped(
+		&self,
+		floor: Option<Position>,
+		end: Option<Position>,
+		resolved: &[Option<Resolved>],
+	) -> Self {
+		let clamping = floor.is_some() || end.is_some();
 		let ranges = self
 			.ranges
 			.iter()
-			.map(|range| Range {
-				start: match (range.start, floor) {
-					(start, None) => start,
-					(Anchor::Absolute(start), Some(floor)) => Anchor::Absolute(start.max(floor)),
-					(Anchor::Relative(_) | Anchor::Time(_), Some(floor)) => Anchor::Absolute(floor),
-				},
-				end: match (range.end, end) {
-					(requested, None) => requested,
-					(Some(Anchor::Absolute(requested)), Some(end)) => Some(Anchor::Absolute(requested.min(end))),
-					(_, Some(end)) => Some(Anchor::Absolute(end)),
-				},
+			.enumerate()
+			.map(|(index, range)| {
+				let resolved = resolved.get(index).copied().flatten().filter(|_| clamping);
+				let start = match (range.start, resolved) {
+					(Anchor::Relative(_) | Anchor::Time(_), Some(resolved)) => {
+						Anchor::Absolute(Position::group(resolved.start))
+					}
+					(start, _) => start,
+				};
+				let requested = match (range.end, resolved.and_then(|resolved| resolved.end)) {
+					(Some(Anchor::Relative(_) | Anchor::Time(_)), Some(resolved)) => {
+						Some(Anchor::Absolute(Position::group(resolved)))
+					}
+					(requested, _) => requested,
+				};
+				Range {
+					start: match (start, floor) {
+						(start, None) => start,
+						(Anchor::Absolute(start), Some(floor)) => Anchor::Absolute(start.max(floor)),
+						(Anchor::Relative(_) | Anchor::Time(_), Some(floor)) => Anchor::Absolute(floor),
+					},
+					end: match (requested, end) {
+						(requested, None) => requested,
+						(Some(Anchor::Absolute(requested)), Some(end)) => Some(Anchor::Absolute(requested.min(end))),
+						(_, Some(end)) => Some(Anchor::Absolute(end)),
+					},
+				}
 			})
 			.collect();
 		Self { ranges, ..self.clone() }
