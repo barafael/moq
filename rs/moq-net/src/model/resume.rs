@@ -1967,7 +1967,9 @@ mod test {
 		let routes = Producer::new();
 		let a = copy();
 		routes.serve(a.consume());
-		let sub = routes.consume().subscribe(kio::Producer::new(Subscription::default()).into());
+		let sub = routes
+			.consume()
+			.subscribe(kio::Producer::new(Subscription::default()).into());
 		let mut reader = sub.reader.lock().unwrap();
 		let copy = &mut reader.copies[0];
 		copy.floor = Some(Position::group(0));
