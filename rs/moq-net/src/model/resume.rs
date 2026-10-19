@@ -337,7 +337,8 @@ impl Copy {
 	fn poll_ready(&mut self, groups: (u64, Cap), waiter: &kio::Waiter) -> Poll<Result<&mut track::Subscriber>> {
 		if let Sub::Pending(pending) = &self.sub {
 			let mut sub = ready!(pending.poll_ok(waiter))?;
-			sub.raise_start_to(groups.0);
+			// An anchor the wire kept may resolve below where the reader got to.
+			sub.raise_start_to(self.floor.map_or(groups.0, |floor| groups.0.max(floor.group)));
 			sub.end_at(groups.1);
 			self.sub = Sub::Ready(Box::new(sub));
 		}
@@ -1982,6 +1983,44 @@ mod test {
 		assert_eq!(copy.wire(&updated).ranges, ranges);
 		assert!(copy.poll_ready((0, Cap::from(..)), &kio::Waiter::noop()).is_ready());
 		assert_eq!(copy.wire(&updated).ranges, ranges);
+	}
+
+	/// A replacement asked for a range reaching back past where the reader got to, while
+	/// still unanswered, never hands out a group the reader skipped below that point.
+	#[test]
+	#[cfg(feature = "async")]
+	fn a_pending_replacement_never_reads_below_the_floor() {
+		let routes = Producer::new();
+		let logical = logical(&routes);
+		let a = copy();
+		routes.serve(a.consume());
+		let mut sub = subscribe(&logical, Duration::from_secs(30));
+		let mut five = a.create_group(group::Info { sequence: 5 }).unwrap();
+		five.write_frame(ts(5000), b"x".as_ref()).unwrap();
+		assert_eq!(recv(&mut sub).sequence, 5);
+
+		let b = track::Request::new(Arc::new(broadcast::Info::default()), "video");
+		routes.serve(b.consume());
+		// The read subscribes the replacement, which has not answered yet.
+		assert!(sub.recv_group().now_or_never().is_none());
+		let back = sub.subscription().with_ranges([track::Range {
+			start: track::Anchor::Relative(100),
+			end: None,
+		}]);
+		sub.update(back).unwrap();
+		assert!(sub.recv_group().now_or_never().is_none());
+
+		let b = b.accept(crate::track::Info::timed());
+		for sequence in 0..7 {
+			let mut group = b.create_group(group::Info { sequence }).unwrap();
+			group.write_frame(ts(sequence * 1000), b"x".as_ref()).unwrap();
+			group.finish().unwrap();
+		}
+		let mut rest = Vec::new();
+		while let Some(Ok(Some(group))) = sub.recv_group().now_or_never() {
+			rest.push(group.sequence);
+		}
+		assert_eq!(rest, vec![6]);
 	}
 
 	#[test]

@@ -404,8 +404,8 @@ impl Subscription {
 	///
 	/// `resolved` names where each range resolved, by index, so a relative or time anchor
 	/// becomes its own group, raised to `floor` or capped at `end`. A start not resolved
-	/// keeps its anchor, since the floor may lie before it; an end not resolved becomes
-	/// the bound.
+	/// keeps its anchor, since the floor may lie before it, so the caller drops what it
+	/// resolves to below `floor`; an end not resolved becomes the bound.
 	pub(super) fn clamped(
 		&self,
 		floor: Option<Position>,
