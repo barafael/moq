@@ -950,6 +950,20 @@ fn log_header_error(err: SessionError, direction: &'static str) {
 pub struct SessionStats(crate::quic::driver::ConnectionStats);
 
 impl web_transport_trait::Stats for SessionStats {
+	fn streams(&self) -> Option<web_transport_trait::Streams> {
+		let streams = self.0.streams;
+		Some(web_transport_trait::Streams {
+			bidi: web_transport_trait::StreamState {
+				open: streams.bidi.open,
+				available: streams.bidi.available,
+			},
+			uni: web_transport_trait::StreamState {
+				open: streams.uni.open,
+				available: streams.uni.available,
+			},
+		})
+	}
+
 	fn bytes_sent(&self) -> Option<u64> {
 		Some(self.0.udp_tx.bytes)
 	}

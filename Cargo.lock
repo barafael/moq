@@ -5327,7 +5327,7 @@ dependencies = [
  "url",
  "usage-rs",
  "web-transport-iroh",
- "web-transport-proto",
+ "web-transport-proto 0.6.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "web-transport-trait",
  "webpki-roots 1.0.9",
  "x509-parser",
@@ -5381,7 +5381,7 @@ dependencies = [
  "tokio",
  "tracing",
  "url",
- "web-transport-proto",
+ "web-transport-proto 0.6.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "web-transport-trait",
 ]
 
@@ -7489,8 +7489,7 @@ dependencies = [
 [[package]]
 name = "qmux"
 version = "0.6.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "542edbed299cac6d624d3964c423c2b2a94b19ffcde4eef5fde09b74c64799e4"
+source = "git+https://github.com/moq-dev/web-transport?rev=13bd407#13bd407b864e60c5c46c2762e82ca6c001516e51"
 dependencies = [
  "bytes",
  "futures",
@@ -7501,7 +7500,7 @@ dependencies = [
  "tokio-rustls",
  "tokio-tungstenite 0.30.0",
  "tracing",
- "web-transport-proto",
+ "web-transport-proto 0.6.2 (git+https://github.com/moq-dev/web-transport?rev=13bd407)",
  "web-transport-trait",
 ]
 
@@ -11034,7 +11033,7 @@ dependencies = [
  "tokio",
  "tracing",
  "url",
- "web-transport-proto",
+ "web-transport-proto 0.6.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "web-transport-trait",
 ]
 
@@ -11053,10 +11052,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "web-transport-proto"
+version = "0.6.2"
+source = "git+https://github.com/moq-dev/web-transport?rev=13bd407#13bd407b864e60c5c46c2762e82ca6c001516e51"
+dependencies = [
+ "bytes",
+ "http",
+ "sfv",
+ "thiserror 2.0.21",
+ "tokio",
+ "url",
+]
+
+[[package]]
 name = "web-transport-trait"
 version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5f1e801f997864ab0074afb1c7d3262df46d5d9ad9b78274c47694544db2dba7"
+source = "git+https://github.com/moq-dev/web-transport?rev=13bd407#13bd407b864e60c5c46c2762e82ca6c001516e51"
 dependencies = [
  "bytes",
 ]

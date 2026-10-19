@@ -552,6 +552,7 @@ mod tests {
 		control_writes: Arc<Mutex<Vec<u8>>>,
 		send_rate: Mutex<Option<u64>>,
 		bytes_sent: Mutex<Option<u64>>,
+		streams: Mutex<Option<crate::transport::Streams>>,
 	}
 
 	fn any_close(events: &kio::Ref<'_, Vec<(u32, String)>>) -> Poll<()> {
@@ -575,6 +576,7 @@ mod tests {
 				control_writes: writes,
 				send_rate: Mutex::new(None),
 				bytes_sent: Mutex::new(None),
+				streams: Mutex::new(None),
 			};
 			Self {
 				state: Arc::new(state),
@@ -672,16 +674,22 @@ mod tests {
 			FakeStats {
 				send_rate: *self.state.send_rate.lock().unwrap(),
 				bytes_sent: *self.state.bytes_sent.lock().unwrap(),
+				streams: *self.state.streams.lock().unwrap(),
 			}
 		}
 	}
 
 	struct FakeStats {
+		streams: Option<crate::transport::Streams>,
 		send_rate: Option<u64>,
 		bytes_sent: Option<u64>,
 	}
 
 	impl crate::transport::Stats for FakeStats {
+		fn streams(&self) -> Option<crate::transport::Streams> {
+			self.streams
+		}
+
 		fn estimated_send_rate(&self) -> Option<u64> {
 			self.send_rate
 		}
@@ -1220,6 +1228,10 @@ mod tests {
 		let fake = FakeSession::new(Some(ALPN_LITE_04), Vec::new());
 		fake.set_send_rate(None);
 		fake.set_bytes_sent(Some(0));
+		*fake.state.streams.lock().unwrap() = Some(crate::transport::Streams {
+			bidi: crate::transport::StreamState { open: 3, available: 5 },
+			uni: crate::transport::StreamState { open: 7, available: 11 },
+		});
 
 		let client = Client::new().with_versions(Version::Lite(lite::Version::Lite04).into());
 		let (session, driver) = client.connect(moq_clock::now(), fake.clone()).await.unwrap();
@@ -1230,6 +1242,8 @@ mod tests {
 		);
 
 		fake.set_bytes_sent(Some(4242));
+		assert_eq!(session.stats().streams.unwrap().bidi.open, 3);
+		*fake.state.streams.lock().unwrap() = Some(crate::transport::Streams::default());
 
 		session.abort(Error::Cancel);
 		session.closed().await;
@@ -1239,6 +1253,7 @@ mod tests {
 			Some(4242),
 			"the closing snapshot must carry the session's final counters"
 		);
+		assert_eq!(session.stats().streams, Some(crate::transport::Streams::default()));
 	}
 
 	// The send-bandwidth sampler lives inside the driver: it samples as soon as a

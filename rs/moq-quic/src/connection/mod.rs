@@ -88,7 +88,9 @@ impl ConnectionTag {
         Self(NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed))
     }
 }
-pub use stats::{ConnectionStats, CreditStats, FrameStats, PathStats, UdpStats};
+pub use stats::{
+    ConnectionStats, CreditStats, FrameStats, PathStats, StreamState, StreamStats, UdpStats,
+};
 
 mod streams;
 pub(crate) use streams::StreamsState;
@@ -1424,6 +1426,11 @@ impl Connection {
         stats.path.bandwidth_estimate = self.path.congestion.metrics().bandwidth_estimate;
         stats.path.current_mtu = self.path.mtud.current_mtu();
         stats.credit = self.streams.credit_stats();
+        stats.streams = if self.state.is_closed() {
+            StreamStats::default()
+        } else {
+            self.streams.stream_stats()
+        };
 
         stats
     }

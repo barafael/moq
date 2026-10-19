@@ -44,6 +44,9 @@ struct StatsState {
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 #[non_exhaustive]
 pub struct Stats {
+	/// Locally initiated stream occupancy and remaining peer stream-ID credit.
+	pub streams: Option<crate::transport::Streams>,
+
 	/// Smoothed round-trip time estimate.
 	pub rtt: Option<Duration>,
 
@@ -641,6 +644,7 @@ impl<S: crate::transport::poll::Session> Supervisor<S> {
 fn snapshot<S: crate::transport::poll::Session>(session: &S) -> Stats {
 	let stats = session.stats();
 	Stats {
+		streams: stats.streams(),
 		rtt: stats.rtt(),
 		estimated_send_rate: stats.estimated_send_rate().map(bandwidth::Rate::from_bps),
 		bytes_sent: stats.bytes_sent(),

@@ -17,7 +17,7 @@ use crate::{
     Dir, MAX_STREAM_COUNT, Side, StreamId, TransportError, VarInt,
     coding::BufMutExt,
     connection::ConnectionTag,
-    connection::stats::{CreditStats, FrameStats},
+    connection::stats::{CreditStats, FrameStats, StreamState, StreamStats},
     frame::{self, FrameStruct, StreamMetaVec},
     transport_parameters::TransportParameters,
 };
@@ -83,6 +83,7 @@ pub(crate) struct StreamsState {
     pub(super) recv: FxHashMap<StreamId, Option<StreamRecv>>,
     pub(super) free_recv: Vec<StreamRecv>,
     pub(super) next: [u64; 2],
+    local_open: [u64; 2],
     /// Maximum number of locally-initiated streams that may be opened over the lifetime of the
     /// connection so far, per direction
     pub(super) max: [u64; 2],
@@ -179,6 +180,7 @@ impl StreamsState {
             recv: FxHashMap::default(),
             free_recv: Vec::new(),
             next: [0, 0],
+            local_open: [0, 0],
             max: [0, 0],
             max_remote: [max_remote_bi.into(), max_remote_uni.into()],
             sent_max_remote: [max_remote_bi.into(), max_remote_uni.into()],
@@ -266,6 +268,7 @@ impl StreamsState {
                 }
             }
             self.next[dir as usize] = 0;
+            self.local_open[dir as usize] = 0;
 
             // If 0-RTT was rejected, any flow control frames we sent were lost.
             if self.flow_control_adjusted {
@@ -1019,6 +1022,7 @@ impl StreamsState {
     pub(super) fn insert_local(&mut self, id: StreamId) {
         debug_assert_eq!(id.initiator(), self.side);
         assert!(self.send.insert(id, None).is_none());
+        self.local_open[id.dir() as usize] += 1;
         if id.dir() == Dir::Bi {
             let recv = self.free_recv.pop();
             assert!(self.recv.insert(id, recv).is_none());
@@ -1111,15 +1115,28 @@ impl StreamsState {
         }
     }
 
+    pub(crate) fn stream_stats(&self) -> StreamStats {
+        let state = |dir: Dir| StreamState {
+            open: self.local_open[dir as usize],
+            available: self.max[dir as usize].saturating_sub(self.next[dir as usize]),
+        };
+        StreamStats {
+            bidi: state(Dir::Bi),
+            uni: state(Dir::Uni),
+        }
+    }
+
     /// Update counters for removal of a stream
     pub(super) fn stream_freed(&mut self, id: StreamId, half: StreamHalf) {
-        if id.initiator() != self.side {
-            let fully_free = id.dir() == Dir::Uni
-                || match half {
-                    StreamHalf::Send => !self.recv.contains_key(&id),
-                    StreamHalf::Recv => !self.send.contains_key(&id),
-                };
-            if fully_free {
+        let fully_free = id.dir() == Dir::Uni
+            || match half {
+                StreamHalf::Send => !self.recv.contains_key(&id),
+                StreamHalf::Recv => !self.send.contains_key(&id),
+            };
+        if fully_free {
+            if id.initiator() == self.side {
+                self.local_open[id.dir() as usize] -= 1;
+            } else {
                 self.allocated_remote_count[id.dir() as usize] -= 1;
                 self.ensure_remote_streams(id.dir());
             }
@@ -1165,6 +1182,107 @@ mod tests {
         connection::State as ConnState, connection::Streams,
     };
     use bytes::Bytes;
+
+    #[test]
+    fn stream_statistics_wait_for_both_halves_and_do_not_recycle_id_credit() {
+        for side in [Side::Client, Side::Server] {
+            let mut state = make(side);
+            state.set_params(&TransportParameters {
+                initial_max_streams_uni: 1u32.into(),
+                initial_max_streams_bidi: 1u32.into(),
+                ..TransportParameters::default()
+            });
+            let conn_state = ConnState::Established;
+            let mut pending = Retransmits::default();
+            for dir in Dir::iter() {
+                let id = Streams {
+                    state: &mut state,
+                    conn_state: &conn_state,
+                }
+                .open(dir, Default::default())
+                .unwrap();
+                assert_eq!(state.local_open[dir as usize], 1);
+                let snapshot = state.stream_stats();
+                assert_eq!(
+                    match dir {
+                        Dir::Bi => snapshot.bidi,
+                        Dir::Uni => snapshot.uni,
+                    }
+                    .available,
+                    0
+                );
+                SendStream {
+                    id,
+                    state: &mut state,
+                    pending: &mut pending,
+                    conn_state: &conn_state,
+                }
+                .finish()
+                .unwrap();
+                // FIN is not closure until the peer acknowledges it.
+                assert_eq!(state.local_open[dir as usize], 1);
+                state.received_ack_of(frame::StreamMeta {
+                    id,
+                    offsets: 0..0,
+                    fin: true,
+                });
+                if dir == Dir::Bi {
+                    assert_eq!(state.stream_stats().bidi.open, 1);
+                    let _ = state
+                        .received(
+                            frame::Stream {
+                                id,
+                                offset: 0,
+                                fin: true,
+                                data: Bytes::new(),
+                            },
+                            0,
+                        )
+                        .unwrap();
+                    let mut recv = RecvStream {
+                        id,
+                        state: &mut state,
+                        pending: &mut pending,
+                    };
+                    let mut chunks = recv.read(true).unwrap();
+                    assert!(chunks.next(1).unwrap().is_none());
+                    let _ = chunks.finalize();
+                }
+                assert_eq!(state.local_open[dir as usize], 0);
+                assert_eq!(state.max[dir as usize] - state.next[dir as usize], 0);
+            }
+        }
+    }
+
+    #[test]
+    fn rejected_early_streams_reset_occupancy_and_id_credit() {
+        let mut state = make(Side::Client);
+        state.max = [1, 1];
+        let conn_state = ConnState::Established;
+        for dir in Dir::iter() {
+            Streams {
+                state: &mut state,
+                conn_state: &conn_state,
+            }
+            .open(dir, Default::default())
+            .unwrap();
+        }
+        state.zero_rtt_rejected();
+        assert_eq!(
+            state.stream_stats().bidi,
+            StreamState {
+                open: 0,
+                available: 1
+            }
+        );
+        assert_eq!(
+            state.stream_stats().uni,
+            StreamState {
+                open: 0,
+                available: 1
+            }
+        );
+    }
 
     fn make(side: Side) -> StreamsState {
         StreamsState::new(

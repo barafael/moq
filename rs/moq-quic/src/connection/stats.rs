@@ -181,6 +181,8 @@ pub struct ConnectionStats {
     pub path: PathStats,
     /// Connection-level receive flow control
     pub credit: CreditStats,
+    /// Locally initiated stream occupancy and remaining peer stream-ID credit.
+    pub streams: StreamStats,
 }
 
 /// Connection-level receive flow control, from the receiver's side
@@ -191,5 +193,24 @@ pub struct CreditStats {
     pub held: u64,
     /// Bytes the peer may still send before it needs more credit, including credit not yet
     /// advertised
+    pub available: u64,
+}
+
+/// Locally initiated transport stream statistics.
+#[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
+pub struct StreamStats {
+    /// Locally initiated bidirectional streams.
+    pub bidi: StreamState,
+    /// Locally initiated unidirectional streams.
+    pub uni: StreamState,
+}
+
+/// One direction's stream occupancy and remaining opening credit.
+#[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
+pub struct StreamState {
+    /// Streams not fully retired, including both halves of bidirectional streams.
+    pub open: u64,
+    /// Additional stream IDs allowed by the peer's cumulative MAX_STREAMS limit.
+    /// Closing a stream does not restore this credit until the peer grants more.
     pub available: u64,
 }

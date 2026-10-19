@@ -22,6 +22,19 @@ impl<E: wt::Error> moq::Error for Error<E> {
 
 struct Stats<S>(S);
 impl<S: wt::Stats> moq::Stats for Stats<S> {
+	fn streams(&self) -> Option<moq::Streams> {
+		self.0.streams().map(|streams| moq::Streams {
+			bidi: moq::StreamState {
+				open: streams.bidi.open,
+				available: streams.bidi.available,
+			},
+			uni: moq::StreamState {
+				open: streams.uni.open,
+				available: streams.uni.available,
+			},
+		})
+	}
+
 	fn bytes_sent(&self) -> Option<u64> {
 		self.0.bytes_sent()
 	}

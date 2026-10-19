@@ -19,6 +19,19 @@ impl<E: wt::Error> moq::Error for Error<E> {
 
 struct Stats<S>(S);
 impl<S: wt::Stats> moq::Stats for Stats<S> {
+	fn streams(&self) -> Option<moq::Streams> {
+		self.0.streams().map(|streams| moq::Streams {
+			bidi: moq::StreamState {
+				open: streams.bidi.open,
+				available: streams.bidi.available,
+			},
+			uni: moq::StreamState {
+				open: streams.uni.open,
+				available: streams.uni.available,
+			},
+		})
+	}
+
 	fn bytes_sent(&self) -> Option<u64> {
 		self.0.bytes_sent()
 	}
@@ -234,6 +247,13 @@ mod tests {
 	}
 	struct Sample;
 	impl wt::Stats for Sample {
+		fn streams(&self) -> Option<wt::Streams> {
+			Some(wt::Streams {
+				bidi: wt::StreamState { open: 3, available: 5 },
+				uni: wt::StreamState { open: 7, available: 11 },
+			})
+		}
+
 		fn rtt(&self) -> Option<std::time::Duration> {
 			Some(std::time::Duration::from_millis(7))
 		}
@@ -304,6 +324,13 @@ mod tests {
 		let mut session = Session::new(Backend(state.clone()));
 		let mut cx = Context::from_waker(std::task::Waker::noop());
 		assert_eq!(poll::Session::protocol(&session), Some("moq-lite-06"));
+		assert_eq!(
+			poll::Session::stats(&session).streams(),
+			Some(moq::Streams {
+				bidi: moq::StreamState { open: 3, available: 5 },
+				uni: moq::StreamState { open: 7, available: 11 },
+			})
+		);
 		assert_eq!(
 			poll::Session::stats(&session).rtt(),
 			Some(std::time::Duration::from_millis(7))
