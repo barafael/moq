@@ -4,7 +4,7 @@ How to update your code for each breaking change, newest first.
 
 ## Unreleased
 
-### Ranges filter each subscriber's reads
+### Ranges filter each subscriber's reads (#5929)
 
 A `track::Subscriber` now reads only the groups its own `Subscription::ranges` cover, resolved again whenever `update` replaces them; before, they only set where its reads started.
 A reader that relied on groups another subscriber asked for must widen its own ranges.

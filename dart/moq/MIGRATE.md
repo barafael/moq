@@ -4,7 +4,7 @@ How to update your code for each breaking change, newest first.
 
 ## Unreleased
 
-### Ranges filter reads, and anchors can name a time
+### Ranges filter reads, and anchors can name a time (#5929)
 
 A subscription now reads only the groups its own `ranges` cover.
 `Anchor` gains a time variant, so exhaustive switches need a case for it.
