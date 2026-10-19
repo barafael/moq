@@ -4,6 +4,12 @@ How to update your code for each breaking change, newest first.
 
 ## Unreleased
 
+### Ranges filter reads, and anchors can name a time
+
+A subscription now reads only the groups its own `Ranges` cover.
+`AnchorTime` names the group containing a presentation time, and type switches over `Anchor` need a case for it.
+`TrackConsumer.Update` also fails on a time anchor an untimed track can't serve.
+
 ### Subscriptions carry group ranges (#5732)
 
 `Subscription.GroupStart` and `GroupEnd` are replaced by `Ranges`, a slice of `Range` whose ends are `AnchorAbsolute` or `AnchorRelative` (an absolute group and frame, or a count of groups before the latest), and an optional `Order`.

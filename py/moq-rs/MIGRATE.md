@@ -4,6 +4,12 @@ How to update your code for each breaking change, newest first.
 
 ## Unreleased
 
+### Ranges filter reads, and anchors can name a time
+
+A subscription now reads only the groups its own `ranges` cover.
+`Anchor` gains a `TIME` variant, the group containing a presentation time.
+`TrackConsumer.update` now raises on a time anchor an untimed track can't serve.
+
 ### Subscriptions carry group ranges (#5732)
 
 `Subscription.group_start` and `group_end` are replaced by `ranges`, a list of `Range` whose ends are an `Anchor` (an absolute group and frame, or a count of groups before the latest), and an optional `order`.

@@ -21,7 +21,7 @@ use super::ledger::{self, Ledger};
 use super::{Datagram, Requests};
 
 use super::Cap;
-use super::subscription::NewGroup;
+use super::subscription::{Containing, Holdings, NewGroup, Window};
 pub use super::subscription::{Anchor, Order, Position, Range, Subscription};
 use rangemap::RangeSet;
 
@@ -564,6 +564,15 @@ impl Slot {
 		}
 	}
 
+	/// Where the copy readers get starts in presentation time, if it has started.
+	fn start(&self) -> Option<Timestamp> {
+		let group = self.serving();
+		match group.is_aborted() {
+			true => None,
+			false => group.timestamp(),
+		}
+	}
+
 	/// The checked start of whichever copy began at frame 0.
 	fn bound(&self) -> Option<Timestamp> {
 		self.copies().find_map(group::Producer::bound)
@@ -624,6 +633,49 @@ pub(crate) struct FetchOutcome {
 	// An accept still refuses joined fetches the cached group cannot cover, without
 	// giving the request's demand watcher a rejection reason.
 	accepted: bool,
+}
+
+/// Whether `time` is strictly after `other`, as instants: exact across scales, unlike
+/// [`Timestamp`]'s `Ord`, which breaks a tie between scales.
+fn later(time: Timestamp, other: Timestamp) -> bool {
+	u128::from(time.value()) * u128::from(other.scale().as_u64())
+		> u128::from(other.value()) * u128::from(time.scale().as_u64())
+}
+
+/// Where the groups this hop holds start, for resolving time anchors. Walks down from the
+/// newest group, so a time near the live edge costs a few groups whatever the cache holds.
+impl Holdings for TrackState {
+	fn timed(&self) -> bool {
+		self.info.as_ref().is_none_or(|info| info.timescale.is_some())
+	}
+
+	fn containing(&self, pts: Timestamp) -> Containing {
+		let mut started = false;
+		for (&sequence, slot) in self.lookup.iter().rev() {
+			let Some(start) = slot.start() else { continue };
+			if !later(start, pts) {
+				return Containing::Group(sequence);
+			}
+			started = true;
+		}
+		match started {
+			true => Containing::Before,
+			false => Containing::Unknown,
+		}
+	}
+
+	fn after(&self, pts: Timestamp, from: u64) -> Option<u64> {
+		let mut after = None;
+		for (&sequence, slot) in self.lookup.range(from..).rev() {
+			match slot.start() {
+				Some(start) if later(start, pts) => after = Some(sequence),
+				Some(_) => break,
+				// Not started, so it proves nothing either way.
+				None => {}
+			}
+		}
+		after
+	}
 }
 
 impl TrackState {
@@ -810,7 +862,7 @@ impl TrackState {
 		self.shown(sequence);
 	}
 
-	/// Find the smallest-sequence cached group satisfying
+	/// Find the smallest-sequence cached group in `window` satisfying
 	/// `next_sequence <= seq < end_sequence (if set)`. Used by
 	/// [`Subscriber::next_group`] so the range can be widened (or unset)
 	/// after the fact and previously-skipped cached groups become available
@@ -823,6 +875,7 @@ impl TrackState {
 		&self,
 		next_sequence: u64,
 		end_sequence: Option<u64>,
+		window: &Window,
 	) -> Poll<Result<Option<group::Producer>>> {
 		// Nothing more can arrive once the track was sealed (dropped with its end
 		// declared) or aborted. Either closed the channel, so parking is not an option:
@@ -836,10 +889,14 @@ impl TrackState {
 		};
 
 		// If the exclusive end is already at or below where we'd resume, no
-		// group can ever satisfy this call until the cap rises. Pending (not
-		// None) so the consumer is parked rather than told the stream is over.
-		// An empty range (`end == 0`) parks even at the first sequence.
-		if let Some(cap) = end_sequence
+		// group can ever satisfy this call until the cap rises or the ranges widen.
+		// Pending (not None) so the consumer is parked rather than told the stream
+		// is over. An empty range (`end == 0`) parks even at the first sequence.
+		let cap = match (end_sequence, window.end()) {
+			(Some(cap), Some(end)) => Some(cap.min(end)),
+			(cap, end) => cap.or(end),
+		};
+		if let Some(cap) = cap
 			&& cap <= next_sequence
 		{
 			if closed {
@@ -848,13 +905,16 @@ impl TrackState {
 			return Poll::Pending;
 		}
 
-		let best = self
-			.lookup
-			.range(next_sequence.max(self.live_floor.unwrap_or(0))..)
+		let best = window
+			.runs(next_sequence.max(self.live_floor.unwrap_or(0)))
 			.filter(|_| self.readable())
-			.map(|(_, slot)| slot.serving())
-			.take_while(|group| super::subscription::before_end(group.sequence, end_sequence))
-			.find(|group| !group.is_aborted());
+			.find_map(|run| {
+				self.lookup
+					.range(run)
+					.map(|(_, slot)| slot.serving())
+					.take_while(|group| super::subscription::before_end(group.sequence, end_sequence))
+					.find(|group| !group.is_aborted())
+			});
 
 		if let Some(group) = best {
 			// Deliberately no cache refresh here: this is a pure seek, and the caller may
@@ -2759,10 +2819,10 @@ impl Producer {
 	/// The info is fixed at creation, so there's nothing to wait for (no
 	/// SUBSCRIBE_OK round trip). Pass `None` for [`Subscription::default`].
 	///
-	/// The read cursor starts at the group the subscription named (its floor), or 0.
-	/// [`Subscription::max_delay`] is what asks for data: delivery skips everything above
-	/// the floor that the budget convicts, so the default budget of zero delivers only
-	/// the latest group and a larger one reaches back over what it can still use.
+	/// Reads only the groups the subscription's ranges cover.
+	/// [`Subscription::max_delay`] is what asks for data: delivery skips everything in range
+	/// that the budget convicts, so the default budget of zero delivers only the latest
+	/// group and a larger one reaches back over what it can still use.
 	pub fn subscribe(&self, subscription: impl Into<Option<Subscription>>) -> Subscriber {
 		let preferences = subscription.into().unwrap_or_default();
 
@@ -3548,10 +3608,10 @@ impl Consumer {
 	/// [`Subscriber`] once the track info is available, or the track's abort error (or
 	/// [`Error::Dropped`]) if it is already closed.
 	///
-	/// The read cursor starts at the group the subscription named (its floor), or 0.
-	/// [`Subscription::max_delay`] is what asks for data: delivery skips everything above
-	/// the floor that the budget convicts, so the default budget of zero delivers only
-	/// the latest group and a larger one reaches back over what it can still use.
+	/// Reads only the groups the subscription's ranges cover.
+	/// [`Subscription::max_delay`] is what asks for data: delivery skips everything in range
+	/// that the budget convicts, so the default budget of zero delivers only the latest
+	/// group and a larger one reaches back over what it can still use.
 	pub fn subscribe(&self, subscription: impl Into<Option<Subscription>>) -> kio::Pending<Subscribing> {
 		let state = self.resolve();
 		let subscription = Preferences::register(state.read(), subscription.into().unwrap_or_default());
@@ -3936,6 +3996,7 @@ impl Subscribing {
 		// Wait until the track info is available
 		let info = ready!(self.state.poll(waiter, |state| state.poll_info()))
 			.map_err(|e| e.abort.clone().unwrap_or(Error::Dropped))??;
+		refuse_untimed(&info, &self.subscription.read())?;
 
 		let resume = self.state.read().routes.clone();
 		let inner = match resume {
@@ -4359,25 +4420,20 @@ impl kio::Task for Fetching {
 ///
 /// # Local cursor vs wire preference
 ///
-/// Group bounds exist at two levels, and setting one does not imply the other:
+/// Group bounds exist at two levels:
 ///
-/// - [`Self::set_groups`] limits **this subscriber's reads**, filtering exactly what
-///   this handle returns without changing the publisher's demand.
-/// - [`Subscription::ranges`], set via [`Self::update`], are a **request to the
-///   publisher**. They're aggregated across every live subscriber (their union), so they
-///   say what the publisher should send, not what this subscriber sees.
+/// - [`Subscription::ranges`], set via [`Self::update`], are both a **request to the
+///   publisher** and **this subscriber's read filter**. The publisher sees the union across
+///   every live subscriber, but each subscriber reads only the groups its own ranges cover,
+///   resolved where it is served: a relative anchor counted back from the latest group (or
+///   the first to arrive, before any exists) and a time anchor from the cached groups'
+///   starts, again whenever the ranges are replaced.
+/// - [`Self::set_groups`] narrows **this subscriber's reads** further, without changing the
+///   publisher's demand.
 ///
-/// They stay separate because their scopes differ: a subscriber can't filter by the
-/// aggregate, since another subscriber can widen it, and the publisher can't honor a
-/// cursor it's never told about. So setting only the cursor still transfers the skipped
-/// groups, and setting only the preference still returns groups another subscriber asked
-/// for. Set both to skip them *and* avoid the transfer.
-///
-/// The one place they meet is where the cursor comes from. A new subscriber's cursor is
-/// floored at the lowest group its own ranges start at, a relative start counted back from
-/// the latest group (or the first to arrive, before any exists), and its
-/// [`Subscription::max_delay`] decides what above the floor is worth delivering. Every later
-/// move is the caller's.
+/// A group outside either is held rather than skipped past, so widening either one later
+/// makes it available again. Within both, [`Subscription::max_delay`] decides what is
+/// still worth delivering, measured against the track's live edge.
 pub struct Subscriber {
 	name: Arc<str>,
 	// The broadcast this track belongs to; see [`Self::broadcast`].
@@ -4549,9 +4605,18 @@ struct Cursor {
 	datagram_index: usize,
 	/// Minimum sequence to return from any `recv` method. Set by `start_at`.
 	min_sequence: u64,
-	/// Whether the subscription's floor still waits on the track's first group: a range
-	/// counting back from the latest group cannot resolve before one exists.
-	floor_pending: bool,
+	/// This subscriber's own ranges, resolved: only the groups in it are read.
+	window: Window,
+	/// The [`Preferences::ranges_revision`] the window was resolved from.
+	ranges_revision: u64,
+	/// Bumped whenever [`Self::window`] moves, so the drop scan knows to look again.
+	window_revision: u64,
+	/// Why the ranges can't be served here: a time anchor on an untimed track.
+	refused: Option<Error>,
+	/// The window revision and cap at which no parked group was in reach. A group is only
+	/// parked out of reach, so the walk waits for either to move rather than running once
+	/// per hand-out over every range.
+	reoffer_idle: Option<(u64, Option<u64>)>,
 	/// One past the highest sequence returned by `next_group`, or `None` once it returned
 	/// `u64::MAX` and no group can follow.
 	/// Used only by that method to skip late arrivals; does not affect `recv_group`.
@@ -4589,6 +4654,13 @@ struct Cursor {
 	drops: Option<Box<DropCursor>>,
 }
 
+/// The sequences a [`DropCursor`] reports from: a cursor's span, narrowed to its window.
+struct Within<'a> {
+	span: ops::Range<u64>,
+	window: &'a Window,
+	revision: u64,
+}
+
 /// What a wire publisher's cursor gave up, found as it changes rather than by rescanning
 /// the cache on every poll.
 struct DropCursor {
@@ -4597,9 +4669,10 @@ struct DropCursor {
 	cuts: super::aborts::Watch,
 	/// Sequences given up and not reported yet: stale skips, cuts, and upstream drops.
 	pending: RangeSet<u64>,
-	/// The [`TrackState::drops_revision`] and window last folded into `pending`.
+	/// The [`TrackState::drops_revision`], span, and window revision last folded into
+	/// `pending`.
 	#[cfg_attr(not(feature = "async"), allow(dead_code))]
-	scanned: Option<(u64, ops::Range<u64>)>,
+	scanned: Option<(u64, ops::Range<u64>, u64)>,
 	/// Every sequence this cursor already reported.
 	#[cfg_attr(not(feature = "async"), allow(dead_code))]
 	reported: RangeSet<u64>,
@@ -4618,7 +4691,8 @@ impl DropCursor {
 	}
 
 	/// The lowest unreported run of `within` given up, now marked reported.
-	fn next(&mut self, state: &TrackState, cut: BTreeSet<u64>, within: &ops::Range<u64>) -> Option<ops::Range<u64>> {
+	fn next(&mut self, state: &TrackState, cut: BTreeSet<u64>, within: &Within<'_>) -> Option<ops::Range<u64>> {
+		let (span, window) = (&within.span, within.window);
 		for sequence in cut {
 			// A cut already reclaimed from the cache is in the track's drops instead.
 			if state.is_cut(sequence)
@@ -4629,14 +4703,14 @@ impl DropCursor {
 		}
 		// Rescan only after the drops change or the window moves; out-of-window runs were
 		// skipped and may be owed now.
-		let scan = (state.drops_revision, within.clone());
+		let scan = (state.drops_revision, span.clone(), within.revision);
 		if self.scanned.as_ref() != Some(&scan) {
 			self.scanned = Some(scan);
-			for dropped in state.drops.overlapping(within) {
+			for dropped in state.drops.overlapping(span) {
 				self.pending
-					.insert(dropped.start.max(within.start)..dropped.end.min(within.end));
+					.insert(dropped.start.max(span.start)..dropped.end.min(span.end));
 			}
-			for (&sequence, slot) in state.lookup.range(within.clone()) {
+			for (&sequence, slot) in state.lookup.range(span.clone()) {
 				if slot.visible
 					&& slot.group.is_cut()
 					&& let Some(end) = sequence.checked_add(1)
@@ -4647,9 +4721,13 @@ impl DropCursor {
 		}
 		while let Some(range) = self.pending.iter().next().cloned() {
 			self.pending.remove(range.clone());
-			let clipped = range.start.max(within.start)..range.end.min(within.end);
-			if clipped.is_empty() {
+			// Only what this subscriber asked for is owed: the first run of its ranges in it,
+			// the rest of the range waiting its turn.
+			let Some(clipped) = window.clip(range.start.max(span.start)..range.end.min(span.end)) else {
 				continue;
+			};
+			if clipped.end < range.end {
+				self.pending.insert(clipped.end..range.end);
 			}
 			if let Some(gap) = self.reported.gaps(&clipped).next() {
 				if gap.end < range.end {
@@ -4668,10 +4746,14 @@ impl Cursor {
 		// The ranges floor the cursor, and the budget picks where above it to start, timed
 		// or not: delivery skips the cached groups it already judges stale, on whichever
 		// clock convicts them.
-		let (floor, datagram_index) = {
+		let (window, ranges_revision, refused, datagram_index) = {
 			let preferences = subscription.read();
+			let ranges_revision = subscription.ranges_revision();
 			let state = state.read();
-			let floor = preferences.floor(state.newest_produced);
+			let (window, refused) = match Window::new(&preferences.ranges, state.newest_produced, &*state) {
+				Ok(window) => (window, None),
+				Err(err) => (Window::new(&[], None, &*state).expect("nothing to refuse"), Some(err)),
+			};
 			// Arrival order need not be timestamp order. Only skip the initial stale prefix;
 			// subsequent delivery stays in arrival order, including late datagrams.
 			let newest = state.datagrams.iter().filter_map(|datagram| datagram.timestamp).max();
@@ -4687,13 +4769,17 @@ impl Cursor {
 					})
 					.expect("the newest datagram is within max delay")
 			});
-			(floor, state.datagram_offset + start)
+			(window, ranges_revision, refused, state.datagram_offset + start)
 		};
 		Self {
 			state,
 			subscription,
-			min_sequence: floor.unwrap_or(0),
-			floor_pending: floor.is_none(),
+			min_sequence: 0,
+			window,
+			ranges_revision,
+			window_revision: 0,
+			reoffer_idle: None,
+			refused,
 			index: 0,
 			datagram_index,
 			next_sequence: Some(0),
@@ -4709,7 +4795,12 @@ impl Cursor {
 
 	#[cfg_attr(not(feature = "async"), allow(dead_code))]
 	fn poll_drop(&mut self, waiter: &kio::Waiter) -> Poll<ops::Range<u64>> {
-		let within = self.min_sequence..self.end_sequence.unwrap_or(u64::MAX);
+		self.sync();
+		let within = Within {
+			span: self.floor()..self.end_sequence.unwrap_or(u64::MAX),
+			window: &self.window,
+			revision: self.window_revision,
+		};
 		let drops = match &mut self.drops {
 			Some(drops) => drops,
 			None => self.drops.insert(Box::new(DropCursor::new(&self.state.read()))),
@@ -4738,19 +4829,66 @@ impl Cursor {
 		}
 	}
 
-	/// Raise the floor to where the subscription's ranges start, once a group exists to
-	/// count a relative start back from. Returns whether the floor is settled.
-	fn resolve_floor(&mut self) -> bool {
-		if self.floor_pending {
-			// The track had no produced group at subscribe, so the newest one then was the
-			// first to arrive, however many have arrived or left since.
-			let latest = self.state.read().first_produced;
-			if let Some(floor) = self.subscription.read().floor(latest) {
-				self.min_sequence = self.min_sequence.max(floor);
-				self.floor_pending = false;
+	/// Bring [`Self::window`] up to date: resolved again once the subscriber replaces its
+	/// ranges, counting relative anchors back from the latest group then, and settled as
+	/// the groups it waits on arrive.
+	fn sync(&mut self) {
+		let replaced = {
+			let preferences = self.subscription.read();
+			let revision = self.subscription.ranges_revision();
+			(revision != self.ranges_revision).then(|| (revision, preferences.ranges.clone()))
+		};
+		let state = self.state.read();
+		let moved = match replaced {
+			Some((revision, ranges)) => {
+				self.ranges_revision = revision;
+				match Window::new(&ranges, state.newest_produced, &*state) {
+					Ok(window) => {
+						self.window = window;
+						self.refused = None;
+					}
+					Err(err) => self.refused = Some(err),
+				}
+				true
+			}
+			None if self.window.is_settled() => false,
+			// The track had no produced group when the ranges resolved, so the newest one
+			// then was the first to arrive, however many have arrived or left since.
+			None if self.window.is_pending() => self.window.settle(state.first_produced, &*state),
+			None => self.window.settle(state.newest_produced, &*state),
+		};
+		drop(state);
+		if moved {
+			self.window_revision += 1;
+		}
+	}
+
+	/// The lowest group this cursor reads: its own floor, raised to its window's.
+	fn floor(&self) -> u64 {
+		self.min_sequence.max(self.window.floor().unwrap_or(0))
+	}
+
+	/// Whether group `sequence`, at or above [`Self::floor`], is one this cursor reads now:
+	/// in its window and below its cap. One that isn't may be later.
+	fn admits(&self, sequence: u64) -> bool {
+		super::subscription::before_end(sequence, self.end_sequence) && self.window.contains(sequence)
+	}
+
+	/// The lowest parked group this cursor reads now.
+	fn reoffer(&mut self) -> Option<u64> {
+		let at = (self.window_revision, self.end_sequence);
+		if self.parked.is_empty() || self.reoffer_idle == Some(at) {
+			return None;
+		}
+		for run in self.window.runs(self.floor()) {
+			if let Some((&sequence, _)) = self.parked.range(run).next()
+				&& super::subscription::before_end(sequence, self.end_sequence)
+			{
+				return Some(sequence);
 			}
 		}
-		!self.floor_pending
+		self.reoffer_idle = Some(at);
+		None
 	}
 
 	// A helper to automatically apply Dropped if the state is closed without an error.
@@ -4871,7 +5009,11 @@ impl Cursor {
 	}
 
 	fn poll_recv_group(&mut self, waiter: &kio::Waiter) -> Poll<Result<Option<group::Consumer>>> {
-		self.resolve_floor();
+		self.sync();
+		if let Some(err) = &self.refused {
+			return Poll::Ready(Err(err.clone()));
+		}
+		let floor = self.floor();
 		if let Some(aborts) = &self.aborts {
 			// A sequence may name both a live group and its fetched head. Only the
 			// consumer we parked decides whether this notification invalidates it.
@@ -4884,7 +5026,7 @@ impl Cursor {
 			// Each overtaken entry is removed once, rather than scanning every entry
 			// again for every delivered group.
 			while let Some((&sequence, _)) = self.parked.first_key_value()
-				&& sequence < self.min_sequence
+				&& sequence < floor
 			{
 				self.parked.pop_first();
 				aborts.remove(sequence);
@@ -4898,10 +5040,10 @@ impl Cursor {
 		let drift = ready!(self.poll_drift(self.end_sequence, waiter))?;
 
 		loop {
-			// Re-offer the lowest parked group back inside the cap once it rises,
-			// ahead of the arrival cursor: it is the oldest thing still owed.
-			let consumer = match self.parked.keys().next().copied() {
-				Some(sequence) if super::subscription::before_end(sequence, self.end_sequence) => {
+			// Re-offer the lowest parked group back in range once the cap rises or the ranges
+			// widen, ahead of the arrival cursor: it is the oldest thing still owed.
+			let consumer = match self.reoffer() {
+				Some(sequence) => {
 					let group = self.parked.remove(&sequence).expect("just looked it up");
 					self.aborts
 						.as_ref()
@@ -4912,8 +5054,9 @@ impl Cursor {
 					group
 				}
 				_ => {
+					let floor = self.floor();
 					let Some((producer, found_index)) =
-						ready!(self.poll(waiter, |state| state.poll_recv_group(self.index, self.min_sequence))?)
+						ready!(self.poll(waiter, |state| state.poll_recv_group(self.index, floor))?)
 					else {
 						// Parked groups survive a finished track: they become deliverable
 						// again if the cap rises, so the stream isn't over while any are held.
@@ -4929,14 +5072,17 @@ impl Cursor {
 					self.index = found_index + 1;
 
 					// The first group to arrive resolves a relative floor, which may land
-					// above it.
-					if self.floor_pending && self.resolve_floor() && consumer.sequence < self.min_sequence {
-						continue;
+					// above it, and a later one may settle where a time end falls.
+					if !self.window.is_settled() {
+						self.sync();
+						if consumer.sequence < self.floor() {
+							continue;
+						}
 					}
 
-					// Park a group beyond the cap instead of dropping it, and keep scanning
-					// so an in-range group that arrived behind it still flows.
-					if !super::subscription::before_end(consumer.sequence, self.end_sequence) {
+					// Park a group beyond the cap or outside the ranges instead of dropping it,
+					// and keep scanning so an in-range group that arrived behind it still flows.
+					if !self.admits(consumer.sequence) {
 						self.park(consumer, waiter);
 
 						continue;
@@ -4974,17 +5120,14 @@ impl Cursor {
 				return Poll::Ready(Ok(None));
 			};
 			self.datagram_index = found_index + 1;
-			self.resolve_floor();
+			self.sync();
 
 			let sequence = datagram.sequence;
 			let mid_group = self.subscription.read().start().is_some_and(|start| {
 				start.group == sequence
 					&& start.frame > datagram.wire.as_ref().and_then(|wire| wire.object_id).unwrap_or(0)
 			});
-			if sequence >= self.min_sequence
-				&& super::subscription::before_end(sequence, self.end_sequence)
-				&& !mid_group
-			{
+			if sequence >= self.floor() && self.admits(sequence) && !mid_group {
 				return Poll::Ready(Ok(Some(datagram)));
 			}
 		}
@@ -4996,14 +5139,19 @@ impl Cursor {
 		let Some(next) = self.next_sequence else {
 			return Poll::Ready(Ok(None));
 		};
-		self.resolve_floor();
-		let mut floor = next.max(self.min_sequence);
+		self.sync();
+		if let Some(err) = &self.refused {
+			return Poll::Ready(Err(err.clone()));
+		}
+		let mut floor = next.max(self.floor());
 		let end = self.end_sequence;
 		// One scan for the whole poll, so walking a backlog off stays linear in its size.
 		let drift = ready!(self.poll_drift(end, waiter))?;
 
 		let group = loop {
-			let Some(producer) = ready!(self.poll(waiter, |state| state.poll_next_in_range(floor, end))?) else {
+			let window = &self.window;
+			let Some(producer) = ready!(self.poll(waiter, |state| state.poll_next_in_range(floor, end, window))?)
+			else {
 				// Deliberately no flush of `seek_pending` here: only a delivery commit
 				// may count a conviction. This `None` can be an artifact of a floor
 				// that will lower again. A conviction never committed is dropped
@@ -5012,10 +5160,14 @@ impl Cursor {
 			};
 			let group = producer.consume();
 
-			// The first group to arrive resolves a relative floor, which may land above it.
-			if self.floor_pending && self.resolve_floor() && group.sequence < self.min_sequence {
-				floor = floor.max(self.min_sequence);
-				continue;
+			// The first group to arrive resolves a relative floor, which may land above it, and
+			// a later one may settle where a time end falls.
+			if !self.window.is_settled() {
+				self.sync();
+				if group.sequence < self.floor() || !self.window.contains(group.sequence) {
+					floor = floor.max(self.floor()).max(group.sequence.saturating_add(1));
+					continue;
+				}
 			}
 
 			// Skip a group the budget has given up on and keep scanning, so one poll
@@ -5069,6 +5221,8 @@ impl Cursor {
 #[derive(Clone)]
 pub struct Control {
 	subscription: Preferences,
+	// Whether the track is timed, so a time anchor on an untimed one is refused.
+	timed: bool,
 }
 
 impl Control {
@@ -5080,9 +5234,21 @@ impl Control {
 	/// Replace this subscriber's preferences, updating the producer's aggregate.
 	///
 	/// Returns [`Error::Closed`] if the track already ended; the update is
-	/// meaningless at that point and can usually be ignored.
+	/// meaningless at that point and can usually be ignored. Refuses a time anchor on
+	/// an untimed track with [`Error::TimestampMismatch`], leaving the preferences as they were.
 	pub fn update(&self, subscription: Subscription) -> Result<()> {
+		if !self.timed && subscription.has_time() {
+			return Err(Error::TimestampMismatch);
+		}
 		self.subscription.update(subscription)
+	}
+}
+
+/// Refuse `subscription` when it asks an untimed track for a presentation time.
+fn refuse_untimed(info: &Info, subscription: &Subscription) -> Result<()> {
+	match info.timescale.is_none() && subscription.has_time() {
+		true => Err(Error::TimestampMismatch),
+		false => Ok(()),
 	}
 }
 
@@ -5130,6 +5296,7 @@ impl Subscriber {
 				Inner::Plain(cursor) => cursor.subscription.clone(),
 				Inner::Resume(resume, _) => resume.subscription().clone(),
 			},
+			timed: self.info.timescale.is_some(),
 		}
 	}
 
@@ -5246,10 +5413,11 @@ impl Subscriber {
 			Inner::Resume(resume, _) => return resume.has_unread_group(unread),
 		};
 		let state = cursor.state.read();
-		let floor = cursor.min_sequence.max(state.live_floor.unwrap_or(0)).max(unread.start);
+		let floor = cursor.floor().max(state.live_floor.unwrap_or(0)).max(unread.start);
 		let eligible = |sequence: u64| {
 			sequence >= floor
 				&& super::subscription::before_end(sequence, unread.end)
+				&& cursor.window.contains(sequence)
 				&& !unread.delivered.contains(sequence)
 		};
 		cursor
@@ -5377,8 +5545,21 @@ impl Subscriber {
 			Inner::Resume(resume, _) => return resume.poll_start(waiter),
 		};
 		let start = ready!(Consumer::poll_state_start(&cursor.state, waiter));
-		cursor.resolve_floor();
-		Poll::Ready(start.map(|start| start.max(cursor.min_sequence)))
+		cursor.sync();
+		Poll::Ready(start.map(|start| start.max(cursor.floor())))
+	}
+
+	/// The lowest group this subscriber's ranges name, as resolved here when it last read:
+	/// `None` while one reaches back to the oldest group still around, or a relative
+	/// start still waits on the first group to arrive.
+	///
+	/// Where a reader that waits on each group in sequence starts, rather than at whatever
+	/// arrives first, which newest-first delivery makes the latest.
+	pub fn floor(&self) -> Option<u64> {
+		match &self.inner {
+			Inner::Plain(cursor) => cursor.window.start(),
+			Inner::Resume(resume, _) => resume.floor(),
+		}
 	}
 
 	/// Poll for sequences this subscription gave up without serving.
@@ -5441,7 +5622,7 @@ impl Subscriber {
 	/// `2..=5` includes groups 2 through 5; `2..5` excludes group 5. An omitted
 	/// start preserves the current floor, and an omitted end removes the cap.
 	/// Groups above the end remain buffered and can be read after raising the cap.
-	/// This changes only local delivery; use [`Subscription::ranges`] and
+	/// This narrows only local delivery, within [`Subscription::ranges`]; use those and
 	/// [`Self::update`] to change the requested groups.
 	pub fn set_groups(&mut self, groups: impl RangeBounds<u64>) {
 		let (start, end) = super::subscription::sequence_bounds(groups);
@@ -5453,7 +5634,7 @@ impl Subscriber {
 	///
 	/// A local filter, not a request: it doesn't tell the publisher anything, so the
 	/// skipped groups are still delivered and simply not returned. To ask the publisher
-	/// to start there instead, set [`Subscription::ranges`] via [`Self::update`].
+	/// to start there too, set [`Subscription::ranges`] via [`Self::update`].
 	/// See [Local cursor vs wire preference](Self#local-cursor-vs-wire-preference).
 	#[cfg_attr(not(feature = "async"), allow(dead_code))]
 	// pending: /quest/m1/public-model/serve.md
@@ -5508,14 +5689,22 @@ impl Subscriber {
 	/// Replace this subscriber's delivery preferences.
 	///
 	/// Stored verbatim; the publisher's max age window is applied to the aggregate, not
-	/// here (see [`Producer::subscription`]). Returns [`Error::Closed`] if the track
-	/// already ended; the update is meaningless at that point and can usually be ignored.
+	/// here (see [`Producer::subscription`]). Replaced ranges resolve again here, a
+	/// relative anchor counting back from the latest group now. Returns [`Error::Closed`]
+	/// if the track already ended; the update is meaningless at that point and can usually
+	/// be ignored. Refuses a time anchor on an untimed track with
+	/// [`Error::TimestampMismatch`], leaving the preferences as they were.
 	pub fn update(&mut self, subscription: Subscription) -> Result<()> {
+		refuse_untimed(&self.info, &subscription)?;
 		let channel = match &self.inner {
 			Inner::Plain(cursor) => &cursor.subscription,
 			Inner::Resume(resume, _) => resume.subscription(),
 		};
-		channel.update(subscription)
+		channel.update(subscription)?;
+		if let Inner::Plain(cursor) = &mut self.inner {
+			cursor.sync();
+		}
+		Ok(())
 	}
 
 	/// Poll for the track's largest location: the current one, then each newer one, and `None` once the track ends.
@@ -9166,12 +9355,14 @@ mod test {
 			append_at(&mut producer, second * 1000);
 		}
 
-		// A range's end is a request to the publisher, folded in with every other
-		// subscriber's, and it does not filter this handle: the groups above it arrive
-		// anyway. Capping the live edge with it would pin the edge below them, leaving
-		// everything past it with nothing newer to be late against.
+		// The budget caps every range: a range ending below the live edge is judged against
+		// that edge, not its own end, so with no budget nothing in it is fresh.
 		let mut subscriber = producer.subscribe(Subscription::default().with_end(Position::after_group(1)));
-		assert_eq!(drain(&mut subscriber), vec![3]);
+		assert_eq!(drain(&mut subscriber), Vec::<u64>::new());
+
+		// A budget that covers it delivers the range, and nothing above it.
+		let mut subscriber = producer.subscribe(replay().with_end(Position::after_group(1)));
+		assert_eq!(drain(&mut subscriber), vec![0, 1]);
 	}
 
 	#[test]
@@ -9183,7 +9374,7 @@ mod test {
 
 		// Capped at group 0: the route running on past the cap is data this subscriber
 		// can never be served, so it isn't a live edge to be late against.
-		let mut subscriber = producer.subscribe(Subscription::default().with_end(Position::after_group(0)));
+		let mut subscriber = producer.subscribe(Subscription::default());
 		subscriber.set_groups(..1);
 		assert_eq!(drain(&mut subscriber), vec![0]);
 
@@ -10779,7 +10970,7 @@ mod test {
 	fn empty_local_cap_holds_while_another_subscriber_requests_everything() {
 		let producer = track_producer("test", Info::timed());
 		let mut everything = producer.subscribe(replay());
-		let mut empty = producer.subscribe(replay().with_end(Position::group(0)));
+		let mut empty = producer.subscribe(replay());
 		empty.set_groups((Bound::Unbounded, Position::group(0).group_end()));
 
 		for s in 0..3 {
@@ -13336,5 +13527,158 @@ mod test {
 			let mut group = producer.create_group(group::Info { sequence }).unwrap();
 			group.write_frame(None, &b"x"[..]).unwrap();
 		}
+	}
+
+	/// A subscriber reads only its own ranges, whatever another subscriber's widen the
+	/// aggregate to, in arrival order and in sequence order alike.
+	#[test]
+	#[cfg(feature = "async")]
+	fn a_subscriber_reads_only_its_own_ranges() {
+		let mut producer = track_producer("test", Info::timed());
+		let mut everything = producer.subscribe(replay());
+		let ranges = [Range::groups(1..3), Range::groups(5..)];
+		let mut mine = producer.subscribe(replay().with_ranges(ranges));
+		let mut ordered = producer.subscribe(replay().with_ranges(ranges)).ordered();
+		for second in 0..7 {
+			append_at(&mut producer, second * 1000);
+		}
+		assert_eq!(drain(&mut everything), vec![0, 1, 2, 3, 4, 5, 6]);
+		assert_eq!(drain(&mut mine), vec![1, 2, 5, 6]);
+		assert_eq!(drain_ordered(&mut ordered), vec![1, 2, 5, 6]);
+	}
+
+	/// Replacing the ranges re-offers what the old ones held back, and a relative anchor
+	/// counts back from the latest group as of the update, not the subscribe.
+	#[test]
+	#[cfg(feature = "async")]
+	fn replaced_ranges_resolve_again() {
+		let mut producer = track_producer("test", Info::timed());
+		let mut subscriber = producer.subscribe(replay().with_groups(0..2));
+		for second in 0..4 {
+			append_at(&mut producer, second * 1000);
+		}
+		assert_eq!(drain(&mut subscriber), vec![0, 1]);
+
+		subscriber.update(replay().with_groups(0..)).unwrap();
+		assert_eq!(drain(&mut subscriber), vec![2, 3], "held back, now in range");
+
+		// The latest group is 3 now, so one back is 2, already read: only new groups follow.
+		let mut late = producer.subscribe(replay().with_groups(..1));
+		assert_eq!(drain(&mut late), vec![0]);
+		late.update(replay().with_ranges([Range {
+			start: Anchor::Relative(1),
+			end: None,
+		}]))
+		.unwrap();
+		assert_eq!(drain(&mut late), vec![2, 3]);
+		append_at(&mut producer, 4000);
+		assert_eq!(drain(&mut late), vec![4]);
+	}
+
+	/// Datagrams outside a subscriber's ranges are dropped like the groups.
+	#[test]
+	#[cfg(feature = "async")]
+	fn datagrams_outside_the_ranges_are_skipped() {
+		let mut producer = track_producer("test", Info::timed());
+		let mut subscriber = producer.subscribe(replay().with_ranges([Range::groups(1..2), Range::groups(3..)]));
+		for millis in 0..5 {
+			producer
+				.append_datagram(Timestamp::from_millis(millis).unwrap(), &b"x"[..])
+				.unwrap();
+		}
+		let mut sequences = Vec::new();
+		while let Some(Ok(Some(datagram))) = subscriber.recv_datagram().now_or_never() {
+			sequences.push(datagram.sequence);
+		}
+		assert_eq!(sequences, vec![1, 3, 4]);
+	}
+
+	/// Only the sequences a subscriber asked for are named dropped to it.
+	#[test]
+	#[cfg(feature = "async")]
+	fn drops_are_named_only_within_the_ranges() {
+		let producer = track_producer("test", Info::timed());
+		let mut subscriber = producer.subscribe(replay().with_ranges([Range::groups(2..4), Range::groups(6..8)]));
+		producer.drop_groups(0..10);
+		let waiter = kio::Waiter::noop();
+		let mut dropped = Vec::new();
+		while let Poll::Ready(range) = subscriber.poll_drop(&waiter) {
+			dropped.push(range);
+		}
+		assert_eq!(dropped, vec![2..4, 6..8]);
+	}
+
+	/// A time start is the cached group containing it and a time end stops just past that
+	/// group; one past every start held stays open until a group starts after it.
+	#[test]
+	#[cfg(feature = "async")]
+	fn time_anchors_resolve_against_the_cache() {
+		let mut producer = track_producer("test", Info::timed());
+		for second in 0..4 {
+			append_at(&mut producer, second * 1000);
+		}
+		let time = |millis| Anchor::Time(Timestamp::from_millis(millis).unwrap());
+
+		let mut seek = producer.subscribe(replay().with_ranges([Range {
+			start: time(1500),
+			end: Some(time(2000)),
+		}]));
+		assert_eq!(drain(&mut seek), vec![1, 2]);
+
+		// A start before every group reaches back to the oldest one.
+		let mut early = producer.subscribe(replay().with_ranges([Range {
+			start: Anchor::Time(Timestamp::from_micros(0).unwrap()),
+			end: Some(time(500)),
+		}]));
+		assert_eq!(drain(&mut early), vec![0]);
+
+		// Past the newest start: open until a group is known to start after the end.
+		let mut live = producer.subscribe(replay().with_ranges([Range {
+			start: time(3000),
+			end: Some(time(4500)),
+		}]));
+		assert_eq!(drain(&mut live), vec![3]);
+		append_at(&mut producer, 4000);
+		append_at(&mut producer, 5000);
+		append_at(&mut producer, 6000);
+		assert_eq!(drain(&mut live), vec![4]);
+	}
+
+	/// An untimed track refuses a time anchor wherever the ranges reach it.
+	#[test]
+	#[cfg(feature = "async")]
+	fn an_untimed_track_refuses_time_anchors() {
+		let producer = untimed_producer();
+		let timed = replay().with_ranges([Range {
+			start: Anchor::Time(Timestamp::from_millis(0).unwrap()),
+			end: None,
+		}]);
+
+		let pending = producer.consume().subscribe(timed.clone());
+		assert!(matches!(
+			pending.poll_ok(&kio::Waiter::noop()),
+			Poll::Ready(Err(Error::TimestampMismatch))
+		));
+
+		let mut subscriber = producer.subscribe(replay());
+		assert!(matches!(subscriber.update(timed.clone()), Err(Error::TimestampMismatch)));
+		assert!(matches!(
+			subscriber.control().update(timed.clone()),
+			Err(Error::TimestampMismatch)
+		));
+		assert_eq!(subscriber.subscription(), replay(), "a refused update changes nothing");
+
+		let mut refused = producer.subscribe(timed);
+		assert!(matches!(
+			refused.recv_group().now_or_never(),
+			Some(Err(Error::TimestampMismatch))
+		));
+
+		// Ranges it can serve lift the refusal.
+		refused.update(replay()).unwrap();
+		let mut group = producer.append_group().unwrap();
+		group.finish().unwrap();
+		let read = refused.recv_group().now_or_never().expect("the group is cached");
+		assert_eq!(read.unwrap().map(|group| group.sequence), Some(0));
 	}
 }

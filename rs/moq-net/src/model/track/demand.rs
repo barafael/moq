@@ -1,5 +1,13 @@
 //! Incremental demand, separate from the track's cached content.
-use std::{collections::BTreeMap, sync::Arc, task::Poll, time::Duration};
+use std::{
+	collections::BTreeMap,
+	sync::{
+		Arc,
+		atomic::{self, AtomicU64},
+	},
+	task::Poll,
+	time::Duration,
+};
 
 use super::{NewGroup, Order, Subscription, TrackState, clamp_combined};
 
@@ -138,6 +146,8 @@ pub(in crate::model) struct Preferences(Arc<Preference>);
 struct Preference {
 	value: kio::Producer<Subscription>,
 	subscriptions: Option<kio::Lock<Subscriptions>>,
+	/// Bumped under the write whenever the ranges change.
+	ranges_revision: AtomicU64,
 }
 
 impl Preferences {
@@ -151,6 +161,7 @@ impl Preferences {
 		Self(Arc::new(Preference {
 			value: kio::Producer::new(value),
 			subscriptions,
+			ranges_revision: AtomicU64::new(0),
 		}))
 	}
 
@@ -186,6 +197,9 @@ impl Preferences {
 			.subscriptions
 			.as_ref()
 			.map(|subs| subs.lock().replace(Some(&value), Some(&next)));
+		if value.ranges != next.ranges {
+			self.0.ranges_revision.fetch_add(1, atomic::Ordering::Relaxed);
+		}
 		*value = next;
 		drop(value);
 		if let Some(wakes) = &mut wakes {
@@ -201,6 +215,11 @@ impl Preferences {
 	}
 	pub(in crate::model) fn read(&self) -> kio::Ref<'_, Subscription> {
 		self.0.value.read()
+	}
+	/// Counts changes to the ranges, so a reader can tell them apart without comparing every
+	/// range. Read it while holding [`Self::read`] to get the count matching those ranges.
+	pub(in crate::model) fn ranges_revision(&self) -> u64 {
+		self.0.ranges_revision.load(atomic::Ordering::Relaxed)
 	}
 	pub(in crate::model) fn consume(&self) -> kio::Consumer<Subscription> {
 		self.0.value.consume()
@@ -232,6 +251,7 @@ impl From<kio::Producer<Subscription>> for Preferences {
 		Self(Arc::new(Preference {
 			value,
 			subscriptions: None,
+			ranges_revision: AtomicU64::new(0),
 		}))
 	}
 }

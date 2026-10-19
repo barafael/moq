@@ -583,8 +583,8 @@ pub struct moq_subscription {
 
 /// A span of a track to deliver: from `start` up to `end`, or onward without one.
 ///
-/// A relative start is the first frame of its group, and a relative end includes its whole
-/// group. An absolute end is exclusive.
+/// A relative or time start is the first frame of its group, and a relative or time end
+/// includes its whole group. An absolute end is exclusive.
 #[repr(C)]
 #[allow(non_camel_case_types)]
 #[derive(Clone, Copy)]
@@ -605,7 +605,8 @@ pub struct moq_anchor {
 	/// `moq_anchor_kind` discriminant.
 	pub kind: u32,
 	/// The group, or with `MOQ_ANCHOR_RELATIVE` how many groups before the latest one
-	/// (0 is the latest, and an offset past the first group clamps to it).
+	/// (0 is the latest, and an offset past the first group clamps to it), or with
+	/// `MOQ_ANCHOR_TIME` a presentation time in microseconds.
 	pub group: u64,
 	/// The frame within `group`, read only with `MOQ_ANCHOR_ABSOLUTE`.
 	pub frame: u64,
@@ -620,6 +621,8 @@ pub enum moq_anchor_kind {
 	MOQ_ANCHOR_ABSOLUTE = 0,
 	/// A count of groups back from the latest one.
 	MOQ_ANCHOR_RELATIVE = 1,
+	/// The group containing a presentation time. An untimed track refuses it.
+	MOQ_ANCHOR_TIME = 2,
 }
 
 /// Which of a subscription's pending groups the publisher sends first. Zero is the default.
@@ -642,6 +645,9 @@ fn parse_anchor(anchor: &moq_anchor) -> Result<moq_net::track::Anchor, Error> {
 			})
 		}
 		v if v == moq_anchor_kind::MOQ_ANCHOR_RELATIVE as u32 => moq_net::track::Anchor::Relative(anchor.group),
+		v if v == moq_anchor_kind::MOQ_ANCHOR_TIME as u32 => {
+			moq_net::track::Anchor::Time(moq_net::Timestamp::from_micros(anchor.group)?)
+		}
 		_ => return Err(Error::InvalidCode),
 	})
 }

@@ -11,19 +11,13 @@ kept beside it.
 
 ## Plan
 
-`track::Subscription` already carries aggregated `ranges`, but only as a wire
-preference: locally a subscriber's ranges set where its reads start, and it
-still reads every later group the aggregate brings in. Serving a range locally
-means filtering a subscriber's reads to its own ranges, and a miss below the
-cache becomes a range request on `Dynamic` rather than a group request.
+A subscriber already reads only its own ranges, re-resolved when they are
+replaced, and a `Time(pts)` anchor resolves from the cached groups' starts, or
+is refused on an untimed track. What remains is the miss: one below the cache
+becomes a range request on `Dynamic` rather than a group request.
 
-- Add a `Time(pts)` anchor beside `Absolute` and `Relative` (see the
-  [line](/quest/m1/subscribe-ranges/README.md)), carried through moq-ffi and
-  every binding like the other anchors. A track resolves it from its cached
-  groups' timestamps and passes an unresolved one to its `track::Dynamic`
-  handler; an untimed track refuses it. Test a time start and end resolved
-  against the cache, an unresolved one passed through to a handler, and an
-  untimed track refusing one.
+- Pass a time anchor the cache can't resolve to the `track::Dynamic` handler
+  in its range request, and test one passed through.
 - Replace `requested_group` and `fetch_group` rather than keep both. Update
   every caller (relay, moq-archive, hls, the ladder) in the same PR,
   including the archive consumer's time resolution from its key listing if it
@@ -34,7 +28,9 @@ cache becomes a range request on `Dynamic` rather than a group request.
   `moq_relay::fetch_group` (added in the 2026-10-05 audit).
 - Every sequence in range either arrives or is named as dropped, so a reader
   never waits on a miss. Share the accounting with
-  [SUBSCRIBE_DROP](/quest/m1/subscribe-drop.md) rather than adding a second one.
+  [SUBSCRIBE_DROP](/quest/m1/subscribe-drop.md) rather than adding a second one:
+  the cursor's drop scan already names only sequences inside the reader's own
+  ranges.
 - Decided in the 2026-10-10 audit: `max_delay` caps every range, including
   historical FETCH replacements, and publisher `max_age` always clamps it.
   A FETCH with no reader delay uses publisher max-age alone, not the live
@@ -43,17 +39,8 @@ cache becomes a range request on `Dynamic` rather than a group request.
   budget or lets one expired caller cancel another still-valid reader.
   Reuse FETCH's optional per-reader budget and publisher clamp rather than
   restoring a historical exemption.
-- Move every relative-start resolution into the model, which counts back
-  from produced groups only. Today two consumers re-resolve relative starts
-  on their own. moq-c's `apply_raw_subscription` (`rs/moq-c/src/consume.rs`)
-  counts back from `Ordered::latest()`, the shared group and datagram
-  sequence, so a datagram past the newest group skews the start. It also
-  re-resolves on every update, because the model doesn't. moq-mux's
-  `container::Consumer::new` treats a relative start as an unfloored join
-  and adopts the first arrival, which under newest-first delivery can skip
-  the older groups the range asked for.
-- Benchmark serving and filling over range count and span as separate axes,
-  beside `track_subscription_ranges`, which covers aggregation.
+- Benchmark filling over range count and span as separate axes, beside
+  `track_range_serving`, which covers serving.
 
 ## Related
 

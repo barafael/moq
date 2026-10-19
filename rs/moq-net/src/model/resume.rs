@@ -397,6 +397,15 @@ impl Subscriber {
 		}
 	}
 
+	/// The floor the first copy answered with; see [`track::Subscriber::floor`]. Later
+	/// copies start where the reader got to, which names no floor of the reader's own.
+	pub(super) fn floor(&self) -> Option<u64> {
+		self.reader().copies.iter().find_map(|copy| match &copy.sub {
+			Sub::Ready(sub) if copy.floor.is_none() => Some(sub.floor()),
+			_ => None,
+		})?
+	}
+
 	/// Poll for sequences the serving copy gave up; see [`track::Subscriber::poll_drop`].
 	#[cfg_attr(not(feature = "async"), allow(dead_code))]
 	pub(super) fn poll_drop(&mut self, waiter: &kio::Waiter) -> Poll<std::ops::Range<u64>> {

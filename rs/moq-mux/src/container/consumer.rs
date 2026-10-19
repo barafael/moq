@@ -161,17 +161,7 @@ impl<F: Container> Consumer<F> {
 		// edge from there. The budget is clamped to the track's retention window,
 		// since history the publisher no longer keeps can't be waited for and would
 		// otherwise stall the catch-up by the excess.
-		// Only absolute starts name a floor: a relative one counts back from wherever the
-		// publisher is, which the first arrivals say.
-		let start = subscription
-			.ranges
-			.iter()
-			.map(|range| match range.start {
-				moq_net::track::Anchor::Absolute(start) => Some(start.group),
-				moq_net::track::Anchor::Relative(_) => None,
-			})
-			.collect::<Option<Vec<_>>>()
-			.and_then(|starts| starts.into_iter().min());
+		let start = track.floor();
 		let max_delay = subscription
 			.max_delay
 			.min(track.info().max_age.unwrap_or(std::time::Duration::MAX));
@@ -290,6 +280,15 @@ impl<F: Container> Consumer<F> {
 		// (a gap below the served window looks like in-flight groups until the budget
 		// expires, or forever on a quiet track), so the cursor adopts it from the
 		// first arrivals instead of assuming group 0. Skipping stays the budget's job.
+		// A relative start names its floor once the first group to arrive resolves it.
+		if self.startup
+			&& !self.newest
+			&& let Some(start) = self.track.floor()
+		{
+			self.pending.retain(|group| group.sequence >= start);
+			self.current = start;
+			self.startup = false;
+		}
 		if self.startup {
 			// NOTE: poll_min_timestamp buffers at least one frame per group and
 			// registers the waiter on the ones still empty. Any wire frame counts, so a
@@ -2886,6 +2885,31 @@ mod tests {
 		let frames = read_all(&mut consumer).await.unwrap();
 		let micros: Vec<u128> = frames.iter().map(|f| f.timestamp.as_micros()).collect();
 		assert_eq!(micros, vec![0, 100_000], "the open group's late frames are delivered");
+	}
+
+	/// A relative start names its floor once resolved: delivery starts that many groups
+	/// back from the latest, rather than at whichever group arrives first.
+	#[tokio::test]
+	async fn startup_at_a_relative_start() {
+		tokio::time::pause();
+		let mut track = track_producer("test", hang::container::track_info(hang::catalog::PRIORITY.video));
+		for sequence in 5..=9 {
+			write_group(&mut track, sequence, &[ts(sequence * 100_000)]);
+		}
+		let subscription = moq_net::track::Subscription::default()
+			.with_max_delay(Duration::from_secs(10))
+			.with_ranges([moq_net::track::Range {
+				start: moq_net::track::Anchor::Relative(2),
+				end: None,
+			}]);
+		let consumer_track = track.subscribe(subscription);
+		assert_eq!(consumer_track.floor(), Some(7));
+		let mut consumer = Consumer::new(consumer_track, Container::Legacy(crate::container::Kind::Data));
+		track.finish().unwrap();
+
+		let frames = read_all(&mut consumer).await.unwrap();
+		let micros: Vec<u128> = frames.iter().map(|f| f.timestamp.as_micros()).collect();
+		assert_eq!(micros, vec![700_000, 800_000, 900_000]);
 	}
 
 	#[tokio::test]

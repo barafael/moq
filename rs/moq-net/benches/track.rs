@@ -56,6 +56,10 @@
 //! disjoint range, swept over how many ranges and how many groups each spans: reading the
 //! union must cost the same per range whatever it spans.
 //!
+//! `track_range_serving` drains one reader whose own ranges are disjoint, swept over how
+//! many ranges and how many cached groups each spans: each group handed out must cost the
+//! same, so a walk over the ranges or the groups between them shows up as a slope.
+//!
 //! Run with `cargo bench -p moq-net --bench track`.
 
 // Custom timings measure the real time the work took, not the ambient clock.
@@ -106,6 +110,10 @@ const RANGES: [u64; 4] = [1, 16, 256, 4096];
 
 /// Groups each aggregated range spans.
 const SPAN: [u64; 3] = [1, 64, 4096];
+
+/// Disjoint ranges one reader is served, and the cached groups each spans.
+const SERVED_RANGES: [u64; 3] = [1, 16, 256];
+const SERVED_SPAN: [u64; 3] = [1, 8, 64];
 
 /// Concurrent publishers sharing one relay-style cache pool.
 const WRITERS: [usize; 4] = [1, 2, 4, 8];
@@ -811,6 +819,48 @@ fn bench_subscription_ranges(c: &mut Criterion) {
 	group.finish();
 }
 
+fn bench_range_serving(c: &mut Criterion) {
+	let mut group = c.benchmark_group("track_range_serving");
+	for span in SERVED_SPAN {
+		for ranges in SERVED_RANGES {
+			let broadcast = broadcast::Info::default().produce();
+			let track = broadcast.create_track("bench", None).unwrap();
+			// A gap between neighbors keeps every range distinct, and its group cached.
+			for _ in 0..ranges * (span + 1) {
+				let mut group = track.append_group().unwrap();
+				group.write_frame(None, Bytes::from_static(b"x")).unwrap();
+				group.finish().unwrap();
+			}
+			let subscription = track::Subscription::default()
+				.with_max_delay(AGED_BUDGET)
+				.with_ranges((0..ranges).map(|i| {
+					let start = i * (span + 1);
+					track::Range::groups(start..start + span)
+				}));
+
+			group.throughput(Throughput::Elements(ranges * span));
+			group.bench_function(BenchmarkId::new(format!("span_{span}"), ranges), |b| {
+				b.iter_batched(
+					|| track.subscribe(subscription.clone()),
+					|mut reader| {
+						let waiter = kio::Waiter::noop();
+						let mut served = 0;
+						while let Poll::Ready(Ok(Some(group))) = reader.poll_recv_group(&waiter) {
+							black_box(group);
+							served += 1;
+						}
+						assert_eq!(served, ranges * span);
+						reader
+					},
+					BatchSize::SmallInput,
+				);
+			});
+			drop((track, broadcast));
+		}
+	}
+	group.finish();
+}
+
 /// Late joins scan a bounded datagram ring; sweep both the backlog and the joining audience.
 fn bench_datagram_subscriber_join(c: &mut Criterion) {
 	let mut group = c.benchmark_group("track_datagram_subscriber_join");
@@ -1213,6 +1263,7 @@ criterion_group!(
 	bench_subscriber_join,
 	bench_range_demand,
 	bench_subscription_ranges,
+	bench_range_serving,
 	bench_subscriber_preferences,
 	bench_datagram_subscriber_join,
 	bench_parked_read,
