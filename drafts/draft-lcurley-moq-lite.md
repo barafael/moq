@@ -1187,6 +1187,7 @@ MUST be 0 when `Group End` is 0, since an unbounded subscription has no end grou
 A subscriber can modify a subscription with a SUBSCRIBE_UPDATE message.
 A subscriber MAY send multiple SUBSCRIBE_UPDATE messages to update the subscription.
 The start and end group can be changed in either direction (growing or shrinking).
+Lowering `Group Start` covers the groups below the old start that the publisher still holds, not only those that arrive later; a group already sent is not sent again.
 
 ~~~
 SUBSCRIBE_UPDATE Message {

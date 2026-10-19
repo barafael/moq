@@ -4630,6 +4630,9 @@ struct Cursor {
 	/// are parked here instead of dropped). Keyed by sequence so the lowest is
 	/// re-offered first.
 	parked: BTreeMap<u64, group::Consumer>,
+	/// The highest floor `recv_group` has applied. Its walk passes the groups below the
+	/// floor without parking them, so lowering it parks those still cached.
+	passed: u64,
 	aborts: Option<Box<super::aborts::Watch>>,
 	/// [`Self::end_sequence`], shared with the groups this cursor hands out so their
 	/// expiry measures drift against the same servable window after a cap moves.
@@ -4802,6 +4805,7 @@ impl Cursor {
 			next_sequence: Some(0),
 			end_sequence: None,
 			parked: BTreeMap::new(),
+			passed: 0,
 			aborts: None,
 			drift_cap: kio::Producer::new(None),
 			stale: stats::Content::default(),
@@ -5025,12 +5029,47 @@ impl Cursor {
 		aborts.register(waiter);
 	}
 
+	/// Park the cached groups in range from `floor` up to [`Self::passed`], which the walk
+	/// passed under a higher floor, so they are re-offered like any widened range.
+	fn backfill(&mut self, floor: u64, waiter: &kio::Waiter) {
+		let groups: Vec<group::Producer> = {
+			let state = self.state.read();
+			// Nothing is read from the cache now, so leave the floor to lower once it is.
+			if !state.readable() {
+				return;
+			}
+			self.filter
+				.window
+				.runs(floor.max(state.live_floor.unwrap_or(0)))
+				.take_while(|run| *run.start() < self.passed)
+				.flat_map(|run| state.lookup.range(run).map(|(_, slot)| slot.serving()))
+				.take_while(|group| group.sequence < self.passed)
+				.filter(|group| !group.is_aborted())
+				.cloned()
+				.collect()
+		};
+		self.passed = floor;
+		if groups.is_empty() {
+			return;
+		}
+		// Consumed with the track guard released, as the walk does.
+		for group in groups {
+			self.park(group.consume(), waiter);
+		}
+		// In reach at the revision `reoffer` last found nothing at, so look again.
+		self.filter.reoffer_idle = None;
+	}
+
 	fn poll_recv_group(&mut self, waiter: &kio::Waiter) -> Poll<Result<Option<group::Consumer>>> {
 		self.sync();
 		if let Some(err) = &self.filter.refused {
 			return Poll::Ready(Err(err.clone()));
 		}
 		let floor = self.floor();
+		match floor < self.passed {
+			true => self.backfill(floor, waiter),
+			false => self.passed = floor,
+		}
 		if let Some(aborts) = &self.aborts {
 			// A sequence may name both a live group and its fetched head. Only the
 			// consumer we parked decides whether this notification invalidates it.
@@ -5072,6 +5111,7 @@ impl Cursor {
 				}
 				_ => {
 					let floor = self.floor();
+					self.passed = self.passed.max(floor);
 					let Some((producer, found_index)) =
 						ready!(self.poll(waiter, |state| state.poll_recv_group(self.index, floor))?)
 					else {
@@ -5093,6 +5133,7 @@ impl Cursor {
 					if !self.filter.window.is_settled() {
 						self.sync();
 						if consumer.sequence < self.floor() {
+							self.passed = self.passed.max(self.floor());
 							continue;
 						}
 					}
@@ -5457,7 +5498,11 @@ impl Subscriber {
 								.lookup
 								.get(sequence)
 								.is_some_and(|slot| slot.stamp == *stamp && !slot.is_aborted())
-					}))
+					}) || state
+					// Passed under a higher floor, so the walk re-parks them; see `Cursor::backfill`.
+					.lookup
+					.range(floor..cursor.passed.max(floor))
+					.any(|(sequence, slot)| eligible(*sequence) && !slot.is_aborted()))
 	}
 
 	/// Receive the next group in arrival order.
@@ -5712,7 +5757,9 @@ impl Subscriber {
 	///
 	/// Stored verbatim; the publisher's max age window is applied to the aggregate, not
 	/// here (see [`Producer::subscription`]). Replaced ranges resolve again here, a
-	/// relative anchor counting back from the latest group now. Returns [`Error::Closed`]
+	/// relative anchor counting back from the latest group now, and widening them offers
+	/// the cached groups they newly cover, even ones that arrived before the groups
+	/// already read. Returns [`Error::Closed`]
 	/// if the track already ended; the update is meaningless at that point and can usually
 	/// be ignored. Refuses a time anchor on an untimed track with
 	/// [`Error::TimestampMismatch`], leaving the preferences as they were.
@@ -13618,6 +13665,33 @@ mod test {
 		assert_eq!(drain(&mut late), vec![2, 3]);
 		append_at(&mut producer, 4000);
 		assert_eq!(drain(&mut late), vec![4]);
+	}
+
+	/// Lowering the floor re-offers the cached groups the arrival walk passed below it,
+	/// as widening any range does.
+	#[test]
+	#[cfg(feature = "async")]
+	fn a_lowered_floor_reoffers_what_arrived_below_it() {
+		let mut producer = track_producer("test", Info::timed());
+		for second in 0..6 {
+			append_at(&mut producer, second * 1000);
+		}
+		let mut subscriber = producer.subscribe(replay().with_groups(5..));
+		assert_eq!(drain(&mut subscriber), vec![5]);
+
+		subscriber.update(replay().with_groups(2..)).unwrap();
+		assert_eq!(drain(&mut subscriber), vec![2, 3, 4], "passed below the floor, now in range");
+		subscriber.update(replay().with_groups(0..)).unwrap();
+		assert_eq!(drain(&mut subscriber), vec![0, 1]);
+
+		// Raising and lowering it again re-offers only what is cached in between, and
+		// nothing already served goes out twice.
+		subscriber.update(replay().with_groups(4..)).unwrap();
+		assert_eq!(drain(&mut subscriber), Vec::<u64>::new());
+		subscriber.update(replay().with_groups(0..)).unwrap();
+		assert_eq!(drain(&mut subscriber), Vec::<u64>::new());
+		append_at(&mut producer, 6000);
+		assert_eq!(drain(&mut subscriber), vec![6]);
 	}
 
 	/// Datagrams outside a subscriber's ranges are dropped like the groups.

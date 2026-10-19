@@ -220,13 +220,15 @@ Each subscription carries the knobs that decide behavior under congestion:
 
 Ranges are both a request and a filter. A subscriber reads only the groups its
 own ranges cover, resolved again whenever it replaces them, even when another
-subscriber of the same track asked for more. A relay merges its subscribers'
-ranges into one upstream request, which today's wire versions carry as the
-single span covering them. A time anchor is resolved from the groups the
-serving hop holds; upstream it asks for everything max delay allows, and an
-untimed track refuses it. At the live edge, a time end may let through one extra
-group that turns out to start past it, since holding each group until its first
-frame arrives would cost latency.
+subscriber of the same track asked for more. Widening them, including lowering
+the start, also serves the cached groups they newly cover, never one already
+served. A relay merges its subscribers' ranges into one upstream request, which
+today's wire versions carry as the single span covering them. A time anchor is
+resolved from the groups the serving hop holds; upstream it asks for everything
+max delay allows, and an untimed track refuses it. At the live edge, a time end
+lets through every group handed out before its first frame showed it starts past
+the end, since holding each group until its first frame arrives would cost
+latency.
 
 Order only decides what goes first, never what is skipped, so catching up oldest
 first needs a max delay that covers the backlog. When a relay serves subscribers of
