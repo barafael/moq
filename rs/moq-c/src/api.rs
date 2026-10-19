@@ -3687,7 +3687,10 @@ pub unsafe extern "C" fn moq_consume_track(
 ///
 /// Pass NULL for `subscription` to reset to moq-net defaults.
 ///
-/// Returns a zero on success, or a negative code on failure.
+/// Returns a zero on success, or a negative code on failure, such as a time anchor on an
+/// untimed track, which leaves the subscription as it was. An update made before the
+/// subscription is established applies once it is, so a refusal then ends the consumer
+/// through its callback instead.
 ///
 /// # Safety
 /// - The caller must ensure that subscription is either NULL or a valid pointer to a [moq_subscription] struct,
