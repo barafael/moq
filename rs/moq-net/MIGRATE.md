@@ -11,6 +11,12 @@ A reader that relied on groups another subscriber asked for must widen its own r
 `track::Anchor` gains `Time(Timestamp)`, the group containing a presentation time, so exhaustive matches need an arm for it.
 Subscribing or updating with one on an untimed track fails with `Error::TimestampMismatch`.
 
+### An expired group fails with `Old` even when drained (#5944)
+
+A reader parked at the end of an unfinished group whose max delay gives up now gets `Error::Old`, even after reading every frame, where it used to end cleanly.
+`group::Consumer::finished` reports the same error.
+Handle it like any other skipped group.
+
 ### Track readers follow `largest()` instead of reading `latest()` (#5725)
 
 `latest()` on `track::{Producer, Consumer, Subscriber, Ordered}` is gone.
