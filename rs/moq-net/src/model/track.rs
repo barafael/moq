@@ -5483,12 +5483,19 @@ impl Subscriber {
 				&& cursor.filter.window.contains(sequence)
 				&& !unread.delivered.contains(sequence)
 		};
+		// Passed under a higher floor, so the walk parks them again; see `Cursor::backfill`.
+		let passed = || {
+			state
+				.lookup
+				.range(floor..cursor.passed.max(floor))
+				.any(|(sequence, slot)| eligible(*sequence) && !slot.is_aborted())
+		};
 		cursor
 			.parked
 			.iter()
 			.any(|(sequence, group)| eligible(*sequence) && !group.is_aborted())
 			|| (state.readable()
-				&& state
+				&& (state
 					.arrival
 					.iter()
 					.skip(cursor.index.saturating_sub(state.offset))
@@ -5498,11 +5505,7 @@ impl Subscriber {
 								.lookup
 								.get(sequence)
 								.is_some_and(|slot| slot.stamp == *stamp && !slot.is_aborted())
-					}) || state
-					// Passed under a higher floor, so the walk re-parks them; see `Cursor::backfill`.
-					.lookup
-					.range(floor..cursor.passed.max(floor))
-					.any(|(sequence, slot)| eligible(*sequence) && !slot.is_aborted()))
+					}) || passed()))
 	}
 
 	/// Receive the next group in arrival order.
@@ -13680,7 +13683,11 @@ mod test {
 		assert_eq!(drain(&mut subscriber), vec![5]);
 
 		subscriber.update(replay().with_groups(2..)).unwrap();
-		assert_eq!(drain(&mut subscriber), vec![2, 3, 4], "passed below the floor, now in range");
+		assert_eq!(
+			drain(&mut subscriber),
+			vec![2, 3, 4],
+			"passed below the floor, now in range"
+		);
 		subscriber.update(replay().with_groups(0..)).unwrap();
 		assert_eq!(drain(&mut subscriber), vec![0, 1]);
 
