@@ -10,6 +10,11 @@ A subscription now reads only the groups its own `ranges` cover.
 `Anchor` gains a `Time` case holding `timestamp_us`, the group containing that presentation time, so exhaustive visits need a case for it.
 `TrackConsumer::update` now returns a result, failing with `TimestampMismatch` on a time anchor an untimed track can't serve.
 
+### `CongestionControl` gained `kNone` (#5926)
+
+`moq::CongestionControl::kNone` runs no congestion control and no pacing, for tests and controlled links.
+A `switch` without a `default` needs one more case.
+
 ### Container byte streams use `MediaContainerProducer` (#5919)
 
 `moq::MediaContainerStreamProducer` and `moq::ContainerStreamInit` are gone: a container recovers its own framing, so `moq::MediaContainerProducer` takes chunks split anywhere.

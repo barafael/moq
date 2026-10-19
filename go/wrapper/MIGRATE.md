@@ -10,6 +10,11 @@ A subscription now reads only the groups its own `Ranges` cover.
 `AnchorTime` names the group containing a presentation time, and type switches over `Anchor` need a case for it.
 `TrackConsumer.Update` also fails on a time anchor an untimed track can't serve.
 
+### `CongestionControl` gained `CongestionControlNone` (#5926)
+
+`CongestionControlNone` runs no congestion control and no pacing, for tests and controlled links.
+A `switch` that handles every value needs one more case.
+
 ### Key logging is opt-in (#5907)
 
 `SSLKEYLOGFILE` alone no longer writes TLS session secrets.

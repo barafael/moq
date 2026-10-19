@@ -11,6 +11,11 @@ A subscription now reads only the groups its own `ranges` cover, rather than sta
 `MoqAnchor` gains `Time { timestamp_us }`, the group containing that presentation time, so exhaustive matches need an arm for it.
 `MoqTrackConsumer::update` now returns `Result<(), MoqError>`, failing with `TimestampMismatch` on a time anchor an untimed track can't serve.
 
+### `MoqCongestionControl` gained `None` (#5926)
+
+`MoqCongestionControl::None` runs no congestion control and no pacing, for tests and controlled links.
+An exhaustive match needs one more arm.
+
 ### Key logging is opt-in (#5907)
 
 `SSLKEYLOGFILE` alone no longer writes TLS session secrets.
