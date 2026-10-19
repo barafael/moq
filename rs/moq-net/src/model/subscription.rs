@@ -166,7 +166,7 @@ pub enum Anchor {
 	/// Resolved from the starts of the groups the serving hop holds. When none starts at
 	/// or before it, a start reaches back to the oldest group, and while no group has
 	/// started at all it waits like `Relative(0)`. An end stays open until a group
-	/// starting after it is known, so at the live edge a reader may get one extra group,
+	/// starting after it is known, so at the live edge a reader may get every group
 	/// handed out before its first frame showed it starts past the end. An untimed track
 	/// refuses it with [`Error::TimestampMismatch`](crate::Error::TimestampMismatch).
 	Time(Timestamp),

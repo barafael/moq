@@ -91,6 +91,7 @@ every sequence delivered or dropped.
 - [Lite-07 ranges](/quest/m1/subscribe-ranges/lite.md) - the lite-07 wire, Rust publisher and subscriber, and the draft
 - [moq-transport ranges](/quest/m1/subscribe-ranges/ietf.md) - range FETCH upstream per missing run, and non-blocking FETCH served downstream
 - [JS ranges](/quest/m1/subscribe-ranges/js.md) - `@moq/net` model and lite-07 parity
+- [Time end cap](/quest/m1/subscribe-ranges/time-end-cap.md) - at most one group past a time end at the live edge
 
 ## Related
 
