@@ -4637,12 +4637,10 @@ struct Cursor {
 	/// [`Self::end_sequence`], shared with the groups this cursor hands out so their
 	/// expiry measures drift against the same servable window after a cap moves.
 	///
-	/// Deliberately not where [`Subscription::ranges`] end. That is a *request to the publisher*,
-	/// folded in with every other subscriber's, and it does not filter this handle (see
-	/// [`Subscriber`]): another unbounded subscriber widens the aggregate and the groups
-	/// arrive here anyway. Capping the drift edge with it would pin the live edge at the
-	/// requested end while delivery ran past it, and everything above would then have
-	/// nothing newer to be late against.
+	/// Deliberately not where [`Subscription::ranges`] end. They filter what this handle
+	/// reads, but they are filters, not exemptions: max delay caps every range against the
+	/// track's live edge. Capping the edge at a range's end would judge a range in the past
+	/// only against itself, so none of it would ever be late however far the track moved on.
 	drift_cap: kio::Producer<Option<u64>>,
 	/// Groups the drift budget skipped since the count was last drained. Accumulated
 	/// here rather than metered in place because the stats scope lives on the owning
