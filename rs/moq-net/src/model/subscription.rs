@@ -166,9 +166,11 @@ pub enum Anchor {
 	/// Resolved from the starts of the groups the serving hop holds. When none starts at
 	/// or before it, a start reaches back to the oldest group, and while no group has
 	/// started at all it waits like `Relative(0)`. An end stays open until a group
-	/// starting after it is known, with every group below that one started or never to
-	/// start, so at the live edge a reader may get every group handed out before its
-	/// first frame showed it starts past the end. An untimed track
+	/// starting after it is known and every sequence below that one is accounted for
+	/// (started, dropped, or never to start), so at the live edge a reader may get every
+	/// group handed out before its first frame showed it starts past the end, and a feed
+	/// that reports no drops leaves it open across a missing group until the wait for that
+	/// group runs out. An untimed track
 	/// refuses it with [`Error::TimestampMismatch`](crate::Error::TimestampMismatch).
 	Time(Timestamp),
 }

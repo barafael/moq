@@ -685,22 +685,42 @@ impl Holdings for TrackState {
 	}
 
 	fn after(&self, pts: Timestamp, from: u64) -> Option<u64> {
+		// Timestamps never rewind, so the end falls before the lowest group starting past
+		// `pts`, once every sequence below it, down to one starting at or before `pts`, is
+		// accounted for: none may still start before `pts`.
 		let mut after = None;
+		// The lowest sequence walked, and whether one below `after` may still start.
+		let mut low = None;
+		let mut open = false;
 		for (&sequence, slot) in self.lookup.range(from..).rev() {
+			let gap = sequence.saturating_add(1)..low.unwrap_or(sequence.saturating_add(1));
+			low = Some(sequence);
 			match slot.start() {
-				Some(start) if later(start, pts) => after = Some(sequence),
-				Some(_) => break,
-				// It may still start before `pts`, so nothing above it settles the end yet.
-				None if slot.may_start() => after = None,
-				// It never will, so it proves nothing either way.
-				None => {}
+				Some(start) if later(start, pts) => {
+					after = Some(sequence);
+					open = false;
+				}
+				Some(_) => return after.filter(|_| !open && self.accounted(gap)),
+				// Not started: one that still may blocks the end, one that never will
+				// proves nothing either way.
+				None => open |= after.is_some() && (slot.may_start() || !self.accounted(gap)),
 			}
 		}
-		after
+		after.filter(|_| !open && self.accounted(from..low.unwrap_or(from)))
 	}
 }
 
 impl TrackState {
+	/// Whether no sequence in `groups` can still arrive: each arrived, was dropped, lies
+	/// below where the live feed starts, or was given up once the arrivals' grace ran out.
+	/// Ranges throughout, so a wide gap costs no more than a narrow one.
+	fn accounted(&self, groups: ops::Range<u64>) -> bool {
+		// Without a declared start, the first arrival stands in for it, as the tail's does.
+		let floor = self.start_sequence.or(self.arrivals.first()).unwrap_or(0);
+		let groups = groups.start.max(floor)..groups.end;
+		groups.is_empty() || self.drops.gaps(&groups).all(|gap| self.arrivals.covers(gap))
+	}
+
 	/// The starts a first frame of group `sequence` must fall between: the nearest checked
 	/// starts cached on either side, since groups land out of sequence order, and the
 	/// eviction watermark. A group at or below the watermark is late: its floor may be gone,
@@ -13891,6 +13911,46 @@ mod test {
 		}]));
 		hole.write_frame(at(1000), bytes::Bytes::from_static(b"x")).unwrap();
 		assert_eq!(drain(&mut subscriber), vec![0]);
+	}
+
+	/// A time end stays open across a sequence yet to arrive: it may start before the end,
+	/// so a later group starting after it settles nothing. Once that sequence is reported
+	/// dropped, nothing below the later group can start before the end, so it settles.
+	#[test]
+	#[cfg(feature = "async")]
+	fn a_time_end_waits_on_an_absent_group_below_it() {
+		let at = |millis| Timestamp::from_millis(millis).unwrap();
+		let ranges = [Range {
+			start: Anchor::Absolute(Position::group(0)),
+			end: Some(Anchor::Time(at(500))),
+		}];
+		for dropped in [false, true] {
+			let producer = track_producer("test", Info::timed());
+			let mut zero = producer.create_group(group::Info { sequence: 0 }).unwrap();
+			zero.write_frame(at(0), bytes::Bytes::from_static(b"x")).unwrap();
+			let mut two = producer.create_group(group::Info { sequence: 2 }).unwrap();
+			two.write_frame(at(2000), bytes::Bytes::from_static(b"x")).unwrap();
+
+			let mut subscriber = producer.subscribe(replay().with_ranges(ranges));
+			assert_eq!(
+				subscriber.resolved_ranges(),
+				vec![Some(Resolved { start: 0, end: None })],
+				"group 1 may still start before the end"
+			);
+			if dropped {
+				producer.drop_groups(1..2);
+				assert_eq!(drain(&mut subscriber), vec![0]);
+				assert_eq!(
+					subscriber.resolved_ranges(),
+					vec![Some(Resolved { start: 0, end: Some(2) })],
+					"the drop settles the end"
+				);
+				continue;
+			}
+			let mut one = producer.create_group(group::Info { sequence: 1 }).unwrap();
+			one.write_frame(at(1000), bytes::Bytes::from_static(b"x")).unwrap();
+			assert_eq!(drain(&mut subscriber), vec![0]);
+		}
 	}
 
 	/// An untimed track refuses a time anchor wherever the ranges reach it.
