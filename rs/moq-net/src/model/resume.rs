@@ -314,7 +314,11 @@ impl Copy {
 				self.from = reader.ranges.clone();
 			}
 			Sub::Pending(_) if reader.ranges == self.from => {}
-			Sub::Pending(_) => self.resolved.clear(),
+			// Its own resolution, once it answers, is for these.
+			Sub::Pending(_) => {
+				self.resolved.clear();
+				self.from = reader.ranges.clone();
+			}
 		}
 		let mut wire = reader.clamped(self.floor, self.end().map(Position::group), &self.resolved);
 		// A bounded copy only finishes what it had, so a new group from it never arrives.
@@ -2281,6 +2285,50 @@ mod test {
 			rest.push(group.sequence);
 		}
 		assert_eq!(rest, vec![6]);
+	}
+
+	/// A copy updated while pending, then answering, hands its own resolution of the
+	/// updated ranges to the copy replacing it, rather than leaving the replacement to
+	/// resolve them from whatever it caches.
+	#[test]
+	#[cfg(feature = "async")]
+	fn a_copy_updated_while_pending_passes_on_its_resolution() {
+		let routes = Producer::new();
+		let logical = logical(&routes);
+		let a = copy();
+		routes.serve(a.consume());
+		let mut sub = subscribe(&logical, Duration::from_secs(30));
+		let mut zero = a.create_group(group::Info { sequence: 0 }).unwrap();
+		zero.write_frame(ts(0), b"x".as_ref()).unwrap();
+		assert_eq!(recv(&mut sub).sequence, 0);
+
+		let b = track::Request::new(Arc::new(broadcast::Info::default()), "video");
+		routes.serve(b.consume());
+		// The read subscribes the replacement, which has not answered yet.
+		assert!(sub.recv_group().now_or_never().is_none());
+		let ranges = [track::Range {
+			start: track::Anchor::Time(ts(10_000)),
+			end: None,
+		}];
+		sub.update(sub.subscription().with_ranges(ranges)).unwrap();
+		assert!(sub.recv_group().now_or_never().is_none());
+
+		let b = b.accept(crate::track::Info::timed());
+		for sequence in 0..13 {
+			let mut group = b.create_group(group::Info { sequence }).unwrap();
+			group.write_frame(ts(sequence * 1000), b"x".as_ref()).unwrap();
+			group.finish().unwrap();
+		}
+		while let Some(Ok(Some(_))) = sub.recv_group().now_or_never() {}
+
+		let c = copy();
+		routes.serve(c.consume());
+		assert!(sub.recv_group().now_or_never().is_none());
+		let start = c.subscription().expect("subscribed").ranges[0].start;
+		assert!(
+			matches!(start, track::Anchor::Absolute(position) if position.group >= 10),
+			"the replacement asks from where b resolved the time: {start:?}"
+		);
 	}
 
 	#[test]
