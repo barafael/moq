@@ -1060,7 +1060,7 @@ impl TrackState {
 	/// Fetched backfill is absent from `arrival`, so it cannot age subscription content
 	/// as though it were a live replacement.
 	fn live_edge(&self, servable: &Servable) -> Option<PresentationEdge> {
-		self.servable(servable, 0).rev().find_map(|slot| {
+		self.find_servable(servable, 0, true, |slot| {
 			if !slot.is_shown() {
 				return None;
 			}
@@ -1087,13 +1087,39 @@ impl TrackState {
 		}
 	}
 
-	/// The cached groups at or above `from` that `servable` covers, lowest first: one
-	/// lookup per span.
-	fn servable<'a>(&'a self, servable: &'a Servable, from: u64) -> impl DoubleEndedIterator<Item = &'a Slot> + 'a {
-		servable
-			.spans(from)
-			.flat_map(|span| self.lookup.range(span))
-			.map(|(_, slot)| slot)
+	/// The first cached group at or above `from` that `servable` covers for which `f`
+	/// answers, lowest first or, with `rev`, highest first: one lookup for a single run,
+	/// one per run otherwise.
+	fn find_servable<'a, R>(
+		&'a self,
+		servable: &Servable,
+		from: u64,
+		rev: bool,
+		mut f: impl FnMut(&'a Slot) -> Option<R>,
+	) -> Option<R> {
+		let mut scan = |range: std::collections::btree_map::Range<'a, u64, Slot>| match rev {
+			true => range.rev().find_map(|(_, slot)| f(slot)),
+			false => range.map(|(_, slot)| slot).find_map(&mut f),
+		};
+		match servable {
+			Servable::Below(end) => {
+				// A range ending before it starts would panic, and holds nothing anyway.
+				if end.is_some_and(|end| end < from) {
+					return None;
+				}
+				let end = end.map_or(Bound::Unbounded, Bound::Excluded);
+				scan(self.lookup.range((Bound::Included(from), end)))
+			}
+			Servable::Runs(runs) => {
+				let mut runs = runs.overlapping(from..=u64::MAX);
+				let each =
+					|run: &ops::RangeInclusive<u64>| scan(self.lookup.range((*run.start()).max(from)..=*run.end()));
+				match rev {
+					true => runs.rev().find_map(each),
+					false => runs.find_map(each),
+				}
+			}
+		}
 	}
 
 	/// Whether `sequence` still holds the servable incarnation `stamp`.
@@ -1118,17 +1144,19 @@ impl TrackState {
 
 	/// The group after `sequence` that bounds it: the first servable one in `servable`,
 	/// stamped or not, empty or not.
-	fn successor<'a>(&'a self, sequence: u64, servable: &'a Servable) -> Option<&'a Slot> {
-		self.servable(servable, sequence.checked_add(1)?)
-			.find(|slot| slot.is_shown())
+	fn successor(&self, sequence: u64, servable: &Servable) -> Option<&Slot> {
+		self.find_servable(servable, sequence.checked_add(1)?, false, |slot| {
+			slot.is_shown().then_some(slot)
+		})
 	}
 
 	/// The group after `sequence` that starts its wall clock: like [`Self::successor`], but
 	/// counting a group a route is still withholding. Its header arrived, so a relay ages the
 	/// group before it as the origin does, even if its first frame never comes.
-	fn arrival<'a>(&'a self, sequence: u64, servable: &'a Servable) -> Option<&'a Slot> {
-		self.servable(servable, sequence.checked_add(1)?)
-			.find(|slot| slot.is_live())
+	fn arrival(&self, sequence: u64, servable: &Servable) -> Option<&Slot> {
+		self.find_servable(servable, sequence.checked_add(1)?, false, |slot| {
+			slot.is_live().then_some(slot)
+		})
 	}
 
 	/// The slot `select` picks, with `waiter` parked on its abort.
@@ -4629,7 +4657,7 @@ struct GroupExpiry {
 	/// the last real subscriber.
 	state: kio::ConsumerWeak<TrackState>,
 	subscription: kio::Consumer<Subscription>,
-	/// What the cursor can be served; see [`Cursor::servable`].
+	/// What the cursor can be served; see [`Cursor::published`].
 	servable: kio::Consumer<Servable>,
 	sequence: u64,
 }
@@ -4715,19 +4743,27 @@ struct Edge {
 /// The groups a reader can be served, the only ones its drift is measured against: one it
 /// never reads, past its cap or in a gap between its ranges, never stands in for one it does.
 #[derive(Clone, PartialEq)]
-struct Servable(Option<Arc<RangeInclusiveSet<u64>>>);
+enum Servable {
+	/// Everything below the exclusive end, or everything: one run, the common case, kept
+	/// as cheap to copy and look up as a cap. Its start is dropped, since every group a
+	/// reader is judged on lies at or above it, and so does anything measured against one.
+	Below(Option<u64>),
+	/// Disjoint runs, lowest first.
+	Runs(Arc<RangeInclusiveSet<u64>>),
+}
 
 impl Servable {
 	/// Every group, for a reader no window narrows.
-	const ALL: Self = Self(None);
+	const ALL: Self = Self::Below(None);
 
-	/// The spans at or above `from`, lowest first.
-	fn spans(&self, from: u64) -> impl DoubleEndedIterator<Item = ops::RangeInclusive<u64>> + '_ {
-		let set = self.0.as_deref();
-		set.into_iter()
-			.flat_map(move |set| set.overlapping(from..=u64::MAX))
-			.map(move |span| (*span.start()).max(from)..=*span.end())
-			.chain(set.is_none().then_some(from..=u64::MAX))
+	/// The groups in `runs`.
+	fn new(runs: RangeInclusiveSet<u64>) -> Self {
+		let mut iter = runs.iter();
+		match (iter.next(), iter.next()) {
+			(None, _) => Self::Below(Some(0)),
+			(Some(run), None) => Self::Below(run.end().checked_add(1)),
+			_ => Self::Runs(Arc::new(runs)),
+		}
 	}
 }
 
@@ -4775,10 +4811,13 @@ struct Cursor {
 	/// the producer's cache and become eligible again when the cap rises (or is removed).
 	/// `Some(0)` is the empty range.
 	end_sequence: Option<u64>,
-	/// What this cursor can be served: its window below its cap. Shared with the groups it
-	/// hands out so their expiry measures drift against the same groups after the cap or
-	/// ranges move.
-	servable: kio::Producer<Servable>,
+	/// What this cursor can be served, the only groups its drift is measured within: its
+	/// window below its cap, so a range behind the live edge is judged against its own
+	/// newest group, and a group in a gap between ranges against nothing.
+	servable: Servable,
+	/// [`Self::servable`], shared with the groups this cursor hands out so their expiry
+	/// measures drift against the same groups after the cap or ranges move.
+	published: kio::Producer<Servable>,
 	/// Groups the drift budget skipped since the count was last drained. Accumulated
 	/// here rather than metered in place because the stats scope lives on the owning
 	/// [`Subscriber`], which drains this after every read.
@@ -4948,7 +4987,8 @@ impl Cursor {
 			datagram_index,
 			next_sequence: Some(0),
 			end_sequence: None,
-			servable: kio::Producer::new(Servable::ALL),
+			servable: Servable::ALL,
+			published: kio::Producer::new(Servable::ALL),
 			stale: stats::Content::default(),
 			seek_pending: BTreeMap::new(),
 			drops: None,
@@ -4983,22 +5023,17 @@ impl Cursor {
 		}
 	}
 
-	/// The groups drift is measured within: the window below the cap, so a range behind
-	/// the live edge is judged against its own newest group, and a group in a gap between
-	/// ranges against nothing, rather than skipped for groups it never reads.
-	fn servable(&self) -> Servable {
-		self.servable.read().clone()
-	}
-
 	/// Resolve [`Self::servable`] again once the window or cap moved, and publish it to the
 	/// groups already handed out. Costs the ranges, never the cache.
 	fn update_servable(&mut self) {
-		let servable = Servable(Some(Arc::new(self.admitted(0, self.end_sequence))));
+		let servable = Servable::new(self.admitted(0, self.end_sequence));
 		// Skip a no-op write: every handed-out group's expiry watches this channel.
-		if *self.servable.read() != servable
-			&& let Ok(mut current) = self.servable.write()
-		{
-			*current = servable;
+		if self.servable == servable {
+			return;
+		}
+		self.servable = servable;
+		if let Ok(mut current) = self.published.write() {
+			*current = self.servable.clone();
 		}
 	}
 
@@ -5195,7 +5230,7 @@ impl Cursor {
 		let max_delay = self.subscription.read().max_delay;
 		let state = self.state.read();
 		let budget = clamp_max_delay(max_delay, state.max_age_bound());
-		let edge = state.drift_edge(&self.servable());
+		let edge = state.drift_edge(&self.servable);
 		// Every group below the last successor found shares it, so a run of cached groups
 		// that cannot serve is walked once per pass, not once per gap.
 		let mut arrival: Option<&Slot> = None;
@@ -5229,7 +5264,7 @@ impl Cursor {
 		group.with_expiry(Arc::new(GroupExpiry {
 			state: self.state.weak(),
 			subscription: self.subscription.consume(),
-			servable: self.servable.consume(),
+			servable: self.published.consume(),
 			sequence,
 		}))
 	}
@@ -5242,7 +5277,7 @@ impl Cursor {
 		self.admit();
 
 		// One scan for the whole poll, so walking a backlog off stays linear in its size.
-		let drift = ready!(self.poll_drift(&self.servable(), waiter))?;
+		let drift = ready!(self.poll_drift(&self.servable, waiter))?;
 
 		loop {
 			// Re-offer what a widening newly covers ahead of the arrival walk, lowest first:
@@ -5348,7 +5383,7 @@ impl Cursor {
 		let mut floor = next.max(self.floor());
 		let end = self.end_sequence;
 		// One scan for the whole poll, so walking a backlog off stays linear in its size.
-		let drift = ready!(self.poll_drift(&self.servable(), waiter))?;
+		let drift = ready!(self.poll_drift(&self.servable, waiter))?;
 
 		let group = loop {
 			let window = &self.filter.window;
