@@ -204,6 +204,14 @@ export class Producer {
 			group.#admits.push(admit);
 		};
 		hooks.groupStart = (group) => (group.#state.total.peek() > 0 ? group.#state.timestamp : undefined);
+		hooks.overRefresh = (group, ratio) => {
+			const state = group.#state;
+			const first = state.frames.peek()[0];
+			// Without its first frame the cache cannot measure the group, so it asks for nothing.
+			if (state.start !== 0 || first === undefined) return false;
+			const head = first.payload.byteLength;
+			return state.cacheBytes - head > head * ratio;
+		};
 		hooks.limitGroup = (group, frames) => {
 			// A closed group takes no more frames, but one already past the cap still
 			// contradicts the end.
@@ -494,7 +502,7 @@ export class Consumer {
 			(value) =>
 				value instanceof Error
 					? !this.#recovers(value)
-					: this.#released || (this.#state.frames.peek().length === 0 && this.#pendingFrames === 0),
+					: this.#released || (this.#bufferedFrames().length === 0 && this.#pendingFrames === 0),
 		);
 		return this.#closed;
 	}
@@ -586,7 +594,7 @@ export class Consumer {
 	}
 
 	#evict() {
-		const frames = this.#state.frames.peek();
+		const frames = this.#bufferedFrames();
 		if (frames.length > 0) {
 			// Unread content is going away either way. If the budget had already given up
 			// on this group that is the more specific reason, so ask it first; otherwise
@@ -651,7 +659,7 @@ export class Consumer {
 		const replacement = attempt.replacement;
 		attempt.replacement = undefined;
 		if (!replacement) return true;
-		if (!failed && (this.#state.frames.peek().length > 0 || this.#state.closed.peek() !== undefined)) {
+		if (!failed && (this.#bufferedFrames().length > 0 || this.#state.closed.peek() !== undefined)) {
 			// The copy being read delivered or ended meanwhile; keep reading it.
 			replacement.discard();
 			return true;
@@ -693,13 +701,20 @@ export class Consumer {
 		this.#closed?.refresh();
 	}
 
-	#readBufferedFrame(pending = false): ReadGroupFrame | undefined {
+	// The unread frames. Every look at the buffer goes through here, so readiness, reads and
+	// `done` agree on what is left.
+	#bufferedFrames(): Frame[] {
 		const frames = this.#state.frames.peek();
 		// A resumed copy repeats the frames an earlier one already delivered.
 		while (this.#state.start < this.#skip && frames.length > 0) {
 			frames.shift();
 			this.#state.start++;
 		}
+		return frames;
+	}
+
+	#readBufferedFrame(pending = false): ReadGroupFrame | undefined {
+		const frames = this.#bufferedFrames();
 		const buffered = frames.shift();
 		if (!buffered) return undefined;
 
@@ -720,7 +735,7 @@ export class Consumer {
 
 	/** True once no further frames can be read: the group has closed and every buffered frame is read. */
 	get done(): boolean {
-		return this.#terminal !== undefined || (this.#state.frames.peek().length === 0 && this.#settled());
+		return this.#terminal !== undefined || (this.#bufferedFrames().length === 0 && this.#settled());
 	}
 
 	/** True once the group has been closed, regardless of whether buffered frames remain unread. Synchronous complement to the {@link closed} promise. */
@@ -774,7 +789,7 @@ export class Consumer {
 				this.#abandon();
 				return;
 			}
-			if (this.#state.frames.peek().length > 0) return;
+			if (this.#bufferedFrames().length > 0) return;
 			const closed = this.#state.closed.peek();
 			if (closed instanceof Error && (await this.#resume(closed))) continue;
 			if (closed !== undefined) {
