@@ -10,6 +10,13 @@ A subscription now reads only the groups its own `ranges` cover.
 `Anchor` gains a `Time` case holding `timestamp_us`, the group containing that presentation time, so exhaustive visits need a case for it.
 `TrackConsumer::update` now returns a result, failing with `TimestampMismatch` on a time anchor an untimed track can't serve.
 
+### Track demand reports the wanted group (#5930)
+
+`TrackDemand::is_used`, `used`, and `unused` are gone.
+`wanted()` returns `std::nullopt` while nobody subscribes, otherwise the group subscribers want next, and `wanted_changed()` waits for it to change (the first call returns at once).
+Loop on `wanted_changed()` until it returns a value where you awaited `used()`, and `std::nullopt` where you awaited `unused()`.
+`TrackInfo` gains `refresh`, the ratio past which a joining subscriber asks for a new group.
+
 ### `CongestionControl` gained `kNone` (#5926)
 
 `moq::CongestionControl::kNone` runs no congestion control and no pacing, for tests and controlled links.

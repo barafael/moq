@@ -10,6 +10,13 @@ A subscription now reads only the groups its own `Ranges` cover.
 `AnchorTime` names the group containing a presentation time, and type switches over `Anchor` need a case for it.
 `TrackConsumer.Update` also fails on a time anchor an untimed track can't serve.
 
+### Track demand reports the wanted group (#5930)
+
+`TrackDemand.IsUsed`, `Used`, and `Unused` are gone.
+`Wanted()` returns nil while nobody subscribes, otherwise the group subscribers want next, and `WantedChanged(ctx)` waits for it to change (the first call returns at once).
+Loop on `WantedChanged` until it returns non-nil where you called `Used`, and nil where you called `Unused`.
+`TrackInfo` gains `Refresh`. `GroupDemand` is unchanged.
+
 ### `CongestionControl` gained `CongestionControlNone` (#5926)
 
 `CongestionControlNone` runs no congestion control and no pacing, for tests and controlled links.

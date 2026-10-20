@@ -10,6 +10,13 @@ A subscription now reads only the groups its own `ranges` cover.
 `Anchor` gains `AnchorTime`, so exhaustive `when` expressions need a branch for it.
 `TrackConsumer.update` now throws `MoqException` on a time anchor an untimed track can't serve.
 
+### Track demand reports the wanted group (#5930)
+
+`TrackDemand.isUsed()`, `used()`, and `unused()` are gone.
+`wanted()` returns null while nobody subscribes, otherwise the group subscribers want next, and `wantedChanged()` waits for it to change (the first call returns at once).
+Loop on `wantedChanged()` until it returns non-null where you called `used()`, and null where you called `unused()`.
+`TrackInfo` gains `refresh`. `GroupDemand` is unchanged.
+
 ### `CongestionControl` gained `NONE` (#5926)
 
 `CongestionControl.NONE` runs no congestion control and no pacing, for tests and controlled links.

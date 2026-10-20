@@ -10,6 +10,13 @@ A subscription now reads only the groups its own `ranges` cover.
 `Anchor` gains a `TIME` variant, the group containing a presentation time.
 `TrackConsumer.update` now raises on a time anchor an untimed track can't serve.
 
+### Track demand reports the wanted group (#5930)
+
+`TrackDemand.is_used()`, `used()`, and `unused()` are gone.
+`wanted()` returns `None` while nobody subscribes, otherwise the group subscribers want next, and `await wanted_changed()` waits for it to change (the first call returns at once).
+Loop on `wanted_changed()` until it returns non-`None` where you awaited `used()`, and `None` where you awaited `unused()`.
+`TrackInfo` gains `refresh`. `GroupDemand` is unchanged.
+
 ### `CongestionControl` gained `NONE` (#5926)
 
 `CongestionControl.NONE` runs no congestion control and no pacing, for tests and controlled links.

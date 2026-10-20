@@ -12,6 +12,24 @@ A reader that relied on groups another subscriber asked for must widen its own r
 Subscribing or updating with one on an untimed track fails with `Error::TimestampMismatch`.
 Once a track finishes, a subscriber with nothing left under its `set_groups` cap ends rather than waiting for the cap to rise; raise it before the track finishes to read past it.
 
+### Track demand reports the wanted group (#5930)
+
+`track::Demand::used`, `unused`, `is_used`, `poll_used`, and `poll_unused` are gone.
+`wanted()` returns `None` while nobody consumes the track and `Some(n)` while consumers want group `n` or later; open a group whenever `n` passes your largest.
+`wanted_changed().await` (or `poll_wanted_changed`) returns it at once on the first call, then on each change, and errors once the track closes.
+A clone of a `Demand` watches on its own.
+
+```rust
+// Before
+demand.used().await?;
+demand.unused().await?;
+// After
+while demand.wanted_changed().await?.is_none() {}
+while demand.wanted_changed().await?.is_some() {}
+```
+
+`track::Info::refresh` opts a track in to new groups on join: set it with `Info::with_refresh(ratio)`.
+
 ### An expired group fails with `Old` even when drained (#5944)
 
 A reader parked at the end of an unfinished group whose max delay gives up now gets `Error::Old`, even after reading every frame, where it used to end cleanly.

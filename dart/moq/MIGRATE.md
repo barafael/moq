@@ -10,6 +10,13 @@ A subscription now reads only the groups its own `ranges` cover.
 `Anchor` gains a time variant, so exhaustive switches need a case for it.
 `TrackConsumer.update` now throws on a time anchor an untimed track can't serve.
 
+### Track demand reports the wanted group (#5930)
+
+`TrackDemand.isUsed()`, `used()`, and `unused()` are gone.
+`wanted()` returns null while nobody subscribes, otherwise the group subscribers want next, and `wantedChanged()` waits for it to change (the first call returns at once).
+Loop on `wantedChanged()` until it returns non-null where you awaited `used()`, and null where you awaited `unused()`.
+`TrackInfo` gains `refresh`. `GroupDemand` is unchanged.
+
 ### `CongestionControl` gained `none` (#5926)
 
 `CongestionControl.none` runs no congestion control and no pacing, for tests and controlled links.
