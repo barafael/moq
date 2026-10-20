@@ -2244,6 +2244,7 @@ mod test {
 		}];
 		let updated = Subscription::default().with_ranges(ranges.clone());
 		assert!(matches!(copy.sub, Sub::Pending(_)));
+		copy.update(&updated);
 		assert_eq!(copy.wire(&updated).ranges, ranges);
 		assert!(copy.poll_ready((0, Cap::from(..)), &kio::Waiter::noop()).is_ready());
 		assert_eq!(copy.wire(&updated).ranges, ranges);
