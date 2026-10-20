@@ -22,9 +22,14 @@ tracing = { workspace = true }
 web-async = { workspace = true }
 
 [dev-dependencies]
+criterion = { workspace = true }
 futures = { workspace = true }
 tokio = { workspace = true, features = ["macros", "rt", "test-util", "time"] }
 
 [[bench]]
 name = "decode"
+harness = false
+
+[[bench]]
+name = "aggregate"
 harness = false

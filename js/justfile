@@ -48,6 +48,11 @@ bench name:
     bun install --frozen-lockfile
     bun net/bench/{{ name }}.ts
 
+# Time Effect create and close, which pays for the creation stack its diagnostics print.
+signals-bench:
+    bun install --frozen-lockfile
+    bun signals/bench/effect.ts
+
 # Build all packages.
 build:
     bun run --filter='*' build

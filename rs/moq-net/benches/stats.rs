@@ -64,5 +64,27 @@ fn report(c: &mut Criterion) {
 	group.finish();
 }
 
-criterion_group!(benches, report);
+fn session_report(c: &mut Criterion) {
+	let mut group = c.benchmark_group("stats/session-report");
+	for labels in [1, 100, 1_000] {
+		for sessions in [1, 10] {
+			let registry = stats::Registry::new(stats::Config::new());
+			let handle = registry.tier(stats::Tier::default());
+			let contexts: Vec<_> = (0..labels)
+				.flat_map(|label| {
+					let handle = handle.clone();
+					(0..sessions).map(move |_| handle.session(format!("project/key/{label}")))
+				})
+				.collect();
+			let mut report = stats::Report::default();
+			group.bench_function(BenchmarkId::from_parameter(format!("{labels}x{sessions}")), |b| {
+				b.iter(|| registry.report(&mut report));
+			});
+			std::hint::black_box(contexts);
+		}
+	}
+	group.finish();
+}
+
+criterion_group!(benches, report, session_report);
 criterion_main!(benches);
