@@ -10,6 +10,7 @@ A `track::Subscriber` now reads only the groups its own `Subscription::ranges` c
 A reader that relied on groups another subscriber asked for must widen its own ranges.
 `track::Anchor` gains `Time(Timestamp)`, the group containing a presentation time, so exhaustive matches need an arm for it.
 Subscribing or updating with one on an untimed track fails with `Error::TimestampMismatch`.
+Once a track finishes, a subscriber with nothing left under its `set_groups` cap ends rather than waiting for the cap to rise; raise it before the track finishes to read past it.
 
 ### An expired group fails with `Old` even when drained (#5944)
 
