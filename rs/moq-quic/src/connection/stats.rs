@@ -198,6 +198,7 @@ pub struct CreditStats {
 
 /// Locally initiated transport stream statistics.
 #[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
+#[non_exhaustive]
 pub struct StreamStats {
     /// Locally initiated bidirectional streams.
     pub bidi: StreamState,
@@ -207,6 +208,7 @@ pub struct StreamStats {
 
 /// One direction's stream occupancy and remaining opening credit.
 #[derive(Debug, Default, Copy, Clone, PartialEq, Eq)]
+#[non_exhaustive]
 pub struct StreamState {
     /// Streams not fully retired, including both halves of bidirectional streams.
     pub open: u64,
