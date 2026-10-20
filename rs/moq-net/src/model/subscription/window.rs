@@ -27,7 +27,8 @@ pub(in crate::model) trait Holdings {
 	/// Where `pts` falls among the groups with a known start.
 	fn containing(&self, pts: Timestamp) -> Containing;
 
-	/// The lowest group at or above `from` known to start after `pts`.
+	/// The lowest group at or above `from` known to start after `pts`, `None` while a
+	/// group below it may yet start at or before `pts`.
 	fn after(&self, pts: Timestamp, from: u64) -> Option<u64>;
 }
 
@@ -74,7 +75,8 @@ enum End {
 	Before(u64),
 	/// Past every group.
 	Open,
-	/// Before the first group starting after this time, once one is known.
+	/// Before the first group starting after this time, once one is known and no group
+	/// below it may yet start before the time.
 	Time(Timestamp),
 }
 

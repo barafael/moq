@@ -587,6 +587,12 @@ impl Slot {
 			.find_map(group::Producer::timestamp)
 	}
 
+	/// Whether the group has no start yet but may still get one: a copy holding frame 0
+	/// has not presented it.
+	fn may_start(&self) -> bool {
+		self.start().is_none() && self.copies().any(group::Producer::may_start)
+	}
+
 	/// The checked start of whichever copy began at frame 0.
 	fn bound(&self) -> Option<Timestamp> {
 		self.copies().find_map(group::Producer::bound)
@@ -684,7 +690,9 @@ impl Holdings for TrackState {
 			match slot.start() {
 				Some(start) if later(start, pts) => after = Some(sequence),
 				Some(_) => break,
-				// Not started, so it proves nothing either way.
+				// It may still start before `pts`, so nothing above it settles the end yet.
+				None if slot.may_start() => after = None,
+				// It never will, so it proves nothing either way.
 				None => {}
 			}
 		}
@@ -13862,6 +13870,27 @@ mod test {
 			end: Some(time(2200)),
 		}]));
 		assert_eq!(drain(&mut seek), vec![1, 2]);
+	}
+
+	/// A time end stays open across a group that has yet to start: it may start before the
+	/// end, so a later group starting after it settles nothing.
+	#[test]
+	#[cfg(feature = "async")]
+	fn a_time_end_waits_on_an_unstarted_group_below_it() {
+		let producer = track_producer("test", Info::timed());
+		let at = |millis| Timestamp::from_millis(millis).unwrap();
+		let mut zero = producer.create_group(group::Info { sequence: 0 }).unwrap();
+		zero.write_frame(at(0), bytes::Bytes::from_static(b"x")).unwrap();
+		let mut hole = producer.create_group(group::Info { sequence: 1 }).unwrap();
+		let mut two = producer.create_group(group::Info { sequence: 2 }).unwrap();
+		two.write_frame(at(2000), bytes::Bytes::from_static(b"x")).unwrap();
+
+		let mut subscriber = producer.subscribe(replay().with_ranges([Range {
+			start: Anchor::Absolute(Position::group(0)),
+			end: Some(Anchor::Time(at(500))),
+		}]));
+		hole.write_frame(at(1000), bytes::Bytes::from_static(b"x")).unwrap();
+		assert_eq!(drain(&mut subscriber), vec![0]);
 	}
 
 	/// An untimed track refuses a time anchor wherever the ranges reach it.
