@@ -15,6 +15,18 @@ impl Grouped for quic::web::Session {
 		Some(quic::web::Session::wire(self))
 	}
 
+	fn streams(&self) -> Option<moq_net::transport::Streams> {
+		let streams = quic::web::Session::streams(self);
+		let state = |s: moq_quic::StreamState| moq_net::transport::StreamState {
+			open: s.open,
+			available: s.available,
+		};
+		Some(moq_net::transport::Streams {
+			bidi: state(streams.bidi),
+			uni: state(streams.uni),
+		})
+	}
+
 	fn send_group(&mut self, priority: i64) -> Option<quic::SendGroup> {
 		Some(quic::web::Session::send_group(self, priority))
 	}

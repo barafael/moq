@@ -1,4 +1,4 @@
-//! Send-group and wire-counter hooks for the async backends.
+//! Send-group, wire-counter and stream-count hooks for the async backends.
 //!
 //! The traits are `pub` in this private module, so other crates can neither name nor
 //! implement them: `pub(crate)` is refused (E0446) because the public adapter's
@@ -8,13 +8,19 @@ use moq_net::transport::poll::SendOptions;
 
 /// A backend session whose send streams may join send groups, as native QUIC's do.
 ///
-/// The async interface has no groups or wire counters, so moq-net's
-/// [`send_group`](moq_net::transport::poll::Session::send_group) and
-/// [`wire`](moq_net::transport::poll::Session::wire) reach a backend through this. A
-/// backend without either implements it empty.
+/// The async interface has no groups, wire counters or stream counts, so moq-net's
+/// [`send_group`](moq_net::transport::poll::Session::send_group),
+/// [`wire`](moq_net::transport::poll::Session::wire) and
+/// [`Stats::streams`](moq_net::transport::Stats::streams) reach a backend through this.
+/// A backend without any of them implements it empty.
 pub trait Grouped: web_transport_trait::Session<SendStream: GroupedSend> {
 	/// The wire counters the backend updates as it sends and receives, or `None` when it has none.
 	fn wire(&self) -> Option<moq_net::transport::Wire> {
+		None
+	}
+
+	/// Locally initiated stream occupancy and remaining peer stream-ID credit, or `None` when the backend doesn't track it.
+	fn streams(&self) -> Option<moq_net::transport::Streams> {
 		None
 	}
 

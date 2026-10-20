@@ -269,10 +269,6 @@ x509-parser = "0.18"
 zeroize = { version = "1", features = ["derive"] }
 
 [patch.crates-io]
-# Stream snapshots require the proposed transport API until its next release.
-web-transport-trait = { git = "https://github.com/moq-dev/web-transport", rev = "13bd407" }
-qmux = { git = "https://github.com/moq-dev/web-transport", rev = "13bd407" }
-
 # web-transport-iroh depends on kio from crates.io. Without
 # this, the lock carries a second kio whose pin drifts behind the member, and the
 # next publish that reaches both fails to resolve a single version (#3551).

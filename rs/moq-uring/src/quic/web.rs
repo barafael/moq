@@ -450,6 +450,11 @@ impl Session {
 		self.conn.wire()
 	}
 
+	/// Locally initiated stream occupancy and remaining peer stream-ID credit.
+	pub(crate) fn streams(&self) -> moq_quic::StreamStats {
+		self.conn.stats().streams
+	}
+
 	/// Open a send group at `priority`, for streams to join with
 	/// [`SendStream::set_group`]. The HTTP/3 streams stay outside every
 	/// group, so they go first.

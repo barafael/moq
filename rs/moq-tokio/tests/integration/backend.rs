@@ -169,6 +169,8 @@ async fn connect_test(config: ConnectTest<'_>) {
 			assert_eq!(request.authority(), expect_authority.as_deref());
 		}
 		let (session, _driver) = request.with_publisher(&pub_origin).ok().await?;
+		// Native QUIC reports its stream counts through moq-net's sampler.
+		assert!(session.stats().streams.is_some());
 
 		let _broadcast = broadcast;
 		let _track = track;

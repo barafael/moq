@@ -20,44 +20,37 @@ impl<E: wt::Error> moq::Error for Error<E> {
 	}
 }
 
-struct Stats<S>(S);
+struct Stats<S> {
+	backend: S,
+	streams: Option<moq::Streams>,
+}
 impl<S: wt::Stats> moq::Stats for Stats<S> {
 	fn streams(&self) -> Option<moq::Streams> {
-		self.0.streams().map(|streams| moq::Streams {
-			bidi: moq::StreamState {
-				open: streams.bidi.open,
-				available: streams.bidi.available,
-			},
-			uni: moq::StreamState {
-				open: streams.uni.open,
-				available: streams.uni.available,
-			},
-		})
+		self.streams
 	}
-
 	fn bytes_sent(&self) -> Option<u64> {
-		self.0.bytes_sent()
+		self.backend.bytes_sent()
 	}
 	fn bytes_received(&self) -> Option<u64> {
-		self.0.bytes_received()
+		self.backend.bytes_received()
 	}
 	fn bytes_lost(&self) -> Option<u64> {
-		self.0.bytes_lost()
+		self.backend.bytes_lost()
 	}
 	fn packets_sent(&self) -> Option<u64> {
-		self.0.packets_sent()
+		self.backend.packets_sent()
 	}
 	fn packets_received(&self) -> Option<u64> {
-		self.0.packets_received()
+		self.backend.packets_received()
 	}
 	fn packets_lost(&self) -> Option<u64> {
-		self.0.packets_lost()
+		self.backend.packets_lost()
 	}
 	fn rtt(&self) -> Option<std::time::Duration> {
-		self.0.rtt()
+		self.backend.rtt()
 	}
 	fn estimated_send_rate(&self) -> Option<u64> {
-		self.0.estimated_send_rate()
+		self.backend.estimated_send_rate()
 	}
 }
 /// A backend session whose send streams may join send groups, as native QUIC's do.
@@ -66,12 +59,18 @@ impl<S: wt::Stats> moq::Stats for Stats<S> {
 /// through [`GroupedSend`]. The module is private and the trait is not re-exported, so
 /// other crates can neither name nor implement it.
 ///
-/// The backend interface has no groups or wire counters, so moq-net's
-/// [`send_group`](poll::Session::send_group) and [`wire`](poll::Session::wire) reach a
-/// backend through this. A backend without either implements it empty.
+/// The backend interface has no groups, wire counters or stream counts, so moq-net's
+/// [`send_group`](poll::Session::send_group), [`wire`](poll::Session::wire) and
+/// [`Stats::streams`](moq::Stats::streams) reach a backend through this. A backend
+/// without any of them implements it empty.
 pub trait Grouped: backend::Session<SendStream: GroupedSend> {
 	/// The wire counters the backend updates as it sends and receives, or `None` when it has none.
 	fn wire(&self) -> Option<moq::Wire> {
+		None
+	}
+
+	/// Locally initiated stream occupancy and remaining peer stream-ID credit, or `None` when the backend doesn't track it.
+	fn streams(&self) -> Option<moq::Streams> {
 		None
 	}
 
@@ -183,7 +182,10 @@ impl<S: Grouped<SendStream: 'static, RecvStream: 'static> + Clone + 'static> pol
 		backend::Session::poll_closed(&mut self.0, cx).map(Error)
 	}
 	fn stats(&self) -> impl moq::Stats {
-		Stats(backend::Session::stats(&self.0))
+		Stats {
+			backend: backend::Session::stats(&self.0),
+			streams: Grouped::streams(&self.0),
+		}
 	}
 	fn wire(&self) -> Option<moq::Wire> {
 		Grouped::wire(&self.0)
@@ -322,16 +324,16 @@ mod tests {
 			match *group {}
 		}
 	}
-	impl Grouped for Backend {}
-	struct Sample;
-	impl wt::Stats for Sample {
-		fn streams(&self) -> Option<wt::Streams> {
-			Some(wt::Streams {
-				bidi: wt::StreamState { open: 3, available: 5 },
-				uni: wt::StreamState { open: 7, available: 11 },
+	impl Grouped for Backend {
+		fn streams(&self) -> Option<moq::Streams> {
+			Some(moq::Streams {
+				bidi: moq::StreamState { open: 3, available: 5 },
+				uni: moq::StreamState { open: 7, available: 11 },
 			})
 		}
-
+	}
+	struct Sample;
+	impl wt::Stats for Sample {
 		fn rtt(&self) -> Option<std::time::Duration> {
 			Some(std::time::Duration::from_millis(7))
 		}

@@ -657,7 +657,6 @@ impl web_transport_trait::poll::Session for Connection {
 	fn stats(&self) -> impl web_transport_trait::Stats {
 		let stats = self.shared.conn.borrow().stats();
 		Stats {
-			streams: stats.streams,
 			bytes_sent: stats.udp_tx.bytes,
 			bytes_received: stats.udp_rx.bytes,
 			bytes_lost: stats.path.lost_bytes,
@@ -679,7 +678,6 @@ impl std::fmt::Debug for Connection {
 /// A snapshot of moq-quic's counters in [`web_transport_trait::Stats`]
 /// shape.
 struct Stats {
-	streams: moq_quic::StreamStats,
 	bytes_sent: u64,
 	bytes_received: u64,
 	bytes_lost: u64,
@@ -692,19 +690,6 @@ struct Stats {
 }
 
 impl web_transport_trait::Stats for Stats {
-	fn streams(&self) -> Option<web_transport_trait::Streams> {
-		Some(web_transport_trait::Streams {
-			bidi: web_transport_trait::StreamState {
-				open: self.streams.bidi.open,
-				available: self.streams.bidi.available,
-			},
-			uni: web_transport_trait::StreamState {
-				open: self.streams.uni.open,
-				available: self.streams.uni.available,
-			},
-		})
-	}
-
 	fn bytes_sent(&self) -> Option<u64> {
 		Some(self.bytes_sent)
 	}

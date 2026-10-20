@@ -878,6 +878,18 @@ impl Grouped for crate::quic::web::Session {
 		Some(crate::quic::driver::Connection::wire(self))
 	}
 
+	fn streams(&self) -> Option<moq_net::transport::Streams> {
+		let streams = crate::quic::driver::Connection::stats(self).streams;
+		let state = |s: moq_quic::StreamState| moq_net::transport::StreamState {
+			open: s.open,
+			available: s.available,
+		};
+		Some(moq_net::transport::Streams {
+			bidi: state(streams.bidi),
+			uni: state(streams.uni),
+		})
+	}
+
 	fn send_group(&self, priority: i64) -> Option<crate::quic::driver::SendGroup> {
 		Some(Self::send_group(self, priority))
 	}
@@ -1444,7 +1456,14 @@ mod tests {
 	#[derive(Clone)]
 	struct FakeSession;
 
-	impl Grouped for FakeSession {}
+	impl Grouped for FakeSession {
+		fn streams(&self) -> Option<moq_net::transport::Streams> {
+			Some(moq_net::transport::Streams {
+				bidi: moq_net::transport::StreamState { open: 3, available: 5 },
+				uni: moq_net::transport::StreamState { open: 7, available: 11 },
+			})
+		}
+	}
 
 	impl web_transport_trait::Session for FakeSession {
 		type SendStream = FakeSend;
@@ -1484,6 +1503,19 @@ mod tests {
 		async fn closed(&self) -> Self::Error {
 			std::future::pending().await
 		}
+	}
+
+	#[test]
+	fn owned_poll_adapter_reports_backend_stream_counts() {
+		use moq_net::transport::{Stats as _, poll};
+		let session = Session::new(FakeSession, moq_net::transport::Binding::Uri);
+		assert_eq!(
+			poll::Session::stats(&session).streams(),
+			Some(moq_net::transport::Streams {
+				bidi: moq_net::transport::StreamState { open: 3, available: 5 },
+				uni: moq_net::transport::StreamState { open: 7, available: 11 },
+			})
+		);
 	}
 
 	#[test]

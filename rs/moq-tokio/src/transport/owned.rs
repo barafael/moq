@@ -20,44 +20,37 @@ impl<E: wt::Error> moq::Error for Error<E> {
 	}
 }
 
-struct Stats<S>(S);
+struct Stats<S> {
+	backend: S,
+	streams: Option<moq::Streams>,
+}
 impl<S: wt::Stats> moq::Stats for Stats<S> {
 	fn streams(&self) -> Option<moq::Streams> {
-		self.0.streams().map(|streams| moq::Streams {
-			bidi: moq::StreamState {
-				open: streams.bidi.open,
-				available: streams.bidi.available,
-			},
-			uni: moq::StreamState {
-				open: streams.uni.open,
-				available: streams.uni.available,
-			},
-		})
+		self.streams
 	}
-
 	fn bytes_sent(&self) -> Option<u64> {
-		self.0.bytes_sent()
+		self.backend.bytes_sent()
 	}
 	fn bytes_received(&self) -> Option<u64> {
-		self.0.bytes_received()
+		self.backend.bytes_received()
 	}
 	fn bytes_lost(&self) -> Option<u64> {
-		self.0.bytes_lost()
+		self.backend.bytes_lost()
 	}
 	fn packets_sent(&self) -> Option<u64> {
-		self.0.packets_sent()
+		self.backend.packets_sent()
 	}
 	fn packets_received(&self) -> Option<u64> {
-		self.0.packets_received()
+		self.backend.packets_received()
 	}
 	fn packets_lost(&self) -> Option<u64> {
-		self.0.packets_lost()
+		self.backend.packets_lost()
 	}
 	fn rtt(&self) -> Option<std::time::Duration> {
-		self.0.rtt()
+		self.backend.rtt()
 	}
 	fn estimated_send_rate(&self) -> Option<u64> {
-		self.0.estimated_send_rate()
+		self.backend.estimated_send_rate()
 	}
 }
 impl<S: super::Grouped<SendStream: 'static, RecvStream: 'static>> poll::Session for super::Session<S> {
@@ -123,7 +116,10 @@ impl<S: super::Grouped<SendStream: 'static, RecvStream: 'static>> poll::Session 
 		backend::Session::poll_closed(self, cx).map(Error)
 	}
 	fn stats(&self) -> impl moq::Stats {
-		Stats(backend::Session::stats(self))
+		Stats {
+			backend: backend::Session::stats(self),
+			streams: super::Grouped::streams(&self.session),
+		}
 	}
 	fn wire(&self) -> Option<moq::Wire> {
 		super::Grouped::wire(&self.session)
