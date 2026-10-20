@@ -1,0 +1,26 @@
+https://moqx-main.ci.openmoq.org:4433/moq-relay connected via WebTransport
+https://moqx-main.ci.openmoq.org:4433/moq-relay negotiated ALPN: moqt-16
+connected version=moq-transport-16
+subscribe_namespace written: requestId=0
+announced: broadcast=smoke-js-web-4772-4468.hang active=true
+subscribe start: id=2 broadcast=smoke-js-web-4772-4468.hang track=catalog.json
+subscribe written: id=2 broadcast=smoke-js-web-4772-4468.hang track=catalog.json
+subscribe ok: id=2 broadcast=smoke-js-web-4772-4468.hang track=catalog.json
+subscribe start: id=4 broadcast=smoke-js-web-4772-4468.hang track=video
+subscribe written: id=4 broadcast=smoke-js-web-4772-4468.hang track=video
+subscribe ok: id=4 broadcast=smoke-js-web-4772-4468.hang track=video
+dropping a group with no head: alias=4 group=0
+adapter: closing stream requestId=4
+subscribe error: id=4 broadcast=smoke-js-web-4772-4468.hang track=video error=publish done: status=0x0 reason=Write after stream complete or reset
+adapter: close() called
+error: publish done: status=0x0 reason=Write after stream complete or reset
+subscribe error: id=2 broadcast=smoke-js-web-4772-4468.hang track=catalog.json error=subscribe stream ended without PUBLISH_DONE
+subscribe_namespace error: RESET_STREAM: 386759528
+announced: broadcast=smoke-js-web-4772-4468.hang active=false
+broadcast discovery failed; broadcasts resolve on request only. warn: RESET_STREAM: 386759528
+ code: "GenericFailure"
+
+      at async #fill (/home/runner/work/moq/moq/test/smoke/clients/js-native/node_modules/@moq/net/stream.js:167:50)
+      at async done (/home/runner/work/moq/moq/test/smoke/clients/js-native/node_modules/@moq/net/stream.js:333:29)
+      at async <anonymous> (/home/runner/work/moq/moq/test/smoke/clients/js-native/node_modules/@moq/net/ietf/subscriber.js:278:58)
+

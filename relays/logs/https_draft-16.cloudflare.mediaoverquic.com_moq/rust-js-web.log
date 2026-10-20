@@ -1,0 +1,61 @@
+[page] negotiated protocol: moqt-16
+[page] connection closed, reconnecting
+[page] adapter: close() called
+[page] fatal error running connection WebTransportError: Connection lost.
+[page] subscribe_namespace error: Connection lost. (source=session)
+[page] negotiated protocol: moqt-16
+[page] connection closed, reconnecting
+[page] adapter: close() called
+[page] fatal error running connection WebTransportError: Connection lost.
+[page] subscribe_namespace error: Connection lost. (source=session)
+[page] negotiated protocol: moqt-16
+[page] connection closed, reconnecting
+[page] adapter: close() called
+[page] fatal error running connection WebTransportError: Connection lost.
+[page] subscribe_namespace error: Connection lost. (source=session)
+[page] negotiated protocol: moqt-16
+[page] connection closed, reconnecting
+[page] adapter: close() called
+[page] fatal error running connection WebTransportError: Connection lost.
+[page] subscribe_namespace error: Connection lost. (source=session)
+[page] negotiated protocol: moqt-16
+[page] connection closed, reconnecting
+[page] adapter: close() called
+[page] fatal error running connection WebTransportError: Connection lost.
+[page] subscribe_namespace error: Connection lost. (source=session)
+[page] negotiated protocol: moqt-16
+[page] connection closed, reconnecting
+[page] adapter: close() called
+[page] fatal error running connection WebTransportError: Connection lost.
+[page] subscribe_namespace error: Connection lost. (source=session)
+[page] negotiated protocol: moqt-16
+[page] connection closed, reconnecting
+[page] adapter: close() called
+[page] fatal error running connection WebTransportError: Connection lost.
+[page] subscribe_namespace error: Connection lost. (source=session)
+[page] negotiated protocol: moqt-16
+[page] connection closed, reconnecting
+[page] adapter: close() called
+[page] fatal error running connection WebTransportError: Connection lost.
+[page] subscribe_namespace error: Connection lost. (source=session)
+[page] negotiated protocol: moqt-16
+[page] connection closed, reconnecting
+[page] adapter: close() called
+[page] fatal error running connection WebTransportError: Connection lost.
+[page] subscribe_namespace error: Connection lost. (source=session)
+[page] negotiated protocol: moqt-16
+[page] connection closed, reconnecting
+[page] adapter: close() called
+[page] fatal error running connection WebTransportError: Connection lost.
+[page] subscribe_namespace error: Connection lost. (source=session)
+[page] negotiated protocol: moqt-16
+[page] connection closed, reconnecting
+[page] adapter: close() called
+[page] fatal error running connection WebTransportError: Connection lost.
+[page] subscribe_namespace error: Connection lost. (source=session)
+[page] negotiated protocol: moqt-16
+[page] connection closed, reconnecting
+[page] adapter: close() called
+[page] fatal error running connection WebTransportError: Connection lost.
+[page] subscribe_namespace error: Connection lost. (source=session)
+decoded 0 frames from smoke-rust-4772-20706.hang (vite)

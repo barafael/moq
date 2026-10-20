@@ -1,0 +1,4 @@
+publishing smoke-js-web-4772-4774.hang (fake camera, vite) to https://lminiero.it:9000
+[page] negotiated protocol: moqt-22
+[page] subscribe_namespace written: requestId=2
+[page] publish ok: broadcast=smoke-js-web-4772-4774.hang track=catalog.json
