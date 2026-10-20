@@ -1826,6 +1826,8 @@ fn raw_track_time_anchor() {
 		max_age_present: true,
 		timescale: 1_000_000,
 		timescale_present: true,
+		refresh: 0,
+		refresh_present: false,
 	};
 	let track =
 		id(unsafe { moq_publish_track(broadcast, track_name.as_ptr() as *const c_char, track_name.len(), &info) });
