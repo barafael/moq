@@ -32,5 +32,10 @@ url = { workspace = true }
 gst-plugin-version-helper = "0.8"
 
 [dev-dependencies]
+criterion = { workspace = true }
 futures = { workspace = true }
 tokio = { workspace = true, features = ["test-util"] }
+
+[[bench]]
+name = "catalog"
+harness = false

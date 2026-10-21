@@ -4390,6 +4390,7 @@ version = "0.4.17"
 dependencies = [
  "anyhow",
  "bytes",
+ "criterion",
  "futures",
  "gst-plugin-version-helper",
  "gstreamer",
@@ -4470,6 +4471,7 @@ dependencies = [
  "base64 0.23.1",
  "bytes",
  "crc",
+ "criterion",
  "futures",
  "h264-parser",
  "hang",
@@ -4613,6 +4615,7 @@ dependencies = [
 name = "moq-pattern"
 version = "0.1.2"
 dependencies = [
+ "criterion",
  "moq-pattern",
  "serde",
  "serde_json",
@@ -4705,6 +4708,7 @@ dependencies = [
  "anyhow",
  "byteorder",
  "bytes",
+ "criterion",
  "futures",
  "hang",
  "hmac 0.13.0",
