@@ -94,7 +94,7 @@ describe("target", () => {
 		expect(await target({ delay: "auto", config, rtt: 40 })).toBe(Time.Milli(50 + 20 + 3));
 	});
 
-	it("adds the rendition's jitter to a fixed delay", async () => {
-		expect(await target({ delay: Time.Milli(250), config })).toBe(Time.Milli(250 + 20 + 3));
+	it.each([0, 100, 250])("uses a fixed delay of %d ms without adding rendition jitter", async (delay) => {
+		expect(await target({ delay: Time.Milli(delay), config })).toBe(Time.Milli(delay));
 	});
 });

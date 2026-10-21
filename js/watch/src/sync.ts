@@ -14,7 +14,8 @@ import {
 /**
  * How far playback trails the live edge.
  *
- * `"auto"` (the default) sizes the jitter buffer from the connection RTT; a `Time.Milli` fixes it.
+ * `"auto"` (the default) sizes the jitter buffer from the connection RTT and rendition jitter.
+ * A `Time.Milli` fixes the total delay at that number, ignoring rendition delay and jitter.
  *
  * `"instant"` drops the buffer and the pacing together: nothing is held, and {@link Sync.wait}
  * returns without sleeping, so a frame presents as soon as it exists. It also overrides
@@ -53,7 +54,7 @@ type SyncOutput = {
 	// This will keep being updated as we catch up to the live playhead then will be relatively static.
 	reference: Signal<Time.Milli | undefined>;
 
-	// The resolved delay from the live edge to the playhead: jitter + max(audio, video).
+	// The resolved delay: the configured number, or in "auto" jitter + max(audio, video).
 	delay: Signal<Time.Milli>;
 
 	// The jitter component of `delay` (always numeric).
@@ -109,7 +110,7 @@ export class Sync {
 		this.#signals.run(this.#runMaxAge.bind(this));
 	}
 
-	/** Include a decoder's rendition delay in the shared playback clock until disposed. */
+	/** Include a decoder's rendition delay in the "auto" playback clock until disposed. */
 	register(jitter: Getter<Time.Milli | undefined>): Dispose {
 		const registered = { jitter };
 		this.#media.update((media) => [...media, registered]);
@@ -161,15 +162,20 @@ export class Sync {
 	}
 
 	#runDelay(effect: Effect): void {
+		const configured = effect.get(this.in.delay);
+		if (typeof configured === "number") {
+			this.#out.delay.set(configured);
+			return;
+		}
+
 		const jitter = effect.get(this.#out.jitter);
 		let media = Time.Milli.zero;
 		for (const registered of effect.get(this.#media)) {
 			media = Time.Milli.max(media, effect.get(registered.jitter) ?? Time.Milli.zero);
 		}
 
-		// A zero delay still holds the rendition's own delay, which is a frame interval at 60fps.
-		// "instant" holds nothing at all.
-		const instant = effect.get(this.in.delay) === "instant";
+		// "auto" includes the rendition's own delay; "instant" holds nothing at all.
+		const instant = configured === "instant";
 		const delay = instant ? Time.Milli.zero : Time.Milli.add(media, jitter);
 		this.#out.delay.set(delay);
 	}

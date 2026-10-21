@@ -66,9 +66,11 @@ export async function target(input: Target): Promise<Time.Milli> {
 	const jitter = playbackJitter(input.config);
 	const unregister = sync.register(new Signal<Time.Milli | undefined>(jitter));
 	try {
-		// Sync's effects run on microtasks. The delay has settled once it holds this rendition's jitter
-		// on top of the resolved jitter, the only rendition registered.
-		while (sync.out.delay.peek() !== Time.Milli.add(sync.out.jitter.peek(), jitter)) {
+		// Sync's effects settle on the configured number, or the network plus rendition jitter in auto.
+		while (
+			sync.out.delay.peek() !==
+			(typeof input.delay === "number" ? input.delay : Time.Milli.add(sync.out.jitter.peek(), jitter))
+		) {
 			await sync.out.delay.changed();
 		}
 		return sync.out.delay.peek();
