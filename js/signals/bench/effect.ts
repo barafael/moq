@@ -43,7 +43,7 @@ async function time(body: () => void | Promise<void>): Promise<number> {
 		for (let i = 0; i < runs; i++) {
 			// Awaiting a sync row would add a microtask hop it doesn't pay.
 			const pending = body();
-			if (pending) await pending;
+			if (pending instanceof Promise) await pending;
 		}
 		best = Math.min(best, ((performance.now() - start) * 1e6) / runs);
 	}
