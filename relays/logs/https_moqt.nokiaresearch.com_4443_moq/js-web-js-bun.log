@@ -5,11 +5,12 @@ subscribe_namespace written: requestId=0
 announced: broadcast=demo active=true
 announced: broadcast=video active=true
 announced: broadcast=simulcast active=true
-announced: broadcast=smoke-js-web-4772-25031.hang active=true
-subscribe start: id=2 broadcast=smoke-js-web-4772-25031.hang track=catalog.json
-subscribe written: id=2 broadcast=smoke-js-web-4772-25031.hang track=catalog.json
-subscribe ok: id=2 broadcast=smoke-js-web-4772-25031.hang track=catalog.json
+announced: broadcast=smoke-js-web-4777-4759.hang active=true
+subscribe start: id=2 broadcast=smoke-js-web-4777-4759.hang track=catalog.json
+subscribe written: id=2 broadcast=smoke-js-web-4777-4759.hang track=catalog.json
+subscribe ok: id=2 broadcast=smoke-js-web-4777-4759.hang track=catalog.json
 error: timed out waiting for data
+subscribe error: id=2 broadcast=smoke-js-web-4777-4759.hang track=catalog.json error=session error: connection error: closed
 subscribe_namespace error: session error: connection error: closed
 announced: broadcast=demo active=false
 announced: broadcast=video active=false
@@ -17,9 +18,10 @@ announced: broadcast=simulcast active=false
 broadcast discovery failed; broadcasts resolve on request only. warn: session error: connection error: closed
  code: "GenericFailure"
 
+      at async #fill (/home/runner/work/moq/moq/test/smoke/clients/js-native/node_modules/@moq/net/stream.js:167:50)
       at async done (/home/runner/work/moq/moq/test/smoke/clients/js-native/node_modules/@moq/net/stream.js:333:29)
 
-announced: broadcast=smoke-js-web-4772-25031.hang active=false
+announced: broadcast=smoke-js-web-4777-4759.hang active=false
 error processing bidi stream 162 |         if (!this.#reader) {
 163 |             return false;
 164 |         }
@@ -33,4 +35,3 @@ error: session error: connection error: closed
       at async #fill (/home/runner/work/moq/moq/test/smoke/clients/js-native/node_modules/@moq/net/stream.js:167:50)
       at async done (/home/runner/work/moq/moq/test/smoke/clients/js-native/node_modules/@moq/net/stream.js:333:29)
 
-subscribe error: id=2 broadcast=smoke-js-web-4772-25031.hang track=catalog.json error=session error: connection error: closed

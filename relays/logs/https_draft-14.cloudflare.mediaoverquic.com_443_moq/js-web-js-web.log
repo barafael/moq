@@ -1,5 +1,2 @@
 [page] subscribe_namespace written: requestId=0
-[page] adapter: close() called
-[page] subscribe_namespace error: unexpected end of stream
-[page] subscribe_namespace written: requestId=0
-decoded 0 frames from smoke-js-web-4772-21929.hang (vite)
+decoded 0 frames from smoke-js-web-4777-9349.hang (vite)

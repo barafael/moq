@@ -1,4 +1,6 @@
 https://draft-16.cloudflare.mediaoverquic.com/moq connected via WebTransport
 https://draft-16.cloudflare.mediaoverquic.com/moq negotiated ALPN: moqt-16
-error: remote error: 3 (scope resolution failed)
+connected version=moq-transport-16
 adapter: close() called
+subscribe_namespace error: webtransport error: closed: code=3 reason=scope resolution failed
+error: timed out waiting for data

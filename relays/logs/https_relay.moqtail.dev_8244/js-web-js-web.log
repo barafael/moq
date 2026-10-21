@@ -1,15 +1,7 @@
 [page] negotiated protocol: moqt-22
 [page] subscribe_namespace written: requestId=0
-[page] announced: broadcast=smoke-js-web-4772-8050.hang active=true
-[page] subscribe start: id=2 broadcast=smoke-js-web-4772-8050.hang track=catalog.json
-[page] subscribe written: id=2 broadcast=smoke-js-web-4772-8050.hang track=catalog.json
-[page] subscribe ok: id=2 broadcast=smoke-js-web-4772-8050.hang track=catalog.json
-[page] announced: broadcast=smoke-js-web-4772-8050.hang active=false
-[page] subscribe error: id=2 broadcast=smoke-js-web-4772-8050.hang track=catalog.json error=remote error: 0
-[page] negotiated protocol: moqt-22
-[page] subscribe_namespace written: requestId=0
-[page] announced: broadcast=smoke-js-web-4772-8050.hang active=true
-[page] subscribe start: id=2 broadcast=smoke-js-web-4772-8050.hang track=catalog.json
-[page] subscribe written: id=2 broadcast=smoke-js-web-4772-8050.hang track=catalog.json
-[page] subscribe ok: id=2 broadcast=smoke-js-web-4772-8050.hang track=catalog.json
-decoded 0 frames from smoke-js-web-4772-8050.hang (vite)
+[page] announced: broadcast=smoke-js-web-4777-15771.hang active=true
+[page] subscribe start: id=2 broadcast=smoke-js-web-4777-15771.hang track=catalog.json
+[page] subscribe written: id=2 broadcast=smoke-js-web-4777-15771.hang track=catalog.json
+[page] subscribe ok: id=2 broadcast=smoke-js-web-4777-15771.hang track=catalog.json
+decoded 0 frames from smoke-js-web-4777-15771.hang (vite)
