@@ -1,7 +1,10 @@
 [page] negotiated protocol: moqt-22
 [page] subscribe_namespace written: requestId=0
-[page] announced: broadcast=smoke-js-web-4955-10186.hang active=true
-[page] subscribe start: id=2 broadcast=smoke-js-web-4955-10186.hang track=catalog.json
-[page] subscribe written: id=2 broadcast=smoke-js-web-4955-10186.hang track=catalog.json
-[page] subscribe ok: id=2 broadcast=smoke-js-web-4955-10186.hang track=catalog.json
-decoded 0 frames from smoke-js-web-4955-10186.hang (vite)
+[page] announced: broadcast=g5-4410eb8c active=true
+[page] announced: broadcast=smoke-js-web-5070-21203.hang active=true
+[page] subscribe start: id=2 broadcast=smoke-js-web-5070-21203.hang track=catalog.json
+[page] subscribe written: id=2 broadcast=smoke-js-web-5070-21203.hang track=catalog.json
+[page] subscribe ok: id=2 broadcast=smoke-js-web-5070-21203.hang track=catalog.json
+[page] announced: broadcast=aiomoqt-watchdog/11018-0 active=true
+[page] announced: broadcast=aiomoqt-watchdog/11018-0 active=false
+decoded 0 frames from smoke-js-web-5070-21203.hang (vite)

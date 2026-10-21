@@ -3,10 +3,11 @@
 [page] announce: prefix=
 [page] announced: broadcast=anon/doom/game/e1m1 active=true
 [page] announced: broadcast=badchulo-test-0209.hang active=true
-[page] announced: broadcast=smoke-rust-4955-31021.hang active=true
-[page] subscribe start: id=0 broadcast=smoke-rust-4955-31021.hang track=catalog.json
-[page] subscribe ok: id=0 broadcast=smoke-rust-4955-31021.hang track=catalog.json
-[page] received catalog hang smoke-rust-4955-31021.hang {video: Object, audio: Object, archive: Object, clock: Object}
-[page] subscribe start: id=1 broadcast=smoke-rust-4955-31021.hang track=0.avc3
-[page] subscribe ok: id=1 broadcast=smoke-rust-4955-31021.hang track=0.avc3
-decoded 34 frames from smoke-rust-4955-31021.hang (vite)
+[page] announced: broadcast=smoke-rust-5070-15618.hang active=true
+[page] subscribe start: id=0 broadcast=smoke-rust-5070-15618.hang track=catalog.json
+[page] subscribe ok: id=0 broadcast=smoke-rust-5070-15618.hang track=catalog.json
+[page] received catalog hang smoke-rust-5070-15618.hang {video: Object, audio: Object, archive: Object, clock: Object}
+[page] subscribe start: id=1 broadcast=smoke-rust-5070-15618.hang track=0.avc3
+[page] subscribe ok: id=1 broadcast=smoke-rust-5070-15618.hang track=0.avc3
+[page] skipping slow groups: track=0.avc3 0 -> 1 count=1
+decoded 34 frames from smoke-rust-5070-15618.hang (vite)
