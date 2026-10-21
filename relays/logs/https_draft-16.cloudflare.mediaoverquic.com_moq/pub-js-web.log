@@ -1,60 +1,67 @@
-publishing smoke-js-web-4777-28156.hang (fake camera, vite) to https://draft-16.cloudflare.mediaoverquic.com/moq
+publishing smoke-js-web-4986-18126.hang (fake camera, vite) to https://draft-16.cloudflare.mediaoverquic.com/moq
 [page] negotiated protocol: moqt-16
 [page] connection closed, reconnecting
 [page] adapter: close() called
 [page] fatal error running connection WebTransportError: Connection lost.
 [page] subscribe_namespace error: Connection lost. (source=session)
 [page] negotiated protocol: moqt-16
-[page] announce failed: broadcast=smoke-js-web-4777-28156.hang error=The stream was aborted by the remote server
+[page] announce failed: broadcast=smoke-js-web-4986-18126.hang error=The stream was aborted by the remote server
 [page] connection closed, reconnecting
 [page] adapter: close() called
 [page] fatal error running connection WebTransportError: Connection lost.
 [page] subscribe_namespace error: Connection lost. (source=session)
 [page] negotiated protocol: moqt-16
-[page] announce failed: broadcast=smoke-js-web-4777-28156.hang error=The stream was aborted by the remote server
+[page] announce failed: broadcast=smoke-js-web-4986-18126.hang error=The stream was aborted by the remote server
 [page] connection closed, reconnecting
 [page] adapter: close() called
 [page] fatal error running connection WebTransportError: Connection lost.
 [page] subscribe_namespace error: Connection lost. (source=session)
 [page] negotiated protocol: moqt-16
-[page] announce failed: broadcast=smoke-js-web-4777-28156.hang error=The stream was aborted by the remote server
+[page] subscribe_namespace error: The stream was aborted by the remote server
+[page] broadcast discovery failed; broadcasts resolve on request only. NetworkError: The stream was aborted by the remote server
+    at e.write (http://localhost:37795/assets/index-Cytq3y03.js:1:104338)
+    at e.u16 (http://localhost:37795/assets/index-Cytq3y03.js:1:103890)
+    at ec (http://localhost:37795/assets/index-Cytq3y03.js:1:106779)
+    at async #_ (http://localhost:37795/assets/index-Cytq3y03.js:1:217128)
+[page] connection closed, reconnecting
+[page] adapter: close() called
+[page] adapter error WebTransportError: The session is closed.
+[page] announce failed: broadcast=smoke-js-web-4986-18126.hang error=The session is closed. (source=session)
+[page] negotiated protocol: moqt-16
+[page] announce failed: broadcast=smoke-js-web-4986-18126.hang error=The stream was aborted by the remote server
 [page] connection closed, reconnecting
 [page] adapter: close() called
 [page] fatal error running connection WebTransportError: Connection lost.
 [page] subscribe_namespace error: Connection lost. (source=session)
 [page] negotiated protocol: moqt-16
-[page] announce failed: broadcast=smoke-js-web-4777-28156.hang error=The stream was aborted by the remote server
+[page] announce failed: broadcast=smoke-js-web-4986-18126.hang error=The stream was aborted by the remote server
 [page] connection closed, reconnecting
 [page] adapter: close() called
 [page] fatal error running connection WebTransportError: Connection lost.
 [page] subscribe_namespace error: Connection lost. (source=session)
 [page] negotiated protocol: moqt-16
-[page] announce failed: broadcast=smoke-js-web-4777-28156.hang error=The stream was aborted by the remote server
+[page] subscribe_namespace written: requestId=2
+[page] connection closed, reconnecting
+[page] adapter: close() called
+[page] adapter error WebTransportError: The session is closed.
+[page] subscribe_namespace error: The session is closed. (source=session)
+[page] announce failed: broadcast=smoke-js-web-4986-18126.hang error=The session is closed. (source=session)
+[page] negotiated protocol: moqt-16
+[page] subscribe_namespace written: requestId=2
+[page] connection closed, reconnecting
+[page] adapter: close() called
+[page] fatal error running connection WebTransportError: Connection lost.
+[page] subscribe_namespace error: Connection lost. (source=session)
+[page] announce failed: broadcast=smoke-js-web-4986-18126.hang error=Connection lost. (source=session)
+[page] negotiated protocol: moqt-16
+[page] announce failed: broadcast=smoke-js-web-4986-18126.hang error=The stream was aborted by the remote server
 [page] connection closed, reconnecting
 [page] adapter: close() called
 [page] fatal error running connection WebTransportError: Connection lost.
 [page] subscribe_namespace error: Connection lost. (source=session)
 [page] negotiated protocol: moqt-16
-[page] announce failed: broadcast=smoke-js-web-4777-28156.hang error=The stream was aborted by the remote server
+[page] announce failed: broadcast=smoke-js-web-4986-18126.hang error=The stream was aborted by the remote server
 [page] connection closed, reconnecting
 [page] adapter: close() called
-[page] fatal error running connection WebTransportError: Connection lost.
-[page] subscribe_namespace error: Connection lost. (source=session)
-[page] negotiated protocol: moqt-16
-[page] announce failed: broadcast=smoke-js-web-4777-28156.hang error=The stream was aborted by the remote server
-[page] connection closed, reconnecting
-[page] adapter: close() called
-[page] fatal error running connection WebTransportError: Connection lost.
-[page] subscribe_namespace error: Connection lost. (source=session)
-[page] negotiated protocol: moqt-16
-[page] announce failed: broadcast=smoke-js-web-4777-28156.hang error=The stream was aborted by the remote server
-[page] connection closed, reconnecting
-[page] adapter: close() called
-[page] fatal error running connection WebTransportError: Connection lost.
-[page] subscribe_namespace error: Connection lost. (source=session)
-[page] negotiated protocol: moqt-16
-[page] announce failed: broadcast=smoke-js-web-4777-28156.hang error=The stream was aborted by the remote server
-[page] adapter: close() called
-[page] connection closed, reconnecting
 [page] fatal error running connection WebTransportError: Connection lost.
 [page] subscribe_namespace error: Connection lost. (source=session)

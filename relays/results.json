@@ -1,6 +1,6 @@
 {
-  "generated": "2026-10-21T00:13:08Z",
-  "run_url": "https://github.com/moq-dev/moq/actions/runs/39518639277",
+  "generated": "2026-10-21T01:31:08Z",
+  "run_url": "https://github.com/moq-dev/moq/actions/runs/39526513746",
   "registry": "https://raw.githubusercontent.com/englishm/moq-interop-runner/main/implementations.json",
   "pairs": [
     "rust → rust",
@@ -105,26 +105,26 @@
       ],
       "cells": {
         "rust → rust": {
-          "status": "PASS",
+          "status": "FAIL",
           "pub_version": "moq-transport-22",
           "sub_version": "moq-transport-22",
-          "reason": "",
+          "reason": "failed to read capsule e=UnexpectedEnd",
           "sub_log": "https_lminiero.it_9000/rust-rust.log",
           "pub_log": "https_lminiero.it_9000/pub-rust.log"
         },
         "rust → js-web": {
-          "status": "PASS",
+          "status": "FAIL",
           "pub_version": "moq-transport-22",
           "sub_version": "moq-transport-22",
-          "reason": "",
+          "reason": "no data within 30s",
           "sub_log": "https_lminiero.it_9000/rust-js-web.log",
           "pub_log": "https_lminiero.it_9000/pub-rust.log"
         },
         "rust → js-bun": {
-          "status": "PASS",
+          "status": "FAIL",
           "pub_version": "moq-transport-22",
           "sub_version": "moq-transport-22",
-          "reason": "",
+          "reason": "error: timed out waiting for data",
           "sub_log": "https_lminiero.it_9000/rust-js-bun.log",
           "pub_log": "https_lminiero.it_9000/pub-rust.log"
         },
@@ -571,7 +571,7 @@
           "status": "FAIL",
           "pub_version": "moq-transport-22",
           "sub_version": "moq-transport-22",
-          "reason": "publisher: publish error: broadcast=smoke-js-web-4777-15771.hang track=catalog.json error=remote error: 0",
+          "reason": "publisher: publish error: broadcast=smoke-js-web-4986-28818.hang track=catalog.json error=remote error: 0",
           "sub_log": "https_relay.moqtail.dev_8244/js-web-js-web.log",
           "pub_log": "https_relay.moqtail.dev_8244/pub-js-web.log"
         },
@@ -591,7 +591,7 @@
       "url": "https://relay.moqtail.dev",
       "transport": "WebTransport",
       "required": false,
-      "ok": true,
+      "ok": false,
       "versions": [
         "moq-transport-18"
       ],
@@ -621,26 +621,26 @@
           "pub_log": "https_relay.moqtail.dev/pub-rust.log"
         },
         "js-web → rust": {
-          "status": "PASS",
+          "status": "FAIL",
           "pub_version": "moq-transport-18",
           "sub_version": "moq-transport-18",
-          "reason": "",
+          "reason": "failed to read capsule e=UnexpectedEnd",
           "sub_log": "https_relay.moqtail.dev/js-web-rust.log",
           "pub_log": "https_relay.moqtail.dev/pub-js-web.log"
         },
         "js-web → js-web": {
-          "status": "PASS",
+          "status": "FAIL",
           "pub_version": "moq-transport-18",
           "sub_version": "moq-transport-18",
-          "reason": "",
+          "reason": "publisher: publish error: broadcast=smoke-js-web-4986-15284.hang track=catalog.json error=remote error: 0",
           "sub_log": "https_relay.moqtail.dev/js-web-js-web.log",
           "pub_log": "https_relay.moqtail.dev/pub-js-web.log"
         },
         "js-web → js-bun": {
-          "status": "PASS",
+          "status": "FAIL",
           "pub_version": "moq-transport-18",
           "sub_version": "moq-transport-18",
-          "reason": "",
+          "reason": "error: timed out waiting for data",
           "sub_log": "https_relay.moqtail.dev/js-web-js-bun.log",
           "pub_log": "https_relay.moqtail.dev/pub-js-web.log"
         }
@@ -833,7 +833,7 @@
           "status": "FAIL",
           "pub_version": "moq-transport-16",
           "sub_version": "moq-transport-16",
-          "reason": "subscribe error: id=4 broadcast=smoke-rust-4777-21101.hang track=0.avc3 error=publish done: status=0x0 reason=Write after stream complete or reset",
+          "reason": "subscribe error: id=4 broadcast=smoke-rust-4986-27668.hang track=0.avc3 error=publish done: status=0x0 reason=Write after stream complete or reset",
           "sub_log": "https_moqx-main.ci.openmoq.org_4433_moq-relay/rust-js-web.log",
           "pub_log": "https_moqx-main.ci.openmoq.org_4433_moq-relay/pub-rust.log"
         },
@@ -841,7 +841,7 @@
           "status": "FAIL",
           "pub_version": "moq-transport-16",
           "sub_version": "moq-transport-16",
-          "reason": "subscribe error: id=4 broadcast=smoke-rust-4777-21101.hang track=0.avc3 error=publish done: status=0x0 reason=Write after stream complete or reset",
+          "reason": "subscribe error: id=4 broadcast=smoke-rust-4986-27668.hang track=0.avc3 error=publish done: status=0x0 reason=Write after stream complete or reset",
           "sub_log": "https_moqx-main.ci.openmoq.org_4433_moq-relay/rust-js-bun.log",
           "pub_log": "https_moqx-main.ci.openmoq.org_4433_moq-relay/pub-rust.log"
         },
@@ -916,7 +916,7 @@
           "status": "FAIL",
           "pub_version": "moq-transport-14",
           "sub_version": "moq-transport-16",
-          "reason": "subscribe error: id=4 broadcast=smoke-rust-4777-9020.hang track=0.avc3 error=publish done: status=0x0 reason=Write after stream complete or reset",
+          "reason": "subscribe error: id=4 broadcast=smoke-rust-4986-27500.hang track=0.avc3 error=publish done: status=0x0 reason=Write after stream complete or reset",
           "sub_log": "https_fb.mvfst.net_9448_moq-relay/rust-js-web.log",
           "pub_log": "https_fb.mvfst.net_9448_moq-relay/pub-rust.log"
         },
@@ -924,7 +924,7 @@
           "status": "FAIL",
           "pub_version": "moq-transport-14",
           "sub_version": "moq-transport-16",
-          "reason": "subscribe error: id=4 broadcast=smoke-rust-4777-9020.hang track=0.avc3 error=publish done: status=0x0 reason=Write after stream complete or reset",
+          "reason": "subscribe error: id=4 broadcast=smoke-rust-4986-27500.hang track=0.avc3 error=publish done: status=0x0 reason=Write after stream complete or reset",
           "sub_log": "https_fb.mvfst.net_9448_moq-relay/rust-js-bun.log",
           "pub_log": "https_fb.mvfst.net_9448_moq-relay/pub-rust.log"
         },
@@ -996,7 +996,7 @@
           "status": "FAIL",
           "pub_version": "",
           "sub_version": "",
-          "reason": "Failed to establish a connection to https://quichemoq.dev/: net::ERR_QUIC_PROTOCOL_ERROR.QUIC_NETWORK_IDLE_TIMEOUT (No recent network activity after 4001542us. Timeout:4s num_undecryptable_packets: 0 {}).",
+          "reason": "Failed to establish a connection to https://quichemoq.dev/: net::ERR_QUIC_PROTOCOL_ERROR.QUIC_NETWORK_IDLE_TIMEOUT (No recent network activity after 4001736us. Timeout:4s num_undecryptable_packets: 0 {}).",
           "sub_log": "https_quichemoq.dev_443/rust-js-web.log",
           "pub_log": "https_quichemoq.dev_443/pub-rust.log"
         },
@@ -1020,7 +1020,7 @@
           "status": "FAIL",
           "pub_version": "",
           "sub_version": "",
-          "reason": "Failed to establish a connection to https://quichemoq.dev/: net::ERR_QUIC_PROTOCOL_ERROR.QUIC_NETWORK_IDLE_TIMEOUT (No recent network activity after 4001601us. Timeout:4s num_undecryptable_packets: 0 {}).",
+          "reason": "Failed to establish a connection to https://quichemoq.dev/: net::ERR_QUIC_PROTOCOL_ERROR.QUIC_NETWORK_IDLE_TIMEOUT (No recent network activity after 4001290us. Timeout:4s num_undecryptable_packets: 0 {}).",
           "sub_log": "https_quichemoq.dev_443/js-web-js-web.log",
           "pub_log": "https_quichemoq.dev_443/pub-js-web.log"
         },
@@ -1221,7 +1221,7 @@
           "status": "FAIL",
           "pub_version": "moq-transport-16",
           "sub_version": "moq-transport-16",
-          "reason": "adapter error WebTransportError: The session is closed.",
+          "reason": "fatal error running connection WebTransportError: Connection lost.",
           "sub_log": "https_draft-16.cloudflare.mediaoverquic.com_moq/rust-js-web.log",
           "pub_log": "https_draft-16.cloudflare.mediaoverquic.com_moq/pub-rust.log"
         },
@@ -1237,7 +1237,7 @@
           "status": "FAIL",
           "pub_version": "moq-transport-16",
           "sub_version": "moq-transport-16",
-          "reason": "session severed immediately, retrying peer=https://draft-16.cloudflare.mediaoverquic.com err=protocol violation",
+          "reason": "session error err=protocol violation",
           "sub_log": "https_draft-16.cloudflare.mediaoverquic.com_moq/js-web-rust.log",
           "pub_log": "https_draft-16.cloudflare.mediaoverquic.com_moq/pub-js-web.log"
         },
@@ -1274,7 +1274,7 @@
           "status": "FAIL",
           "pub_version": "moq-transport-16",
           "sub_version": "moq-transport-16",
-          "reason": "session severed immediately, retrying peer=moqt://draft-16.cloudflare.mediaoverquic.com:443 err=protocol violation",
+          "reason": "session error err=protocol violation",
           "sub_log": "moqt_draft-16.cloudflare.mediaoverquic.com_443/rust-rust.log",
           "pub_log": "moqt_draft-16.cloudflare.mediaoverquic.com_443/pub-rust.log"
         }
