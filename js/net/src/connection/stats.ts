@@ -15,7 +15,8 @@ import { Milli } from "@moq/clock";
  * Every field is optional. The qmux/WebSocket fallback implements no `getStats()` at
  * all and reports nothing; see {@link Probe} for what the peer measures.
  *
- * The field names match Rust's `moq_net::session::Stats` but the counters keep each
+ * The field names match Rust's `moq_net::session::Stats`, except its native-only
+ * `streams`, which W3C stats cannot report. The counters keep each
  * stack's own semantics rather than being normalized. Notably W3C excludes
  * retransmissions and QUIC overhead from the byte counts where native QUIC includes
  * them, and counts packets where native QUIC counts datagrams.
