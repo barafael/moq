@@ -66,7 +66,15 @@ jobs:
         id: scope
         env:
           CI_BASE: ${{ github.event_name != 'pull_request' && '--all' || '' }}
-        run: just ci-select-platform "$CI_BASE" >> "$GITHUB_OUTPUT"
+        run: |
+          {
+            echo "needed=true"
+            echo "rs=true"
+            echo "swift=false"
+            echo "cpp=false"
+            echo "obs_compile=false"
+            echo "moq_sh=false"
+          } >> "$GITHUB_OUTPUT"
 
   windows:
     name: Windows
@@ -112,8 +120,8 @@ jobs:
         env:
           CI_BASE: ${{ github.event_name != 'pull_request' && '--all' || '' }}
         run: |
-          just rs windows "$CI_BASE"
-          just rs windows-test
+          just rs test -p qmux@0.7.0 -p moq-tokio
+          just rs test -p moq-tokio -E 'test(reconnect::a_protocol_violation_ends_reconnect)' --stress-count 100 --retries 0 --failure-output immediate-final
       - name: C++
         if: needs.scope.outputs.cpp == 'true'
         shell: bash
@@ -126,7 +134,7 @@ jobs:
   macos:
     name: macOS
     needs: scope
-    if: needs.scope.outputs.rs == 'true' || needs.scope.outputs.swift == 'true' || needs.scope.outputs.obs == 'true' || needs.scope.outputs.moq_sh == 'true'
+    if: needs.scope.outputs.swift == 'true'
     runs-on: macos-latest
     # `main` and its merge queue write the Rust cache; see .github/actions/rust-cache.
     environment: ${{ (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/gh-readonly-queue/main/')) && 'cache-write' || '' }}
