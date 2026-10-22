@@ -209,6 +209,7 @@ fn quick_client(redirect: moq_tokio::Redirect) -> moq_tokio::Client {
 }
 
 /// A protocol violation is a settled failure even after a successful session.
+#[tracing_test::traced_test]
 #[tokio::test]
 async fn a_protocol_violation_ends_reconnect() {
 	let (port, mut sessions, task) = spawn_server().await;

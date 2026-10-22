@@ -95,6 +95,7 @@ impl State {
 		if self.closed.is_some() {
 			return;
 		}
+		tracing::debug!(?err, local_close = ?self.local_close, closed = self.conn.is_closed(), drained = self.conn.is_drained(), "qmux terminal error");
 		self.closed = Some(err);
 		self.driver.wake();
 		self.reader.wake();
@@ -385,6 +386,7 @@ async fn run_writer<W: Writer>(inner: Arc<Inner>, mut writer: W) {
 			.map_or(CLOSE_TIMEOUT, |at| at.saturating_duration_since(moq_clock::now()));
 		let _ = moq_clock::timeout(bound, writer.close()).await;
 	}
+	tracing::debug!(?result, "qmux transport writer stopped");
 	inner.writer_done(result);
 }
 
@@ -393,7 +395,10 @@ async fn run_reader<R: Reader>(inner: Arc<Inner>, mut reader: R) {
 	loop {
 		let record = tokio::select! {
 			biased;
-			() = kio::wait(|waiter| inner.poll_ended(waiter)) => return,
+			() = kio::wait(|waiter| inner.poll_ended(waiter)) => {
+				tracing::debug!("qmux session ended; dropping transport reader");
+				return;
+			},
 			record = reader.recv() => record,
 		};
 
@@ -417,6 +422,7 @@ async fn run_reader<R: Reader>(inner: Arc<Inner>, mut reader: R) {
 				.conn
 				.handle_violation(violation(TransportErrorCode::PROTOCOL_VIOLATION, "transport framing")),
 			Err(err) => {
+				tracing::debug!(?err, local_close = ?state.local_close, "qmux transport receive ended");
 				// The transport's own error says more than the connection's reset, unless
 				// this side is closing, when the peer hanging up is the expected answer and
 				// the writer publishes the close it asked for.
