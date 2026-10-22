@@ -3,22 +3,21 @@ https://aiomoqt-relay.marzresearch.net:4443/ negotiated ALPN: moqt-22
 connected version=moq-transport-22
 subscribe_namespace written: requestId=0
 announced: broadcast=g5-77fd9a2e active=true
-announced: broadcast=smoke-rust-4859-20308.hang active=true
-subscribe start: id=2 broadcast=smoke-rust-4859-20308.hang track=catalog.json
-subscribe written: id=2 broadcast=smoke-rust-4859-20308.hang track=catalog.json
-subscribe ok: id=2 broadcast=smoke-rust-4859-20308.hang track=catalog.json
-subscribe start: id=4 broadcast=smoke-rust-4859-20308.hang track=0.avc3
-subscribe written: id=4 broadcast=smoke-rust-4859-20308.hang track=0.avc3
-subscribe ok: id=4 broadcast=smoke-rust-4859-20308.hang track=0.avc3
+announced: broadcast=smoke-rust-5101-31561.hang active=true
+subscribe start: id=2 broadcast=smoke-rust-5101-31561.hang track=catalog.json
+subscribe written: id=2 broadcast=smoke-rust-5101-31561.hang track=catalog.json
+subscribe ok: id=2 broadcast=smoke-rust-5101-31561.hang track=catalog.json
+subscribe start: id=4 broadcast=smoke-rust-5101-31561.hang track=0.avc3
+subscribe written: id=4 broadcast=smoke-rust-5101-31561.hang track=0.avc3
+subscribe ok: id=4 broadcast=smoke-rust-5101-31561.hang track=0.avc3
 dropping a group with no head: alias=1 group=2
-announced: broadcast=aiomoqt-watchdog/24763-0 active=true
-announced: broadcast=aiomoqt-watchdog/24763-0 active=false
+announced: broadcast=aiomoqt-watchdog/27716-0 active=true
+announced: broadcast=aiomoqt-watchdog/27716-0 active=false
 error: timed out waiting for data
-subscribe error: id=2 broadcast=smoke-rust-4859-20308.hang track=catalog.json error=session error: connection error: closed
-subscribe error: id=4 broadcast=smoke-rust-4859-20308.hang track=0.avc3 error=session error: connection error: closed
+subscribe error: id=4 broadcast=smoke-rust-5101-31561.hang track=0.avc3 error=session error: connection error: closed
 subscribe_namespace error: session error: connection error: closed
 announced: broadcast=g5-77fd9a2e active=false
-announced: broadcast=smoke-rust-4859-20308.hang active=false
+announced: broadcast=smoke-rust-5101-31561.hang active=false
 broadcast discovery failed; broadcasts resolve on request only. warn: session error: connection error: closed
  code: "GenericFailure"
 
@@ -26,3 +25,4 @@ broadcast discovery failed; broadcasts resolve on request only. warn: session er
       at async done (/home/runner/work/moq/moq/test/smoke/clients/js-native/node_modules/@moq/net/stream.js:333:29)
       at async <anonymous> (/home/runner/work/moq/moq/test/smoke/clients/js-native/node_modules/@moq/net/ietf/subscriber.js:278:58)
 
+subscribe error: id=2 broadcast=smoke-rust-5101-31561.hang track=catalog.json error=session error: connection error: closed

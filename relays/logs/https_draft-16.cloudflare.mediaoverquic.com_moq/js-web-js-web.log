@@ -1,39 +1,16 @@
 [page] negotiated protocol: moqt-16
+[page] adapter: close() called
+[page] connection closed, reconnecting
+[page] subscribe_namespace error: The WebTransport connection is not open.
+[page] negotiated protocol: moqt-16
 [page] connection closed, reconnecting
 [page] adapter: close() called
 [page] fatal error running connection WebTransportError: Connection lost.
 [page] subscribe_namespace error: The WebTransport connection is not open.
 [page] negotiated protocol: moqt-16
-[page] connection closed, reconnecting
-[page] adapter: close() called
-[page] fatal error running connection WebTransportError: Connection lost.
-[page] subscribe_namespace error: The WebTransport connection is not open.
-[page] negotiated protocol: moqt-16
-[page] subscribe_namespace written: requestId=0
-[page] connection closed, reconnecting
-[page] adapter: close() called
-[page] fatal error running connection WebTransportError: Connection lost.
-[page] subscribe_namespace error: Connection lost. (source=session)
-[page] negotiated protocol: moqt-16
 [page] subscribe_namespace written: requestId=0
 [page] adapter: close() called
 [page] connection closed, reconnecting
-[page] fatal error running connection WebTransportError: Connection lost.
-[page] subscribe_namespace error: Connection lost. (source=session)
-[page] negotiated protocol: moqt-16
-[page] subscribe_namespace written: requestId=0
-[page] adapter: close() called
-[page] connection closed, reconnecting
-[page] subscribe_namespace error: The session is closed. (source=session)
-[page] negotiated protocol: moqt-16
-[page] adapter: close() called
-[page] connection closed, reconnecting
-[page] subscribe_namespace error: The WebTransport connection is not open.
-[page] negotiated protocol: moqt-16
-[page] subscribe_namespace written: requestId=0
-[page] connection closed, reconnecting
-[page] adapter: close() called
-[page] adapter error WebTransportError: The session is closed.
 [page] subscribe_namespace error: The session is closed. (source=session)
 [page] negotiated protocol: moqt-16
 [page] connection closed, reconnecting
@@ -47,9 +24,27 @@
 [page] adapter error WebTransportError: The session is closed.
 [page] subscribe_namespace error: The session is closed. (source=session)
 [page] negotiated protocol: moqt-16
+[page] connection closed, reconnecting
+[page] adapter: close() called
+[page] fatal error running connection WebTransportError: Connection lost.
+[page] subscribe_namespace error: The WebTransport connection is not open.
+[page] negotiated protocol: moqt-16
 [page] subscribe_namespace written: requestId=0
 [page] connection closed, reconnecting
 [page] adapter: close() called
 [page] fatal error running connection WebTransportError: Connection lost.
 [page] subscribe_namespace error: Connection lost. (source=session)
-decoded 0 frames from smoke-js-web-4859-20447.hang (vite)
+[page] negotiated protocol: moqt-16
+[page] connection closed, reconnecting
+[page] adapter: close() called
+[page] fatal error running connection WebTransportError: Connection lost.
+[page] subscribe_namespace error: The WebTransport connection is not open.
+[page] negotiated protocol: moqt-16
+[page] adapter: close() called
+[page] connection closed, reconnecting
+[page] subscribe_namespace error: The WebTransport connection is not open.
+[page] negotiated protocol: moqt-16
+[page] adapter: close() called
+[page] connection closed, reconnecting
+[page] subscribe_namespace error: The WebTransport connection is not open.
+decoded 0 frames from smoke-js-web-5101-18522.hang (vite)

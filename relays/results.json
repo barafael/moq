@@ -1,6 +1,6 @@
 {
-  "generated": "2026-10-22T06:31:59Z",
-  "run_url": "https://github.com/moq-dev/moq/actions/runs/39733145302",
+  "generated": "2026-10-22T07:17:26Z",
+  "run_url": "https://github.com/moq-dev/moq/actions/runs/39737884657",
   "registry": "https://raw.githubusercontent.com/englishm/moq-interop-runner/main/implementations.json",
   "pairs": [
     "rust → rust",
@@ -105,26 +105,26 @@
       ],
       "cells": {
         "rust → rust": {
-          "status": "FAIL",
+          "status": "PASS",
           "pub_version": "moq-transport-22",
           "sub_version": "moq-transport-22",
-          "reason": "failed to read capsule e=UnexpectedEnd",
+          "reason": "",
           "sub_log": "https_lminiero.it_9000/rust-rust.log",
           "pub_log": "https_lminiero.it_9000/pub-rust.log"
         },
         "rust → js-web": {
-          "status": "FAIL",
+          "status": "PASS",
           "pub_version": "moq-transport-22",
           "sub_version": "moq-transport-22",
-          "reason": "no data within 30s",
+          "reason": "",
           "sub_log": "https_lminiero.it_9000/rust-js-web.log",
           "pub_log": "https_lminiero.it_9000/pub-rust.log"
         },
         "rust → js-bun": {
-          "status": "FAIL",
+          "status": "PASS",
           "pub_version": "moq-transport-22",
           "sub_version": "moq-transport-22",
-          "reason": "error: timed out waiting for data",
+          "reason": "",
           "sub_log": "https_lminiero.it_9000/rust-js-bun.log",
           "pub_log": "https_lminiero.it_9000/pub-rust.log"
         },
@@ -160,16 +160,16 @@
       "url": "moqt://lminiero.it:9000",
       "transport": "QUIC",
       "required": false,
-      "ok": false,
+      "ok": true,
       "versions": [
         "moq-transport-22"
       ],
       "cells": {
         "rust → rust": {
-          "status": "FAIL",
+          "status": "PASS",
           "pub_version": "moq-transport-22",
           "sub_version": "moq-transport-22",
-          "reason": "session terminated err=transport: connection error: closed",
+          "reason": "",
           "sub_log": "moqt_lminiero.it_9000/rust-rust.log",
           "pub_log": "moqt_lminiero.it_9000/pub-rust.log"
         }
@@ -375,7 +375,7 @@
           "status": "FAIL",
           "pub_version": "moq-transport-14",
           "sub_version": "moq-transport-14",
-          "reason": "no data within 30s",
+          "reason": "session terminated err=transport: session error: connection error: closed",
           "sub_log": "moqt_draft-14.cloudflare.mediaoverquic.com_443/rust-rust.log",
           "pub_log": "moqt_draft-14.cloudflare.mediaoverquic.com_443/pub-rust.log"
         }
@@ -571,7 +571,7 @@
           "status": "FAIL",
           "pub_version": "moq-transport-22",
           "sub_version": "moq-transport-22",
-          "reason": "publisher: publish error: broadcast=smoke-js-web-4859-5126.hang track=catalog.json error=remote error: 0",
+          "reason": "publisher: publish error: broadcast=smoke-js-web-5101-6959.hang track=catalog.json error=remote error: 0",
           "sub_log": "https_relay.moqtail.dev_8244/js-web-js-web.log",
           "pub_log": "https_relay.moqtail.dev_8244/pub-js-web.log"
         },
@@ -608,7 +608,7 @@
           "status": "FAIL",
           "pub_version": "moq-transport-18",
           "sub_version": "moq-transport-18",
-          "reason": "subscribe error: id=2 broadcast=smoke-rust-4859-12039.hang track=catalog.json error=subscribe timed out after 10000ms waiting for SUBSCRIBE_OK (browser stream limit reached?)",
+          "reason": "subscribe error: id=2 broadcast=smoke-rust-5101-15797.hang track=catalog.json error=subscribe timed out after 10000ms waiting for SUBSCRIBE_OK (browser stream limit reached?)",
           "sub_log": "https_relay.moqtail.dev/rust-js-web.log",
           "pub_log": "https_relay.moqtail.dev/pub-rust.log"
         },
@@ -616,7 +616,7 @@
           "status": "FAIL",
           "pub_version": "moq-transport-18",
           "sub_version": "moq-transport-18",
-          "reason": "subscribe error: id=2 broadcast=smoke-rust-4859-12039.hang track=catalog.json error=subscribe timed out after 10000ms waiting for SUBSCRIBE_OK (browser stream limit reached?)",
+          "reason": "subscribe error: id=2 broadcast=smoke-rust-5101-15797.hang track=catalog.json error=subscribe timed out after 10000ms waiting for SUBSCRIBE_OK (browser stream limit reached?)",
           "sub_log": "https_relay.moqtail.dev/rust-js-bun.log",
           "pub_log": "https_relay.moqtail.dev/pub-rust.log"
         },
@@ -916,7 +916,7 @@
           "status": "FAIL",
           "pub_version": "moq-transport-14",
           "sub_version": "moq-transport-16",
-          "reason": "subscribe error: id=4 broadcast=smoke-rust-4859-3982.hang track=0.avc3 error=publish done: status=0x0 reason=Write after stream complete or reset",
+          "reason": "subscribe error: id=4 broadcast=smoke-rust-5101-13654.hang track=0.avc3 error=publish done: status=0x0 reason=Write after stream complete or reset",
           "sub_log": "https_fb.mvfst.net_9448_moq-relay/rust-js-web.log",
           "pub_log": "https_fb.mvfst.net_9448_moq-relay/pub-rust.log"
         },
@@ -924,7 +924,7 @@
           "status": "FAIL",
           "pub_version": "moq-transport-14",
           "sub_version": "moq-transport-16",
-          "reason": "subscribe error: id=4 broadcast=smoke-rust-4859-3982.hang track=0.avc3 error=publish done: status=0x0 reason=Write after stream complete or reset",
+          "reason": "subscribe error: id=4 broadcast=smoke-rust-5101-13654.hang track=0.avc3 error=publish done: status=0x0 reason=Write after stream complete or reset",
           "sub_log": "https_fb.mvfst.net_9448_moq-relay/rust-js-bun.log",
           "pub_log": "https_fb.mvfst.net_9448_moq-relay/pub-rust.log"
         },
@@ -996,7 +996,7 @@
           "status": "FAIL",
           "pub_version": "",
           "sub_version": "",
-          "reason": "Failed to establish a connection to https://quichemoq.dev/: net::ERR_QUIC_PROTOCOL_ERROR.QUIC_NETWORK_IDLE_TIMEOUT (No recent network activity after 4002297us. Timeout:4s num_undecryptable_packets: 0 {}).",
+          "reason": "Failed to establish a connection to https://quichemoq.dev/: net::ERR_QUIC_PROTOCOL_ERROR.QUIC_NETWORK_IDLE_TIMEOUT (No recent network activity after 4001696us. Timeout:4s num_undecryptable_packets: 0 {}).",
           "sub_log": "https_quichemoq.dev_443/rust-js-web.log",
           "pub_log": "https_quichemoq.dev_443/pub-rust.log"
         },
@@ -1020,7 +1020,7 @@
           "status": "FAIL",
           "pub_version": "",
           "sub_version": "",
-          "reason": "Failed to establish a connection to https://quichemoq.dev/: net::ERR_QUIC_PROTOCOL_ERROR.QUIC_NETWORK_IDLE_TIMEOUT (No recent network activity after 4002367us. Timeout:4s num_undecryptable_packets: 0 {}).",
+          "reason": "Failed to establish a connection to https://quichemoq.dev/: net::ERR_QUIC_PROTOCOL_ERROR.QUIC_NETWORK_IDLE_TIMEOUT (No recent network activity after 4002577us. Timeout:4s num_undecryptable_packets: 0 {}).",
           "sub_log": "https_quichemoq.dev_443/js-web-js-web.log",
           "pub_log": "https_quichemoq.dev_443/pub-js-web.log"
         },
@@ -1213,7 +1213,7 @@
           "status": "FAIL",
           "pub_version": "moq-transport-16",
           "sub_version": "moq-transport-16",
-          "reason": "session severed immediately, retrying peer=https://draft-16.cloudflare.mediaoverquic.com err=protocol violation",
+          "reason": "session terminated err=transport: closed",
           "sub_log": "https_draft-16.cloudflare.mediaoverquic.com_moq/rust-rust.log",
           "pub_log": "https_draft-16.cloudflare.mediaoverquic.com_moq/pub-rust.log"
         },
@@ -1245,7 +1245,7 @@
           "status": "FAIL",
           "pub_version": "moq-transport-16",
           "sub_version": "moq-transport-16",
-          "reason": "fatal error running connection WebTransportError: Connection lost.",
+          "reason": "subscribe_namespace error: The WebTransport connection is not open.",
           "sub_log": "https_draft-16.cloudflare.mediaoverquic.com_moq/js-web-js-web.log",
           "pub_log": "https_draft-16.cloudflare.mediaoverquic.com_moq/pub-js-web.log"
         },
@@ -1253,7 +1253,7 @@
           "status": "FAIL",
           "pub_version": "moq-transport-16",
           "sub_version": "moq-transport-16",
-          "reason": "subscribe_namespace error: webtransport error: closed: code=3 reason=scope resolution failed",
+          "reason": "adapter error 162 |         if (!this.#reader) {",
           "sub_log": "https_draft-16.cloudflare.mediaoverquic.com_moq/js-web-js-bun.log",
           "pub_log": "https_draft-16.cloudflare.mediaoverquic.com_moq/pub-js-web.log"
         }

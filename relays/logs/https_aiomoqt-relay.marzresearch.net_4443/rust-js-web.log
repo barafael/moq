@@ -1,16 +1,16 @@
 [page] negotiated protocol: moqt-22
 [page] subscribe_namespace written: requestId=0
 [page] announced: broadcast=g5-77fd9a2e active=true
-[page] announced: broadcast=smoke-rust-4859-20308.hang active=true
-[page] subscribe start: id=2 broadcast=smoke-rust-4859-20308.hang track=catalog.json
-[page] subscribe written: id=2 broadcast=smoke-rust-4859-20308.hang track=catalog.json
-[page] subscribe ok: id=2 broadcast=smoke-rust-4859-20308.hang track=catalog.json
-[page] received catalog hang smoke-rust-4859-20308.hang {video: Object, audio: Object, archive: Object, clock: Object}
-[page] subscribe start: id=4 broadcast=smoke-rust-4859-20308.hang track=0.avc3
-[page] subscribe written: id=4 broadcast=smoke-rust-4859-20308.hang track=0.avc3
-[page] subscribe ok: id=4 broadcast=smoke-rust-4859-20308.hang track=0.avc3
+[page] announced: broadcast=smoke-rust-5101-31561.hang active=true
+[page] subscribe start: id=2 broadcast=smoke-rust-5101-31561.hang track=catalog.json
+[page] subscribe written: id=2 broadcast=smoke-rust-5101-31561.hang track=catalog.json
+[page] subscribe ok: id=2 broadcast=smoke-rust-5101-31561.hang track=catalog.json
+[page] received catalog hang smoke-rust-5101-31561.hang {video: Object, audio: Object, archive: Object, clock: Object}
+[page] subscribe start: id=4 broadcast=smoke-rust-5101-31561.hang track=0.avc3
+[page] subscribe written: id=4 broadcast=smoke-rust-5101-31561.hang track=0.avc3
+[page] subscribe ok: id=4 broadcast=smoke-rust-5101-31561.hang track=0.avc3
 [page] dropping a group with no head: alias=1 group=2
-[page] received catalog hang smoke-rust-4859-20308.hang {video: Object, audio: Object, archive: Object, clock: Object}
-[page] announced: broadcast=aiomoqt-watchdog/24763-0 active=true
-[page] announced: broadcast=aiomoqt-watchdog/24763-0 active=false
-decoded 0 frames from smoke-rust-4859-20308.hang (vite)
+[page] received catalog hang smoke-rust-5101-31561.hang {video: Object, audio: Object, archive: Object, clock: Object}
+[page] announced: broadcast=aiomoqt-watchdog/27716-0 active=true
+[page] announced: broadcast=aiomoqt-watchdog/27716-0 active=false
+decoded 0 frames from smoke-rust-5101-31561.hang (vite)
