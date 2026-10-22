@@ -134,6 +134,11 @@ audio-quality *args:
 audio-quality-record *args:
     ./audio-quality/record.sh "$@"
 
+# Measure per-track SUBSCRIBE_UPDATE sends with the production viewer (manual, needs the network).
+[positional-arguments]
+subscribe-updates *args:
+    ./audio-quality/subscribe-updates.sh "$@"
+
 # Removes one recovery behavior at a time in a disposable copy of the tree and
 # requires the drill covering it to fail, for the reason the mutation names. The
 # checkout is never modified. `--list` shows the mutations.

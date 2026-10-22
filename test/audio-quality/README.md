@@ -125,6 +125,30 @@ changed during the live run. The observer only
 records frames delivered under the player's maximum age, so a replay cannot recover groups the
 transport already discarded.
 
+## Subscription update traffic
+
+`just test subscribe-updates` is a manual send-count probe using the same production
+watch/publish pages. It counts the viewer's moq-lite `subscribe update` log, emitted
+after the update is written, separately for every track. It records initial
+subscriptions and warmup updates separately, samples the resolved max delay, and
+refuses a row without both audio/video timestamp progress, WebTransport, or the
+selected tracks' Lite send logs. There is no traffic-rate acceptance budget.
+
+```bash
+MOQ_TEST_KEEP=1 just test subscribe-updates --url https://cdn.moq.dev/demo --broadcast bbb.hang
+MOQ_TEST_KEEP=1 just test subscribe-updates --url https://cdn.moq.dev/anon --broadcast unique-camera.hang --camera real
+MOQ_TEST_KEEP=1 just test subscribe-updates --url https://cdn.moq.dev/anon --broadcast unique-fake.hang --camera fake
+```
+
+Use a fresh broadcast name for each camera run. `--camera real` captures the host's
+camera and microphone; `--camera fake` uses Chromium's generated devices and is a
+control, not physical-camera evidence. No camera option watches the named existing
+broadcast. Rows default to 60 seconds after five seconds of warmup from first
+media; `--duration` and `--warmup` take seconds. The retained run contains
+`updates.json` with raw send events, samples, source label, and counts, plus
+`viewer.log`. These network/device measurements are manual, like trace recording;
+they do not run in CI or change the audio quality budgets.
+
 ## Traces
 
 The shaper's profiles are synthetic. [`traces/`](traces) holds real arrivals, each graded as a

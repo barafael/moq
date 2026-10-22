@@ -9,6 +9,7 @@
 		"native.ts",
 		"grade.ts",
 		"record.ts",
+		"updates.ts",
 		"replay.ts",
 		"src",
 		"vite.config.ts",
