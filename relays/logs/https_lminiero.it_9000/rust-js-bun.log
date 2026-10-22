@@ -10,5 +10,5 @@ broadcast discovery failed; broadcasts resolve on request only. warn: session er
       at async #fill (/home/runner/work/moq/moq/test/smoke/clients/js-native/node_modules/@moq/net/stream.js:167:50)
       at async done (/home/runner/work/moq/moq/test/smoke/clients/js-native/node_modules/@moq/net/stream.js:333:29)
 
-subscribe start: id=2 broadcast=smoke-rust-4859-14903.hang track=catalog.json
-subscribe error: id=2 broadcast=smoke-rust-4859-14903.hang track=catalog.json error=subscribe abandoned before it was accepted
+subscribe start: id=2 broadcast=smoke-rust-4859-7362.hang track=catalog.json
+subscribe error: id=2 broadcast=smoke-rust-4859-7362.hang track=catalog.json error=subscribe abandoned before it was accepted

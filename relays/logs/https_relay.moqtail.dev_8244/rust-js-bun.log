@@ -2,15 +2,15 @@ https://relay.moqtail.dev:8244/ connected via WebTransport
 https://relay.moqtail.dev:8244/ negotiated ALPN: moqt-22
 connected version=moq-transport-22
 subscribe_namespace written: requestId=0
-announced: broadcast=smoke-rust-4859-3347.hang active=true
-subscribe start: id=2 broadcast=smoke-rust-4859-3347.hang track=catalog.json
-subscribe written: id=2 broadcast=smoke-rust-4859-3347.hang track=catalog.json
-subscribe ok: id=2 broadcast=smoke-rust-4859-3347.hang track=catalog.json
-subscribe start: id=4 broadcast=smoke-rust-4859-3347.hang track=0.avc3
-subscribe written: id=4 broadcast=smoke-rust-4859-3347.hang track=0.avc3
-subscribe ok: id=4 broadcast=smoke-rust-4859-3347.hang track=0.avc3
+announced: broadcast=smoke-rust-4859-10485.hang active=true
+subscribe start: id=2 broadcast=smoke-rust-4859-10485.hang track=catalog.json
+subscribe written: id=2 broadcast=smoke-rust-4859-10485.hang track=catalog.json
+subscribe ok: id=2 broadcast=smoke-rust-4859-10485.hang track=catalog.json
+subscribe start: id=4 broadcast=smoke-rust-4859-10485.hang track=0.avc3
+subscribe written: id=4 broadcast=smoke-rust-4859-10485.hang track=0.avc3
+subscribe ok: id=4 broadcast=smoke-rust-4859-10485.hang track=0.avc3
 dropping a group with no head: alias=1 group=2
-received 530 bytes from smoke-rust-4859-3347.hang
-announced: broadcast=smoke-rust-4859-3347.hang active=false
-subscribe error: id=4 broadcast=smoke-rust-4859-3347.hang track=0.avc3 error=session error: connection error: closed
-subscribe error: id=2 broadcast=smoke-rust-4859-3347.hang track=catalog.json error=session error: connection error: closed
+received 398 bytes from smoke-rust-4859-10485.hang
+subscribe error: id=4 broadcast=smoke-rust-4859-10485.hang track=0.avc3 error=session error: connection error: closed
+announced: broadcast=smoke-rust-4859-10485.hang active=false
+subscribe error: id=2 broadcast=smoke-rust-4859-10485.hang track=catalog.json error=session error: connection error: closed

@@ -1,15 +1,13 @@
 [page] negotiated protocol: moq-lite-06
 [page] announced: prefix=
+[page] announce: prefix=
 [page] announced: broadcast=anon/doom/game/e1m1 active=true
 [page] announced: broadcast=lcb-6658971-9caf.hang active=true
-[page] announce: prefix=
-[page] announced: broadcast=smoke-js-web-4859-17548.hang active=true
-[page] subscribe start: id=0 broadcast=smoke-js-web-4859-17548.hang track=catalog.json
-[page] subscribe ok: id=0 broadcast=smoke-js-web-4859-17548.hang track=catalog.json
-[page] received catalog hang smoke-js-web-4859-17548.hang {video: Object, clock: Object}
-[page] subscribe start: id=1 broadcast=smoke-js-web-4859-17548.hang track=video
-[page] subscribe ok: id=1 broadcast=smoke-js-web-4859-17548.hang track=video
-[page] subscribe update: id=1 broadcast=smoke-js-web-4859-17548.hang track=video
-[page] received catalog hang smoke-js-web-4859-17548.hang {video: Object, clock: Object}
-[page] subscribe update: id=1 broadcast=smoke-js-web-4859-17548.hang track=video
-decoded 6 frames from smoke-js-web-4859-17548.hang (vite)
+[page] announced: broadcast=smoke-js-web-4859-4101.hang active=true
+[page] subscribe start: id=0 broadcast=smoke-js-web-4859-4101.hang track=catalog.json
+[page] subscribe ok: id=0 broadcast=smoke-js-web-4859-4101.hang track=catalog.json
+[page] received catalog hang smoke-js-web-4859-4101.hang {video: Object, clock: Object}
+[page] subscribe start: id=1 broadcast=smoke-js-web-4859-4101.hang track=video
+[page] subscribe ok: id=1 broadcast=smoke-js-web-4859-4101.hang track=video
+[page] subscribe update: id=1 broadcast=smoke-js-web-4859-4101.hang track=video
+decoded 4 frames from smoke-js-web-4859-4101.hang (vite)
