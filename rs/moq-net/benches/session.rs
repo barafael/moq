@@ -852,10 +852,9 @@ fn allocations() {
 	}
 }
 
-/// Versions for the churn sweep: the one draft with a MAX_REQUEST_ID window and the
-/// newest draft without it. Lite is left out: a reopened subscription there never
-/// reaches the relay, so there is no request round trip to time.
-const CHURN_VERSIONS: [&str; 2] = ["moq-transport-14", "moq-transport-22"];
+/// Versions for the churn sweep: Lite, the draft with a MAX_REQUEST_ID window, and
+/// the newest draft without it.
+const CHURN_VERSIONS: [&str; 3] = ["moq-lite-06", "moq-transport-14", "moq-transport-22"];
 
 /// Sessions on one relay, each holding `held` subscriptions open while it churns one more.
 #[derive(Clone, Copy)]
@@ -921,14 +920,23 @@ impl ChurnRoom {
 	}
 
 	/// Open and close one subscription per iteration, round-robin over the sessions.
-	async fn measure(&self, iters: u64) -> Duration {
+	async fn measure(&mut self, iters: u64) -> Duration {
 		let start = Instant::now();
 		for iter in 0..iters as usize {
 			let session = iter % self.broadcasts.len();
 			let track = self.broadcasts[session].track(&format!("churn{session}")).unwrap();
-			let subscriber = track.subscribe(None).await.unwrap();
-			// The relay saw the request, rather than a cached track answering it locally.
-			self.churn[session].demand().used().await.unwrap();
+			let mut subscriber = track.subscribe(None).await.unwrap();
+			// Keep the reader polled while its per-route subscription resolves. No
+			// groups are produced here, so this starts demand without consuming data.
+			kio::wait(|waiter| {
+				assert!(subscriber.poll_recv_group(waiter).is_pending());
+				while std::task::ready!(self.churn[session].poll_subscription_changed(waiter))
+					.unwrap()
+					.is_none()
+				{}
+				std::task::Poll::Ready(())
+			})
+			.await;
 			drop(subscriber);
 			drop(track);
 			self.churn[session].demand().unused().await.unwrap();
