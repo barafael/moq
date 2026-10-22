@@ -19,7 +19,7 @@ pub struct Config {
 	pub compression: Compression,
 
 	/// Maximum bytes in an inflated frame or the compact JSON of the reconstructed value.
-	/// Unset preserves the DEFLATE decoder's default frame cap and leaves state size unlimited.
+	/// Unset uses [`moq_flate::DEFAULT_MAX_FRAME_SIZE`], the largest snapshot a producer publishes.
 	pub max_size: Option<usize>,
 }
 

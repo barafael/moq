@@ -1,7 +1,7 @@
-import { Decoder as Flate } from "@moq/flate";
+import { DEFAULT_MAX_FRAME_SIZE, Decoder as Flate } from "@moq/flate";
 
 import { isDeflate } from "../compression.ts";
-import { merge } from "../diff.ts";
+import { isObject } from "../diff.ts";
 import { MissingSnapshot } from "../error.ts";
 import type { Config } from "./encoder.ts";
 
@@ -26,6 +26,11 @@ export class Decoder<T> {
 	#flate?: Flate;
 	// The reconstructed value, `undefined` until the first snapshot.
 	#current?: unknown;
+	// The reconstructed value's size in JSON bytes: the snapshot's own bytes, then moved by what each
+	// patch adds, replaces, or removes (see {@link apply}). The snapshot is not re-serialized, so a
+	// number printed longer than its source (`9e9`) goes uncounted, but the value's memory follows
+	// its nodes, which its bytes bound all the same.
+	#size = 0;
 
 	constructor(config: Pick<Config<T>, "schema" | "compression"> = {}) {
 		this.#schema = config.schema;
@@ -41,17 +46,27 @@ export class Decoder<T> {
 	snapshot(payload: Uint8Array): void {
 		// Each group is its own compressed stream, so the window starts cold here.
 		this.#flate = this.#decompress ? new Flate() : undefined;
-		this.#current = this.#parse(payload);
+		const plain = this.#inflate(payload);
+		this.#current = this.#parse(plain);
+		this.#size = plain.byteLength;
 	}
 
 	/**
 	 * Apply one of a group's later frames: an RFC 7396 merge patch against the current value.
 	 *
-	 * Throws when no snapshot has been applied yet, since a patch has nothing to apply to.
+	 * Throws when no snapshot has been applied yet, since a patch has nothing to apply to, or when
+	 * the result would outgrow the largest snapshot a producer publishes. A refused patch drops the
+	 * value until the next snapshot.
 	 */
 	delta(payload: Uint8Array): void {
 		if (this.#current === undefined) throw new MissingSnapshot();
-		this.#current = merge(this.#current, this.#parse(payload));
+		const [value, growth] = apply(this.#current, this.#parse(this.#inflate(payload)));
+		this.#current = value;
+		this.#size += growth;
+		if (this.#size > DEFAULT_MAX_FRAME_SIZE) {
+			this.#current = undefined;
+			throw new Error(`reconstructed value exceeded ${DEFAULT_MAX_FRAME_SIZE} bytes`);
+		}
 	}
 
 	/**
@@ -76,9 +91,58 @@ export class Decoder<T> {
 		return this.#schema ? this.#schema.parse(this.#current) : (structuredClone(this.#current) as T);
 	}
 
-	// Decompress a frame against the group's window when compressing, then parse it as JSON.
-	#parse(payload: Uint8Array): unknown {
-		const plain = this.#flate ? this.#flate.frame(payload) : payload;
+	// Decompress a frame against the group's window when compressing.
+	#inflate(payload: Uint8Array): Uint8Array {
+		return this.#flate ? this.#flate.frame(payload) : payload;
+	}
+
+	#parse(plain: Uint8Array): unknown {
 		return JSON.parse(new TextDecoder().decode(plain));
 	}
+}
+
+const utf8 = new TextEncoder();
+
+// Bytes in a value's JSON, or none for an absent one.
+function bytes(value: unknown): number {
+	return value === undefined ? 0 : utf8.encode(JSON.stringify(value)).byteLength;
+}
+
+// Apply an RFC 7396 merge patch, mutating `target` where it can, and return the result with how many
+// JSON bytes it grew. Only the patch and what it replaces or removes are measured, never the
+// untouched rest, so the cost follows the frame rather than the value it lands on. A member counts its
+// key, value, colon, and comma, without the O(n) scan for whether an object has other members, so
+// the count can be off from the compact JSON by a byte per object but never drifts as members come
+// and go.
+function apply(target: unknown, patch: unknown): [unknown, number] {
+	if (!isObject(patch)) return [patch, bytes(patch) - bytes(target)];
+
+	let growth = 0;
+	let object: Record<string, unknown>;
+	if (isObject(target)) {
+		object = target;
+	} else {
+		object = {};
+		growth += 2 - bytes(target);
+	}
+
+	for (const [key, value] of Object.entries(patch)) {
+		const present = Object.hasOwn(object, key);
+		if (value === null) {
+			if (!present) continue;
+			growth -= bytes(key) + bytes(object[key]) + 2;
+			delete object[key];
+		} else if (present) {
+			const [next, grown] = apply(object[key], value);
+			object[key] = next;
+			growth += grown;
+		} else {
+			const [next, grown] = apply(undefined, value);
+			// Defined rather than assigned, so a `__proto__` key becomes a member instead of the
+			// object's prototype.
+			Object.defineProperty(object, key, { value: next, enumerable: true, writable: true, configurable: true });
+			growth += bytes(key) + 2 + grown;
+		}
+	}
+	return [object, growth];
 }
