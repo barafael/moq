@@ -2537,7 +2537,13 @@ where
 				Some(requested) => requested.to_owned(),
 				None => continue,
 			};
-			let source = crate::model::broadcast::SourceGuard::new(self.origin.create_source(&requested));
+			let source = match self.origin.answer_source(&request) {
+				Ok(source) => crate::session::SourceGuard::new(source),
+				Err(err) => {
+					request.reject(err);
+					continue;
+				}
+			};
 			// The handler exists before the requester sees the source, so a track it asks
 			// for before `run_broadcast` first polls queues instead of failing `NotFound`.
 			let dynamic = source.dynamic();
@@ -2610,7 +2616,7 @@ where
 	async fn run_broadcast(
 		&self,
 		path: Path<'_>,
-		source: crate::model::broadcast::SourceGuard,
+		source: crate::session::SourceGuard,
 		mut broadcast: broadcast::Dynamic,
 		route: Option<kio::Consumer<()>>,
 	) -> Result<(), Error> {
@@ -2722,7 +2728,7 @@ where
 		// Open while the namespace stays announced and authorized, which its own token may
 		// have done in place of the scope. `None` once retracted.
 		route: Option<kio::Consumer<()>>,
-		request: track::Request,
+		mut request: track::Request,
 	) {
 		// Data streams wait on the alias bound by SUBSCRIBE_OK, so leave the model request
 		// pending until its immutable track metadata is known.
@@ -2752,9 +2758,10 @@ where
 					request.reject(Error::Unauthorized);
 					return;
 				}
-				None if request.reject_unused(Error::Cancel) => return,
-				// Demand returned in the gap.
-				None => continue,
+				None => match request.reject_unused(Error::Cancel) {
+					Ok(()) => return,
+					Err(returned) => request = returned,
+				},
 			}
 		}
 
@@ -3116,9 +3123,10 @@ where
 						else {
 							break None;
 						};
-						if pending.reject_unused(Error::Cancel) {
-							break None;
-						}
+						let pending = match pending.reject_unused(Error::Cancel) {
+							Ok(()) => break None,
+							Err(returned) => returned,
+						};
 						if let Some(held) = state.subscribes.get_mut(&request_id) {
 							held.pending = Some(pending);
 						}
@@ -4137,6 +4145,7 @@ where
 		// Nobody wanting the track any more ends the wait on a peer that may never answer,
 		// and the session ending fails it with the session's reason.
 		let mut demand = request.demand();
+		let mut pending = Some(request);
 		let mut closed = self.session.clone();
 		let response = {
 			let mut response = std::pin::pin!(self.read_track_status_response(&mut stream));
@@ -4163,15 +4172,17 @@ where
 				.await;
 				match res {
 					Some(res) => break Some(res),
-					None if request.reject_unused(Error::Cancel) => break None,
-					None => continue,
+					None => match pending.take().expect("request pending").reject_unused(Error::Cancel) {
+						Ok(()) => break None,
+						Err(returned) => pending = Some(returned),
+					},
 				}
 			}
 		};
 		let response = match response {
 			Some(SetupResponse::Response(response)) => response,
 			Some(SetupResponse::Cancelled(err)) => {
-				request.reject(err);
+				pending.take().expect("request pending").reject(err);
 				stream.reader.abort(&Error::Cancel);
 				let _ = stream.writer.close().await;
 				return None;
@@ -4182,6 +4193,7 @@ where
 				return None;
 			}
 		};
+		let request = pending.expect("a received response keeps its request");
 		let _ = stream.writer.finish();
 		let ok = match response {
 			// A track that needs a property we do not understand is not forwarded.
@@ -9320,7 +9332,7 @@ mod tests {
 	async fn a_minted_source_closes_unheld_or_retracted() {
 		let (subscriber, origin) = cluster_subscriber(crate::Hop::new(1).unwrap());
 		let run = |route: &kio::Producer<()>| {
-			let source = crate::model::broadcast::SourceGuard::new(origin.create_source("pool/p"));
+			let source = crate::session::SourceGuard::new(origin.create_source("pool/p"));
 			let (holder, dynamic) = (source.consume(), source.dynamic());
 			let (this, route) = (subscriber.clone(), route.consume());
 			let task = moq_clock::sim::spawn(async move {
