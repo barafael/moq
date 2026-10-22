@@ -1,22 +1,27 @@
 [page] negotiated protocol: moqt-16
-[page] adapter: close() called
 [page] connection closed, reconnecting
+[page] adapter: close() called
+[page] adapter error WebTransportError: The session is closed.
 [page] subscribe_namespace error: The WebTransport connection is not open.
 [page] negotiated protocol: moqt-16
+[page] subscribe_namespace error: The stream was aborted by the remote server
+[page] broadcast discovery failed; broadcasts resolve on request only. NetworkError: The stream was aborted by the remote server
+    at e.write (http://localhost:45689/assets/index-BLWAqUUB.js:1:104338)
+    at e.u16 (http://localhost:45689/assets/index-BLWAqUUB.js:1:103890)
+    at ec (http://localhost:45689/assets/index-BLWAqUUB.js:1:106779)
+    at async #_ (http://localhost:45689/assets/index-BLWAqUUB.js:1:217128)
+[page] subscribe start: id=2 broadcast=smoke-js-web-5432-32099.hang track=catalog.json
+[page] subscribe error: id=2 broadcast=smoke-js-web-5432-32099.hang track=catalog.json error=The stream was aborted by the remote server
+[page] error fetching catalog smoke-js-web-5432-32099.hang NetworkError: The stream was aborted by the remote server
+    at e.write (http://localhost:45689/assets/index-BLWAqUUB.js:1:104338)
+    at http://localhost:45689/assets/index-BLWAqUUB.js:1:109741
+    at http://localhost:45689/assets/index-BLWAqUUB.js:1:91596
+    at wo.<anonymous> (http://localhost:45689/assets/index-BLWAqUUB.js:1:89512)
+    at Generator.next (<anonymous>)
+    at o (http://localhost:45689/assets/index-BLWAqUUB.js:1:88870)
 [page] connection closed, reconnecting
 [page] adapter: close() called
 [page] fatal error running connection WebTransportError: Connection lost.
-[page] subscribe_namespace error: The WebTransport connection is not open.
-[page] negotiated protocol: moqt-16
-[page] subscribe_namespace written: requestId=0
-[page] adapter: close() called
-[page] connection closed, reconnecting
-[page] subscribe_namespace error: The session is closed. (source=session)
-[page] negotiated protocol: moqt-16
-[page] connection closed, reconnecting
-[page] adapter: close() called
-[page] fatal error running connection WebTransportError: Connection lost.
-[page] subscribe_namespace error: The WebTransport connection is not open.
 [page] negotiated protocol: moqt-16
 [page] subscribe_namespace written: requestId=0
 [page] connection closed, reconnecting
@@ -29,22 +34,25 @@
 [page] fatal error running connection WebTransportError: Connection lost.
 [page] subscribe_namespace error: The WebTransport connection is not open.
 [page] negotiated protocol: moqt-16
-[page] subscribe_namespace written: requestId=0
-[page] connection closed, reconnecting
-[page] adapter: close() called
-[page] fatal error running connection WebTransportError: Connection lost.
-[page] subscribe_namespace error: Connection lost. (source=session)
+[page] connection error: WebTransportError: Connection lost.
 [page] negotiated protocol: moqt-16
 [page] connection closed, reconnecting
 [page] adapter: close() called
 [page] fatal error running connection WebTransportError: Connection lost.
 [page] subscribe_namespace error: The WebTransport connection is not open.
 [page] negotiated protocol: moqt-16
-[page] adapter: close() called
 [page] connection closed, reconnecting
+[page] adapter: close() called
+[page] fatal error running connection WebTransportError: Connection lost.
 [page] subscribe_namespace error: The WebTransport connection is not open.
 [page] negotiated protocol: moqt-16
-[page] adapter: close() called
 [page] connection closed, reconnecting
+[page] adapter: close() called
+[page] adapter error WebTransportError: The session is closed.
 [page] subscribe_namespace error: The WebTransport connection is not open.
-decoded 0 frames from smoke-js-web-5101-18522.hang (vite)
+[page] negotiated protocol: moqt-16
+[page] connection closed, reconnecting
+[page] adapter: close() called
+[page] fatal error running connection WebTransportError: Connection lost.
+[page] subscribe_namespace error: The WebTransport connection is not open.
+decoded 0 frames from smoke-js-web-5432-32099.hang (vite)

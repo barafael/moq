@@ -2,10 +2,10 @@ https://relay.moqtail.dev:8244/ connected via WebTransport
 https://relay.moqtail.dev:8244/ negotiated ALPN: moqt-22
 connected version=moq-transport-22
 subscribe_namespace written: requestId=0
-announced: broadcast=smoke-js-web-5101-6959.hang active=true
-subscribe start: id=2 broadcast=smoke-js-web-5101-6959.hang track=catalog.json
-subscribe written: id=2 broadcast=smoke-js-web-5101-6959.hang track=catalog.json
-subscribe ok: id=2 broadcast=smoke-js-web-5101-6959.hang track=catalog.json
+announced: broadcast=smoke-js-web-5432-19843.hang active=true
+subscribe start: id=2 broadcast=smoke-js-web-5432-19843.hang track=catalog.json
+subscribe written: id=2 broadcast=smoke-js-web-5432-19843.hang track=catalog.json
+subscribe ok: id=2 broadcast=smoke-js-web-5432-19843.hang track=catalog.json
 error: timed out waiting for data
-announced: broadcast=smoke-js-web-5101-6959.hang active=false
-subscribe error: id=2 broadcast=smoke-js-web-5101-6959.hang track=catalog.json error=session error: connection error: closed
+announced: broadcast=smoke-js-web-5432-19843.hang active=false
+subscribe error: id=2 broadcast=smoke-js-web-5432-19843.hang track=catalog.json error=session error: connection error: closed
