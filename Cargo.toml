@@ -237,6 +237,7 @@ serde_json = "1"
 serde_with = "3"
 sha2 = "0.11"
 slab = "0.4.12"
+smallvec = { version = "1.16.3", features = ["union"] }
 socket2 = "0.6"
 # Sans-IO WebRTC. The default `examples` feature pulls in a web server, and aws-lc-rs
 # is the provider rustls already brings.

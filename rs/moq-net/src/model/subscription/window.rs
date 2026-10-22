@@ -7,6 +7,7 @@
 use std::ops;
 
 use rangemap::RangeInclusiveSet;
+use smallvec::SmallVec;
 
 use super::{Anchor, Range};
 use crate::{Error, Result, Timestamp};
@@ -108,15 +109,66 @@ pub(in crate::model) fn later(time: Timestamp, other: Timestamp) -> bool {
 #[derive(Debug)]
 pub(in crate::model) struct Window {
 	/// What these were resolved from, so only replacing the ranges resolves again.
-	ranges: Vec<Range>,
-	spans: Vec<Span>,
+	ranges: SmallVec<[Range; 1]>,
+	spans: SmallVec<[Span; 1]>,
 	/// The groups the spans cover, an unsettled time end through its cap.
-	groups: RangeInclusiveSet<u64>,
+	groups: Groups,
 	/// A relative anchor waits on a first group, so nothing is filtered yet.
 	pending: bool,
 	/// Nothing is left to resolve: see [`Self::is_settled`]. Kept so a read checks it once
 	/// per group, not once per range.
 	settled: bool,
+}
+
+/// A single range needs no tree; several resolved spans use the existing union.
+#[derive(Debug)]
+enum Groups {
+	Inline(Option<ops::RangeInclusive<u64>>),
+	Set(RangeInclusiveSet<u64>),
+}
+
+impl Groups {
+	fn new(mut runs: impl Iterator<Item = ops::RangeInclusive<u64>>) -> Self {
+		let Some(first) = runs.next() else {
+			return Self::Inline(None);
+		};
+		let Some(second) = runs.next() else {
+			return Self::Inline(Some(first));
+		};
+		Self::Set(
+			std::iter::once(first)
+				.chain(std::iter::once(second))
+				.chain(runs)
+				.collect(),
+		)
+	}
+
+	fn contains(&self, sequence: &u64) -> bool {
+		match self {
+			Self::Inline(run) => run.as_ref().is_some_and(|run| run.contains(sequence)),
+			Self::Set(runs) => runs.contains(sequence),
+		}
+	}
+
+	fn iter(&self) -> impl DoubleEndedIterator<Item = &ops::RangeInclusive<u64>> {
+		let (inline, set) = match self {
+			Self::Inline(run) => (run.as_ref(), None),
+			Self::Set(runs) => (None, Some(runs.iter())),
+		};
+		inline.into_iter().chain(set.into_iter().flatten())
+	}
+
+	fn overlapping(&self, query: ops::RangeInclusive<u64>) -> impl Iterator<Item = &ops::RangeInclusive<u64>> {
+		let (inline, set) = match self {
+			Self::Inline(run) => (
+				run.as_ref()
+					.filter(|run| run.start() <= query.end() && query.start() <= run.end()),
+				None,
+			),
+			Self::Set(runs) => (None, Some(runs.overlapping(query))),
+		};
+		inline.into_iter().chain(set.into_iter().flatten())
+	}
 }
 
 /// One non-empty range, resolved.
@@ -139,6 +191,17 @@ impl Span {
 			End::Open => None,
 			End::Time(time) => time.limit,
 		}
+	}
+
+	fn run(&self) -> Option<ops::RangeInclusive<u64>> {
+		let last = match self.limit() {
+			Some(end) => match end.checked_sub(1) {
+				Some(last) if last >= self.start => last,
+				_ => return None,
+			},
+			None => u64::MAX,
+		};
+		Some(self.start..=last)
 	}
 
 	/// Whether group `sequence` is read now.
@@ -314,9 +377,9 @@ impl Window {
 	/// Refuses a time anchor on an untimed track with [`Error::TimestampMismatch`].
 	pub fn new(ranges: &[Range], latest: Option<u64>, holdings: &impl Holdings) -> Result<Self> {
 		let mut window = Self {
-			ranges: ranges.to_vec(),
-			spans: Vec::new(),
-			groups: RangeInclusiveSet::new(),
+			ranges: SmallVec::from_slice(ranges),
+			spans: SmallVec::new(),
+			groups: Groups::Inline(None),
 			pending: false,
 			settled: false,
 		};
@@ -559,17 +622,7 @@ impl Window {
 
 	fn rebuild(&mut self) {
 		self.settled = !self.pending && !self.spans.iter().any(|span| matches!(span.end, End::Time(_)));
-		self.groups = RangeInclusiveSet::new();
-		for span in &self.spans {
-			let last = match span.limit() {
-				Some(end) => match end.checked_sub(1) {
-					Some(last) if last >= span.start => last,
-					_ => continue,
-				},
-				None => u64::MAX,
-			};
-			self.groups.insert(span.start..=last);
-		}
+		self.groups = Groups::new(self.spans.iter().filter_map(Span::run));
 	}
 }
 
@@ -778,6 +831,26 @@ mod tests {
 		let window = Window::new(&[], None, &Untimed).unwrap();
 		assert_eq!(covered(&window, 4), Vec::<u64>::new());
 		assert_eq!((window.floor(), window.end()), (Some(0), Some(0)));
+	}
+
+	/// An open run includes the last sequence, including when adjacent ranges join there.
+	#[test]
+	fn adjacent_ranges_preserve_an_open_run_at_the_last_sequence() {
+		for ranges in [
+			vec![Range::groups(u64::MAX - 3..)],
+			vec![Range::groups(u64::MAX - 3..u64::MAX - 1), Range::groups(u64::MAX - 1..)],
+		] {
+			let window = Window::new(&ranges, None, &Untimed).unwrap();
+			assert_eq!(window.floor(), Some(u64::MAX - 3));
+			assert_eq!(window.end(), None);
+			assert!(window.contains(u64::MAX));
+			assert_eq!(
+				window.runs(u64::MAX - 2).collect::<Vec<_>>(),
+				vec![u64::MAX - 2..=u64::MAX]
+			);
+			assert_eq!(window.clip(u64::MAX - 4..u64::MAX), Some(u64::MAX - 3..u64::MAX));
+			assert_eq!(window.clip(u64::MAX..u64::MAX), None);
+		}
 	}
 
 	/// Only a group an absolute anchor falls inside reads part of itself, and overlapping
