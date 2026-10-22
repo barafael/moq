@@ -2,17 +2,19 @@ https://aiomoqt-relay.marzresearch.net:4443/ connected via WebTransport
 https://aiomoqt-relay.marzresearch.net:4443/ negotiated ALPN: moqt-22
 connected version=moq-transport-22
 subscribe_namespace written: requestId=0
-announced: broadcast=g5-4410eb8c active=true
-announced: broadcast=smoke-js-web-4904-5077.hang active=true
-subscribe start: id=2 broadcast=smoke-js-web-4904-5077.hang track=catalog.json
-subscribe written: id=2 broadcast=smoke-js-web-4904-5077.hang track=catalog.json
-subscribe ok: id=2 broadcast=smoke-js-web-4904-5077.hang track=catalog.json
+announced: broadcast=g5-77fd9a2e active=true
+announced: broadcast=smoke-js-web-4859-24315.hang active=true
+subscribe start: id=2 broadcast=smoke-js-web-4859-24315.hang track=catalog.json
+subscribe written: id=2 broadcast=smoke-js-web-4859-24315.hang track=catalog.json
+subscribe ok: id=2 broadcast=smoke-js-web-4859-24315.hang track=catalog.json
 error: timed out waiting for data
+subscribe error: id=2 broadcast=smoke-js-web-4859-24315.hang track=catalog.json error=session error: connection error: closed
 subscribe_namespace error: session error: connection error: closed
-announced: broadcast=g5-4410eb8c active=false
-announced: broadcast=smoke-js-web-4904-5077.hang active=false
+announced: broadcast=g5-77fd9a2e active=false
+announced: broadcast=smoke-js-web-4859-24315.hang active=false
 broadcast discovery failed; broadcasts resolve on request only. warn: session error: connection error: closed
  code: "GenericFailure"
 
+      at async #fill (/home/runner/work/moq/moq/test/smoke/clients/js-native/node_modules/@moq/net/stream.js:167:50)
+      at async done (/home/runner/work/moq/moq/test/smoke/clients/js-native/node_modules/@moq/net/stream.js:333:29)
 
-subscribe error: id=2 broadcast=smoke-js-web-4904-5077.hang track=catalog.json error=session error: connection error: closed
