@@ -1,4 +1,4 @@
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it, spyOn } from "bun:test";
 import type * as Catalog from "@moq/hang/catalog";
 import { Time } from "@moq/net";
 import { Signal } from "@moq/signals";
@@ -10,6 +10,51 @@ import { renditionJitter } from "./video/playhead";
 const flush = () => new Promise((resolve) => setTimeout(resolve, 0));
 
 describe("delay and buffer", () => {
+	it("keeps a fixed delay independent of rendition jitter", () => {
+		const jobs: (() => void)[] = [];
+		const microtasks = spyOn(globalThis, "queueMicrotask").mockImplementation((job) => {
+			jobs.push(job);
+		});
+		const clock = spyOn(Time.Milli, "now").mockReturnValue(Time.Milli(1_000));
+		const flushJobs = () => {
+			for (let job = jobs.shift(); job; job = jobs.shift()) job();
+		};
+		let sync: Sync | undefined;
+		try {
+			for (const fixed of [0, 100, 250]) {
+				const delay = new Signal<Delay>(Time.Milli(fixed));
+				const rendition = new Signal<Time.Milli | undefined>(Time.Milli(234));
+				sync = new Sync({ delay, buffer: Time.Milli(500) });
+				const unregister = sync.register(rendition);
+				flushJobs();
+				sync.received(Time.Milli(500));
+				expect(sync.out.delay.peek()).toBe(Time.Milli(fixed));
+				expect(sync.out.maxAge.peek()).toBe(Time.Milli(fixed + 500));
+				expect(sync.now()).toBe(Time.Milli(500 - fixed));
+
+				// A growing publisher estimate must not move the fixed-delay playhead back.
+				rendition.set(Time.Milli(42_000));
+				flushJobs();
+				expect(sync.out.delay.peek()).toBe(Time.Milli(fixed));
+				expect(sync.now()).toBe(Time.Milli(500 - fixed));
+
+				delay.set(Time.Milli(fixed + 50));
+				flushJobs();
+				expect(sync.out.delay.peek()).toBe(Time.Milli(fixed + 50));
+				expect(sync.out.maxAge.peek()).toBe(Time.Milli(fixed + 550));
+
+				unregister();
+				flushJobs();
+				expect(sync.out.delay.peek()).toBe(Time.Milli(fixed + 50));
+				sync.close();
+			}
+		} finally {
+			sync?.close();
+			clock.mockRestore();
+			microtasks.mockRestore();
+		}
+	});
+
 	it("holds no lookahead by default", async () => {
 		const sync = new Sync();
 		await flush();
@@ -59,6 +104,7 @@ describe("delay and buffer", () => {
 
 	it("holds nothing when instant, whatever the buffer says", async () => {
 		const sync = new Sync({ delay: "instant", buffer: 30_000 as Time.Milli });
+		sync.register(new Signal(Time.Milli(42_000)));
 		await flush();
 		expect(sync.out.buffered.peek()).toBe(false);
 		expect(sync.out.delay.peek()).toBe(0 as Time.Milli);
@@ -68,7 +114,7 @@ describe("delay and buffer", () => {
 
 	it("includes registered decoder jitter until the decoder unregisters", async () => {
 		const media = new Signal<Time.Milli | undefined>(20 as Time.Milli);
-		const sync = new Sync({ delay: 100 as Time.Milli });
+		const sync = new Sync({ delay: "auto" });
 		const unregister = sync.register(media);
 		await flush();
 		expect(sync.out.delay.peek()).toBe(120 as Time.Milli);
@@ -86,7 +132,7 @@ describe("delay and buffer", () => {
 	it("holds the largest delay plus jitter among subscribed renditions", async () => {
 		const audio = { codec: "opus", container: { kind: "legacy" }, sampleRate: 48000, numberOfChannels: 2 };
 		const video = { codec: "avc1.640028", container: { kind: "legacy" }, jitter: 34, delay: 200 };
-		const sync = new Sync({ delay: 100 as Time.Milli });
+		const sync = new Sync({ delay: "auto" });
 		sync.register(new Signal(playbackJitter(audio as Catalog.AudioConfig)));
 		const unsubscribe = sync.register(new Signal(renditionJitter(video as Catalog.VideoConfig)));
 		await flush();
@@ -102,7 +148,7 @@ describe("delay and buffer", () => {
 
 	it("unregisters duplicate jitter inputs independently", async () => {
 		const media = new Signal<Time.Milli | undefined>(20 as Time.Milli);
-		const sync = new Sync({ delay: 100 as Time.Milli });
+		const sync = new Sync({ delay: "auto" });
 		const unregisterFirst = sync.register(media);
 		const unregisterSecond = sync.register(media);
 
