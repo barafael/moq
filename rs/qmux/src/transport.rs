@@ -92,12 +92,14 @@ pub trait Reader: Send + 'static {
 // `recv_record`/`recv_qmux00_frame` are safe to keep as-is.
 #[cfg(any(feature = "tcp", all(unix, feature = "uds")))]
 mod stream_transport {
+	use std::sync::Arc;
+
 	use bytes::{BufMut, Bytes, BytesMut};
 	use moq_quic::VarInt;
 	use moq_quic::coding::Codec;
 	use tokio::io::{AsyncRead, AsyncReadExt, AsyncWrite, AsyncWriteExt, BufReader, BufWriter};
 	use tokio::sync::mpsc;
-	use tokio::task::JoinHandle;
+	use tokio::task::{AbortHandle, JoinHandle};
 
 	use super::{Reader, Transport, Writer};
 	use crate::{Error, MAX_FRAME_SIZE, Version};
@@ -137,14 +139,23 @@ mod stream_transport {
 	pub struct StreamWriter<T> {
 		writer: BufWriter<tokio::io::WriteHalf<T>>,
 		version: Version,
+		reader_task: JoinHandle<()>,
+		_reader_lifetime: Arc<ReaderTask>,
 	}
 
-	/// The receive half of a byte-stream [`Stream`]. Owns the reader task's
-	/// abort handle so the task can't outlive the receive half.
+	/// The receive half of a byte-stream [`Stream`].
 	pub struct StreamReader {
 		rx: mpsc::Receiver<Result<Bytes, Error>>,
-		/// Aborted on drop so the reader task can't outlive the transport.
-		reader_task: JoinHandle<()>,
+		_reader_lifetime: Arc<ReaderTask>,
+	}
+
+	// Either half can outlive the other; the last owner cancels the socket read.
+	struct ReaderTask(AbortHandle);
+
+	impl Drop for ReaderTask {
+		fn drop(&mut self) {
+			self.0.abort();
+		}
 	}
 
 	impl<T: AsyncRead + AsyncWrite + Send + 'static> Stream<T> {
@@ -162,12 +173,18 @@ mod stream_transport {
 				usize::try_from(our_max_record_size).unwrap_or(usize::MAX),
 				tx,
 			));
+			let reader_lifetime = Arc::new(ReaderTask(reader_task.abort_handle()));
 			Self {
 				writer: StreamWriter {
 					writer: BufWriter::new(write),
 					version,
+					reader_task,
+					_reader_lifetime: reader_lifetime.clone(),
 				},
-				reader: StreamReader { rx, reader_task },
+				reader: StreamReader {
+					rx,
+					_reader_lifetime: reader_lifetime,
+				},
 				socket_stats: None,
 			}
 		}
@@ -193,14 +210,6 @@ mod stream_transport {
 
 		fn socket_stats(&self) -> Option<crate::SharedSocketStats> {
 			self.socket_stats.clone()
-		}
-	}
-
-	impl Drop for StreamReader {
-		fn drop(&mut self) {
-			// Make sure the reader task doesn't outlive the transport; otherwise
-			// it would hold the read half open until the connection drops.
-			self.reader_task.abort();
 		}
 	}
 
@@ -233,6 +242,8 @@ mod stream_transport {
 
 		async fn close(&mut self) -> Result<(), Error> {
 			self.writer.shutdown().await?;
+			// Closing a TCP socket with unread peer data can reset it and discard our close.
+			(&mut self.reader_task).await.map_err(std::io::Error::other)?;
 			Ok(())
 		}
 	}
@@ -248,7 +259,7 @@ mod stream_transport {
 
 	/// Reader task: pull complete frames off the wire and ship them through `tx`.
 	/// On parse error, send the error and exit. If `tx` is closed (the transport
-	/// was dropped), exit silently.
+	/// was dropped), drain the peer until EOF so the writer can close gracefully.
 	async fn reader_loop<R: AsyncRead + Unpin>(
 		mut reader: BufReader<R>,
 		version: Version,
@@ -262,6 +273,9 @@ mod stream_transport {
 			};
 			let stop = result.is_err();
 			if tx.send(result).await.is_err() {
+				// The session no longer reads records, but the peer can still be finishing
+				// its send half. Discard without buffering; the writer owns cancellation.
+				let _ = tokio::io::copy(&mut reader, &mut tokio::io::sink()).await;
 				return;
 			}
 			if stop {
@@ -460,6 +474,59 @@ mod stream_transport {
 		use super::*;
 		use crate::transport::{Reader, Transport};
 		use tokio::io::AsyncWriteExt;
+
+		#[tokio::test(start_paused = true)]
+		async fn graceful_close_drains_the_peer_after_our_send_half_ends() {
+			for &version in Version::ALL {
+				let (stream, mut peer) = tokio::io::duplex(64);
+				let (mut writer, reader) = Stream::new(stream, version, 16 * 1024).split();
+				drop(reader);
+
+				let close = writer.close();
+				tokio::pin!(close);
+				let mut extra = [0];
+				tokio::select! {
+					biased;
+					result = &mut close => panic!("{version:?}: closed before the peer finished: {result:?}"),
+					result = peer.read(&mut extra) => assert_eq!(result.unwrap(), 0),
+				}
+
+				// The peer can still have data in flight after it reads our FIN. More than the
+				// pipe holds proves the receiver is draining it rather than merely staying alive.
+				peer.write_all(&[0; 1024]).await.expect("drain peer data");
+				peer.shutdown().await.expect("peer FIN");
+				close.await.expect("graceful close");
+			}
+		}
+
+		#[tokio::test(start_paused = true)]
+		async fn cancelling_graceful_close_releases_the_receive_half() {
+			let (stream, mut peer) = tokio::io::duplex(64);
+			let (mut writer, reader) = Stream::new(stream, Version::QMux02, 16 * 1024).split();
+			drop(reader);
+
+			let mut close = Box::pin(writer.close());
+			let mut extra = [0];
+			tokio::select! {
+				biased;
+				result = &mut close => panic!("closed before the peer finished: {result:?}"),
+				result = peer.read(&mut extra) => assert_eq!(result.unwrap(), 0),
+			}
+			drop(close);
+			drop(writer);
+
+			// A detached drain would let this write finish, or park it once the pipe fills.
+			peer.write_all(&[0; 1024]).await.expect_err("receive half released");
+		}
+
+		#[tokio::test(start_paused = true)]
+		async fn dropping_the_send_half_keeps_the_receive_half_usable() {
+			let (stream, mut peer) = tokio::io::duplex(64);
+			let (writer, mut reader) = Stream::new(stream, Version::QMux02, 16 * 1024).split();
+			drop(writer);
+			peer.write_all(&[1, 42]).await.expect("peer record");
+			assert_eq!(reader.recv().await.expect("receive half remains open"), &[42][..]);
+		}
 
 		// Drip a frame in one byte at a time, racing each `recv` against an
 		// immediate yield so the recv future is dropped every iteration. With

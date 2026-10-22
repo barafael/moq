@@ -20,9 +20,9 @@ use rustc_hash::FxHashMap;
 use crate::transport::{Reader, Transport, Writer};
 use crate::{Config, Error, SharedSocketStats};
 
-/// How long a closing session keeps writing to deliver its close frame before it drops the
-/// transport anyway, like QUIC's draining period. A peer that stopped reading cannot hold the
-/// transport open past it.
+/// How long a closing session keeps the transport open to deliver its close and finish graceful
+/// shutdown, like QUIC's draining period. A peer that stopped reading or never finishes its send
+/// half cannot hold the transport open past it.
 const CLOSE_TIMEOUT: Duration = Duration::from_secs(3);
 
 /// The most bytes gathered before the writer flushes the transport.
