@@ -29,6 +29,11 @@ public contract and inventory before this quest is complete.
   `Producer.fallback()`, with `unrouted()` as an alternative. The fallback
   returns only the request stream and close operation, since it owns no
   advertised route to update.
+- Finish validity for already handed-out but unaccepted track requests.
+  Source retirement currently stops new lookups and queue handouts, while
+  ordinary broadcast close leaves a claimed request to its handler. A late
+  answer must not serve a retired instance. Preserve writes on tracks
+  accepted before retirement, and add coverage for the unfinished handout.
 - Finish migrating test-only users of the JS request-slot wire view onto
   the public answerer, then remove that view and the exported `RequestSlot`.
   Delete the registered-but-unread `OriginConsumer.broadcasts` view.
