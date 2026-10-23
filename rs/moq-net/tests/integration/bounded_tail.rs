@@ -78,6 +78,16 @@ async fn bounded_tail(version: Option<Version>, compressed: bool, frames: u64) {
 }
 
 #[moq_clock::test]
+async fn a_bounded_lite06_copy_accepts_its_tail() {
+	moq_clock::timeout(
+		Duration::from_secs(1),
+		bounded_tail(Some("moq-lite-06".parse().unwrap()), false, 5),
+	)
+	.await
+	.expect("a later subscriber receives the lite-06 tail");
+}
+
+#[moq_clock::test]
 async fn a_bounded_plain_copy_accepts_its_tail() {
 	moq_clock::timeout(
 		Duration::from_secs(1),
