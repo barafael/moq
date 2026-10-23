@@ -18,7 +18,7 @@ const workflow = Bun.YAML.parse(await Bun.file(".github/workflows/check.yml").te
 for (const name of ["check"]) {
 	test(`${name} queries before setup and keeps its required check name`, () => {
 		const job = workflow.jobs[name];
-		expect(job.name).toBe("Check");
+		expect(job.name).toBe("PR check");
 		const scopeIndex = job.steps.findIndex((step) => step.id === "scope");
 		expect(scopeIndex).toBeGreaterThan(0);
 		const scope = job.steps[scopeIndex];
@@ -47,16 +47,13 @@ for (const name of ["check"]) {
 		}
 	});
 
-	test(`${name} uses the configured runner only for merge groups`, () => {
-		const expression = workflow.jobs[name]["runs-on"].replace(/^\$\{\{\s*|\s*\}\}$/g, "");
-		const runner = new Function("github", "vars", `return (${expression});`);
-		expect(runner({ event_name: "merge_group" }, { MOQ_QUEUE_RUNNER: "moq-queue" })).toBe("moq-queue");
-		expect(runner({ event_name: "merge_group" }, {})).toBe("ubuntu-24.04-arm");
-		expect(runner({ event_name: "pull_request" }, { MOQ_QUEUE_RUNNER: "moq-queue" })).toBe("ubuntu-24.04-arm");
+	test(`${name} runs untrusted PR code on hosted runners without cache write credentials`, () => {
+		expect(workflow.jobs[name]["runs-on"]).toBe("ubuntu-24.04-arm");
+		expect(workflow.jobs[name]).not.toHaveProperty("environment");
 	});
 }
 
-test("self-hosted queue jobs use local caches without R2 credentials", async () => {
+test("self-hosted main jobs use local caches without R2 credentials", async () => {
 	const action = Bun.YAML.parse(await Bun.file(".github/actions/rust-cache/action.yml").text());
 	const setup = action.runs.steps.find((step: Step) => step.uses?.startsWith("jdx/mr-boxington-action@"));
 	const expression = setup.with.backend
@@ -66,8 +63,12 @@ test("self-hosted queue jobs use local caches without R2 credentials", async () 
 	const backend = new Function("runner", "inputs", `return (${expression});`);
 	const guard = new Function("runner", "github", `return (${action.runs.steps[0].if});`);
 	for (const event_name of ["merge_group", "pull_request", "pull_request_target", "push", "workflow_dispatch"]) {
-		expect(guard({ environment: "self-hosted" }, { event_name })).toBe(event_name !== "merge_group");
-		expect(guard({ environment: "github-hosted" }, { event_name })).toBe(false);
+		for (const ref of ["refs/heads/main", "refs/heads/release", "refs/pull/1/merge"]) {
+			expect(guard({ environment: "self-hosted" }, { event_name, ref })).toBe(
+				event_name !== "push" || ref !== "refs/heads/main",
+			);
+			expect(guard({ environment: "github-hosted" }, { event_name, ref })).toBe(false);
+		}
 	}
 	for (const credentials of [
 		{ "access-key-id": "key", "secret-access-key": "secret" },

@@ -112,16 +112,14 @@ regenerates the repository metadata, signs it, and uploads the diff.
 ## Bootstrapping the Rust build cache
 
 `.github/actions/rust-cache` points mbx at the private `mbx-moq-dev` bucket,
-namespaced per runner OS and architecture. Every job that runs on `main` or in
-its merge queue (`gh-readonly-queue/main/*`) writes what it compiles: a queued
-pull request is about to become `main`, so its code is trusted like `main`'s.
-Release pull request jobs only read (main pull requests run no cloud CI), and
-fork pull requests, which get no secrets, build cold.
+namespaced per runner OS and architecture. Jobs on `main` write what they
+compile. Pull request jobs only read, and fork pull requests, which get no
+secrets, build cold.
 
 The write key is what enforces that: it lives in a GitHub Environment that
 only those refs can deploy to, and each writer job names that Environment only
 when it runs on one of them. mbx on its own trusts only a push to a protected
-branch, which leaves out the queue and Nightly's schedule, so the action sets
+branch, which leaves out Nightly's schedule, so the action sets
 `MBX_REMOTE_TRUST_WRITES` for writers and the Environment is the only boundary.
 
 All of this runs once, by a maintainer. Steps 1, 2, and 4 are done, and step 3
@@ -147,8 +145,8 @@ is done for `main`.
    - `mbx-read`: **Object Read only**.
    - `mbx-write`: **Object Read & Write**.
 
-3. **Create the `cache-write` Environment**, deployable from `main` and its
-   merge queue only. A protected-branches policy would admit `release` as
+3. **Create the `cache-write` Environment**, deployable from the `main`
+   branch only. A protected-branches policy would admit `release` as
    well, so name the branches instead:
 
    ```bash
@@ -157,12 +155,7 @@ is done for `main`.
    EOF
    gh api -X POST repos/moq-dev/moq/environments/cache-write/deployment-branch-policies \
      -f name=main -f type=branch
-   gh api -X POST repos/moq-dev/moq/environments/cache-write/deployment-branch-policies \
-     -f name='gh-readonly-queue/main/*' -f type=branch
    ```
-
-   Without the queue policy, every merge queue job that writes fails before
-   it starts, and the queue merges nothing.
 
 4. **Store the keys under the same two names at both levels.** An Environment
    secret shadows a repository secret of the same name, so writers get the
@@ -223,7 +216,7 @@ depends on it.
 
 Nix only trusts paths signed by the key in `flake.nix`, so the signing key is
 the trust boundary, not the bucket keys. It lives in the `cache-write`
-Environment beside one R2 token for both buckets. Only `main`, the merge queue,
+Environment beside one R2 token for both buckets. Only `main`
 and the five release tag patterns can deploy there; anything that can reach
 the key can sign any path, so a second Environment for releases would only
 guard the bucket. Readers need no secret.

@@ -1,9 +1,8 @@
 name: Dependabot
 
 # Enables auto-merge on Dependabot pull requests, so a bump lands on its own
-# once the merge queue's Check and Test pass. The main ruleset requires both
-# (a main PR reports them skipped, so auto-merge enqueues it), and dependabot.yml
-# holds every new version for 7 days, so nothing merges unreviewed by CI or the
+# once the required PR check passes. dependabot.yml holds every new version
+# for 7 days, so nothing merges unreviewed by CI or the
 # moment it is published.
 #
 # `pull_request_target` rather than `pull_request`: Dependabot runs with a
@@ -37,7 +36,7 @@ jobs:
 
     steps:
       # Smoke's flake and npm Playwright pin move together through its updater.
-      # A lock-only Dependabot PR is discovery, not a change safe to auto-enqueue.
+      # A lock-only Dependabot PR is discovery, not a change safe to auto-merge.
       - name: Require a coupled smoke update
         env:
           GH_TOKEN: ${{ github.token }}

@@ -97,15 +97,15 @@ install:
 check $BASE="":
     sh/dispatch.sh check "$BASE"
 
-# The merge queue runs this gate in one job. The test build also enforces
+# Pull requests run this gate in one job. The test build also enforces
 # default-feature clippy; distinct feature permutations and optimized binding
 # builds run nightly and on release PRs. Missing tools fail under MOQ_STRICT.
 
-# Run the merge queue's Linux gate over the branch diff against BASE.
+# Run the pull request's Linux gate over the branch diff against BASE.
 ci $BASE="":
     MOQ_STRICT=1 NEXTEST_PROFILE=ci sh/dispatch.sh ci "$BASE"
 
-# Run the queue's Linux gate over every package.
+# Run the Linux gate over every package.
 gate:
     just ci --all
 

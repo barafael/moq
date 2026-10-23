@@ -17,7 +17,7 @@ match CI. `just check` and `just fix` refuse to run outside it; set
 | `just ci-select` | Report whether CI and Rust build setup are needed, without running checks. |
 | `just fix` | Format and lint the packages this branch changed. |
 | `just check` | Compile, lint, and test the same scope. |
-| `just ci` | Run the merge queue's gate locally, strictly. PRs into `main` get no other CI, so run it before every push. |
+| `just ci` | Run the pull request gate locally, strictly, before every push. |
 | `just gate` | `just ci` over every package, as nightly and release PRs run it. |
 | `just fix --all`, `just check --all` | The same, over every package. |
 | `just pub bbb <url>` | Publish Big Buck Bunny (also `tos`, `clock`, `gst`, `hls`). |
@@ -118,7 +118,7 @@ just fix
 just ci
 ```
 
-`just ci` runs the merge queue gate for the selected scope. See
+`just ci` runs the pull request gate for the selected scope. See
 [Checks and tests](#checks-and-tests) for targeted checks while iterating.
 
 See [CONTRIBUTING.md](https://github.com/moq-dev/moq/blob/main/CONTRIBUTING.md)

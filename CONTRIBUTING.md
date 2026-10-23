@@ -9,7 +9,7 @@ under the files they change.
 
 # Commits
 
-PRs into `main` are squash-merged through the merge queue, so the PR title becomes the commit subject and the PR description becomes the body in `git log`.
+PRs into `main` are squash-merged, so the PR title becomes the commit subject and the PR description becomes the body in `git log`.
 The one exception is the maintainer's pre-release merge of `release` into `main`, which lands as a merge commit (see [Releases](#releases)).
 PRs into `release` use a merge commit, so their history survives until they land.
 
@@ -38,18 +38,13 @@ Run `just ci` before every push, and mark the PR ready yourself when the work is
 Keep it a draft only while its description lists a decision the maintainer still owns.
 Fix any merge conflicts and failing CI checks.
 
-# Merge queue
+# Merging
 
-PRs into `main` get no cloud CI: they report **Check** as skipped, and `just ci` runs the same gate locally.
-The merge queue runs Check on the PR combined with the latest `main` and the PRs queued ahead of it.
-Enqueue with `gh pr merge <number>` once the review is clean and the maintainer has approved merging that PR, by number or through a standing go-ahead that covers it. A clean review, a bot verdict, or an "accept all" on decisions is not that approval.
-Both select only what the diff touches, so a break can reach `main`; `just gate` runs the full suite, and it, the feature matrix, optimized binding builds, macOS, Windows, and the other optional workflows run nightly on `main` and on PRs into `release`.
-A PR whose diff is only quest files, tests, or CI config goes to the front, since other work builds on it: `gh pr merge` has no flag for this, so use the `enqueuePullRequest` GraphQL mutation with `jump: true`.
+PRs into `main` run **PR check** independently, and `just ci` runs the same gate locally.
+Merge with `gh pr merge --squash <number>` once checks pass, the review is clean, and the maintainer has approved merging that PR, by number or through a standing go-ahead that covers it. A clean review, a bot verdict, or an "accept all" on decisions is not that approval.
+Checks select only what the diff touches, so a break can reach `main`; `just gate` runs the full suite, and it, the feature matrix, optimized binding builds, macOS, Windows, and the other optional workflows run nightly on `main` and on PRs into `release`.
 
-A dequeued PR means the combination failed checks, timed out, or no longer meets the ruleset.
-Read the removal reason in the PR timeline and the merge group run, fix the cause, and enqueue again.
-
-Never bypass the queue with `--admin`, with one exception: the maintainer's pre-release merge of `release` into `main`, since the queue would squash it.
+Never bypass required checks with `--admin`, with one exception: the maintainer's pre-release merge of `release` into `main`, which lands as a merge commit.
 
 # AI
 

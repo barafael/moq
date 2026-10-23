@@ -11,15 +11,15 @@ it needs neither QCOW2 metadata nor a second copy-on-write layer.
 Import `moq.nixosModules.github-runner-vm` into an x86\_64 NixOS host:
 
 ```nix
-services.github-runner-vms.queue-ci = {
+services.github-runner-vms.main-ci = {
   enable = true;
   runner = {
     url = "https://github.com/example/project";
-    name = "build-host-queue";
-    labels = [ "merge-queue" ];
+    name = "build-host-main";
+    labels = [ "main-build" ];
   };
   network = { id = 0; uplink = "eth0"; };
-  tokenFile = "/var/lib/secrets/queue-runner.token";
+  tokenFile = "/var/lib/secrets/main-runner.token";
   resources = { cores = 8; memory = 16384; disk = 192; };
   guestConfig = {
     users.users.root.openssh.authorizedKeys.keyFiles = [ ./deploy.pub ];
@@ -75,18 +75,18 @@ Nix store. Keep the expired token file after registration. The guest retains its
 own long-lived credential; wiping its state requires a fresh registration token.
 Restart the host VM service after replacing the token.
 
-The host service and disk are named by the instance attribute: the example uses `queue-ci.service`
-and `/var/lib/queue-ci/root.raw`. Its disk is created once. Changing the configured
+The host service and disk are named by the instance attribute: the example uses `main-ci.service`
+and `/var/lib/main-ci/root.raw`. Its disk is created once. Changing the configured
 image does not replace existing state, and changing `resources.disk` does not
 resize an existing disk. For guest updates, expose the evaluated guest in the
 host flake's outputs (`{ self, ... }:`):
 
 ```nix
-nixosConfigurations.queue-ci =
-  self.nixosConfigurations.build-host.config.services.github-runner-vms.queue-ci.guest;
+nixosConfigurations.main-ci =
+  self.nixosConfigurations.build-host.config.services.github-runner-vms.main-ci.guest;
 ```
 
-Then deploy with `nixos-rebuild switch --flake .#queue-ci --target-host
+Then deploy with `nixos-rebuild switch --flake .#main-ci --target-host
 root@10.231.0.2`, using the dedicated deployment key. Host rebuilds update the VM
 launcher. Back up the deployment private key separately.
 
@@ -98,15 +98,15 @@ Build the migration tool and the host configuration first, while the old guest
 continues running:
 
 ```bash
-nix build .#nixosConfigurations.queue-ci.config.system.build.runner-migrate -o runner-migrate
+nix build .#nixosConfigurations.main-ci.config.system.build.runner-migrate -o runner-migrate
 nixos-rebuild build --flake .#build-host
 ```
 
 Once the runner is idle, stop its VM and copy its filesystem into the new image:
 
 ```bash
-sudo systemctl stop queue-ci
-sudo ./runner-migrate/bin/runner-migrate /var/lib/queue-ci/root.qcow2 /var/lib/queue-ci/root.raw
+sudo systemctl stop main-ci
+sudo ./runner-migrate/bin/runner-migrate /var/lib/main-ci/root.qcow2 /var/lib/main-ci/root.raw
 ```
 
 The tool keeps the source read-only, preserves registration, caches, ownership,
@@ -118,7 +118,7 @@ Activate the built host configuration and start the VM:
 
 ```bash
 nixos-rebuild switch --sudo --flake .#build-host
-sudo systemctl start queue-ci
+sudo systemctl start main-ci
 ```
 
 Verify the runner is online, its root filesystem is XFS, and a representative
@@ -134,8 +134,8 @@ job runs, so an idle VM holds little more than its running services; the next jo
 reads its caches from disk.
 The guest has no swap, so earlyoom kills the largest process once available memory
 drops below 10%, rather than letting a job that fills memory thrash the disk.
-For MoQ, set `MOQ_QUEUE_RUNNER` to the runner label after a representative CI run
-passes; release pull requests use hosted runners and main pull requests skip cloud CI.
+MoQ pull requests use hosted runners; never route unreviewed PR code to this
+persistent runner.
 
 The hosted workflow uses `just gh runner-vm-ci` to load a temporary AppArmor
 profile for the exact pinned `unshare` while building the image. The recipe

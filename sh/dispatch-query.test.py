@@ -108,15 +108,15 @@ class QueryTests(unittest.TestCase):
         (self.repo / "rs/moq-net/src/lib.rs").unlink()
         self.expect(True)
 
-    def test_release_pr_base_and_merge_group_base(self):
+    def test_release_pr_base_and_explicit_base(self):
         self.env["GITHUB_BASE_REF"] = "release"
         self.expect(True, base="", rust=False)
         self.change("rs/moq-net/src/lib.rs")
         self.git("add", ".")
-        self.git("commit", "-qm", "queued source")
-        group_base = self.git("rev-parse", "HEAD")
+        self.git("commit", "-qm", "committed source")
+        explicit_base = self.git("rev-parse", "HEAD")
         self.change("quest/m1/example.md")
-        self.expect(True, base=group_base, rust=False)
+        self.expect(True, base=explicit_base, rust=False)
         self.expect(True, base="origin/release")
 
     def test_invalid_base_fails_instead_of_reporting_no_work(self):
