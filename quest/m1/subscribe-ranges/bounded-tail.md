@@ -10,32 +10,63 @@ plain and compressed tracks on every version that carries frame bounds.
 
 ## Plan
 
-Found on [moq-dev/moq#6242](https://github.com/moq-dev/moq/pull/6242) while
-answering Codex's
-[P1](https://github.com/moq-dev/moq/pull/6242#discussion_r4345457940): through
-one relay, a subscriber reads group 5 frames 0..3 and a second then asks for
-3..5. The tail never arrives, on a plain track and on a compressed one alike.
+Reproduced on `ee1111a91b` through one relay: subscriber A reads group 5
+frames 0..3, then subscriber B asks for 3..5. Local readers get all requested
+frames, but a relayed lite-07 copy loses the tail on both plain and compressed
+tracks. Draft-20, 21, and 22 lose it too. The deterministic reproductions and
+early/exact-end controls are in `rs/moq-net/tests/integration/bounded_tail.rs`.
+The tail tests assert the intended behavior and currently fail; they are not
+ignored or changed to require the bug.
 
-- `GroupRecv` (`rs/moq-net/src/lite/subscriber.rs`) calls `group.finish()`
-  when a group stream ends cleanly, including one that ended only because the
-  request's end bound was reached. The truncated copy then looks complete.
-- `claim_sequence` and `covering_group` (`rs/moq-net/src/model/track.rs`)
-  judge a copy only by its first frame, so every later stream for that
-  sequence is `Duplicate`, whatever frame it was asked from.
-- Fix it in the receive path: a stream that stopped at the request's end
-  bound is not the group's end. Weigh leaving the copy unfinished so a tail
-  appends from its end (one copy; a compressed group keeps inflating against
-  its own prefix, which `widen_compressed` relies on when it keeps a request at
-  N) against letting a bounded copy stop covering a request past its end so
-  the new stream replaces it (compressed requests would then widen to frame 0
-  again).
-- A peer must not be able to pass off an early FIN as reaching the bound.
+`GroupRecv` (`rs/moq-net/src/lite/subscriber.rs`) always calls `group.finish()`
+on FIN. `claim_sequence` and `covering_group` (`model/track.rs`) then treat
+the copy as covering every later request from its first frame. IETF
+`GroupIngest` similarly collapses a bare FIN and an explicit END_OF_GROUP into
+`Ended::Group`, even though its publisher clears `GroupFlags.has_end` when
+serving a bounded slice. JS has the same unconditional close in its lite
+subscriber.
 
-Test on mock time through a relay: a bounded first subscriber, then a second
-asking past its end, on plain and compressed lite-07 tracks, and on
-moq-transport draft-20+ if its Absolute end reaches the same path.
+Settle the stream-boundary distinction before changing ownership. Lite-07's
+GROUP header carries only subscription ID, sequence, and starting frame. It
+does not carry the request's end or revision. After an update widens 3 to 5,
+the same header, frames 0..3, and FIN can be:
 
-Public API: none expected. Wire: none.
+- A stream admitted under the old end of 3, with more source frames to come.
+- A stream admitted under the new end of 5, whose source really ends at 3.
+
+Latching the receiver's current end when the header arrives cannot distinguish
+these cases: control and data streams can arrive out of order. Remembering
+every historical end has unbounded cost without a retirement signal. Never
+declare an early FIN to have reached a requested end.
+
+Recommendation: make each stream's admitted end unambiguous, then append its
+tail into the existing copy. A stream-specific end bound in the unpublished
+lite-07 GROUP header would let FIN below that bound finish the source group,
+and FIN exactly at it leave the copy resumable. An explicit final-versus-
+bounded terminal is an alternative. This is a wire decision, not an approved
+format change. Reuse IETF's existing end bit/status rather than extending its
+wire format, including emitting a genuine early end when the header did not
+promise one. Keep published drafts compatible and mirror lite changes in JS
+and its draft.
+
+For append ownership, transfer one private writer permission into cache-owned
+group state between streams. Never park a producer/parent clone or permit two
+writers. Resume atomically at the committed frame boundary, preserve the
+compressed prefix and inflater, and leave cached payload subject to normal
+eviction, abort, and route teardown. A replayed prefix must be decoded and
+discarded without writing it twice. Replacement is less attractive: warm
+compressed demand intentionally starts at N, so replacing a copy also needs
+its prefix and correct cache coverage, fetch, and existing-reader recovery.
+
+Verify plain/compressed tails, real ends before/at/after the cap, empty tails,
+duplicate concurrent streams, reset/eviction/teardown, and repeated demand
+widening. Add a scripted case where the update overtakes an earlier GROUP
+header, and the converse where a real early FIN follows the update. Neither
+test may depend on sleeps or accepting a missing tail. Exercise the matching
+JS path and cross-language interop after the boundary contract is settled.
+
+Public API: none expected. Wire: lite-07 boundary signaling needs a decision;
+no format change is implemented by this checkpoint.
 
 ## Related
 
