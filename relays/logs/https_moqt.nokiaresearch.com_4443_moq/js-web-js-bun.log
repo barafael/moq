@@ -3,24 +3,24 @@ https://moqt.nokiaresearch.com:4443/moq negotiated ALPN: moqt-22
 connected version=moq-transport-22
 subscribe_namespace written: requestId=0
 announced: broadcast=simulcast active=true
-announced: broadcast=demo active=true
 announced: broadcast=video active=true
-announced: broadcast=smoke-js-web-5432-21154.hang active=true
-subscribe start: id=2 broadcast=smoke-js-web-5432-21154.hang track=catalog.json
-subscribe written: id=2 broadcast=smoke-js-web-5432-21154.hang track=catalog.json
-subscribe ok: id=2 broadcast=smoke-js-web-5432-21154.hang track=catalog.json
+announced: broadcast=demo active=true
+announced: broadcast=smoke-js-web-5313-28271.hang active=true
+subscribe start: id=2 broadcast=smoke-js-web-5313-28271.hang track=catalog.json
+subscribe written: id=2 broadcast=smoke-js-web-5313-28271.hang track=catalog.json
+subscribe ok: id=2 broadcast=smoke-js-web-5313-28271.hang track=catalog.json
 error: timed out waiting for data
 subscribe_namespace error: session error: connection error: closed
 announced: broadcast=simulcast active=false
-announced: broadcast=demo active=false
 announced: broadcast=video active=false
+announced: broadcast=demo active=false
 broadcast discovery failed; broadcasts resolve on request only. warn: session error: connection error: closed
  code: "GenericFailure"
 
       at async done (/home/runner/work/moq/moq/test/smoke/clients/js-native/node_modules/@moq/net/stream.js:333:29)
 
-subscribe error: id=2 broadcast=smoke-js-web-5432-21154.hang track=catalog.json error=session error: connection error: closed
-announced: broadcast=smoke-js-web-5432-21154.hang active=false
+subscribe error: id=2 broadcast=smoke-js-web-5313-28271.hang track=catalog.json error=session error: connection error: closed
+announced: broadcast=smoke-js-web-5313-28271.hang active=false
 error processing bidi stream 162 |         if (!this.#reader) {
 163 |             return false;
 164 |         }
