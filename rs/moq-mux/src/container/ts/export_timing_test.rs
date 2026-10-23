@@ -73,6 +73,9 @@ struct Live {
 	stalling: bool,
 	stalled: Vec<moq_net::group::Producer>,
 	audio: Producer<HangContainer>,
+	/// More AAC tracks, each sent beside the first until it ends, with whether it has begun its
+	/// first group: see [`Self::add_audio`].
+	extra: Vec<(Producer<HangContainer>, bool)>,
 	source: crate::Source,
 	/// Media time per unit of the receivers' clock: above 1 the source runs fast.
 	scale: f64,
@@ -152,6 +155,7 @@ impl Live {
 			stalling: false,
 			stalled: Vec::new(),
 			audio,
+			extra: Vec::new(),
 			scale,
 			rate: MUX_RATE,
 			sync: false,
@@ -329,18 +333,62 @@ impl Live {
 		}
 	}
 
-	/// Write the next audio frame.
+	/// Write the next audio frame, and one to each track added, filled with its mark: 0x55 for
+	/// the first, counting up.
 	fn send_audio(&mut self) {
 		let index = self.audio_index;
+		let timestamp = Timestamp::from_micros(self.origin + index * AUDIO_US).unwrap();
+		let keyframe = index.is_multiple_of(AUDIO_GROUP);
+		let frame = |payload: Bytes| Frame {
+			timestamp,
+			duration: None,
+			payload,
+			keyframe,
+		};
 		self.audio
-			.write(Frame {
-				timestamp: Timestamp::from_micros(self.origin + index * AUDIO_US).unwrap(),
-				duration: None,
-				payload: Bytes::from_iter((0..180u16).map(|i| (i ^ index as u16) as u8)),
-				keyframe: index.is_multiple_of(AUDIO_GROUP),
-			})
+			.write(frame(Bytes::from_iter((0..180u16).map(|i| (i ^ index as u16) as u8))))
 			.unwrap();
+		for (mark, (track, begun)) in (0x55..).zip(self.extra.iter_mut()) {
+			if *begun || keyframe {
+				track.write(frame(Bytes::from(vec![mark; 180]))).unwrap();
+				*begun = true;
+			}
+		}
 		self.audio_index += 1;
+	}
+
+	/// List a second AAC track in the catalog, sent from the next audio group on. Its name sorts
+	/// after the others, so it takes the next PID on every leg.
+	fn add_audio(&mut self) {
+		let track = self
+			._broadcast
+			.create_track(
+				self._broadcast.unique_name(".aac"),
+				hang::container::track_info(hang::catalog::PRIORITY.audio),
+			)
+			.unwrap();
+		let mut cfg = AudioConfig::new(AAC { profile: 2 }, 48_000, 2);
+		cfg.container = Container::Legacy;
+		self.catalog
+			.modify()
+			.unwrap()
+			.audio
+			.renditions
+			.insert(track.name().to_string(), cfg);
+		self.extra.push((
+			Producer::new(track, HangContainer::Legacy(crate::container::Kind::Audio)),
+			false,
+		));
+	}
+
+	/// Drop the last AAC track added from the catalog, and end it unless it runs on.
+	fn remove_audio(&mut self, ends: bool) {
+		let (track, _) = self.extra.last_mut().expect("a track to remove");
+		self.catalog.modify().unwrap().audio.renditions.remove(track.name());
+		if ends {
+			let (mut track, _) = self.extra.pop().expect("checked above");
+			track.finish().unwrap();
+		}
 	}
 
 	/// Send audio alone, each frame at its instant, until media time `until` (µs), as a
@@ -364,6 +412,9 @@ impl Live {
 		self.stalled.clear();
 		self.video.finish().unwrap();
 		self.audio.finish().unwrap();
+		for (mut track, _) in self.extra.drain(..) {
+			track.finish().unwrap();
+		}
 		for leg in legs.iter_mut() {
 			leg.drain().await;
 		}
@@ -1295,6 +1346,213 @@ async fn sync_refuses_a_rate_its_lanes_do_not_fit() {
 	live.rate = 14 * 188 * 8 * 40;
 	let mut leg = live.join(Duration::ZERO).await;
 	live.run(2 * GOP, &mut [&mut leg], |_| false).await;
+}
+
+/// The PID the export gives the PMT of a program that recorded none.
+const PMT_PID: u16 = 0x1000;
+/// The PID the second AAC track ([`Live::add_audio`]) takes.
+const EXTRA_PID: u16 = 0x1003;
+
+/// A PMT a leg sent: its `version_number`, PCR PID and stream PIDs.
+type Pmt = (u8, u16, Vec<u16>);
+
+/// Every PMT copy a leg sent, at the media time (µs) of the slot it ends in.
+fn pmts(leg: &Leg) -> Vec<(u64, Pmt)> {
+	let mut out = Vec::new();
+	let mut section = Vec::new();
+	for (_, frame) in &leg.out {
+		for packet in frame.payload.chunks(188) {
+			if pid(packet) != PMT_PID {
+				continue;
+			}
+			let mut at = 4;
+			if packet[3] & 0x20 != 0 {
+				at += 1 + usize::from(packet[4]);
+			}
+			if packet[1] & 0x40 != 0 {
+				section = packet[at + 1 + usize::from(packet[at])..].to_vec();
+			} else {
+				section.extend_from_slice(&packet[at..]);
+			}
+			let len = 3 + (usize::from(section[1] & 0x0f) << 8 | usize::from(section[2]));
+			if section.len() < len {
+				continue;
+			}
+			let whole = std::mem::take(&mut section);
+			let pmt = super::psi::Pmt::parse(&whole[..len]).expect("a whole PMT");
+			let streams = pmt.streams.iter().map(|es| es.pid.as_u16()).collect();
+			let pcr = pmt.pcr_pid.map_or(0x1fff, |pid| pid.as_u16());
+			out.push((
+				frame.timestamp.as_micros() as u64,
+				((whole[5] >> 1) & 0x1f, pcr, streams),
+			));
+		}
+	}
+	out
+}
+
+/// The media time (µs) of the slot a leg first sent a PMT listing `pid` in, or no longer listing
+/// it with `listed` false, after first listing it.
+fn revised(leg: &Leg, pid: u16, listed: bool) -> u64 {
+	let pmts = pmts(leg);
+	let lists = |streams: &Vec<u16>| streams.contains(&pid);
+	let from = match listed {
+		true => 0,
+		false => pmts
+			.iter()
+			.position(|(_, (_, _, s))| lists(s))
+			.expect("a PMT listing it"),
+	};
+	pmts[from..]
+		.iter()
+		.find(|(_, (_, _, s))| lists(s) == listed)
+		.expect("a revised PMT")
+		.0
+}
+
+/// The PMT versions and streams a leg sent from media time `from` (µs), each run of repeats once.
+fn pmt_runs(leg: &Leg, from: u64) -> Vec<Pmt> {
+	let mut runs: Vec<Pmt> = Vec::new();
+	for (at, pmt) in pmts(leg) {
+		if at >= from && runs.last() != Some(&pmt) {
+			runs.push(pmt);
+		}
+	}
+	runs
+}
+
+/// Under sync a track added mid-stream revises the PMT where every leg revises it: two legs
+/// there before it render the same packets across the revision, PMTs included, and a leg that
+/// joins after it lays the revised PMT, at the same `version_number`, and the revised grid.
+#[tokio::test(start_paused = true)]
+async fn synced_legs_revise_their_pmt_alike_for_an_added_track() {
+	for lag in LAGS {
+		let mut live = Live::new(1.0, lag).await;
+		live.sync = true;
+		let mut a = live.join(Duration::ZERO).await;
+		live.run(JOIN, &mut [&mut a], |_| false).await;
+		let mut b = live.join(Duration::from_millis(100)).await;
+		live.run(6 * GOP, &mut [&mut a, &mut b], |_| false).await;
+		live.add_audio();
+		live.run(10 * GOP, &mut [&mut a, &mut b], |_| false).await;
+		let mut c = live.join(Duration::from_millis(100)).await;
+		live.run(16 * GOP, &mut [&mut a, &mut b, &mut c], |_| false).await;
+		live.finish(&mut [&mut a, &mut b, &mut c]).await;
+
+		let joined = |leg: &Leg| leg.out.first().expect("the leg rendered").1.timestamp.as_micros() as u64;
+		let from = joined(&b) + 2_000_000;
+		let at = revised(&a, EXTRA_PID, true);
+		assert!(
+			at > from,
+			"lag {lag}: the revision at {at} µs comes before the legs agree"
+		);
+		assert_eq!(revised(&b, EXTRA_PID, true), at, "lag {lag}");
+		assert_eq!(assert_same_synced(&a, &b, from), 0, "lag {lag}");
+		assert_eq!(assert_same_synced(&a, &c, joined(&c) + 2_000_000), 0, "lag {lag}");
+		let runs = pmt_runs(&a, 0);
+		assert_eq!(runs.len(), 2, "lag {lag}: {runs:?}");
+		assert_ne!(runs[0].0, runs[1].0, "lag {lag}: the revision keeps its version");
+		assert_eq!(runs[0].2, [VIDEO_PID, AUDIO_PID], "lag {lag}");
+		assert_eq!(runs[1].2, [VIDEO_PID, AUDIO_PID, EXTRA_PID], "lag {lag}");
+		assert_eq!(pmt_runs(&c, 0), runs[1..], "lag {lag}: the joiner's tables");
+		assert!(
+			c.units().iter().any(|unit| unit.pid == EXTRA_PID),
+			"lag {lag}: the added track went out"
+		);
+	}
+}
+
+/// Under sync a track that ends and leaves the catalog leaves the PMT where every leg drops it,
+/// and a leg that joins after lays the revised PMT and grid.
+#[tokio::test(start_paused = true)]
+async fn synced_legs_revise_their_pmt_alike_for_a_removed_track() {
+	for lag in LAGS {
+		let mut live = Live::new(1.0, lag).await;
+		live.sync = true;
+		// Lanes narrowed by two audio tracks cannot carry the first keyframe by a decode time of zero.
+		live.origin = 10_000_000;
+		live.add_audio();
+		let mut a = live.join(Duration::ZERO).await;
+		live.run(JOIN, &mut [&mut a], |_| false).await;
+		let mut b = live.join(Duration::from_millis(100)).await;
+		live.run(6 * GOP, &mut [&mut a, &mut b], |_| false).await;
+		live.remove_audio(true);
+		live.run(10 * GOP, &mut [&mut a, &mut b], |_| false).await;
+		let mut c = live.join(Duration::from_millis(100)).await;
+		live.run(16 * GOP, &mut [&mut a, &mut b, &mut c], |_| false).await;
+		live.finish(&mut [&mut a, &mut b, &mut c]).await;
+
+		let joined = |leg: &Leg| leg.out.first().expect("the leg rendered").1.timestamp.as_micros() as u64;
+		let from = joined(&b) + 2_000_000;
+		let at = revised(&a, EXTRA_PID, false);
+		assert!(
+			at > from,
+			"lag {lag}: the revision at {at} µs comes before the legs agree"
+		);
+		assert_eq!(revised(&b, EXTRA_PID, false), at, "lag {lag}");
+		assert_eq!(assert_same_synced(&a, &b, from), 0, "lag {lag}");
+		assert_eq!(assert_same_synced(&a, &c, joined(&c) + 2_000_000), 0, "lag {lag}");
+		let runs = pmt_runs(&a, 0);
+		assert_eq!(runs.len(), 2, "lag {lag}: {runs:?}");
+		assert_ne!(runs[0].0, runs[1].0, "lag {lag}: the revision keeps its version");
+		assert_eq!(runs[1].2, [VIDEO_PID, AUDIO_PID], "lag {lag}");
+		assert_eq!(pmt_runs(&c, 0), runs[1..], "lag {lag}: the joiner's tables");
+	}
+}
+
+/// Under sync a track the catalog lists on the PID of one it dropped, which runs on, cuts that
+/// one where every leg cuts it, and takes the PID over there: the legs render the same packets
+/// across it, and the PMT lists the PID once.
+#[tokio::test(start_paused = true)]
+async fn synced_legs_hand_a_pid_over_alike() {
+	for lag in LAGS {
+		let mut live = Live::new(1.0, lag).await;
+		live.sync = true;
+		live.origin = 10_000_000;
+		live.add_audio();
+		let mut a = live.join(Duration::ZERO).await;
+		live.run(JOIN, &mut [&mut a], |_| false).await;
+		let mut b = live.join(Duration::from_millis(100)).await;
+		live.run(6 * GOP, &mut [&mut a, &mut b], |_| false).await;
+		// The next PID free of the streams the catalog lists is the dropped track's.
+		live.remove_audio(false);
+		live.add_audio();
+		live.run(10 * GOP, &mut [&mut a, &mut b], |_| false).await;
+		let mut c = live.join(Duration::from_millis(100)).await;
+		live.run(16 * GOP, &mut [&mut a, &mut b, &mut c], |_| false).await;
+		live.finish(&mut [&mut a, &mut b, &mut c]).await;
+
+		let joined = |leg: &Leg| leg.out.first().expect("the leg rendered").1.timestamp.as_micros() as u64;
+		assert_eq!(assert_same_synced(&a, &b, joined(&b) + 2_000_000), 0, "lag {lag}");
+		assert_eq!(assert_same_synced(&a, &c, joined(&c) + 2_000_000), 0, "lag {lag}");
+		for leg in [&a, &b, &c] {
+			let runs = pmt_runs(leg, 0);
+			assert_eq!(runs.len(), 1, "lag {lag}: {runs:?}");
+			assert_eq!(runs[0].2, [VIDEO_PID, AUDIO_PID, EXTRA_PID], "lag {lag}");
+		}
+		// The PID carries the dropped track's frames up to the cut, and the new one's after.
+		let marks = |leg: &Leg| {
+			let mut marks = Vec::new();
+			for (_, frame) in &leg.out {
+				for packet in frame.payload.chunks(188).filter(|packet| pid(packet) == EXTRA_PID) {
+					// A PES start: its header, then ADTS, then the frame, filled with its track's mark.
+					if packet[1] & 0x40 != 0 && packet[3] & 0x10 != 0 {
+						let at = match packet[3] & 0x20 != 0 {
+							true => 5 + usize::from(packet[4]),
+							false => 4,
+						};
+						let pes = &packet[at..];
+						let mark = pes[9 + usize::from(pes[8]) + 7];
+						if marks.last() != Some(&mark) {
+							marks.push(mark);
+						}
+					}
+				}
+			}
+			marks
+		};
+		assert_eq!(marks(&a), [0x55, 0x56], "lag {lag}");
+	}
 }
 
 /// Whatever follows the source's clock has to follow it identically on both legs, though they

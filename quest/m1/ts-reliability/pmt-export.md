@@ -1,52 +1,38 @@
-# [M] Synced TS legs revise their PMT identically
+# [S] Synced TS legs agree on catalog-only revisions
 
 ## Goal
 
-Two `moq export ts --sync` legs of a broadcast whose layout changes
-mid-stream revise their PMT identically: the same `version_number`, in the
-same slot, listing the same streams, wherever both legs hold the content
-around it. A track added no longer ends a synced export.
+Under `moq export ts --sync`, a catalog change no stream's media anchors
+lands at the same slot on every leg, including one that joins after it, or
+is refused loudly. That covers a `programDescriptors` change and a
+`muxRate` change. Today each leg logs and ignores them, so a leg that opens
+after the change lays different tables or a different grid than the legs
+that saw it.
 
 ## Plan
 
-Outside `--sync`, the export follows a PMT revision at the next
-`version_number`: a stream joins the PMT with its first frame, and leaves
-once the catalog has dropped it and nothing of it is left to go out. A track
-recorded on the PID of a dropped stream waits for that stream to drain, and
-cuts it if it never ends. Each revision is one boundary: versions go out in
-order, no packet of a stream a revision adds goes ahead of it, and its PCR
-PID and `muxRate` take over after its last packet. The PCR keeps its PID
-unless its track retires.
+A track added, a track that ends, and a PID another stream takes over
+already revise the PMT and the lanes at the first table repetition two
+slots past the jitter-buffer key of that stream's first or last unit, which
+every leg reads alike. The revised `version_number` follows from what the
+PMT lists, so a joiner announces it alike. The catalog carries no media
+time, so nothing in it says where a catalog-only change would land.
 
-What `--sync` does today:
+Options, to settle with the maintainer:
 
-- The tables are laid once, from the catalog the leg opened on. A track
-  added afterward fails the export ("… under --sync").
-- A track that leaves the catalog keeps its PID and its lane, and an entry
-  or `programDescriptors` change is not announced.
-- A `muxRate` change is warned and ignored: the leg keeps the rate its grid
-  was laid at.
-- So legs that open on either side of a catalog change lay different PMTs
-  and grids, and a pair does not survive an added stream.
+- The TS importer records where the change took effect, as a media time
+  (and perhaps the source's PMT `version_number`) in the `mpegts` section.
+  Export lands it there. A wire change, so the MPEG-TS draft changes too.
+- The change rides the next media-anchored revision, as one transaction. A
+  leg that opens in between differs until then.
+- Keep ignoring it, and document that a leg must restart to take it up.
 
-Decided 2026-10-22 by the maintainer: under `moq export ts --sync`, the
-revision is a function of the catalog alone, so identical legs revise
-their PMT identically. A revision is one transaction over everything the
-catalog configures: a `muxRate` change applies with the tables at the same
-boundary and, under `--sync`, rebuilds the grid there.
+A `muxRate` change also needs lane positions that survive a rate change:
+today every layout counts packets at one rate.
 
-Open: where a revision lands. Each leg reads the catalog update at its own
-moment, so the slot that carries the revised PMT, and its `version_number`,
-must follow from something both legs read alike, such as an added track's
-first unit on its lane or the end of a retired track's last group. A
-revision that adds a track also needs a lane the rate can carry.
-
-Rust: `rs/moq-mux` TS export (`with_sync`).
-
-Tests: two synced legs, joined apart, across a PMT add, remove, retype,
-descriptor change and `muxRate` change, write the same packets from the
-revision on, PMTs included; a leg that joins after a revision lays the
-revised PMT at the same `version_number`, and the revised grid.
+Also open: a track without a recorded PID takes the next free one in catalog
+name order, so a track added under a name that sorts before the others gets
+a different PID on a leg that joins later. TS sources record their PIDs.
 
 ## Related
 

@@ -22,7 +22,7 @@
 //! length-prefixed -> Annex-B conversion, re-injecting the parameter sets as
 //! inline NALs on every keyframe. CMAF tracks are rejected with a clear error.
 
-use std::collections::{BTreeMap, HashMap, HashSet, VecDeque};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet, VecDeque};
 use std::sync::Arc;
 use std::task::Poll;
 use std::time::Duration;
@@ -54,7 +54,7 @@ use crate::jitter::{self, Arrival, Push};
 
 use super::adts;
 use super::catalog;
-use super::lane::{self, Grid, Lane, Layout, Need, Unplaced};
+use super::lane::{self, Epoch, Grid, Lane, Lanes, Layout, Need, Run, Unplaced};
 use super::psi;
 use super::schedule::{self, Buffer, Schedule};
 
@@ -260,8 +260,8 @@ struct Queued {
 	description: Option<Bytes>,
 	/// The PES it may share ([`Track::pack_start`]).
 	pes: Option<PesStart>,
-	/// Its packets on the track's lane, under [`Export::with_sync`].
-	planned: Option<Planned>,
+	/// Its entry in the track's plan log, under [`Export::with_sync`].
+	unit: Option<u64>,
 }
 
 /// A frame's packets, numbered, and their positions on the timeline ([`Track::plan`]).
@@ -272,10 +272,275 @@ struct Planned {
 
 /// A track's lane under [`Export::with_sync`].
 struct Synced {
-	layout: Arc<Layout>,
+	lanes: Arc<Lanes>,
 	lane: Lane,
 	/// The release slot of the last frame planned ([`Track::plan`]).
 	released: Option<u128>,
+	/// The slots its lane runs in, `None` until its first unit is read.
+	run: Option<Run>,
+	/// The jitter buffer key of its first unit, read before the revision listing it is laid
+	/// out ([`Export::revise_lanes`]).
+	anchor: Option<Timestamp>,
+	/// A unit fell past the end of its run, so nothing after it goes out.
+	ended: bool,
+	/// Each unit planned and not yet out, in the order planned, so a revision of the lanes
+	/// re-plans the ones it reaches as a leg that read them after it would.
+	log: VecDeque<Logged>,
+	/// The id of the next entry logged.
+	next: u64,
+}
+
+/// An entry of [`Synced::log`].
+struct Logged {
+	id: u64,
+	/// What the unit was planned from, or `None` for a restart of the timeline, which forgot
+	/// every group before it.
+	unit: Option<Unit>,
+	/// The lane, and the release slot of the last frame planned, as they were before it.
+	before: (Lane, Option<u128>),
+	planned: Option<Planned>,
+	/// It went out to the grid.
+	out: bool,
+}
+
+/// What [`Synced::place`] plans a unit from.
+struct Unit {
+	frame: Frame,
+	dts: Option<u64>,
+	description: Option<Bytes>,
+	group: (u64, bool),
+	/// When it may first go out, for a placed frame, which goes out from its placement.
+	release: Option<u128>,
+	/// When it must have arrived by, in nanoseconds of media time.
+	by: u128,
+	/// How many slots ahead of `by` it may go out before its lane bounds it ([`Track::ahead_slots`]).
+	ahead: u128,
+	/// Its decoder buffer's size, which bounds that.
+	size: Option<usize>,
+	/// The room a group's first picture says its HRD has left ([`Timing::room`]).
+	room: Option<u64>,
+}
+
+impl Synced {
+	fn new(lanes: Arc<Lanes>, run: Option<Run>) -> Self {
+		Self {
+			lanes,
+			lane: Lane::default(),
+			released: None,
+			run,
+			anchor: None,
+			ended: false,
+			log: VecDeque::new(),
+			next: 0,
+		}
+	}
+
+	/// Log a unit, or a restart with `None`, planned now: its id, and what it placed.
+	fn log(&mut self, kind: &Kind, pid: u16, name: &str, unit: Option<Unit>) -> anyhow::Result<(u64, bool)> {
+		let id = self.next;
+		self.next += 1;
+		let before = (self.lane.clone(), self.released);
+		let planned = self.step(kind, pid, name, unit.as_ref())?;
+		let placed = planned.is_some();
+		self.log.push_back(Logged {
+			id,
+			unit,
+			before,
+			planned,
+			out: false,
+		});
+		Ok((id, placed))
+	}
+
+	/// Plan `unit` on, or restart the lane for `None`.
+	fn step(&mut self, kind: &Kind, pid: u16, name: &str, unit: Option<&Unit>) -> anyhow::Result<Option<Planned>> {
+		match unit {
+			Some(unit) => self.place(kind, pid, name, unit),
+			None => {
+				self.lane.reset();
+				self.released = None;
+				Ok(None)
+			}
+		}
+	}
+
+	/// Plan every logged unit not yet out again on lanes a revision changed, from the lane as it
+	/// was before the first. One that went out after them comes out the same, as the revision
+	/// lies past it.
+	fn replan(&mut self, kind: &Kind, pid: u16, name: &str) -> anyhow::Result<()> {
+		let Some(start) = self.log.iter().position(|logged| !logged.out) else {
+			return Ok(());
+		};
+		(self.lane, self.released) = self.log[start].before.clone();
+		for at in start..self.log.len() {
+			self.log[at].before = (self.lane.clone(), self.released);
+			let unit = self.log[at].unit.take();
+			let planned = self.step(kind, pid, name, unit.as_ref());
+			let logged = &mut self.log[at];
+			logged.unit = unit;
+			if !logged.out {
+				logged.planned = planned?;
+			}
+		}
+		Ok(())
+	}
+
+	/// Forget the entries no revision can reach any more: those out, and those due before
+	/// slot `next`, the first the grid has still to lay.
+	fn forget(&mut self, next: u128) {
+		while let Some(front) = self.log.front()
+			&& (front.out
+				|| front
+					.unit
+					.as_ref()
+					.is_none_or(|unit| schedule::slot(unit.by) + 2 <= next))
+		{
+			self.log.pop_front();
+		}
+	}
+
+	/// Plan a frame on the track's lane: packetized, numbered on from its group's earlier units,
+	/// at the positions [`Lane::plan`] gives. `None` places nothing: a group this leg did not
+	/// hold from its first unit, or that opened before its lane, a unit past its lane's end, a
+	/// malformed section, or a section its lane cannot carry by its deadline. A placed frame's
+	/// deadline is the delay after its placement, which it goes out from; any other's is its
+	/// decode time, less the drain.
+	fn place(&mut self, kind: &Kind, pid: u16, name: &str, unit: &Unit) -> anyhow::Result<Option<Planned>> {
+		let Unit {
+			frame,
+			dts,
+			description,
+			group,
+			by,
+			..
+		} = unit;
+		let (group, by) = (*group, *by);
+		// Listed only once the revision its first unit brings about is laid out.
+		let Some(run) = self.run else {
+			return Ok(None);
+		};
+		let rate = self.lanes.payload_rate(pid, schedule::slot(by));
+		let release = unit
+			.release
+			.unwrap_or_else(|| lane::release(by, filled(unit.ahead, unit.size, rate)));
+		let video = matches!(kind, Kind::Video(_));
+		let opening = self.lane.opening(group);
+		// A receiver tunes in at the tables, so an AAC program config element leads the first
+		// frame its group places and the first released on or after each repetition of them.
+		let slot = schedule::slot(release);
+		let pce = opening
+			|| self
+				.released
+				.is_some_and(|last| last / lane::PSI_SLOTS < slot / lane::PSI_SLOTS);
+		self.released = Some(slot);
+		let mut packets = Vec::new();
+		match es_payload(kind, description.as_ref(), frame, pce)? {
+			Some(es) => {
+				let pes = PesUnit {
+					pid,
+					is_video: video,
+					keyframe: frame.keyframe,
+					timestamp: frame.timestamp,
+					dts: *dts,
+					stream_id: stream_id(kind),
+				};
+				pes_packets(&mut packets, &pes, &es, opening)?;
+			}
+			None if let Kind::PesPacket { stream_type } = kind => {
+				PesPacket::parse(&frame.payload, *stream_type)
+					.with_context(|| format!("MPEG-TS track '{name}' carries a malformed PES packet"))?;
+				whole_pes_packets(&mut packets, pid, &frame.payload, opening)?;
+			}
+			None if is_complete_section(&frame.payload) => {
+				section_packets(&mut packets, pid, &frame.payload, opening)?;
+			}
+			None => {
+				tracing::warn!(track = %name, len = frame.payload.len(), "dropping malformed private section on export");
+				return Ok(None);
+			}
+		}
+		let count = packets.len() / TsPacket::SIZE;
+		// A unit is released as early as a full CPB would need it. A group's first picture whose
+		// buffering period says how much room its encoder's HRD has left when it decodes it goes
+		// out as much later as its lane takes to carry that room. The HRD received every earlier
+		// picture before that picture's first bit (ITU-T H.264 C.3), so a lane faster than the
+		// HRD's rate has by then carried the group before on any leg that holds it. It never goes
+		// out so late that it would miss its own deadline.
+		let release = match unit.room {
+			Some(bits) => self.lanes.later((pid, run), release, bits, by, count),
+			None => release,
+		};
+		let overruns = self.lane.overruns();
+		let plan = self.lane.plan(&self.lanes, (pid, run), group, release, by, count);
+		if self.lane.overruns() > overruns {
+			tracing::warn!(track = %name, pid, "--sync group began behind the one before it: its lane is too narrow for legs that lose different data to agree here");
+		}
+		match plan {
+			Ok(placed) => {
+				lane::number(&mut packets, placed.counter);
+				Ok(Some(Planned {
+					packets,
+					positions: placed.positions,
+				}))
+			}
+			Err(Unplaced::Partial) => Ok(None),
+			Err(Unplaced::Ended) => {
+				self.ended = true;
+				Ok(None)
+			}
+			Err(Unplaced::Late) if matches!(kind, Kind::Verbatim { .. }) => {
+				tracing::warn!(track = %name, count, "verbatim unit its lane cannot carry by its deadline; dropped");
+				Ok(None)
+			}
+			Err(Unplaced::Late) => anyhow::bail!(
+				"MPEG-TS --sync cannot carry a {count}-packet unit on PID {pid} by its deadline on its lane at {} b/s; raise --mux-rate or the delay",
+				self.lanes.rate()
+			),
+		}
+	}
+}
+
+/// Under [`Export::with_sync`], the `version_number` of the PMT `pmt`, from `base`: a function of
+/// what it says, so a leg that joins after a revision announces it as the legs that saw it do.
+/// Each stream adds a term of 1 to 31, so a revision adding or dropping one stream always moves
+/// it; the program's descriptors add one too. Where the clock rides is left out: it follows the
+/// streams.
+fn synced_version(base: VersionNumber, pmt: &psi::Pmt) -> VersionNumber {
+	// FNV-1a: stable across builds, as every leg has to agree on it.
+	let hash = |bytes: &[u8]| {
+		bytes.iter().fold(0xcbf2_9ce4_8422_2325_u64, |hash, &byte| {
+			(hash ^ u64::from(byte)).wrapping_mul(0x0100_0000_01b3)
+		})
+	};
+	let descriptors = |out: &mut Vec<u8>, descriptors: &[catalog::Descriptor]| {
+		for descriptor in descriptors {
+			out.extend_from_slice(&[descriptor.tag, descriptor.data.len() as u8]);
+			out.extend_from_slice(&descriptor.data);
+		}
+	};
+	let mut program = pmt.program_number.to_be_bytes().to_vec();
+	descriptors(&mut program, &pmt.program_info);
+	let mut sum = u64::from(base.as_u8()) + hash(&program) % 32;
+	for es in &pmt.streams {
+		let mut entry = vec![es.stream_type];
+		entry.extend_from_slice(&es.pid.as_u16().to_be_bytes());
+		descriptors(&mut entry, &es.descriptors);
+		sum += 1 + hash(&entry) % 31;
+	}
+	VersionNumber::from_u8((sum % 32) as u8).expect("a version below 32")
+}
+
+/// `slots` ahead, bounded under [`Export::with_sync`] to how far ahead a lane carrying `rate`
+/// bits a second fills a decoder buffer of `size` bytes in, less a slot, so the buffer holds
+/// whatever the frames' sizes.
+fn filled(slots: u128, size: Option<usize>, rate: Option<u64>) -> u128 {
+	match (size, rate) {
+		(Some(size), Some(rate)) => {
+			let fills = size as u128 * 8 * 1_000_000_000 / u128::from(rate.max(1));
+			slots.min(schedule::slot(fills).saturating_sub(1))
+		}
+		_ => slots,
+	}
 }
 
 /// The PES an audio frame may share ([`Track::pack_start`]): the place of its first frame on
@@ -405,8 +670,7 @@ impl Track {
 			self.restart = pending.restart;
 			self.clock = DecodeClock::default();
 			if let Some(sync) = &mut self.sync {
-				sync.lane.reset();
-				sync.released = None;
+				sync.log(&self.kind, self.pid, name, None)?;
 			}
 		}
 		let Kind::Video(stream_type) = self.kind else {
@@ -448,6 +712,13 @@ impl Track {
 	/// Read until a frame is due, or hold the first frame until the program tables are built.
 	fn fill(&mut self, name: &str, waiter: &kio::Waiter, input: &mut Input<'_>) -> crate::Result<()> {
 		if self.pending.is_some() || self.finished {
+			return Ok(());
+		}
+		// A run another stream's revision cut short is read to the cut, as on a leg that read
+		// that revision later ([`Export::revise_lanes`]).
+		if self.sync.as_ref().is_some_and(|sync| sync.ended) {
+			self.finished = true;
+			self.release(name, input.jitter, true)?;
 			return Ok(());
 		}
 		let is_video = matches!(self.kind, Kind::Video(_));
@@ -495,6 +766,10 @@ impl Track {
 						break;
 					}
 					self.queue(name, pending, input.jitter)?;
+					if self.sync.as_ref().is_some_and(|sync| sync.ended) {
+						self.finished = true;
+						break;
+					}
 				}
 				// A cut takes a start group it left short now, not with the next group, which may
 				// arrive after that start was due, or with the stream's end. Under sync the frames
@@ -604,31 +879,31 @@ impl Track {
 		self.buffer().unwrap_or(Buffer::SYSTEM).drain()
 	}
 
-	/// How far ahead of its decode time the track's units may go out under `delay`: as far
-	/// as [`schedule::ahead`] lets them, and nothing without a delay or for a placed frame,
-	/// whose timestamp is when it goes out.
-	fn ahead(&self, delay: Duration) -> Duration {
-		PCR_INTERVAL * u32::try_from(self.ahead_slots(delay)).unwrap_or(u32::MAX)
+	/// How far ahead of its decode time the track's unit decoding at `decode` may go out under
+	/// `delay`: as far as [`schedule::ahead`] lets them, and nothing without a delay or for a
+	/// placed frame, whose timestamp is when it goes out. Under [`Export::with_sync`] a unit
+	/// goes out no further ahead than its lane where it is due fills its decoder buffer in
+	/// ([`filled`]), as [`Synced::place`] lays it.
+	fn ahead(&self, delay: Duration, decode: Timestamp) -> Duration {
+		let slots = self.ahead_slots(delay);
+		let slots = match &self.sync {
+			Some(sync) => {
+				let by = decode.as_nanos().saturating_sub(self.drain().as_nanos());
+				let rate = sync.lanes.payload_rate(self.pid, schedule::slot(by));
+				filled(slots, self.buffer().and_then(|buffer| buffer.size), rate)
+			}
+			None => slots,
+		};
+		PCR_INTERVAL * u32::try_from(slots).unwrap_or(u32::MAX)
 	}
 
-	/// [`Self::ahead`] in slots. Under [`Export::with_sync`] a unit goes out no further ahead
-	/// than its lane fills its decoder buffer in, less a slot, so the buffer holds whatever
-	/// the frames' sizes.
+	/// [`Self::ahead`] in slots, before a lane bounds it.
 	fn ahead_slots(&self, delay: Duration) -> u128 {
 		// A placed frame goes out at its placement, never ahead of it.
 		if delay.is_zero() || self.kind.placed() {
 			return 0;
 		}
-		let buffer = self.buffer();
-		let slots = schedule::ahead(buffer.as_ref(), schedule::slot(delay.as_nanos()));
-		match (&self.sync, buffer.and_then(|buffer| buffer.size)) {
-			(Some(sync), Some(size)) => {
-				let rate = u128::from(sync.layout.payload_rate(sync.lane.index()).max(1));
-				let fills = size as u128 * 8 * 1_000_000_000 / rate;
-				slots.min(schedule::slot(fills).saturating_sub(1))
-			}
-			_ => slots,
-		}
+		schedule::ahead(self.buffer().as_ref(), schedule::slot(delay.as_nanos()))
 	}
 
 	/// The lane the track takes under [`Export::with_sync`], in packets a second. Lanes are
@@ -676,111 +951,53 @@ impl Track {
 		}
 	}
 
-	/// Plan a frame on the track's lane under [`Export::with_sync`]: packetized, numbered on
-	/// from its group's earlier units, at the positions [`Lane::plan`] gives. `None` places
-	/// nothing: a group this leg did not hold from its first unit, a malformed section, or
-	/// a section its lane cannot carry by its deadline. A placed frame's deadline is the delay
-	/// after its placement, which it goes out from; any other's is its decode time, less the
-	/// drain.
+	/// Plan a frame on the track's lane under [`Export::with_sync`] ([`Synced::place`]), logged
+	/// so a revision of the lanes can plan it again. Returns its log entry if it placed
+	/// anything, or may once the revision listing the track is laid out. A placed frame's
+	/// deadline is the delay after its placement, which it goes out from; any other's is its
+	/// decode time, less the drain.
 	fn plan(
 		&mut self,
 		name: &str,
 		frame: &Frame,
 		(decode, dts): (Timestamp, Option<u64>),
 		description: Option<&Bytes>,
-		group: (u64, bool),
+		(group, key): ((u64, bool), Timestamp),
 		delay: Duration,
-	) -> anyhow::Result<Option<Planned>> {
+	) -> anyhow::Result<Option<u64>> {
 		let (release, by) = match self.kind.placed() {
 			// The PCR runs a slot behind the positions ([`Layout::time`]), so a placed unit is
 			// released a slot past its placement to go out no earlier than it.
 			true => (
-				decode.as_nanos() + PCR_INTERVAL.as_nanos(),
+				Some(decode.as_nanos() + PCR_INTERVAL.as_nanos()),
 				decode.as_nanos() + delay.as_nanos(),
 			),
-			false => {
-				let by = decode.as_nanos().saturating_sub(self.drain().as_nanos());
-				(lane::release(by, self.ahead_slots(delay)), by)
-			}
+			false => (None, decode.as_nanos().saturating_sub(self.drain().as_nanos())),
 		};
-		let video = matches!(self.kind, Kind::Video(_));
-		let room = match video && group.1 {
+		let room = match matches!(self.kind, Kind::Video(_)) && group.1 {
 			true => self.timing.room(frame),
 			false => None,
+		};
+		let unit = Unit {
+			frame: frame.clone(),
+			dts,
+			description: description.cloned(),
+			group,
+			release,
+			by,
+			ahead: self.ahead_slots(delay),
+			size: self.buffer().and_then(|buffer| buffer.size),
+			room,
 		};
 		let Some(sync) = &mut self.sync else {
 			return Ok(None);
 		};
-		let opening = sync.lane.opening(group);
-		// A receiver tunes in at the tables, so an AAC program config element leads the first
-		// frame its group places and the first released on or after each repetition of them.
-		let slot = schedule::slot(release);
-		let pce = opening
-			|| sync
-				.released
-				.is_some_and(|last| last / lane::PSI_SLOTS < slot / lane::PSI_SLOTS);
-		sync.released = Some(slot);
-		let mut packets = Vec::new();
-		match es_payload(&self.kind, description, frame, pce)? {
-			Some(es) => {
-				let unit = PesUnit {
-					pid: self.pid,
-					is_video: video,
-					keyframe: frame.keyframe,
-					timestamp: frame.timestamp,
-					dts,
-					stream_id: stream_id(&self.kind),
-				};
-				pes_packets(&mut packets, &unit, &es, opening)?;
-			}
-			None if let Kind::PesPacket { stream_type } = self.kind => {
-				PesPacket::parse(&frame.payload, stream_type)
-					.with_context(|| format!("MPEG-TS track '{name}' carries a malformed PES packet"))?;
-				whole_pes_packets(&mut packets, self.pid, &frame.payload, opening)?;
-			}
-			None if is_complete_section(&frame.payload) => {
-				section_packets(&mut packets, self.pid, &frame.payload, opening)?;
-			}
-			None => {
-				tracing::warn!(track = %name, len = frame.payload.len(), "dropping malformed private section on export");
-				return Ok(None);
-			}
+		// Its first unit lists it, at a revision every leg lays out alike.
+		if sync.run.is_none() && sync.anchor.is_none() {
+			sync.anchor = Some(key);
 		}
-		let count = packets.len() / TsPacket::SIZE;
-		// A unit is released as early as a full CPB would need it. A group's first picture whose
-		// buffering period says how much room its encoder's HRD has left when it decodes it goes
-		// out as much later as its lane takes to carry that room. The HRD received every earlier
-		// picture before that picture's first bit (ITU-T H.264 C.3), so a lane faster than the
-		// HRD's rate has by then carried the group before on any leg that holds it. It never goes
-		// out so late that it would miss its own deadline.
-		let release = match room {
-			Some(bits) => sync.layout.later(sync.lane.index(), release, bits, by, count),
-			None => release,
-		};
-		let overruns = sync.lane.overruns();
-		let plan = sync.lane.plan(&sync.layout, group, release, by, count);
-		if sync.lane.overruns() > overruns {
-			tracing::warn!(track = %name, pid = self.pid, "--sync group began behind the one before it: its lane is too narrow for legs that lose different data to agree here");
-		}
-		match plan {
-			Ok(placed) => {
-				lane::number(&mut packets, placed.counter);
-				Ok(Some(Planned {
-					packets,
-					positions: placed.positions,
-				}))
-			}
-			Err(Unplaced::Partial) => Ok(None),
-			Err(Unplaced::Late) if matches!(self.kind, Kind::Verbatim { .. }) => {
-				tracing::warn!(track = %name, count, "verbatim unit its lane cannot carry by its deadline; dropped");
-				Ok(None)
-			}
-			Err(Unplaced::Late) => anyhow::bail!(
-				"MPEG-TS --sync cannot carry a {count}-packet unit on PID {} by its deadline on its lane at {} b/s; raise --mux-rate or the delay",
-				self.pid,
-				sync.layout.rate()
-			),
-		}
+		let (id, placed) = sync.log(&self.kind, self.pid, name, Some(unit))?;
+		Ok((placed || sync.run.is_none()).then_some(id))
 	}
 
 	/// Where the jitter buffer orders a frame decoding at `decode` under `delay`: at its release
@@ -804,7 +1021,7 @@ impl Track {
 		delay: Duration,
 		frame: &Frame,
 	) -> anyhow::Result<(Timestamp, Option<PesStart>)> {
-		let lead = delay.saturating_sub(self.ahead(delay));
+		let lead = delay.saturating_sub(self.ahead(delay, decode));
 		let key = Duration::from(decode)
 			.checked_add(lead)
 			.context("MPEG-TS decode time past the end of the timeline")?;
@@ -873,9 +1090,16 @@ impl Track {
 			.unwrap_or(frame.timestamp);
 		let (key, pes) = self.release_key(decode, jitter.delay(), &frame)?;
 		// Planned as it is read, so a frame the jitter buffer drops still moves its group on.
-		let planned = match self.sync.is_some() {
-			true => match self.plan(name, &frame, (decode, dts), description.as_ref(), group, jitter.delay())? {
-				Some(planned) => Some(planned),
+		let unit = match self.sync.is_some() {
+			true => match self.plan(
+				name,
+				&frame,
+				(decode, dts),
+				description.as_ref(),
+				(group, key),
+				jitter.delay(),
+			)? {
+				Some(unit) => Some(unit),
 				None => return Ok(()),
 			},
 			false => None,
@@ -915,7 +1139,7 @@ impl Track {
 				dts,
 				description,
 				pes,
-				planned,
+				unit,
 			},
 		};
 		if jitter.push(name.to_string(), arrival)? == Push::Late {
@@ -1455,6 +1679,15 @@ where
 	/// of its own, and each PID's continuity counter restarts at every group, its first packet
 	/// flagging the break. Audio is not packed: one frame a PES.
 	///
+	/// A track the catalog adds, or one that ends, revises the program at the first slot that
+	/// repeats the tables after its first or last unit's deadline, the same slot on every leg: the
+	/// PMT there lists what runs from then on, at a `version_number` that follows from what it
+	/// lists, so a leg that joins later announces it alike, and the lanes are laid out again
+	/// for it. An added track goes out from its first group after that slot, and one the catalog
+	/// lists on a PID another still holds cuts that one there. The program descriptors and the
+	/// rate stay as the leg opened on, since nothing in the media says where a change to them
+	/// alone would land; a change is logged.
+	///
 	/// Needs a constant rate ([`Self::with_mux_rate`], or the catalog's), and fails at the
 	/// program tables without one, or if the rate cannot carry each track's lane. The lanes
 	/// take a worst case per codec, and the video lane needs headroom over the video's rate.
@@ -1677,7 +1910,8 @@ where
 				self.last_timestamp = Some(ready.item.frame.timestamp);
 				let decode = ready.item.decode.as_nanos();
 				self.lay_before(ready.item.key.as_nanos())?;
-				match self.list(&name)? {
+				// Under sync the lanes list a track ([`Self::revise_lanes`]).
+				match self.sync || self.list(&name)? {
 					true => self.mux(&name, ready.item)?,
 					false => self
 						.tracks
@@ -1832,6 +2066,7 @@ where
 		for (name, track) in &mut self.tracks {
 			track.fill(name, waiter, &mut input)?;
 		}
+		self.revise_lanes()?;
 		Ok(())
 	}
 
@@ -1843,10 +2078,16 @@ where
 		reject_ambiguous_tracks(&catalog, &mpegts)?;
 		self.source.retain_selectable(&mut catalog);
 
-		// Under sync the tables and the grid are laid once, from the catalog the leg opened on.
+		// Under sync a revision lands where the media that brings it about says, which a change
+		// to the program descriptors or the rate alone has none of, so they stay as the leg
+		// opened on.
 		let locked = self.sync && self.psi.is_some();
-		if !locked {
-			self.program_descriptors = mpegts.program_descriptors.clone();
+		match locked {
+			true if mpegts.program_descriptors != self.program_descriptors => tracing::warn!(
+				"ignoring a program descriptor change under --sync, which keeps the descriptors it opened with"
+			),
+			true => {}
+			false => self.program_descriptors = mpegts.program_descriptors.clone(),
 		}
 		self.program = mpegts.program.clone();
 		// An explicit override wins even when it is refused (leaving the output
@@ -1940,14 +2181,6 @@ where
 		}
 
 		if self.psi.is_some() {
-			if locked {
-				for name in active.keys() {
-					anyhow::ensure!(
-						self.tracks.contains_key(name),
-						"TS track layout changed after PAT/PMT was emitted under --sync: '{name}' added"
-					);
-				}
-			}
 			if !self.stale.is_empty() {
 				self.resubscribe(&catalog, &mpegts)?;
 			}
@@ -1968,7 +2201,7 @@ where
 			// withdraws leaves nothing behind but what it already sent, which still goes out. A
 			// name that returns before that is gone is the same stream, so it is read on.
 			for (name, track) in self.tracks.iter_mut() {
-				track.cataloged = locked || active.contains_key(name);
+				track.cataloged = active.contains_key(name);
 				if track.cataloged && std::mem::take(&mut track.withdrawn) {
 					track.finished = false;
 				}
@@ -1986,15 +2219,20 @@ where
 		// fills PIDs, descriptors, and stream_ids across several catalog publishes, so this runs
 		// every snapshot until the PMT lists the track, which is *refreshed*, not latched from
 		// the first (partial) snapshot. A recorded PID may take over one a stream the catalog
-		// dropped still drains on ([`Self::list`]); any other PID the PMT lists is taken.
+		// dropped still drains on ([`Self::list`]); any other PID the PMT lists is taken. Under
+		// sync a leg assigns what one joining now would, which knows neither the PID the clock
+		// rides nor a stream the catalog dropped: the clock moves off a PID a track takes, and
+		// a track that takes a PID still draining cuts that stream ([`Self::revise_lanes`]).
 		let pmt_pid = self.pmt_pid();
 		let mut taken: Vec<u16> = vec![0x0000, pmt_pid, 0x1FFF];
-		taken.extend(self.psi.as_ref().and_then(|psi| psi.own_clock()));
+		if !self.sync {
+			taken.extend(self.psi.as_ref().and_then(|psi| psi.own_clock()));
+		}
 		taken.extend(self.tracks.values().filter(|t| t.listed && t.cataloged).map(|t| t.pid));
 		let draining: Vec<u16> = self
 			.tracks
 			.values()
-			.filter(|t| t.listed && !t.cataloged)
+			.filter(|t| t.listed && !t.cataloged && !self.sync)
 			.map(|t| t.pid)
 			.collect();
 		let joining: Vec<&String> = active
@@ -2020,9 +2258,12 @@ where
 				pids.insert(name.clone(), pid);
 			}
 		}
+		// Under sync the clock rides its own PID, which the PMT names.
+		let clock = self.psi.as_ref().and_then(|psi| psi.own_clock()).filter(|_| self.sync);
 		let es_pids: Vec<u16> = taken
 			.iter()
 			.chain(&draining)
+			.chain(&clock)
 			.copied()
 			.filter(|&pid| pid >= 0x10 && pid != 0x1FFF)
 			.collect();
@@ -2110,6 +2351,13 @@ where
 			.filter(|(_, track)| !track.finished)
 			.filter(|(_, track)| track.kind.class() != super::stats::Class::Data || track.buffer.is_some());
 		self.jitter.expect(continuous.map(|(name, _)| name.clone()));
+		// A track added under sync plans its first unit on the lanes laid out, which list it at
+		// the revision that unit brings about.
+		if let Some(lanes) = self.schedule.grid().map(|grid| grid.lanes().clone()) {
+			for track in self.tracks.values_mut().filter(|track| track.sync.is_none()) {
+				track.sync = Some(Synced::new(lanes.clone(), None));
+			}
+		}
 		Ok(())
 	}
 
@@ -2283,7 +2531,7 @@ where
 	/// The same publisher instance (an equal epoch) continues the stream: the program and
 	/// its PSI carry on, and its catalog resubscribes each track as it lists it, so a gap is a
 	/// skip like any other. A track it adds or drops revises the PMT, as any catalog update
-	/// does, except under [`Self::with_sync`], where an added one fails as a layout change.
+	/// does.
 	///
 	/// Another instance (another epoch, or an epochless route) is a full program switch: a
 	/// fresh export of `broadcast` with a new PMT from its catalog, and nothing carried from
@@ -2525,10 +2773,10 @@ where
 		let pcr_pid = match sync {
 			// A media PID flags the break at every group, which on the PCR's PID would declare a
 			// break in the time base, so under sync the PCR rides a PID of its own.
-			Some(_) => self.clock_pid()?,
+			Some(_) => self.clock_pid(&self.tracks.values().map(|track| track.pid).collect::<Vec<_>>())?,
 			None => self.pick_clock()?,
 		};
-		let pmt = self.program_map(pcr_pid)?;
+		let pmt = self.program_map(&self.listed(), pcr_pid)?;
 
 		// Preserve the source's program identity so the rebuilt PAT stays consistent with the
 		// carried SI; synthesize a minimal identity otherwise.
@@ -2556,11 +2804,16 @@ where
 			queued: VecDeque::new(),
 			out: None,
 		};
-		if let Some(rate) = sync {
-			self.lay_lanes(rate, &psi)?;
-		}
 		self.psi = Some(psi);
 		self.psi_due = !self.sync;
+		if sync.is_some() {
+			// Laid out from each track's run, which every track has from the start.
+			let lanes = Arc::new(Lanes::default());
+			for track in self.tracks.values_mut() {
+				track.sync = Some(Synced::new(lanes.clone(), Some(Run::WHOLE)));
+			}
+			self.lay_lanes()?;
+		}
 		Ok(())
 	}
 
@@ -2591,9 +2844,14 @@ where
 			.context("TS export has no unused PID for the PCR")
 	}
 
-	/// The PMT listing every listed track in PID order, with the clock on `pcr_pid`.
-	fn program_map(&self, pcr_pid: u16) -> anyhow::Result<psi::Pmt> {
-		let mut tracks: Vec<&Track> = self.tracks.values().filter(|t| t.listed).collect();
+	/// The tracks the PMT lists.
+	fn listed(&self) -> Vec<&Track> {
+		self.tracks.values().filter(|track| track.listed).collect()
+	}
+
+	/// The PMT listing `tracks` in PID order, with the clock on `pcr_pid`.
+	fn program_map(&self, tracks: &[&Track], pcr_pid: u16) -> anyhow::Result<psi::Pmt> {
+		let mut tracks = tracks.to_vec();
 		tracks.sort_by_key(|t| t.pid);
 
 		let streams = tracks
@@ -2681,7 +2939,7 @@ where
 			true => current,
 			false => self.pick_clock()?,
 		};
-		let pmt = self.program_map(pcr_pid)?;
+		let pmt = self.program_map(&self.listed(), pcr_pid)?;
 		let psi = self.psi.as_mut().expect("checked above");
 		if pmt != psi.pmt {
 			psi.pmt = pmt;
@@ -2726,7 +2984,12 @@ where
 	/// Retire each track the catalog dropped once nothing of it is left to go out, and list
 	/// the tracks that waited for its PID ([`Self::list`]).
 	fn settle(&mut self) -> anyhow::Result<()> {
-		if self.psi.is_none() || self.sync {
+		if self.psi.is_none() {
+			return Ok(());
+		}
+		if self.sync {
+			self.revise_lanes()?;
+			self.settle_sync();
 			return Ok(());
 		}
 		let gone: Vec<String> =
@@ -2788,6 +3051,40 @@ where
 		Ok(())
 	}
 
+	/// Under [`Self::with_sync`], forget each track that ended once the slot its revision retires
+	/// it in is laid, or that ended before one listed it, and nothing of it waits to go out, and
+	/// each planned unit no revision can reach any more.
+	fn settle_sync(&mut self) {
+		let Some(next) = self.schedule.grid().map(Grid::floor) else {
+			return;
+		};
+		for sync in self.tracks.values_mut().filter_map(|track| track.sync.as_mut()) {
+			sync.forget(next);
+		}
+		let gone: Vec<String> = self
+			.tracks
+			.iter()
+			.filter(|(name, track)| {
+				track.finished
+					&& !self.stale.contains(name.as_str())
+					&& !self.jitter.holds(name.as_str())
+					&& self.held.as_ref().is_none_or(|held| held.track != **name)
+					&& track.sync.as_ref().is_some_and(|sync| match sync.run {
+						Some(run) => run.until.is_some_and(|until| until <= next),
+						None => sync.anchor.is_none(),
+					})
+			})
+			.map(|(name, _)| name.clone())
+			.collect();
+		for name in gone {
+			let track = self.tracks.remove(&name).expect("collected above");
+			self.jitter.forget(name.as_str());
+			if track.listed {
+				self.liveness.retire(track.pid);
+			}
+		}
+	}
+
 	/// Hand the program tables to the schedule ahead of the next unit, if they are due. A PMT
 	/// that differs from the last handed over goes out under the next version.
 	fn lead_tables(&mut self) -> anyhow::Result<()> {
@@ -2828,66 +3125,158 @@ where
 		Ok(())
 	}
 
-	/// The PID the PCR rides alone under [`Self::with_sync`]: the first above the program's
-	/// elementary streams that nothing else in it uses, else the first below them, so every
+	/// The PID the PCR rides alone under [`Self::with_sync`], beside streams on `pids`: the first
+	/// above them that nothing else in the program uses, else the first below them, so every
 	/// leg picks the same one.
-	fn clock_pid(&self) -> anyhow::Result<u16> {
-		let used: HashSet<u16> = self
-			.tracks
-			.values()
-			.map(|track| track.pid)
+	fn clock_pid(&self, pids: &[u16]) -> anyhow::Result<u16> {
+		let used: HashSet<u16> = pids
+			.iter()
+			.copied()
 			.chain([self.pmt_pid()])
 			.chain(self.si.keys().map(|(pid, _)| *pid))
 			.collect();
-		let top = self
-			.tracks
-			.values()
-			.map(|track| track.pid)
-			.max()
-			.unwrap_or(FIRST_ES_PID);
+		let top = pids.iter().copied().max().unwrap_or(FIRST_ES_PID);
 		(top + 1..0x1FFF)
 			.chain(FIRST_ES_PID..top)
 			.find(|pid| !used.contains(pid))
 			.context("MPEG-TS --sync found no PID left for the PCR")
 	}
 
-	/// Give each track its lane of `rate` under [`Self::with_sync`], beside the tables in
-	/// `psi` and room for the SI, and lay every slot on them from now on.
-	fn lay_lanes(&mut self, rate: u64, psi: &Psi) -> anyhow::Result<()> {
+	/// Under [`Self::with_sync`], put in force the revisions the media brought about since the
+	/// lanes were laid out: a track's first unit lists it, and its end retires it, at the first
+	/// slot repeating the tables two slots after that unit's jitter buffer key ([`Lanes::revision`]).
+	/// Every leg reads that key alike, and reads it before its clock reaches it, while that slot
+	/// and every unit placed past it is still to go out. A leg that reads it later than that
+	/// revises at the first such slot it still can.
+	///
+	/// A track listed on a PID another still holds cuts that one at its revision, as a recorded
+	/// PID taking over a stream the catalog dropped does. That one is read on to the cut.
+	fn revise_lanes(&mut self) -> anyhow::Result<()> {
+		if !self.sync {
+			return Ok(());
+		}
+		let Some(grid) = self.schedule.grid() else {
+			return Ok(());
+		};
+		// Nothing laid or placed is revised: the slot after it is the earliest a revision may land
+		// two slots after.
+		let floor = grid.floor();
+		let revision = |key: Option<Timestamp>| {
+			let slot = key.map_or(0, |key| schedule::slot(key.as_nanos()));
+			Lanes::revision(slot.max(floor))
+		};
+		let mut listed = Vec::new();
+		let mut changed = false;
+		for (name, track) in self.tracks.iter_mut() {
+			let last = track.released.map(|(_, key, _)| key);
+			let ends = track.finished && !self.stale.contains(name);
+			let Some(sync) = &mut track.sync else {
+				continue;
+			};
+			if let Some(key) = sync.anchor.take() {
+				let from = revision(Some(key));
+				sync.run = Some(Run { from, until: None });
+				track.listed = true;
+				listed.push((name.clone(), track.pid, from));
+				changed = true;
+			}
+			if ends && let Some(run @ Run { until: None, .. }) = &mut sync.run {
+				run.until = Some(revision(last));
+				changed = true;
+			}
+		}
+		for (name, pid, from) in listed {
+			for (holder, track) in self.tracks.iter_mut() {
+				if *holder == name || track.pid != pid {
+					continue;
+				}
+				let Some(Some(run)) = track.sync.as_mut().map(|sync| sync.run.as_mut()) else {
+					continue;
+				};
+				if run.until.is_none_or(|until| until > from) {
+					run.until = Some(from);
+					track.withdrawn = false;
+				}
+			}
+		}
+		if changed {
+			self.lay_lanes()?;
+		}
+		Ok(())
+	}
+
+	/// Lay the lanes out under [`Self::with_sync`] from each track's run: from slot zero and
+	/// every revision on, each listed track a lane of the constant rate, beside the tables and
+	/// room for the SI. The units planned on lanes a revision changed are planned again.
+	fn lay_lanes(&mut self) -> anyhow::Result<()> {
+		let rate = self.mux_rate.context("MPEG-TS --sync lanes without a constant rate")?;
+		let mut bounds = BTreeSet::from([0]);
+		for run in self.tracks.values().filter_map(|track| track.sync.as_ref()?.run) {
+			bounds.insert(run.from);
+			bounds.extend(run.until);
+		}
+		let mut epochs = Vec::new();
+		for at in bounds {
+			let members: Vec<&Track> = self
+				.tracks
+				.values()
+				.filter(|track| {
+					track
+						.sync
+						.as_ref()
+						.and_then(|sync| sync.run)
+						.is_some_and(|run| run.holds(at))
+				})
+				.collect();
+			epochs.push((at, self.epoch(rate, &members)?));
+		}
+		let lanes = Arc::new(Lanes::new(epochs));
+		let pmt = lanes.last().pmt.1.clone();
+		self.psi.as_mut().context("PSI not built")?.pmt = pmt;
+		for (name, track) in self.tracks.iter_mut() {
+			let Some(sync) = &mut track.sync else {
+				continue;
+			};
+			sync.lanes = lanes.clone();
+			sync.replan(&track.kind, track.pid, name)?;
+			if sync.run.is_some() {
+				self.liveness.register(track.pid);
+			}
+		}
+		match self.schedule.sync() {
+			Some(grid) => grid.set_lanes(lanes),
+			None => self.schedule.set_sync(Grid::new(lanes)),
+		}
+		Ok(())
+	}
+
+	/// The layout of `members` at `rate` under [`Self::with_sync`], with the tables listing them.
+	fn epoch(&self, rate: u64, members: &[&Track]) -> anyhow::Result<Epoch> {
+		let psi = self.psi.as_ref().context("PSI not built")?;
+		let pids: Vec<u16> = members.iter().map(|track| track.pid).collect();
+		let clock = self.clock_pid(&pids)?;
+		let pmt = self.program_map(members, clock)?;
+		let version = synced_version(self.version, &pmt);
 		// Flagged, so each emission has the adaptation field a jump sets the flag in ([`Grid::lay`]).
 		let mut tables = Vec::new();
 		section_packets(&mut tables, Pid::PAT, &psi.pat, true)?;
-		section_packets(
-			&mut tables,
-			psi.pmt_pid,
-			&super::psi::encode_pmt(&psi.pmt, self.version)?,
-			true,
-		)?;
+		section_packets(&mut tables, psi.pmt_pid, &super::psi::encode_pmt(&pmt, version)?, true)?;
 		let tables = tables.as_chunks::<{ TsPacket::SIZE }>().0.to_vec();
-		let mut needs: Vec<(u16, Need)> = self
-			.tracks
-			.values()
-			.map(|track| (track.pid, track.lane_need()))
-			.collect();
+		let mut needs: Vec<(u16, Need)> = members.iter().map(|track| (track.pid, track.lane_need())).collect();
 		needs.sort_unstable_by_key(|(pid, _)| *pid);
-		let layout = Arc::new(Layout::new(rate, tables.len(), SI_LANE, &needs)?);
-		for track in self.tracks.values_mut() {
-			let lane = layout.lane(track.pid).context("a track without a lane")?;
-			track.sync = Some(Synced {
-				layout: layout.clone(),
-				lane: Lane::new(lane),
-				released: None,
-			});
-		}
-		self.schedule.set_sync(Grid::new(layout, tables));
-		Ok(())
+		Ok(Epoch {
+			layout: Layout::new(rate, tables.len(), SI_LANE, &needs)?,
+			tables,
+			pmt: (version, pmt),
+			clock,
+		})
 	}
 
 	/// Packetize one media frame and queue it on the [`Schedule`], re-emitting PAT/PMT
 	/// before video keyframes (and periodically) so receivers can tune in mid-stream.
 	fn mux(&mut self, name: &str, queued: Queued) -> anyhow::Result<()> {
 		if self.sync {
-			return self.mux_sync(queued);
+			return self.mux_sync(name, queued);
 		}
 		let Queued {
 			frame,
@@ -3067,13 +3456,26 @@ where
 
 	/// Put a frame's planned packets on their lane under [`Self::with_sync`]. The tables and SI
 	/// have positions of their own ([`Self::queue_si`]), so nothing rides with it.
-	fn mux_sync(&mut self, queued: Queued) -> anyhow::Result<()> {
-		let Some(planned) = queued.planned else {
+	fn mux_sync(&mut self, name: &str, queued: Queued) -> anyhow::Result<()> {
+		let Some(id) = queued.unit else {
 			return Ok(());
 		};
-		self.schedule.decodes_at(queued.decode.as_nanos());
+		let sync = self
+			.tracks
+			.get_mut(name)
+			.and_then(|track| track.sync.as_mut())
+			.context("MPEG-TS --sync track without a lane")?;
 		let grid = self.schedule.sync().context("MPEG-TS --sync lanes not laid out")?;
-		grid.place(&planned.packets, &planned.positions, queued.frame.keyframe);
+		// Forgotten once due before every slot still to lay ([`Self::settle_sync`]): it could
+		// only go out late.
+		let Some(logged) = sync.log.iter_mut().find(|logged| logged.id == id) else {
+			return Ok(());
+		};
+		logged.out = true;
+		if let Some(planned) = &logged.planned {
+			grid.place(&planned.packets, &planned.positions, queued.frame.keyframe);
+			self.schedule.decodes_at(queued.decode.as_nanos());
+		}
 		Ok(())
 	}
 
@@ -3393,9 +3795,9 @@ where
 				keyframe: slot.keyframe,
 			};
 			let psi = self.psi.as_mut().expect("checked above");
-			// Under sync the grid lays the one version the tables were built at.
+			// Under sync the grid lays the tables in force in the slot.
 			let tables = match self.sync {
-				true => psi.out.is_none().then(|| (self.version, psi.pmt.clone())),
+				true => slot.pmt,
 				false => (0..slot.tables).filter_map(|_| psi.queued.pop_front()).last(),
 			};
 			let tally = Tally {

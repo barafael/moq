@@ -427,6 +427,8 @@ pub(super) struct Slot {
 	/// How many units of program tables finish in the slot ([`Schedule::lead`]), which go
 	/// out in the order they were pushed.
 	pub tables: usize,
+	/// On a [`Grid`], the PMT's version and what it says, if the slot sent the tables.
+	pub pmt: Option<(mpeg2ts::ts::VersionNumber, super::psi::Pmt)>,
 }
 
 impl Slot {
@@ -1027,7 +1029,7 @@ impl Schedule {
 			let laid = grid.lay(index);
 			return Ok(Some(Slot {
 				index,
-				pcr: rate_pcr(index, grid.layout().rate()) as u64,
+				pcr: rate_pcr(index, grid.lanes().rate()) as u64,
 				nulls: laid.count - 1 - laid.positions.len(),
 				packets: laid.packets,
 				keyframe: laid.keyframe,
@@ -1035,8 +1037,9 @@ impl Schedule {
 				positions: Some(laid.positions),
 				clocked: false,
 				jump: laid.jump,
-				clock: self.clock,
+				clock: Some(laid.clock),
 				tables: 0,
+				pmt: laid.tables,
 			}));
 		}
 		let Some(index) = self.index(known) else {
@@ -1116,6 +1119,7 @@ impl Schedule {
 			jump: false,
 			clock,
 			tables,
+			pmt: None,
 		}))
 	}
 
@@ -1140,6 +1144,7 @@ impl Schedule {
 			jump: false,
 			clock: self.clock,
 			tables: 0,
+			pmt: None,
 		};
 		let clock = self.clock.filter(|pid| self.buffers.contains_key(pid));
 		let mut holding = self.holding(|i| self.units[i].remaining());
@@ -2823,6 +2828,7 @@ mod tests {
 			jump: false,
 			clock: None,
 			tables: 0,
+			pmt: None,
 		};
 		let mut null = unit(0, 1);
 		(null[1], null[2]) = (0x1f, 0xff);
@@ -2864,6 +2870,7 @@ mod tests {
 			jump: false,
 			clock: None,
 			tables: 0,
+			pmt: None,
 		};
 		let mut null = unit(0, 1);
 		(null[1], null[2]) = (0x1f, 0xff);

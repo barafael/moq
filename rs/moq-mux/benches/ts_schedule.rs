@@ -10,6 +10,17 @@ mod export {
 	pub const PSI_INTERVAL: Duration = Duration::from_millis(500);
 	use std::time::Duration;
 }
+#[allow(dead_code)]
+mod psi {
+	/// What a synced slot's tables say, which the schedule only carries.
+	#[derive(Clone, Debug)]
+	pub struct Pmt {
+		pub program_number: u16,
+		pub pcr_pid: Option<u16>,
+		pub program_info: Vec<()>,
+		pub streams: Vec<()>,
+	}
+}
 #[path = "../src/container/ts/lane.rs"]
 #[allow(dead_code)]
 mod lane;

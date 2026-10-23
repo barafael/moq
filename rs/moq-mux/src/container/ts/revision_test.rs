@@ -687,41 +687,6 @@ fn remove(catalog: &mut crate::catalog::Producer<Ext>, name: &str) {
 	guard.ext.mpegts.tracks.remove(name);
 }
 
-/// Under sync the tables stay as laid, so a track added after them fails the export.
-#[tokio::test(start_paused = true)]
-async fn a_track_added_under_sync_fails_the_export() {
-	let mut broadcast = moq_net::broadcast::Info::new().produce();
-	let consumer = broadcast.consume();
-	let mut catalog = crate::catalog::Producer::new(
-		&mut broadcast,
-		crate::catalog::Config::default().with_catalog(crate::catalog::hang::Catalog::<Ext>::default()),
-	)
-	.unwrap();
-	let (_, mut first) = aac_track(&mut broadcast, &mut catalog, Some(AUDIO_PID));
-	for millis in (0..3_000).step_by(20) {
-		write_aac(&mut [&mut first], millis);
-	}
-	let source = crate::source::announced(&consumer).await;
-	let opened = super::export_test::open_ts(source, crate::catalog::CatalogFormat::Hang)
-		.await
-		.unwrap();
-	let mut export = opened.with_delay(DELAY).with_mux_rate(2_000_000).with_sync();
-	let out = tokio::time::timeout(DELAY * 2, export.next()).await;
-	out.expect("the tables went out").unwrap().unwrap();
-
-	let _second = aac_track(&mut broadcast, &mut catalog, Some(OTHER_AUDIO_PID));
-	let err = tokio::time::timeout(DELAY * 2, async {
-		loop {
-			if let Err(err) = export.next().await {
-				break err;
-			}
-		}
-	})
-	.await
-	.expect("the export reads the catalog update");
-	assert!(err.to_string().contains("under --sync"), "{err}");
-}
-
 /// A track the catalog lists after the tables went out, but before its PID is recorded,
 /// takes the frames it holds along to the recorded PID when that arrives.
 #[tokio::test(start_paused = true)]

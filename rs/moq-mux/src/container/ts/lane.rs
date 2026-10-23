@@ -8,6 +8,9 @@
 //! packets a second, spread evenly over the rest. The positions no lane owns carry the SI,
 //! else stuffing.
 //!
+//! A revision of the program puts another layout in force from a slot every leg derives alike
+//! ([`Lanes`]): the slot that repeats the tables after the media that brought it about.
+//!
 //! A unit takes the next positions of its PID's lane from where its MoQ group was anchored:
 //! the first slot the group's first unit may go out in. Where it lands depends on its group's
 //! earlier units and nothing else, so a leg that lacks a group, or joined after it, lays the
@@ -20,9 +23,10 @@
 use std::collections::{BTreeMap, HashMap, HashSet, VecDeque};
 use std::sync::Arc;
 
-use mpeg2ts::ts::TsPacket;
+use mpeg2ts::ts::{TsPacket, VersionNumber};
 
 use super::export::{PCR_INTERVAL, PSI_INTERVAL};
+use super::psi;
 use super::schedule::{PACKET, packets_before};
 
 /// Grid slots per second.
@@ -128,10 +132,6 @@ impl Layout {
 		})
 	}
 
-	pub fn rate(&self) -> u64 {
-		self.rate
-	}
-
 	/// The lane `pid` owns, if any.
 	pub fn lane(&self, pid: u16) -> Option<usize> {
 		self.lanes.iter().position(|&(lane, _)| lane == pid)
@@ -220,28 +220,145 @@ impl Layout {
 		}
 		owners
 	}
+}
 
-	/// `release` moved later by as long as lane `lane` takes to carry `bits` of payload, unless a
-	/// unit of `count` packets laid from there would arrive after `by`.
-	pub fn later(&self, lane: usize, release: u128, bits: u64, by: u128, count: usize) -> u128 {
-		let later = release + u128::from(bits) * 1_000_000_000 / u128::from(self.payload_rate(lane).max(1));
-		let positions = self.take(lane, self.at(later), count.max(1));
-		let last = *positions.last().expect("at least one position");
-		match self.time(last + 1) > by {
-			true => release,
-			false => later,
+/// One layout of a [`Lanes`], and the program tables it lays.
+#[derive(Debug)]
+pub(super) struct Epoch {
+	pub layout: Layout,
+	/// The PAT then the PMT, flagged, so each emission has the adaptation field a jump sets the
+	/// flag in ([`Grid::lay`]).
+	pub tables: Vec<[u8; TsPacket::SIZE]>,
+	/// The PMT's version and what it says.
+	pub pmt: (VersionNumber, psi::Pmt),
+	/// The PID the PCR rides alone.
+	pub clock: u16,
+}
+
+/// The layouts a constant-rate multiplex runs through, each in force from the first slot of
+/// a revision of the program ([`Export::with_sync`](super::Export::with_sync)), on one rate.
+///
+/// A revision's slot repeats the tables, which go out revised there, ahead of every packet of
+/// the streams it adds: a group opens on a lane only in a slot after the one the lane began in.
+/// Its PCR still rides the PID the tables before it named, which the new clock takes over from
+/// the next slot on.
+#[derive(Debug, Default)]
+pub(super) struct Lanes {
+	/// Each layout by the first slot it lays, the first from slot zero. Empty until laid out.
+	epochs: Vec<(u128, Epoch)>,
+}
+
+impl Lanes {
+	/// `epochs` in slot order, the first from slot zero, all at one rate.
+	pub fn new(epochs: Vec<(u128, Epoch)>) -> Self {
+		debug_assert!(epochs.first().is_some_and(|(from, _)| *from == 0));
+		debug_assert!(epochs.windows(2).all(|pair| pair[0].0 < pair[1].0));
+		debug_assert!(
+			epochs
+				.iter()
+				.all(|(_, epoch)| epoch.layout.rate == epochs[0].1.layout.rate)
+		);
+		Self { epochs }
+	}
+
+	/// The first slot that repeats the tables after `slot`, and at least two after it: a unit due
+	/// in `slot` may still take positions in the slot after it, whose PCR runs a slot behind.
+	pub fn revision(slot: u128) -> u128 {
+		(slot + 2).next_multiple_of(PSI_SLOTS)
+	}
+
+	fn at_slot(&self, index: u128) -> usize {
+		self.epochs.partition_point(|(from, _)| *from <= index) - 1
+	}
+
+	/// The layout in force in slot `index`, and the slot it came into force.
+	pub fn epoch(&self, index: u128) -> (u128, &Epoch) {
+		let (from, epoch) = &self.epochs[self.at_slot(index)];
+		(*from, epoch)
+	}
+
+	/// The layout in force before the one in slot `index` came into force, if any.
+	fn previous(&self, index: u128) -> Option<&Epoch> {
+		let at = self.at_slot(index);
+		(at > 0).then(|| &self.epochs[at - 1].1)
+	}
+
+	/// The layout of the last revision.
+	pub fn last(&self) -> &Epoch {
+		&self.epochs.last().expect("at least one layout").1
+	}
+
+	fn layout(&self) -> &Layout {
+		&self.epochs[0].1.layout
+	}
+
+	/// The multiplex rate, in bits per second.
+	pub fn rate(&self) -> u64 {
+		self.layout().rate
+	}
+
+	/// See [`Layout::first`].
+	pub fn first(&self, index: u128) -> u128 {
+		self.layout().first(index)
+	}
+
+	/// See [`Layout::at`].
+	pub fn at(&self, time: u128) -> u128 {
+		self.layout().at(time)
+	}
+
+	/// See [`Layout::slot_of`].
+	pub fn slot_of(&self, position: u128) -> u128 {
+		self.layout().slot_of(position)
+	}
+
+	/// See [`Layout::time`].
+	pub fn time(&self, position: u128) -> u128 {
+		self.layout().time(position)
+	}
+
+	/// The PID slot `index`'s PCR rides: the clock the tables in force before it named.
+	pub fn clock(&self, index: u128) -> u16 {
+		let (from, epoch) = self.epoch(index);
+		match from == index {
+			true => self.previous(index).unwrap_or(epoch).clock,
+			false => epoch.clock,
 		}
 	}
 
-	/// The next `count` positions of lane `lane` at or after the timeline's packet `from`.
-	pub fn take(&self, lane: usize, from: u128, count: usize) -> Vec<u128> {
+	/// How fast `pid`'s lane in slot `index` carries elementary bytes, in bits per second.
+	pub fn payload_rate(&self, pid: u16, index: u128) -> Option<u64> {
+		let layout = &self.epoch(index).1.layout;
+		Some(layout.payload_rate(layout.lane(pid)?))
+	}
+
+	/// `release` moved later by as long as `pid`'s lane in `run` takes to carry `bits` of payload,
+	/// unless a unit of `count` packets laid from there would arrive after `by`.
+	pub fn later(&self, (pid, run): (u16, Run), release: u128, bits: u64, by: u128, count: usize) -> u128 {
+		let Some(rate) = self.payload_rate(pid, self.slot_of(self.at(release))) else {
+			return release;
+		};
+		let later = release + u128::from(bits) * 1_000_000_000 / u128::from(rate.max(1));
+		match self.take((pid, run), self.at(later), count.max(1)) {
+			Some(positions) if self.time(positions.last().expect("at least one position") + 1) <= by => later,
+			_ => release,
+		}
+	}
+
+	/// The next `count` positions of `pid`'s lane in `run` at or after the timeline's packet
+	/// `from`, or `None` if the run ends first.
+	pub fn take(&self, (pid, run): (u16, Run), from: u128, count: usize) -> Option<Vec<u128>> {
 		let mut out = Vec::with_capacity(count);
 		let mut index = self.slot_of(from);
 		while out.len() < count {
+			if !run.holds(index) {
+				return None;
+			}
+			let lane = Owner::Lane(self.epoch(index).1.layout.lane(pid)?);
 			let first = self.first(index);
 			for (position, owner) in self.owners(index).into_iter().enumerate() {
 				let at = first + position as u128;
-				if at >= from && owner == Owner::Lane(lane) {
+				if at >= from && owner == lane {
 					out.push(at);
 					if out.len() == count {
 						break;
@@ -250,7 +367,36 @@ impl Layout {
 			}
 			index += 1;
 		}
-		out
+		Some(out)
+	}
+
+	/// What each position of slot `index` carries ([`Layout::owners`]).
+	pub fn owners(&self, index: u128) -> Vec<Owner> {
+		self.epoch(index).1.layout.owners(index)
+	}
+}
+
+/// The slots a PID's lane runs in for one stream: from the revision that lists it, up to the one
+/// that retires it.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(super) struct Run {
+	pub from: u128,
+	pub until: Option<u128>,
+}
+
+impl Run {
+	/// From the start of the timeline on.
+	pub const WHOLE: Self = Self { from: 0, until: None };
+
+	/// Whether it runs in slot `index`.
+	pub fn holds(&self, index: u128) -> bool {
+		self.from <= index && self.until.is_none_or(|until| index < until)
+	}
+
+	/// Whether a group may open in slot `index`: one after the slot the run began in, whose
+	/// tables list the stream, unless it runs from the start.
+	fn opens(&self, index: u128) -> bool {
+		self.holds(index) && (self.from == 0 || self.from < index)
 	}
 }
 
@@ -265,16 +411,18 @@ pub(super) struct Placed {
 /// Why [`Lane::plan`] placed nothing.
 #[derive(Debug, PartialEq, Eq)]
 pub(super) enum Unplaced {
-	/// This leg did not hold the unit's group from its first unit, so it cannot know where
-	/// the unit goes.
+	/// This leg did not hold the unit's group from its first unit, or the group opened before
+	/// its lane did, so it cannot know where the unit goes.
 	Partial,
 	/// The lane cannot carry the unit by its deadline.
 	Late,
+	/// The lane ends before the unit would.
+	Ended,
 }
 
 /// A PID's place in its lane.
+#[derive(Clone, Default)]
 pub(super) struct Lane {
-	lane: usize,
 	/// The group being laid.
 	group: Option<Group>,
 	/// One past the last position any group took.
@@ -283,6 +431,7 @@ pub(super) struct Lane {
 	overruns: u64,
 }
 
+#[derive(Clone)]
 struct Group {
 	sequence: u64,
 	/// The next position it may take.
@@ -294,20 +443,6 @@ struct Group {
 }
 
 impl Lane {
-	pub fn new(lane: usize) -> Self {
-		Self {
-			lane,
-			group: None,
-			end: 0,
-			overruns: 0,
-		}
-	}
-
-	/// Which lane of its [`Layout`] it is.
-	pub fn index(&self) -> usize {
-		self.lane
-	}
-
 	/// Groups that began behind the one before them, on a lane short of headroom.
 	pub fn overruns(&self) -> u64 {
 		self.overruns
@@ -328,28 +463,29 @@ impl Lane {
 		}
 	}
 
-	/// Place a unit of `count` packets from group `sequence`, which it `opens` when it is the
-	/// group's first unit, that may go out from `release` and must have arrived by `by`,
-	/// both in nanoseconds of media time.
+	/// Place a unit of `count` packets on `pid`'s lane in `run` from group `sequence`, which it
+	/// `opens` when it is the group's first unit, that may go out from `release` and must have
+	/// arrived by `by`, both in nanoseconds of media time.
 	///
 	/// A group opens at its lane's first position from its first unit's release, and each unit
 	/// after it takes the next positions from there, never before its own release. A unit that
 	/// misses its deadline takes nothing, so the units after it keep theirs.
 	pub fn plan(
 		&mut self,
-		layout: &Layout,
+		lanes: &Lanes,
+		(pid, run): (u16, Run),
 		(sequence, opens): (u64, bool),
 		release: u128,
 		by: u128,
 		count: usize,
 	) -> Result<Placed, Unplaced> {
-		let earliest = layout.at(release);
+		let earliest = lanes.at(release);
 		let from = match &mut self.group {
 			Some(group) if group.sequence == sequence => match group.whole {
 				true => group.next.max(earliest),
 				false => return Err(Unplaced::Partial),
 			},
-			_ if !opens => {
+			_ if !opens || !run.opens(lanes.slot_of(self.end.max(earliest))) => {
 				self.group = Some(Group {
 					sequence,
 					next: 0,
@@ -371,9 +507,9 @@ impl Lane {
 				self.end.max(earliest)
 			}
 		};
-		let positions = layout.take(self.lane, from, count.max(1));
+		let positions = lanes.take((pid, run), from, count.max(1)).ok_or(Unplaced::Ended)?;
 		let last = *positions.last().expect("at least one position");
-		if layout.time(last + 1) > by {
+		if lanes.time(last + 1) > by {
 			return Err(Unplaced::Late);
 		}
 		let group = self.group.as_mut().expect("a group was just set");
@@ -407,18 +543,19 @@ pub(super) struct Laid {
 	pub units: Vec<u16>,
 	/// It does not follow the slot laid before it.
 	pub jump: bool,
+	/// The PID its PCR rides.
+	pub clock: u16,
+	/// The PMT's version and what it says, if the slot sent the tables.
+	pub tables: Option<(VersionNumber, psi::Pmt)>,
 }
 
-/// The packets placed on a [`Layout`], laid out slot by slot.
+/// The packets placed on [`Lanes`], laid out slot by slot.
 pub(super) struct Grid {
-	layout: Arc<Layout>,
+	lanes: Arc<Lanes>,
 	/// Each placed packet, by its timeline position.
 	placed: BTreeMap<u128, [u8; TsPacket::SIZE]>,
 	/// Where each unit's first packet sits: its PID and whether it opens a keyframe.
 	starts: BTreeMap<u128, (u16, bool)>,
-	/// The PAT then the PMT, numbered as they go out. Each section's first packet carries an
-	/// adaptation field, whose `discontinuity_indicator` is set where the grid jumps.
-	tables: Vec<[u8; TsPacket::SIZE]>,
 	/// SI packets still to go out, in order, each no earlier than its position.
 	si: VecDeque<(u128, [u8; TsPacket::SIZE])>,
 	/// Where each SI PID's last packet went.
@@ -432,12 +569,11 @@ pub(super) struct Grid {
 }
 
 impl Grid {
-	pub fn new(layout: Arc<Layout>, tables: Vec<[u8; TsPacket::SIZE]>) -> Self {
+	pub fn new(lanes: Arc<Lanes>) -> Self {
 		Self {
-			layout,
+			lanes,
 			placed: BTreeMap::new(),
 			starts: BTreeMap::new(),
-			tables,
 			si: VecDeque::new(),
 			si_last: HashMap::new(),
 			next: None,
@@ -446,8 +582,23 @@ impl Grid {
 		}
 	}
 
-	pub fn layout(&self) -> &Arc<Layout> {
-		&self.layout
+	pub fn lanes(&self) -> &Arc<Lanes> {
+		&self.lanes
+	}
+
+	/// Lay every slot not yet laid on `lanes`, which a revision of the program changed from a
+	/// slot not yet laid on.
+	pub fn set_lanes(&mut self, lanes: Arc<Lanes>) {
+		self.lanes = lanes;
+	}
+
+	/// The latest slot nothing laid or placed lies two slots past: the next slot to lay, and
+	/// the one before the last a placed packet takes, whose unit was due in it at the latest.
+	pub fn floor(&self) -> u128 {
+		let placed = self.placed.keys().next_back().map(|&last| self.lanes.slot_of(last));
+		self.next
+			.unwrap_or(0)
+			.max(placed.map_or(0, |slot| slot.saturating_sub(1)))
 	}
 
 	/// Packets that reached the grid after their position went out.
@@ -457,7 +608,7 @@ impl Grid {
 
 	/// Put a unit's `packets` at their `positions`, dropping any whose position went out.
 	pub fn place(&mut self, packets: &[u8], positions: &[u128], keyframe: bool) {
-		let gone = self.next.map_or(0, |next| self.layout.first(next));
+		let gone = self.next.map_or(0, |next| self.lanes.first(next));
 		for (n, (packet, &at)) in packets
 			.as_chunks::<{ TsPacket::SIZE }>()
 			.0
@@ -481,7 +632,7 @@ impl Grid {
 	/// carry skips emissions rather than piling up; each emission numbers from zero and flags
 	/// its break, so a skipped one leaves no gap.
 	pub fn push_si(&mut self, index: u128, packets: &[u8]) {
-		let from = self.layout.first(index);
+		let from = self.lanes.first(index);
 		let queued: HashSet<u16> = self.si.iter().map(|(_, packet)| pid(packet)).collect();
 		for packet in packets.as_chunks::<{ TsPacket::SIZE }>().0 {
 			if !queued.contains(&pid(packet)) {
@@ -505,7 +656,7 @@ impl Grid {
 	/// restarted grid's timeline runs on from the slot laid last.
 	pub fn index(&self) -> Option<u128> {
 		self.next.or_else(|| {
-			let first = self.layout.slot_of(*self.placed.keys().next()?);
+			let first = self.lanes.slot_of(*self.placed.keys().next()?);
 			Some(match self.last {
 				Some(last) if first + BEHIND > last && first <= last + AHEAD => last + 1,
 				_ => first.saturating_sub(1),
@@ -534,17 +685,24 @@ impl Grid {
 	///
 	/// Tables that start a timeline number as the last repetition before them did, so a
 	/// receiver tuning in on them counts on into the next; after a jump they flag the break
-	/// from the repetition the stream carried last.
+	/// from the repetition the stream carried last, as does a revised PMT longer or shorter
+	/// than the one before it, which numbers on from where its own length would have.
 	pub fn lay(&mut self, index: u128) -> Laid {
 		self.next = Some(index + 1);
 		let jump = self.last.is_some_and(|last| index != last + 1);
-		let tables = Layout::repeats_tables(index) || jump || self.last.is_none();
+		let sends = Layout::repeats_tables(index) || jump || self.last.is_none();
 		self.last = Some(index);
-		let first = self.layout.first(index);
+		let lanes = self.lanes.clone();
+		let (from, epoch) = lanes.epoch(index);
+		let resized = from == index
+			&& lanes
+				.previous(index)
+				.is_some_and(|before| before.tables.len() != epoch.tables.len());
+		let first = lanes.first(index);
 		// What a restarted grid holds behind the slot it runs on from went out as stuffing.
 		let ahead = self.placed.split_off(&first);
 		self.late += std::mem::replace(&mut self.placed, ahead).len() as u64;
-		let owners = self.layout.owners(index);
+		let owners = epoch.layout.owners(index);
 		let count = owners.len();
 		let mut out = Laid {
 			packets: Vec::new(),
@@ -553,24 +711,29 @@ impl Grid {
 			keyframe: false,
 			units: Vec::new(),
 			jump,
+			clock: lanes.clock(index),
+			tables: sends.then(|| epoch.pmt.clone()),
 		};
 		let emission = index / PSI_SLOTS;
-		let spacing = self.layout.spacing as u128;
+		let spacing = epoch.layout.spacing as u128;
 		for (position, owner) in owners.into_iter().enumerate() {
 			let at = first + position as u128;
 			let packet = match owner {
 				Owner::Clock => None,
-				Owner::Table(n) => self.tables.get(n).filter(|_| tables).map(|table| {
+				Owner::Table(n) => epoch.tables.get(n).filter(|_| sends).map(|table| {
 					let mut packet = *table;
 					// The PAT is one packet; the PMT's packets follow it, numbered on from the
 					// last emission's on the absolute grid.
-					let counter = match n {
-						0 => emission,
-						n => emission * (self.tables.len() as u128 - 1) + n as u128 - 1,
+					let (counter, flag) = match n {
+						0 => (emission, jump),
+						n => (
+							emission * (epoch.tables.len() as u128 - 1) + n as u128 - 1,
+							jump || resized,
+						),
 					};
 					packet[3] = (packet[3] & 0xf0) | (counter & 0x0f) as u8;
 					if packet[1] & 0x40 != 0 && packet[3] & 0x20 != 0 && packet[4] > 0 {
-						packet[5] = (packet[5] & !0x80) | u8::from(jump) << 7;
+						packet[5] = (packet[5] & !0x80) | u8::from(flag) << 7;
 					}
 					packet
 				}),
@@ -629,6 +792,27 @@ mod test {
 		.unwrap()
 	}
 
+	/// `layout` with [`tables`], its PCR on `clock`.
+	fn epoch(layout: Layout, clock: u16) -> Epoch {
+		let pmt = psi::Pmt {
+			program_number: 1,
+			pcr_pid: None,
+			program_info: Vec::new(),
+			streams: Vec::new(),
+		};
+		Epoch {
+			layout,
+			tables: tables(),
+			pmt: (VersionNumber::default(), pmt),
+			clock,
+		}
+	}
+
+	/// `layout` in force from the start.
+	fn lanes(layout: Layout) -> Lanes {
+		Lanes::new(vec![(0, epoch(layout, 0x1ff))])
+	}
+
 	#[test]
 	fn every_slot_gives_each_lane_its_share() {
 		let layout = layout();
@@ -657,7 +841,7 @@ mod test {
 	/// the break in their counters as the PCR does; elsewhere they flag nothing.
 	#[test]
 	fn the_tables_flag_a_jump() {
-		let mut grid = Grid::new(Arc::new(layout()), tables());
+		let mut grid = Grid::new(Arc::new(lanes(layout())));
 		let flagged = |laid: Laid| -> Vec<bool> {
 			laid.packets
 				.chunks(TsPacket::SIZE)
@@ -681,7 +865,7 @@ mod test {
 			assert_eq!(owners[layout.tables[0]], Owner::Table(0));
 			assert_eq!(owners[layout.tables[1]], Owner::Table(1));
 		}
-		let mut grid = Grid::new(Arc::new(layout), tables());
+		let mut grid = Grid::new(Arc::new(lanes(layout)));
 		let mut sent = Vec::new();
 		for index in 21..=41 {
 			let laid = grid.lay(index);
@@ -702,12 +886,12 @@ mod test {
 	/// timeline further off starts afresh.
 	#[test]
 	fn a_grid_restarted_behind_its_last_slot_runs_on() {
-		let layout = Arc::new(layout());
+		let layout = Arc::new(lanes(layout()));
 		let mut packet = [0xaau8; TsPacket::SIZE];
 		packet[..4].copy_from_slice(&[0x47, 0x41, 0x00, 0x10]);
 		let last = 10_000u128;
 		for (behind, next) in [(3 * u128::from(SLOTS), last + 1), (BEHIND + 1, last - BEHIND - 2)] {
-			let mut grid = Grid::new(layout.clone(), tables());
+			let mut grid = Grid::new(layout.clone());
 			grid.lay(last);
 			grid.restart();
 			grid.place(&packet, &[layout.first(last - behind)], false);
@@ -758,19 +942,31 @@ mod test {
 
 	#[test]
 	fn a_group_lays_from_its_own_anchor_whatever_came_before() {
-		let layout = layout();
+		let layout = lanes(layout());
 		let by = 10_000_000_000;
-		let mut whole = Lane::new(0);
-		let mut joiner = Lane::new(0);
+		let mut whole = Lane::default();
+		let mut joiner = Lane::default();
 		// Group 1, which the joiner lacks.
-		whole.plan(&layout, (1, true), start(100), by, 50).unwrap();
-		whole.plan(&layout, (1, false), start(101), by, 5).unwrap();
-		let a = whole.plan(&layout, (2, true), start(110), by, 20).unwrap();
-		let b = joiner.plan(&layout, (2, true), start(110), by, 20).unwrap();
+		whole
+			.plan(&layout, (0x100, Run::WHOLE), (1, true), start(100), by, 50)
+			.unwrap();
+		whole
+			.plan(&layout, (0x100, Run::WHOLE), (1, false), start(101), by, 5)
+			.unwrap();
+		let a = whole
+			.plan(&layout, (0x100, Run::WHOLE), (2, true), start(110), by, 20)
+			.unwrap();
+		let b = joiner
+			.plan(&layout, (0x100, Run::WHOLE), (2, true), start(110), by, 20)
+			.unwrap();
 		assert_eq!(a.positions, b.positions);
 		assert_eq!((a.counter, b.counter), (0, 0));
-		let a = whole.plan(&layout, (2, false), start(110), by, 3).unwrap();
-		let b = joiner.plan(&layout, (2, false), start(110), by, 3).unwrap();
+		let a = whole
+			.plan(&layout, (0x100, Run::WHOLE), (2, false), start(110), by, 3)
+			.unwrap();
+		let b = joiner
+			.plan(&layout, (0x100, Run::WHOLE), (2, false), start(110), by, 3)
+			.unwrap();
 		assert_eq!(a.positions, b.positions);
 		assert_eq!((a.counter, b.counter), (4, 4));
 		assert_eq!((whole.overruns(), joiner.overruns()), (0, 0));
@@ -778,65 +974,180 @@ mod test {
 
 	#[test]
 	fn groups_released_in_one_slot_keep_their_own_anchors() {
-		let layout = layout();
+		let layout = lanes(layout());
 		// 48 kHz AAC: frames 21.3 ms apart, two to a slot now and then.
 		let frame = 1_000_000_000 * 1024 / 48_000;
-		let mut whole = Lane::new(1);
-		let mut joiner = Lane::new(1);
+		let mut whole = Lane::default();
+		let mut joiner = Lane::default();
 		let last = start(100) + 2_000_000;
-		whole.plan(&layout, (1, true), last - frame, u128::MAX, 2).unwrap();
-		whole.plan(&layout, (1, false), last, u128::MAX, 2).unwrap();
+		whole
+			.plan(&layout, (0x101, Run::WHOLE), (1, true), last - frame, u128::MAX, 2)
+			.unwrap();
+		whole
+			.plan(&layout, (0x101, Run::WHOLE), (1, false), last, u128::MAX, 2)
+			.unwrap();
 		assert_eq!(layout.slot_of(layout.at(last)), layout.slot_of(layout.at(last + frame)));
-		let a = whole.plan(&layout, (2, true), last + frame, u128::MAX, 2).unwrap();
-		let b = joiner.plan(&layout, (2, true), last + frame, u128::MAX, 2).unwrap();
+		let a = whole
+			.plan(&layout, (0x101, Run::WHOLE), (2, true), last + frame, u128::MAX, 2)
+			.unwrap();
+		let b = joiner
+			.plan(&layout, (0x101, Run::WHOLE), (2, true), last + frame, u128::MAX, 2)
+			.unwrap();
 		assert_eq!(a.positions, b.positions);
 		assert_eq!(whole.overruns(), 0);
 	}
 
 	#[test]
 	fn a_group_held_from_its_middle_is_not_placed() {
-		let layout = layout();
-		let mut lane = Lane::new(0);
+		let layout = lanes(layout());
+		let mut lane = Lane::default();
 		assert_eq!(
-			lane.plan(&layout, (1, false), start(10), u128::MAX, 2).err(),
+			lane.plan(&layout, (0x100, Run::WHOLE), (1, false), start(10), u128::MAX, 2)
+				.err(),
 			Some(Unplaced::Partial)
 		);
 		assert_eq!(
-			lane.plan(&layout, (1, false), start(10), u128::MAX, 2).err(),
+			lane.plan(&layout, (0x100, Run::WHOLE), (1, false), start(10), u128::MAX, 2)
+				.err(),
 			Some(Unplaced::Partial)
 		);
-		assert!(lane.plan(&layout, (2, true), start(30), u128::MAX, 2).is_ok());
+		assert!(
+			lane.plan(&layout, (0x100, Run::WHOLE), (2, true), start(30), u128::MAX, 2)
+				.is_ok()
+		);
 	}
 
 	#[test]
 	fn a_late_unit_leaves_its_positions_to_the_next() {
-		let layout = layout();
-		let mut lane = Lane::new(1);
+		let layout = lanes(layout());
+		let mut lane = Lane::default();
 		let at = layout.time(layout.first(11));
 		assert_eq!(
-			lane.plan(&layout, (1, true), start(10), at, 30).err(),
+			lane.plan(&layout, (0x101, Run::WHOLE), (1, true), start(10), at, 30)
+				.err(),
 			Some(Unplaced::Late)
 		);
-		let placed = lane.plan(&layout, (1, false), start(10), u128::MAX, 2).unwrap();
+		let placed = lane
+			.plan(&layout, (0x101, Run::WHOLE), (1, false), start(10), u128::MAX, 2)
+			.unwrap();
 		assert_eq!(placed.counter, 0);
 		assert!(placed.positions[0] >= layout.first(10));
 	}
 
 	#[test]
 	fn a_release_moves_later_only_while_its_unit_meets_its_deadline() {
-		let layout = layout();
+		let layout = lanes(layout());
 		// Half a second of lane 0's payload.
-		let bits = layout.payload_rate(0) / 2;
-		let later = layout.later(0, start(100), bits, start(200), 2);
+		let bits = layout.payload_rate(0x100, 100).unwrap() / 2;
+		let later = layout.later((0x100, Run::WHOLE), start(100), bits, start(200), 2);
 		assert!((start(119)..=start(120)).contains(&later), "{later}");
-		assert_eq!(layout.later(0, start(100), bits, start(110), 2), start(100));
-		assert_eq!(layout.later(0, start(100), 0, start(110), 2), start(100));
+		assert_eq!(
+			layout.later((0x100, Run::WHOLE), start(100), bits, start(110), 2),
+			start(100)
+		);
+		assert_eq!(
+			layout.later((0x100, Run::WHOLE), start(100), 0, start(110), 2),
+			start(100)
+		);
+	}
+
+	/// Lanes for 0x100 and 0x101 from the start, and from slot [`REVISED`] on 0x102 too, its PMT a
+	/// packet longer, the clock moving from 0x1ff to 0x200.
+	fn revised() -> Lanes {
+		let before = Layout::new(RATE, 2, 0, &[(0x100, Need::Rest(u64::MAX)), (0x101, Need::Fixed(422))]).unwrap();
+		let needs = [
+			(0x100, Need::Rest(u64::MAX)),
+			(0x101, Need::Fixed(422)),
+			(0x102, Need::Fixed(40)),
+		];
+		let mut after = epoch(Layout::new(RATE, 3, 0, &needs).unwrap(), 0x200);
+		let mut more = after.tables[1];
+		more[1] &= !0x40;
+		after.tables.push(more);
+		Lanes::new(vec![(0, epoch(before, 0x1ff)), (REVISED, after)])
+	}
+
+	/// The slot [`revised`] revises the program in.
+	const REVISED: u128 = 2 * PSI_SLOTS;
+
+	/// A unit straddling a revision takes its lane's positions on each side of it, and a stream
+	/// the revision adds opens its first group in a slot after it, behind the tables listing it.
+	#[test]
+	fn a_revision_lays_its_lanes_from_its_slot() {
+		let lanes = revised();
+		assert_eq!(Lanes::revision(REVISED - 2), REVISED);
+		assert_eq!(Lanes::revision(REVISED - 1), REVISED + PSI_SLOTS);
+		let positions = lanes.take((0x100, Run::WHOLE), lanes.first(REVISED - 1), 40).unwrap();
+		for at in positions {
+			let index = lanes.slot_of(at);
+			let owner = lanes.epoch(index).1.layout.owners(index)[(at - lanes.first(index)) as usize];
+			assert_eq!(owner, Owner::Lane(0), "position {at} in slot {index}");
+		}
+		assert!(lanes.take((0x102, Run::WHOLE), lanes.first(REVISED - 1), 1).is_none());
+
+		let run = Run {
+			from: REVISED,
+			until: None,
+		};
+		let mut lane = Lane::default();
+		assert_eq!(
+			lane.plan(&lanes, (0x102, run), (1, true), start(REVISED), u128::MAX, 1)
+				.err(),
+			Some(Unplaced::Partial),
+			"a group opening in the revision's slot"
+		);
+		let placed = lane
+			.plan(&lanes, (0x102, run), (2, true), start(REVISED + 1), u128::MAX, 1)
+			.unwrap();
+		assert_eq!(lanes.slot_of(placed.positions[0]), REVISED + 1);
+	}
+
+	/// A unit that would run past the revision retiring its stream takes nothing.
+	#[test]
+	fn a_unit_past_its_run_is_not_placed() {
+		let lanes = revised();
+		let run = Run {
+			from: 0,
+			until: Some(REVISED),
+		};
+		let mut lane = Lane::default();
+		lane.plan(&lanes, (0x101, run), (1, true), start(REVISED - 2), u128::MAX, 2)
+			.unwrap();
+		assert_eq!(
+			lane.plan(&lanes, (0x101, run), (1, false), start(REVISED - 1), u128::MAX, 40)
+				.err(),
+			Some(Unplaced::Ended)
+		);
+	}
+
+	/// The revision's slot sends the revised tables, its PMT flagging the break in its counter
+	/// when it runs longer or shorter, under the PCR the tables before it named; the new clock
+	/// takes over from the slot after.
+	#[test]
+	fn a_revision_sends_its_tables_under_the_clock_before_it() {
+		let mut grid = Grid::new(Arc::new(revised()));
+		let pmt = |laid: &Laid| -> Vec<(u8, bool)> {
+			laid.packets
+				.chunks(TsPacket::SIZE)
+				.filter(|packet| pid(packet) == 0x1000)
+				.map(|packet| (packet[3] & 0x0f, packet[1] & 0x40 != 0 && packet[5] & 0x80 != 0))
+				.collect()
+		};
+		let before = grid.lay(REVISED - PSI_SLOTS);
+		assert_eq!((before.clock, pmt(&before)), (0x1ff, vec![(1, false)]));
+		for index in REVISED - PSI_SLOTS + 1..REVISED {
+			grid.lay(index);
+		}
+		let revised = grid.lay(REVISED);
+		assert_eq!(revised.clock, 0x1ff);
+		assert_eq!(pmt(&revised), [(4, true), (5, false)]);
+		assert_eq!(grid.lay(REVISED + 1).clock, 0x200);
 	}
 
 	#[test]
 	fn the_grid_lays_tables_and_si_beside_the_lanes() {
 		let layout = Layout::new(RATE, 2, 80, &[(0x100, Need::Rest(u64::MAX)), (0x101, Need::Fixed(422))]).unwrap();
-		let mut grid = Grid::new(Arc::new(layout), tables());
+		let mut grid = Grid::new(Arc::new(lanes(layout)));
 		let mut si = [0xffu8; TsPacket::SIZE];
 		si[..4].copy_from_slice(&[0x47, 0x40, 0x11, 0x10]);
 		grid.push_si(40, &[si, si].concat());
@@ -844,7 +1155,7 @@ mod test {
 		for index in 40..44 {
 			let laid = grid.lay(index);
 			assert_eq!(laid.count, 34);
-			let first = grid.layout().first(index);
+			let first = grid.lanes().first(index);
 			for (packet, position) in laid
 				.packets
 				.as_chunks::<{ TsPacket::SIZE }>()
@@ -855,7 +1166,7 @@ mod test {
 				seen.push((pid(packet), first + *position as u128, packet[3] & 0x0f));
 			}
 		}
-		let first = grid.layout().first(40);
+		let first = grid.lanes().first(40);
 		let on = |pid: u16| -> Vec<(u128, u8)> {
 			seen.iter()
 				.filter(|seen| seen.0 == pid)
@@ -864,13 +1175,13 @@ mod test {
 		};
 		// The PAT and PMT sit at their positions, numbered on from the emissions before them on
 		// the grid.
-		let tables = &grid.layout().tables;
+		let tables = &grid.lanes().epoch(40).1.layout.tables;
 		assert_eq!(on(0x0000), [(tables[0] as u128, 2)]);
 		assert_eq!(on(0x1000), [(tables[1] as u128, 2)]);
 		let si = on(0x0011);
 		assert_eq!(si.len(), 2);
 		assert!(
-			si[1].0 >= si[0].0 + grid.layout().spacing as u128,
+			si[1].0 >= si[0].0 + grid.lanes().epoch(40).1.layout.spacing as u128,
 			"SI paced like the tables"
 		);
 	}
@@ -878,7 +1189,7 @@ mod test {
 	#[test]
 	fn si_the_free_positions_cannot_carry_does_not_pile_up() {
 		let layout = Layout::new(RATE, 2, 80, &[(0x100, Need::Rest(u64::MAX)), (0x101, Need::Fixed(422))]).unwrap();
-		let mut grid = Grid::new(Arc::new(layout), tables());
+		let mut grid = Grid::new(Arc::new(lanes(layout)));
 		let mut si = [0xffu8; TsPacket::SIZE];
 		si[..4].copy_from_slice(&[0x47, 0x40, 0x11, 0x10]);
 		let emission = si.repeat(40);

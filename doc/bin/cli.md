@@ -465,7 +465,10 @@ narrow to absorb that one, is logged and counted in `overruns`: the legs can
 differ there. So can reordered video whose SPS declares no reorder depth
 (`max_num_reorder_frames`), which is logged, and SI while one leg holds an older
 revision than the other or around an SI table the catalog adds or drops, which
-each leg takes up when its catalog update arrives.
+each leg takes up when its catalog update arrives. A track the catalog adds, or
+one that ends, revises the PMT and the lanes at the same slot on every leg; a
+change to the catalog's program descriptors or `muxRate` alone is logged and
+ignored.
 
 A stdout export ends with the broadcast. `export ts --linger 10s` waits that
 long for the same publisher instance to come back, and carries on with the same
