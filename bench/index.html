@@ -12,217 +12,217 @@ td{font-variant-numeric:tabular-nums}polyline{fill:none;stroke:#555}.worse{backg
 .better{background:#cec}.muted{color:#888;font-weight:400}input{font:inherit;width:100%;padding:.3rem}
 </style>
 <h1>MoQ nightly benchmarks</h1>
-<p>Nightly <a href="https://github.com/moq-dev/moq/commit/33940b6e336133a64d8601f42833f91708a7fd35">33940b6e3</a>, 0 flagged
+<p>Nightly <a href="https://github.com/moq-dev/moq/commit/4381af6f07e32d594036723f80d298b67e60085f">4381af6f0</a>, 0 flagged
 of 2874 series. Each series compares its newest point with the median
 of its previous 7. Red is worse and green is better by more than 10% and 3 times that window's median
 absolute deviation. Grey rows lack history or come from a source that did not finish tonight.
 <a href="https://github.com/moq-dev/moq/blob/main/bench/README.md#nightly-trends">Metrics and local
 reproduction</a></p>
 <input id="filter" type="search" placeholder="Filter series">
-<details open class="flagged"><summary>Regressions (0)</summary></details><details open class="flagged"><summary>Improvements (0)</summary></details><details><summary>bench-ffi (204)</summary><table><thead><tr><th>Series<th>Latest<th>Baseline<th>Change<th>Trend</thead><tbody><tr><td>bench-ffi/cpp/call/info<td>170.8 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,2"/></svg>
-<tr><td>bench-ffi/cpp/call/info vs rust-ffi<td>63.48 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,1 6,15"/></svg>
-<tr><td>bench-ffi/cpp/call/sequence<td>22.52 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,5"/></svg>
-<tr><td>bench-ffi/cpp/call/sequence vs rust-ffi<td>25.98 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,2 3,15 6,1"/></svg>
-<tr><td>bench-ffi/cpp/cpu/size=100/pub=1/sub=1<td>59.99 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,13"/></svg>
-<tr><td>bench-ffi/cpp/cpu/size=100/pub=1/sub=1 vs rust-ffi<td>3.504 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,2 3,1 6,15"/></svg>
-<tr><td>bench-ffi/cpp/cpu/size=1024/pub=1/sub=1<td>24.98 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,2 6,15"/></svg>
-<tr><td>bench-ffi/cpp/cpu/size=1024/pub=1/sub=1 vs rust-ffi<td>12.87 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,4 6,15"/></svg>
-<tr><td>bench-ffi/cpp/cpu/size=1024/pub=1/sub=4<td>17.44 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,2 6,15"/></svg>
-<tr><td>bench-ffi/cpp/cpu/size=1024/pub=1/sub=4 vs rust-ffi<td>11.36 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,11"/></svg>
-<tr><td>bench-ffi/cpp/cpu/size=1024/pub=4/sub=1<td>24.63 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,2 3,1 6,15"/></svg>
-<tr><td>bench-ffi/cpp/cpu/size=1024/pub=4/sub=1 vs rust-ffi<td>12.42 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,5"/></svg>
-<tr><td>bench-ffi/cpp/cpu/size=1024/pub=4/sub=4<td>17.36 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,3 3,1 6,15"/></svg>
-<tr><td>bench-ffi/cpp/cpu/size=1024/pub=4/sub=4 vs rust-ffi<td>11.02 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,5 6,1"/></svg>
-<tr><td>bench-ffi/cpp/cpu/size=1048576/pub=1/sub=1<td>20.65 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,3 3,1 6,15"/></svg>
-<tr><td>bench-ffi/cpp/cpu/size=1048576/pub=1/sub=1 vs rust-ffi<td>160.5 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,2 3,15 6,1"/></svg>
-<tr><td>bench-ffi/cpp/cpu/size=65536/pub=1/sub=1<td>20.65 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,2 3,1 6,15"/></svg>
-<tr><td>bench-ffi/cpp/cpu/size=65536/pub=1/sub=1 vs rust-ffi<td>148.2 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,8 3,15 6,1"/></svg>
-<tr><td>bench-ffi/cpp/throughput/size=100/pub=1/sub=1<td>22.74 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,11"/></svg>
-<tr><td>bench-ffi/cpp/throughput/size=100/pub=1/sub=1 vs rust-ffi<td>2.966 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,1 6,15"/></svg>
-<tr><td>bench-ffi/cpp/throughput/size=1024/pub=1/sub=1<td>64.95 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,9 6,15"/></svg>
-<tr><td>bench-ffi/cpp/throughput/size=1024/pub=1/sub=1 vs rust-ffi<td>8.857 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,4"/></svg>
-<tr><td>bench-ffi/cpp/throughput/size=1024/pub=1/sub=4<td>67.36 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,2 3,15 6,1"/></svg>
-<tr><td>bench-ffi/cpp/throughput/size=1024/pub=1/sub=4 vs rust-ffi<td>11.09 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,15 6,1"/></svg>
-<tr><td>bench-ffi/cpp/throughput/size=1024/pub=4/sub=1<td>66.44 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,3"/></svg>
-<tr><td>bench-ffi/cpp/throughput/size=1024/pub=4/sub=1 vs rust-ffi<td>8.393 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,7 3,15 6,1"/></svg>
-<tr><td>bench-ffi/cpp/throughput/size=1024/pub=4/sub=4<td>67.75 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,6 3,15 6,1"/></svg>
-<tr><td>bench-ffi/cpp/throughput/size=1024/pub=4/sub=4 vs rust-ffi<td>10.68 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,14 3,15 6,1"/></svg>
-<tr><td>bench-ffi/cpp/throughput/size=1048576/pub=1/sub=1<td>77.07 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,7 3,15 6,1"/></svg>
-<tr><td>bench-ffi/cpp/throughput/size=1048576/pub=1/sub=1 vs rust-ffi<td>102.1 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,15 6,1"/></svg>
-<tr><td>bench-ffi/cpp/throughput/size=65536/pub=1/sub=1<td>82.44 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,1"/></svg>
-<tr><td>bench-ffi/cpp/throughput/size=65536/pub=1/sub=1 vs rust-ffi<td>88.93 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,15 6,1"/></svg>
-<tr><td>bench-ffi/dart/call/info<td>432.6 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,15 6,1"/></svg>
-<tr><td>bench-ffi/dart/call/info vs rust-ffi<td>160.8 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,2 6,15"/></svg>
-<tr><td>bench-ffi/dart/call/sequence<td>178.3 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15"/></svg>
-<tr><td>bench-ffi/dart/call/sequence vs rust-ffi<td>205.8 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,7 6,1"/></svg>
-<tr><td>bench-ffi/dart/cpu/size=100/pub=1/sub=1<td>123 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,13 6,15"/></svg>
-<tr><td>bench-ffi/dart/cpu/size=100/pub=1/sub=1 vs rust-ffi<td>7.183 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,12 6,15"/></svg>
-<tr><td>bench-ffi/dart/cpu/size=1024/pub=1/sub=1<td>12.71 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,9 6,15"/></svg>
-<tr><td>bench-ffi/dart/cpu/size=1024/pub=1/sub=1 vs rust-ffi<td>6.548 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,9 6,15"/></svg>
-<tr><td>bench-ffi/dart/cpu/size=1024/pub=1/sub=4<td>8.333 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,10 6,15"/></svg>
-<tr><td>bench-ffi/dart/cpu/size=1024/pub=1/sub=4 vs rust-ffi<td>5.426 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,10 6,15"/></svg>
-<tr><td>bench-ffi/dart/cpu/size=1024/pub=4/sub=1<td>10.69 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,8 6,15"/></svg>
-<tr><td>bench-ffi/dart/cpu/size=1024/pub=4/sub=1 vs rust-ffi<td>5.391 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,11 6,15"/></svg>
-<tr><td>bench-ffi/dart/cpu/size=1024/pub=4/sub=4<td>8.019 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,10 6,15"/></svg>
-<tr><td>bench-ffi/dart/cpu/size=1024/pub=4/sub=4 vs rust-ffi<td>5.093 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,10 6,15"/></svg>
-<tr><td>bench-ffi/dart/cpu/size=1048576/pub=1/sub=1<td>6.428 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,13 3,1 6,15"/></svg>
-<tr><td>bench-ffi/dart/cpu/size=1048576/pub=1/sub=1 vs rust-ffi<td>49.96 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,11 6,1"/></svg>
-<tr><td>bench-ffi/dart/cpu/size=65536/pub=1/sub=1<td>2.948 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,13 3,1 6,15"/></svg>
-<tr><td>bench-ffi/dart/cpu/size=65536/pub=1/sub=1 vs rust-ffi<td>21.16 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,14"/></svg>
-<tr><td>bench-ffi/dart/throughput/size=100/pub=1/sub=1<td>9.848 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,4 6,1"/></svg>
-<tr><td>bench-ffi/dart/throughput/size=100/pub=1/sub=1 vs rust-ffi<td>6.848 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,12 6,15"/></svg>
-<tr><td>bench-ffi/dart/throughput/size=1024/pub=1/sub=1<td>83.98 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,8 6,1"/></svg>
-<tr><td>bench-ffi/dart/throughput/size=1024/pub=1/sub=1 vs rust-ffi<td>6.85 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,9 6,15"/></svg>
-<tr><td>bench-ffi/dart/throughput/size=1024/pub=1/sub=4<td>123.2 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,7 6,1"/></svg>
-<tr><td>bench-ffi/dart/throughput/size=1024/pub=1/sub=4 vs rust-ffi<td>6.063 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,10 6,15"/></svg>
-<tr><td>bench-ffi/dart/throughput/size=1024/pub=4/sub=1<td>95.32 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,9 6,1"/></svg>
-<tr><td>bench-ffi/dart/throughput/size=1024/pub=4/sub=1 vs rust-ffi<td>5.85 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,11 6,15"/></svg>
-<tr><td>bench-ffi/dart/throughput/size=1024/pub=4/sub=4<td>126.7 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,7 6,1"/></svg>
-<tr><td>bench-ffi/dart/throughput/size=1024/pub=4/sub=4 vs rust-ffi<td>5.708 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,11 6,15"/></svg>
-<tr><td>bench-ffi/dart/throughput/size=1048576/pub=1/sub=1<td>257.9 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,3 3,15 6,1"/></svg>
-<tr><td>bench-ffi/dart/throughput/size=1048576/pub=1/sub=1 vs rust-ffi<td>30.51 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,11"/></svg>
-<tr><td>bench-ffi/dart/throughput/size=65536/pub=1/sub=1<td>340.1 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,4 3,15 6,1"/></svg>
-<tr><td>bench-ffi/dart/throughput/size=65536/pub=1/sub=1 vs rust-ffi<td>21.56 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,14"/></svg>
-<tr><td>bench-ffi/go/call/info<td>670.8 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,6 6,1"/></svg>
-<tr><td>bench-ffi/go/call/info vs rust-ffi<td>249.3 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,14"/></svg>
-<tr><td>bench-ffi/go/call/sequence<td>241.3 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,1"/></svg>
-<tr><td>bench-ffi/go/call/sequence vs rust-ffi<td>278.4 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,14 3,15 6,1"/></svg>
-<tr><td>bench-ffi/go/cpu/size=100/pub=1/sub=1<td>159.4 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,3"/></svg>
-<tr><td>bench-ffi/go/cpu/size=100/pub=1/sub=1 vs rust-ffi<td>9.309 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,10"/></svg>
-<tr><td>bench-ffi/go/cpu/size=1024/pub=1/sub=1<td>20.7 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,2"/></svg>
-<tr><td>bench-ffi/go/cpu/size=1024/pub=1/sub=1 vs rust-ffi<td>10.67 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,2"/></svg>
-<tr><td>bench-ffi/go/cpu/size=1024/pub=1/sub=4<td>12.63 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,11"/></svg>
-<tr><td>bench-ffi/go/cpu/size=1024/pub=1/sub=4 vs rust-ffi<td>8.222 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,6"/></svg>
-<tr><td>bench-ffi/go/cpu/size=1024/pub=4/sub=1<td>17.59 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,9 3,1 6,15"/></svg>
-<tr><td>bench-ffi/go/cpu/size=1024/pub=4/sub=1 vs rust-ffi<td>8.867 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,15 6,1"/></svg>
-<tr><td>bench-ffi/go/cpu/size=1024/pub=4/sub=4<td>11.83 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,8 3,1 6,15"/></svg>
-<tr><td>bench-ffi/go/cpu/size=1024/pub=4/sub=4 vs rust-ffi<td>7.512 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,14 3,1 6,15"/></svg>
-<tr><td>bench-ffi/go/cpu/size=1048576/pub=1/sub=1<td>4.273 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,13 6,15"/></svg>
-<tr><td>bench-ffi/go/cpu/size=1048576/pub=1/sub=1 vs rust-ffi<td>33.21 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,4 3,15 6,1"/></svg>
-<tr><td>bench-ffi/go/cpu/size=65536/pub=1/sub=1<td>4.679 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,6 3,1 6,15"/></svg>
-<tr><td>bench-ffi/go/cpu/size=65536/pub=1/sub=1 vs rust-ffi<td>33.59 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,13 3,15 6,1"/></svg>
-<tr><td>bench-ffi/go/throughput/size=100/pub=1/sub=1<td>8.636 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,11"/></svg>
-<tr><td>bench-ffi/go/throughput/size=100/pub=1/sub=1 vs rust-ffi<td>7.808 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,11"/></svg>
-<tr><td>bench-ffi/go/throughput/size=1024/pub=1/sub=1<td>75.85 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,14"/></svg>
-<tr><td>bench-ffi/go/throughput/size=1024/pub=1/sub=1 vs rust-ffi<td>7.585 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,3"/></svg>
-<tr><td>bench-ffi/go/throughput/size=1024/pub=1/sub=4<td>201.8 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,2"/></svg>
-<tr><td>bench-ffi/go/throughput/size=1024/pub=1/sub=4 vs rust-ffi<td>3.702 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,13"/></svg>
-<tr><td>bench-ffi/go/throughput/size=1024/pub=4/sub=1<td>141.6 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,6 3,15 6,1"/></svg>
-<tr><td>bench-ffi/go/throughput/size=1024/pub=4/sub=1 vs rust-ffi<td>3.939 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,7 3,15 6,1"/></svg>
-<tr><td>bench-ffi/go/throughput/size=1024/pub=4/sub=4<td>261.6 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,3 3,15 6,1"/></svg>
-<tr><td>bench-ffi/go/throughput/size=1024/pub=4/sub=4 vs rust-ffi<td>2.766 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,15"/></svg>
-<tr><td>bench-ffi/go/throughput/size=1048576/pub=1/sub=1<td>351.8 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,9 3,1 6,15"/></svg>
-<tr><td>bench-ffi/go/throughput/size=1048576/pub=1/sub=1 vs rust-ffi<td>22.37 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,6 3,15 6,1"/></svg>
-<tr><td>bench-ffi/go/throughput/size=65536/pub=1/sub=1<td>386 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,15 6,1"/></svg>
-<tr><td>bench-ffi/go/throughput/size=65536/pub=1/sub=1 vs rust-ffi<td>18.99 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,10 3,15 6,1"/></svg>
-<tr><td>bench-ffi/kotlin/call/info<td>29,582 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,5"/></svg>
-<tr><td>bench-ffi/kotlin/call/info vs rust-ffi<td>10,993 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,12"/></svg>
-<tr><td>bench-ffi/kotlin/call/sequence<td>14,396 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,8"/></svg>
-<tr><td>bench-ffi/kotlin/call/sequence vs rust-ffi<td>16,614 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,7"/></svg>
-<tr><td>bench-ffi/kotlin/cpu/size=100/pub=1/sub=1<td>2,029 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,1 6,15"/></svg>
-<tr><td>bench-ffi/kotlin/cpu/size=100/pub=1/sub=1 vs rust-ffi<td>118.5 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,10 3,1 6,15"/></svg>
-<tr><td>bench-ffi/kotlin/cpu/size=1024/pub=1/sub=1<td>134.6 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,6 6,1"/></svg>
-<tr><td>bench-ffi/kotlin/cpu/size=1024/pub=1/sub=1 vs rust-ffi<td>69.36 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,6 6,1"/></svg>
-<tr><td>bench-ffi/kotlin/cpu/size=1024/pub=1/sub=4<td>53.7 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,14 6,1"/></svg>
-<tr><td>bench-ffi/kotlin/cpu/size=1024/pub=1/sub=4 vs rust-ffi<td>34.97 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,11 6,1"/></svg>
-<tr><td>bench-ffi/kotlin/cpu/size=1024/pub=4/sub=1<td>131.8 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,6 6,15"/></svg>
-<tr><td>bench-ffi/kotlin/cpu/size=1024/pub=4/sub=1 vs rust-ffi<td>66.46 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,8 6,15"/></svg>
-<tr><td>bench-ffi/kotlin/cpu/size=1024/pub=4/sub=4<td>152.6 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,2 6,1"/></svg>
-<tr><td>bench-ffi/kotlin/cpu/size=1024/pub=4/sub=4 vs rust-ffi<td>96.9 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,3 6,1"/></svg>
-<tr><td>bench-ffi/kotlin/cpu/size=1048576/pub=1/sub=1<td>3.699 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,2 3,15 6,1"/></svg>
-<tr><td>bench-ffi/kotlin/cpu/size=1048576/pub=1/sub=1 vs rust-ffi<td>28.74 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,3 3,15 6,1"/></svg>
-<tr><td>bench-ffi/kotlin/cpu/size=65536/pub=1/sub=1<td>11.55 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,13 6,15"/></svg>
-<tr><td>bench-ffi/kotlin/cpu/size=65536/pub=1/sub=1 vs rust-ffi<td>82.92 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,12"/></svg>
-<tr><td>bench-ffi/kotlin/throughput/size=100/pub=1/sub=1<td>1.11 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,9"/></svg>
-<tr><td>bench-ffi/kotlin/throughput/size=100/pub=1/sub=1 vs rust-ffi<td>60.73 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,9"/></svg>
-<tr><td>bench-ffi/kotlin/throughput/size=1024/pub=1/sub=1<td>14.44 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,8"/></svg>
-<tr><td>bench-ffi/kotlin/throughput/size=1024/pub=1/sub=1 vs rust-ffi<td>39.83 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,8"/></svg>
-<tr><td>bench-ffi/kotlin/throughput/size=1024/pub=1/sub=4<td>26.47 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,9 3,15 6,1"/></svg>
-<tr><td>bench-ffi/kotlin/throughput/size=1024/pub=1/sub=4 vs rust-ffi<td>28.21 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,9 3,1 6,15"/></svg>
-<tr><td>bench-ffi/kotlin/throughput/size=1024/pub=4/sub=1<td>14.76 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,3"/></svg>
-<tr><td>bench-ffi/kotlin/throughput/size=1024/pub=4/sub=1 vs rust-ffi<td>37.78 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,4"/></svg>
-<tr><td>bench-ffi/kotlin/throughput/size=1024/pub=4/sub=4<td>18.89 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,12 6,15"/></svg>
-<tr><td>bench-ffi/kotlin/throughput/size=1024/pub=4/sub=4 vs rust-ffi<td>38.28 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,6 6,1"/></svg>
-<tr><td>bench-ffi/kotlin/throughput/size=1048576/pub=1/sub=1<td>324.8 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,14 3,1 6,15"/></svg>
-<tr><td>bench-ffi/kotlin/throughput/size=1048576/pub=1/sub=1 vs rust-ffi<td>24.22 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,4 3,15 6,1"/></svg>
-<tr><td>bench-ffi/kotlin/throughput/size=65536/pub=1/sub=1<td>239.9 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,13 6,1"/></svg>
-<tr><td>bench-ffi/kotlin/throughput/size=65536/pub=1/sub=1 vs rust-ffi<td>30.56 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,8 6,15"/></svg>
-<tr><td>bench-ffi/python/call/info<td>12,746 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,6"/></svg>
-<tr><td>bench-ffi/python/call/info vs rust-ffi<td>4,737 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,2 6,15"/></svg>
-<tr><td>bench-ffi/python/call/sequence<td>4,768 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,12"/></svg>
-<tr><td>bench-ffi/python/call/sequence vs rust-ffi<td>5,502 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,8"/></svg>
-<tr><td>bench-ffi/python/cpu/size=100/pub=1/sub=1<td>800.1 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,12"/></svg>
-<tr><td>bench-ffi/python/cpu/size=100/pub=1/sub=1 vs rust-ffi<td>46.73 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15"/></svg>
-<tr><td>bench-ffi/python/cpu/size=1024/pub=1/sub=1<td>86.31 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15"/></svg>
-<tr><td>bench-ffi/python/cpu/size=1024/pub=1/sub=1 vs rust-ffi<td>44.46 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15"/></svg>
-<tr><td>bench-ffi/python/cpu/size=1024/pub=1/sub=4<td>49.83 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,13 6,15"/></svg>
-<tr><td>bench-ffi/python/cpu/size=1024/pub=1/sub=4 vs rust-ffi<td>32.45 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,13 6,15"/></svg>
-<tr><td>bench-ffi/python/cpu/size=1024/pub=4/sub=1<td>74.59 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15"/></svg>
-<tr><td>bench-ffi/python/cpu/size=1024/pub=4/sub=1 vs rust-ffi<td>37.6 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,10"/></svg>
-<tr><td>bench-ffi/python/cpu/size=1024/pub=4/sub=4<td>46.84 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,10"/></svg>
-<tr><td>bench-ffi/python/cpu/size=1024/pub=4/sub=4 vs rust-ffi<td>29.75 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,7"/></svg>
-<tr><td>bench-ffi/python/cpu/size=1048576/pub=1/sub=1<td>2.091 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,1 6,15"/></svg>
-<tr><td>bench-ffi/python/cpu/size=1048576/pub=1/sub=1 vs rust-ffi<td>16.25 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,8 6,15"/></svg>
-<tr><td>bench-ffi/python/cpu/size=65536/pub=1/sub=1<td>3.66 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,4 6,15"/></svg>
-<tr><td>bench-ffi/python/cpu/size=65536/pub=1/sub=1 vs rust-ffi<td>26.27 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,6 6,15"/></svg>
-<tr><td>bench-ffi/python/throughput/size=100/pub=1/sub=1<td>1.253 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,4"/></svg>
-<tr><td>bench-ffi/python/throughput/size=100/pub=1/sub=1 vs rust-ffi<td>53.81 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15"/></svg>
-<tr><td>bench-ffi/python/throughput/size=1024/pub=1/sub=1<td>11.61 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,1"/></svg>
-<tr><td>bench-ffi/python/throughput/size=1024/pub=1/sub=1 vs rust-ffi<td>49.53 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15"/></svg>
-<tr><td>bench-ffi/python/throughput/size=1024/pub=1/sub=4<td>20.15 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,4 6,1"/></svg>
-<tr><td>bench-ffi/python/throughput/size=1024/pub=1/sub=4 vs rust-ffi<td>37.08 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,14 6,15"/></svg>
-<tr><td>bench-ffi/python/throughput/size=1024/pub=4/sub=1<td>13.45 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,1"/></svg>
-<tr><td>bench-ffi/python/throughput/size=1024/pub=4/sub=1 vs rust-ffi<td>41.48 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,9"/></svg>
-<tr><td>bench-ffi/python/throughput/size=1024/pub=4/sub=4<td>21.43 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,7"/></svg>
-<tr><td>bench-ffi/python/throughput/size=1024/pub=4/sub=4 vs rust-ffi<td>33.75 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,7"/></svg>
-<tr><td>bench-ffi/python/throughput/size=1048576/pub=1/sub=1<td>479.6 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,15 6,1"/></svg>
-<tr><td>bench-ffi/python/throughput/size=1048576/pub=1/sub=1 vs rust-ffi<td>16.41 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,8 6,15"/></svg>
-<tr><td>bench-ffi/python/throughput/size=65536/pub=1/sub=1<td>273.9 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,13 6,1"/></svg>
-<tr><td>bench-ffi/python/throughput/size=65536/pub=1/sub=1 vs rust-ffi<td>26.76 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,6 6,15"/></svg>
-<tr><td>bench-ffi/rust-ffi/call/info<td>2.691 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,15 6,1"/></svg>
-<tr><td>bench-ffi/rust-ffi/call/sequence<td>0.8665 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,12 6,15"/></svg>
-<tr><td>bench-ffi/rust-ffi/cpu/size=100/pub=1/sub=1<td>17.12 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,8 3,15 6,1"/></svg>
-<tr><td>bench-ffi/rust-ffi/cpu/size=1024/pub=1/sub=1<td>1.941 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,15"/></svg>
-<tr><td>bench-ffi/rust-ffi/cpu/size=1024/pub=1/sub=4<td>1.536 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,12 6,15"/></svg>
-<tr><td>bench-ffi/rust-ffi/cpu/size=1024/pub=4/sub=1<td>1.984 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,9 3,1 6,15"/></svg>
-<tr><td>bench-ffi/rust-ffi/cpu/size=1024/pub=4/sub=4<td>1.575 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,6 6,15"/></svg>
-<tr><td>bench-ffi/rust-ffi/cpu/size=1048576/pub=1/sub=1<td>0.1287 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,1 6,15"/></svg>
-<tr><td>bench-ffi/rust-ffi/cpu/size=65536/pub=1/sub=1<td>0.1393 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,1 6,15"/></svg>
-<tr><td>bench-ffi/rust-ffi/throughput/size=100/pub=1/sub=1<td>67.43 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,1 6,15"/></svg>
-<tr><td>bench-ffi/rust-ffi/throughput/size=1024/pub=1/sub=1<td>575.3 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,8"/></svg>
-<tr><td>bench-ffi/rust-ffi/throughput/size=1024/pub=1/sub=4<td>746.9 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,10 3,15 6,1"/></svg>
-<tr><td>bench-ffi/rust-ffi/throughput/size=1024/pub=4/sub=1<td>557.7 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,6 3,15 6,1"/></svg>
-<tr><td>bench-ffi/rust-ffi/throughput/size=1024/pub=4/sub=4<td>723.4 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,13 3,15 6,1"/></svg>
-<tr><td>bench-ffi/rust-ffi/throughput/size=1048576/pub=1/sub=1<td>7,868 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,15 6,1"/></svg>
-<tr><td>bench-ffi/rust-ffi/throughput/size=65536/pub=1/sub=1<td>7,331 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,15 6,1"/></svg>
-<tr><td>bench-ffi/rust-net/cpu/size=100/pub=1/sub=1<td>3.696 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,11 6,1"/></svg>
-<tr><td>bench-ffi/rust-net/cpu/size=100/pub=1/sub=1 vs rust-ffi<td>0.2159 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,10 6,1"/></svg>
-<tr><td>bench-ffi/rust-net/cpu/size=1024/pub=1/sub=1<td>0.5695 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,6"/></svg>
-<tr><td>bench-ffi/rust-net/cpu/size=1024/pub=1/sub=1 vs rust-ffi<td>0.2934 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,6"/></svg>
-<tr><td>bench-ffi/rust-net/cpu/size=1024/pub=1/sub=4<td>0.2225 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,6 6,1"/></svg>
-<tr><td>bench-ffi/rust-net/cpu/size=1024/pub=1/sub=4 vs rust-ffi<td>0.1449 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,6 6,1"/></svg>
-<tr><td>bench-ffi/rust-net/cpu/size=1024/pub=4/sub=1<td>0.5931 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,12"/></svg>
-<tr><td>bench-ffi/rust-net/cpu/size=1024/pub=4/sub=1 vs rust-ffi<td>0.299 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,9"/></svg>
-<tr><td>bench-ffi/rust-net/cpu/size=1024/pub=4/sub=4<td>0.2291 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,10"/></svg>
-<tr><td>bench-ffi/rust-net/cpu/size=1024/pub=4/sub=4 vs rust-ffi<td>0.1455 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,7"/></svg>
-<tr><td>bench-ffi/rust-net/cpu/size=1048576/pub=1/sub=1<td>0.07276 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,12 3,1 6,15"/></svg>
-<tr><td>bench-ffi/rust-net/cpu/size=1048576/pub=1/sub=1 vs rust-ffi<td>0.5654 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,15 6,1"/></svg>
-<tr><td>bench-ffi/rust-net/cpu/size=65536/pub=1/sub=1<td>0.07254 ms/MB<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,7 3,1 6,15"/></svg>
-<tr><td>bench-ffi/rust-net/cpu/size=65536/pub=1/sub=1 vs rust-ffi<td>0.5208 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,15 6,1"/></svg>
-<tr><td>bench-ffi/rust-net/throughput/size=100/pub=1/sub=1<td>270.5 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,6 6,15"/></svg>
-<tr><td>bench-ffi/rust-net/throughput/size=100/pub=1/sub=1 vs rust-ffi<td>0.2493 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,10 6,1"/></svg>
-<tr><td>bench-ffi/rust-net/throughput/size=1024/pub=1/sub=1<td>1,756 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,10"/></svg>
-<tr><td>bench-ffi/rust-net/throughput/size=1024/pub=1/sub=1 vs rust-ffi<td>0.3277 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,6"/></svg>
-<tr><td>bench-ffi/rust-net/throughput/size=1024/pub=1/sub=4<td>4,494 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,10 6,15"/></svg>
-<tr><td>bench-ffi/rust-net/throughput/size=1024/pub=1/sub=4 vs rust-ffi<td>0.1662 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,8 6,1"/></svg>
-<tr><td>bench-ffi/rust-net/throughput/size=1024/pub=4/sub=1<td>1,681 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,5"/></svg>
-<tr><td>bench-ffi/rust-net/throughput/size=1024/pub=4/sub=1 vs rust-ffi<td>0.3318 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,9"/></svg>
-<tr><td>bench-ffi/rust-net/throughput/size=1024/pub=4/sub=4<td>4,364 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,7"/></svg>
-<tr><td>bench-ffi/rust-net/throughput/size=1024/pub=4/sub=4 vs rust-ffi<td>0.1658 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,6"/></svg>
-<tr><td>bench-ffi/rust-net/throughput/size=1048576/pub=1/sub=1<td>13,743 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,15 6,1"/></svg>
-<tr><td>bench-ffi/rust-net/throughput/size=1048576/pub=1/sub=1 vs rust-ffi<td>0.5725 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,15 6,1"/></svg>
-<tr><td>bench-ffi/rust-net/throughput/size=65536/pub=1/sub=1<td>13,783 MB/s<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,9 3,15 6,1"/></svg>
-<tr><td>bench-ffi/rust-net/throughput/size=65536/pub=1/sub=1 vs rust-ffi<td>0.5319 x<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,12 3,15 6,1"/></svg></tbody></table></details><details><summary>bench-js (841)</summary><table><thead><tr><th>Series<th>Latest<th>Baseline<th>Change<th>Trend</thead><tbody><tr><td>bench-js/js/arrivals/handles=1/backlog=0/ns_per_handle_write<td>478 ns<td><td class="muted">1 of 8 points<td><svg width="87" height="16"><polyline points="0,8"/></svg>
+<details open class="flagged"><summary>Regressions (0)</summary></details><details open class="flagged"><summary>Improvements (0)</summary></details><details><summary>bench-ffi (204)</summary><table><thead><tr><th>Series<th>Latest<th>Baseline<th>Change<th>Trend</thead><tbody><tr><td>bench-ffi/cpp/call/info<td>174.7 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,3 6,4 9,1"/></svg>
+<tr><td>bench-ffi/cpp/call/info vs rust-ffi<td>71.12 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,1 6,15 9,1"/></svg>
+<tr><td>bench-ffi/cpp/call/sequence<td>22.96 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,5 9,2"/></svg>
+<tr><td>bench-ffi/cpp/call/sequence vs rust-ffi<td>26.5 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,15 6,4 9,1"/></svg>
+<tr><td>bench-ffi/cpp/cpu/size=100/pub=1/sub=1<td>61.66 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,10 3,15 6,14 9,1"/></svg>
+<tr><td>bench-ffi/cpp/cpu/size=100/pub=1/sub=1 vs rust-ffi<td>3.47 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,2 3,1 6,11 9,15"/></svg>
+<tr><td>bench-ffi/cpp/cpu/size=1024/pub=1/sub=1<td>25.92 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,6 6,15 9,1"/></svg>
+<tr><td>bench-ffi/cpp/cpu/size=1024/pub=1/sub=1 vs rust-ffi<td>12.61 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,3 6,9 9,15"/></svg>
+<tr><td>bench-ffi/cpp/cpu/size=1024/pub=1/sub=4<td>17.71 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,5 6,15 9,1"/></svg>
+<tr><td>bench-ffi/cpp/cpu/size=1024/pub=1/sub=4 vs rust-ffi<td>11.21 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,8 3,1 6,6 9,15"/></svg>
+<tr><td>bench-ffi/cpp/cpu/size=1024/pub=4/sub=1<td>25.54 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,4 3,4 6,15 9,1"/></svg>
+<tr><td>bench-ffi/cpp/cpu/size=1024/pub=4/sub=1 vs rust-ffi<td>12.02 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,11 6,4 9,15"/></svg>
+<tr><td>bench-ffi/cpp/cpu/size=1024/pub=4/sub=4<td>17.65 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,4 6,15 9,1"/></svg>
+<tr><td>bench-ffi/cpp/cpu/size=1024/pub=4/sub=4 vs rust-ffi<td>10.73 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,9 3,3 6,1 9,15"/></svg>
+<tr><td>bench-ffi/cpp/cpu/size=1048576/pub=1/sub=1<td>21.41 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,3 3,1 6,15 9,3"/></svg>
+<tr><td>bench-ffi/cpp/cpu/size=1048576/pub=1/sub=1 vs rust-ffi<td>148.6 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,2 3,15 6,1 9,10"/></svg>
+<tr><td>bench-ffi/cpp/cpu/size=65536/pub=1/sub=1<td>21.39 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,2 3,1 6,15 9,3"/></svg>
+<tr><td>bench-ffi/cpp/cpu/size=65536/pub=1/sub=1 vs rust-ffi<td>143.7 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,8 3,15 6,1 9,13"/></svg>
+<tr><td>bench-ffi/cpp/throughput/size=100/pub=1/sub=1<td>22.48 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,7 3,1 6,5 9,15"/></svg>
+<tr><td>bench-ffi/cpp/throughput/size=100/pub=1/sub=1 vs rust-ffi<td>2.919 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,1 6,9 9,15"/></svg>
+<tr><td>bench-ffi/cpp/throughput/size=1024/pub=1/sub=1<td>64.28 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,2 6,3 9,15"/></svg>
+<tr><td>bench-ffi/cpp/throughput/size=1024/pub=1/sub=1 vs rust-ffi<td>8.544 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,3 6,1 9,15"/></svg>
+<tr><td>bench-ffi/cpp/throughput/size=1024/pub=1/sub=4<td>67.09 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,5 6,1 9,15"/></svg>
+<tr><td>bench-ffi/cpp/throughput/size=1024/pub=1/sub=4 vs rust-ffi<td>10.87 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,7 6,1 9,15"/></svg>
+<tr><td>bench-ffi/cpp/throughput/size=1024/pub=4/sub=1<td>65.93 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,9 6,2 9,15"/></svg>
+<tr><td>bench-ffi/cpp/throughput/size=1024/pub=4/sub=1 vs rust-ffi<td>7.931 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,6 3,14 6,1 9,15"/></svg>
+<tr><td>bench-ffi/cpp/throughput/size=1024/pub=4/sub=4<td>67.35 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,12 6,1 9,15"/></svg>
+<tr><td>bench-ffi/cpp/throughput/size=1024/pub=4/sub=4 vs rust-ffi<td>10.35 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,11 6,1 9,15"/></svg>
+<tr><td>bench-ffi/cpp/throughput/size=1048576/pub=1/sub=1<td>76.64 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,7 3,15 6,1 9,8"/></svg>
+<tr><td>bench-ffi/cpp/throughput/size=1048576/pub=1/sub=1 vs rust-ffi<td>91.64 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,15 6,1 9,11"/></svg>
+<tr><td>bench-ffi/cpp/throughput/size=65536/pub=1/sub=1<td>82.63 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,6 3,15 6,6 9,1"/></svg>
+<tr><td>bench-ffi/cpp/throughput/size=65536/pub=1/sub=1 vs rust-ffi<td>82.98 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,15 6,1 9,14"/></svg>
+<tr><td>bench-ffi/dart/call/info<td>429 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,15 6,1 9,8"/></svg>
+<tr><td>bench-ffi/dart/call/info vs rust-ffi<td>174.6 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,2 6,15 9,3"/></svg>
+<tr><td>bench-ffi/dart/call/sequence<td>177.2 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,11 6,11 9,15"/></svg>
+<tr><td>bench-ffi/dart/call/sequence vs rust-ffi<td>204.6 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,7 6,1 9,7"/></svg>
+<tr><td>bench-ffi/dart/cpu/size=100/pub=1/sub=1<td>138 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,13 6,15 9,9"/></svg>
+<tr><td>bench-ffi/dart/cpu/size=100/pub=1/sub=1 vs rust-ffi<td>7.769 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,12 6,15 9,11"/></svg>
+<tr><td>bench-ffi/dart/cpu/size=1024/pub=1/sub=1<td>14.58 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,9 6,15 9,7"/></svg>
+<tr><td>bench-ffi/dart/cpu/size=1024/pub=1/sub=1 vs rust-ffi<td>7.093 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,9 6,15 9,11"/></svg>
+<tr><td>bench-ffi/dart/cpu/size=1024/pub=1/sub=4<td>9.394 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,10 6,15 9,9"/></svg>
+<tr><td>bench-ffi/dart/cpu/size=1024/pub=1/sub=4 vs rust-ffi<td>5.946 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,10 6,15 9,10"/></svg>
+<tr><td>bench-ffi/dart/cpu/size=1024/pub=4/sub=1<td>12.18 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,8 6,15 9,8"/></svg>
+<tr><td>bench-ffi/dart/cpu/size=1024/pub=4/sub=1 vs rust-ffi<td>5.736 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,11 6,15 9,11"/></svg>
+<tr><td>bench-ffi/dart/cpu/size=1024/pub=4/sub=4<td>8.867 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,10 6,15 9,10"/></svg>
+<tr><td>bench-ffi/dart/cpu/size=1024/pub=4/sub=4 vs rust-ffi<td>5.393 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,10 6,15 9,12"/></svg>
+<tr><td>bench-ffi/dart/cpu/size=1048576/pub=1/sub=1<td>7.474 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,13 3,1 6,15 9,1"/></svg>
+<tr><td>bench-ffi/dart/cpu/size=1048576/pub=1/sub=1 vs rust-ffi<td>51.87 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,13 6,10 9,1"/></svg>
+<tr><td>bench-ffi/dart/cpu/size=65536/pub=1/sub=1<td>3.798 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,13 3,1 6,15 9,1"/></svg>
+<tr><td>bench-ffi/dart/cpu/size=65536/pub=1/sub=1 vs rust-ffi<td>25.52 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,2 6,14 9,1"/></svg>
+<tr><td>bench-ffi/dart/throughput/size=100/pub=1/sub=1<td>8.995 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,4 6,1 9,7"/></svg>
+<tr><td>bench-ffi/dart/throughput/size=100/pub=1/sub=1 vs rust-ffi<td>7.295 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,12 6,15 9,12"/></svg>
+<tr><td>bench-ffi/dart/throughput/size=1024/pub=1/sub=1<td>72.88 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,8 6,1 9,10"/></svg>
+<tr><td>bench-ffi/dart/throughput/size=1024/pub=1/sub=1 vs rust-ffi<td>7.535 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,9 6,15 9,10"/></svg>
+<tr><td>bench-ffi/dart/throughput/size=1024/pub=1/sub=4<td>108.9 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,7 6,1 9,8"/></svg>
+<tr><td>bench-ffi/dart/throughput/size=1024/pub=1/sub=4 vs rust-ffi<td>6.698 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,10 6,15 9,10"/></svg>
+<tr><td>bench-ffi/dart/throughput/size=1024/pub=4/sub=1<td>83.54 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,9 6,1 9,9"/></svg>
+<tr><td>bench-ffi/dart/throughput/size=1024/pub=4/sub=1 vs rust-ffi<td>6.259 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,11 6,15 9,11"/></svg>
+<tr><td>bench-ffi/dart/throughput/size=1024/pub=4/sub=4<td>115.1 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,7 6,1 9,7"/></svg>
+<tr><td>bench-ffi/dart/throughput/size=1024/pub=4/sub=4 vs rust-ffi<td>6.059 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,11 6,15 9,12"/></svg>
+<tr><td>bench-ffi/dart/throughput/size=1048576/pub=1/sub=1<td>209.3 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,3 3,15 6,1 9,15"/></svg>
+<tr><td>bench-ffi/dart/throughput/size=1048576/pub=1/sub=1 vs rust-ffi<td>33.56 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,8 6,13 9,1"/></svg>
+<tr><td>bench-ffi/dart/throughput/size=65536/pub=1/sub=1<td>263.9 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,4 3,15 6,1 9,15"/></svg>
+<tr><td>bench-ffi/dart/throughput/size=65536/pub=1/sub=1 vs rust-ffi<td>25.99 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,2 6,15 9,1"/></svg>
+<tr><td>bench-ffi/go/call/info<td>658.1 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,6 6,1 9,3"/></svg>
+<tr><td>bench-ffi/go/call/info vs rust-ffi<td>267.8 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,2 6,14 9,1"/></svg>
+<tr><td>bench-ffi/go/call/sequence<td>241.1 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,1 9,1"/></svg>
+<tr><td>bench-ffi/go/call/sequence vs rust-ffi<td>278.3 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,14 3,15 6,1 9,1"/></svg>
+<tr><td>bench-ffi/go/cpu/size=100/pub=1/sub=1<td>149.4 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,9 6,2 9,15"/></svg>
+<tr><td>bench-ffi/go/cpu/size=100/pub=1/sub=1 vs rust-ffi<td>8.41 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,4 6,3 9,15"/></svg>
+<tr><td>bench-ffi/go/cpu/size=1024/pub=1/sub=1<td>19.5 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,7 6,1 9,15"/></svg>
+<tr><td>bench-ffi/go/cpu/size=1024/pub=1/sub=1 vs rust-ffi<td>9.49 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,4 6,1 9,15"/></svg>
+<tr><td>bench-ffi/go/cpu/size=1024/pub=1/sub=4<td>12.69 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,11 9,8"/></svg>
+<tr><td>bench-ffi/go/cpu/size=1024/pub=1/sub=4 vs rust-ffi<td>8.031 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,13 3,1 6,6 9,15"/></svg>
+<tr><td>bench-ffi/go/cpu/size=1024/pub=4/sub=1<td>17.4 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,7 3,1 6,12 9,15"/></svg>
+<tr><td>bench-ffi/go/cpu/size=1024/pub=4/sub=1 vs rust-ffi<td>8.19 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,2 3,4 6,1 9,15"/></svg>
+<tr><td>bench-ffi/go/cpu/size=1024/pub=4/sub=4<td>12.17 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,8 3,1 6,15 9,8"/></svg>
+<tr><td>bench-ffi/go/cpu/size=1024/pub=4/sub=4 vs rust-ffi<td>7.402 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,1 6,11 9,15"/></svg>
+<tr><td>bench-ffi/go/cpu/size=1048576/pub=1/sub=1<td>3.66 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,2 6,2 9,15"/></svg>
+<tr><td>bench-ffi/go/cpu/size=1048576/pub=1/sub=1 vs rust-ffi<td>25.4 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,3 3,10 6,1 9,15"/></svg>
+<tr><td>bench-ffi/go/cpu/size=65536/pub=1/sub=1<td>4.18 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,3 3,1 6,6 9,15"/></svg>
+<tr><td>bench-ffi/go/cpu/size=65536/pub=1/sub=1 vs rust-ffi<td>28.08 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,3 3,3 6,1 9,15"/></svg>
+<tr><td>bench-ffi/go/throughput/size=100/pub=1/sub=1<td>9.364 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,8 6,13 9,1"/></svg>
+<tr><td>bench-ffi/go/throughput/size=100/pub=1/sub=1 vs rust-ffi<td>7.007 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,6 6,4 9,15"/></svg>
+<tr><td>bench-ffi/go/throughput/size=1024/pub=1/sub=1<td>79.54 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,6 6,14 9,1"/></svg>
+<tr><td>bench-ffi/go/throughput/size=1024/pub=1/sub=1 vs rust-ffi<td>6.905 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,7 6,2 9,15"/></svg>
+<tr><td>bench-ffi/go/throughput/size=1024/pub=1/sub=4<td>201.2 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,2 9,2"/></svg>
+<tr><td>bench-ffi/go/throughput/size=1024/pub=1/sub=4 vs rust-ffi<td>3.623 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,14 6,13 9,15"/></svg>
+<tr><td>bench-ffi/go/throughput/size=1024/pub=4/sub=1<td>140 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,6 3,15 6,1 9,6"/></svg>
+<tr><td>bench-ffi/go/throughput/size=1024/pub=4/sub=1 vs rust-ffi<td>3.734 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,3 3,7 6,1 9,15"/></svg>
+<tr><td>bench-ffi/go/throughput/size=1024/pub=4/sub=4<td>251.8 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,3 3,15 6,1 9,4"/></svg>
+<tr><td>bench-ffi/go/throughput/size=1024/pub=4/sub=4 vs rust-ffi<td>2.768 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,15 9,15"/></svg>
+<tr><td>bench-ffi/go/throughput/size=1048576/pub=1/sub=1<td>480 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,14 3,13 6,15 9,1"/></svg>
+<tr><td>bench-ffi/go/throughput/size=1048576/pub=1/sub=1 vs rust-ffi<td>14.63 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,4 3,9 6,1 9,15"/></svg>
+<tr><td>bench-ffi/go/throughput/size=65536/pub=1/sub=1<td>458.6 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,14 3,15 6,12 9,1"/></svg>
+<tr><td>bench-ffi/go/throughput/size=65536/pub=1/sub=1 vs rust-ffi<td>14.95 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,3 3,3 6,1 9,15"/></svg>
+<tr><td>bench-ffi/kotlin/call/info<td>29,583 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,5 9,5"/></svg>
+<tr><td>bench-ffi/kotlin/call/info vs rust-ffi<td>12,040 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,12 9,6"/></svg>
+<tr><td>bench-ffi/kotlin/call/sequence<td>14,733 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,8 9,7"/></svg>
+<tr><td>bench-ffi/kotlin/call/sequence vs rust-ffi<td>17,008 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,7 9,5"/></svg>
+<tr><td>bench-ffi/kotlin/cpu/size=100/pub=1/sub=1<td>2,139 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,1 6,15 9,6"/></svg>
+<tr><td>bench-ffi/kotlin/cpu/size=100/pub=1/sub=1 vs rust-ffi<td>120.4 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,10 3,1 6,15 9,13"/></svg>
+<tr><td>bench-ffi/kotlin/cpu/size=1024/pub=1/sub=1<td>126.7 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,6 6,1 9,7"/></svg>
+<tr><td>bench-ffi/kotlin/cpu/size=1024/pub=1/sub=1 vs rust-ffi<td>61.66 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,6 6,1 9,12"/></svg>
+<tr><td>bench-ffi/kotlin/cpu/size=1024/pub=1/sub=4<td>49.39 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,7 3,7 6,1 9,15"/></svg>
+<tr><td>bench-ffi/kotlin/cpu/size=1024/pub=1/sub=4 vs rust-ffi<td>31.26 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,8 3,6 6,1 9,15"/></svg>
+<tr><td>bench-ffi/kotlin/cpu/size=1024/pub=4/sub=1<td>182.4 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,4 3,8 6,15 9,1"/></svg>
+<tr><td>bench-ffi/kotlin/cpu/size=1024/pub=4/sub=1 vs rust-ffi<td>85.87 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,2 3,9 6,15 9,1"/></svg>
+<tr><td>bench-ffi/kotlin/cpu/size=1024/pub=4/sub=4<td>142.6 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,2 6,1 9,5"/></svg>
+<tr><td>bench-ffi/kotlin/cpu/size=1024/pub=4/sub=4 vs rust-ffi<td>86.71 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,3 6,1 9,7"/></svg>
+<tr><td>bench-ffi/kotlin/cpu/size=1048576/pub=1/sub=1<td>4.041 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,6 3,15 6,5 9,1"/></svg>
+<tr><td>bench-ffi/kotlin/cpu/size=1048576/pub=1/sub=1 vs rust-ffi<td>28.05 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,3 3,15 6,1 9,2"/></svg>
+<tr><td>bench-ffi/kotlin/cpu/size=65536/pub=1/sub=1<td>10.84 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,10 6,12 9,15"/></svg>
+<tr><td>bench-ffi/kotlin/cpu/size=65536/pub=1/sub=1 vs rust-ffi<td>72.82 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,11 6,9 9,15"/></svg>
+<tr><td>bench-ffi/kotlin/throughput/size=100/pub=1/sub=1<td>1.022 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,14 6,9 9,15"/></svg>
+<tr><td>bench-ffi/kotlin/throughput/size=100/pub=1/sub=1 vs rust-ffi<td>64.19 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,9 9,5"/></svg>
+<tr><td>bench-ffi/kotlin/throughput/size=1024/pub=1/sub=1<td>14.63 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,8 9,6"/></svg>
+<tr><td>bench-ffi/kotlin/throughput/size=1024/pub=1/sub=1 vs rust-ffi<td>37.53 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,14 3,1 6,8 9,15"/></svg>
+<tr><td>bench-ffi/kotlin/throughput/size=1024/pub=1/sub=4<td>29.19 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,14 3,15 6,13 9,1"/></svg>
+<tr><td>bench-ffi/kotlin/throughput/size=1024/pub=1/sub=4 vs rust-ffi<td>24.98 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,1 6,1 9,15"/></svg>
+<tr><td>bench-ffi/kotlin/throughput/size=1024/pub=4/sub=1<td>14.32 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,3 9,12"/></svg>
+<tr><td>bench-ffi/kotlin/throughput/size=1024/pub=4/sub=1 vs rust-ffi<td>36.51 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,4 9,10"/></svg>
+<tr><td>bench-ffi/kotlin/throughput/size=1024/pub=4/sub=4<td>20.09 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,12 6,15 9,7"/></svg>
+<tr><td>bench-ffi/kotlin/throughput/size=1024/pub=4/sub=4 vs rust-ffi<td>34.71 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,6 6,1 9,12"/></svg>
+<tr><td>bench-ffi/kotlin/throughput/size=1048576/pub=1/sub=1<td>337.2 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,14 3,1 6,15 9,14"/></svg>
+<tr><td>bench-ffi/kotlin/throughput/size=1048576/pub=1/sub=1 vs rust-ffi<td>20.82 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,4 3,15 6,1 9,6"/></svg>
+<tr><td>bench-ffi/kotlin/throughput/size=65536/pub=1/sub=1<td>227.5 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,13 6,1 9,6"/></svg>
+<tr><td>bench-ffi/kotlin/throughput/size=65536/pub=1/sub=1 vs rust-ffi<td>30.14 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,7 6,13 9,15"/></svg>
+<tr><td>bench-ffi/python/call/info<td>12,646 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,8 6,4 9,15"/></svg>
+<tr><td>bench-ffi/python/call/info vs rust-ffi<td>5,147 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,2 6,15 9,4"/></svg>
+<tr><td>bench-ffi/python/call/sequence<td>4,719 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,12 9,14"/></svg>
+<tr><td>bench-ffi/python/call/sequence vs rust-ffi<td>5,447 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,8 9,11"/></svg>
+<tr><td>bench-ffi/python/cpu/size=100/pub=1/sub=1<td>769.2 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,14 6,11 9,15"/></svg>
+<tr><td>bench-ffi/python/cpu/size=100/pub=1/sub=1 vs rust-ffi<td>43.29 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,10 6,10 9,15"/></svg>
+<tr><td>bench-ffi/python/cpu/size=1024/pub=1/sub=1<td>82.57 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,11 6,11 9,15"/></svg>
+<tr><td>bench-ffi/python/cpu/size=1024/pub=1/sub=1 vs rust-ffi<td>40.18 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,9 6,9 9,15"/></svg>
+<tr><td>bench-ffi/python/cpu/size=1024/pub=1/sub=4<td>46.59 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,9 6,11 9,15"/></svg>
+<tr><td>bench-ffi/python/cpu/size=1024/pub=1/sub=4 vs rust-ffi<td>29.49 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,8 6,9 9,15"/></svg>
+<tr><td>bench-ffi/python/cpu/size=1024/pub=4/sub=1<td>71.43 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,11 6,11 9,15"/></svg>
+<tr><td>bench-ffi/python/cpu/size=1024/pub=4/sub=1 vs rust-ffi<td>33.63 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,11 6,7 9,15"/></svg>
+<tr><td>bench-ffi/python/cpu/size=1024/pub=4/sub=4<td>42.82 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,11 6,8 9,15"/></svg>
+<tr><td>bench-ffi/python/cpu/size=1024/pub=4/sub=4 vs rust-ffi<td>26.04 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,10 6,5 9,15"/></svg>
+<tr><td>bench-ffi/python/cpu/size=1048576/pub=1/sub=1<td>2.9 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,1 6,15 9,1"/></svg>
+<tr><td>bench-ffi/python/cpu/size=1048576/pub=1/sub=1 vs rust-ffi<td>20.13 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,8 6,15 9,5"/></svg>
+<tr><td>bench-ffi/python/cpu/size=65536/pub=1/sub=1<td>4.385 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,4 6,15 9,5"/></svg>
+<tr><td>bench-ffi/python/cpu/size=65536/pub=1/sub=1 vs rust-ffi<td>29.47 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,6 6,15 9,6"/></svg>
+<tr><td>bench-ffi/python/throughput/size=100/pub=1/sub=1<td>1.304 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,2 6,5 9,1"/></svg>
+<tr><td>bench-ffi/python/throughput/size=100/pub=1/sub=1 vs rust-ffi<td>50.32 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,11 6,10 9,15"/></svg>
+<tr><td>bench-ffi/python/throughput/size=1024/pub=1/sub=1<td>12.14 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,5 6,5 9,1"/></svg>
+<tr><td>bench-ffi/python/throughput/size=1024/pub=1/sub=1 vs rust-ffi<td>45.23 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,10 6,9 9,15"/></svg>
+<tr><td>bench-ffi/python/throughput/size=1024/pub=1/sub=4<td>21.56 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,8 6,6 9,1"/></svg>
+<tr><td>bench-ffi/python/throughput/size=1024/pub=1/sub=4 vs rust-ffi<td>33.82 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,9 6,10 9,15"/></svg>
+<tr><td>bench-ffi/python/throughput/size=1024/pub=4/sub=1<td>14.05 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,6 6,6 9,1"/></svg>
+<tr><td>bench-ffi/python/throughput/size=1024/pub=4/sub=1 vs rust-ffi<td>37.22 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,11 6,7 9,15"/></svg>
+<tr><td>bench-ffi/python/throughput/size=1024/pub=4/sub=4<td>23.47 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,5 6,9 9,1"/></svg>
+<tr><td>bench-ffi/python/throughput/size=1024/pub=4/sub=4 vs rust-ffi<td>29.71 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,11 6,5 9,15"/></svg>
+<tr><td>bench-ffi/python/throughput/size=1048576/pub=1/sub=1<td>345.6 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,15 6,1 9,15"/></svg>
+<tr><td>bench-ffi/python/throughput/size=1048576/pub=1/sub=1 vs rust-ffi<td>20.32 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,8 6,15 9,5"/></svg>
+<tr><td>bench-ffi/python/throughput/size=65536/pub=1/sub=1<td>228.7 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,13 6,1 9,12"/></svg>
+<tr><td>bench-ffi/python/throughput/size=65536/pub=1/sub=1 vs rust-ffi<td>29.98 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,6 6,15 9,7"/></svg>
+<tr><td>bench-ffi/rust-ffi/call/info<td>2.457 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,15 6,1 9,13"/></svg>
+<tr><td>bench-ffi/rust-ffi/call/sequence<td>0.8662 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,12 6,15 9,15"/></svg>
+<tr><td>bench-ffi/rust-ffi/cpu/size=100/pub=1/sub=1<td>17.77 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,12 3,15 6,10 9,1"/></svg>
+<tr><td>bench-ffi/rust-ffi/cpu/size=1024/pub=1/sub=1<td>2.055 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,14 6,15 9,1"/></svg>
+<tr><td>bench-ffi/rust-ffi/cpu/size=1024/pub=1/sub=4<td>1.58 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,8 3,14 6,15 9,1"/></svg>
+<tr><td>bench-ffi/rust-ffi/cpu/size=1024/pub=4/sub=1<td>2.124 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,5 6,15 9,1"/></svg>
+<tr><td>bench-ffi/rust-ffi/cpu/size=1024/pub=4/sub=4<td>1.644 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,6 3,9 6,15 9,1"/></svg>
+<tr><td>bench-ffi/rust-ffi/cpu/size=1048576/pub=1/sub=1<td>0.1441 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,1 6,15 9,6"/></svg>
+<tr><td>bench-ffi/rust-ffi/cpu/size=65536/pub=1/sub=1<td>0.1488 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,1 6,15 9,3"/></svg>
+<tr><td>bench-ffi/rust-ffi/throughput/size=100/pub=1/sub=1<td>65.62 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,3 3,1 6,8 9,15"/></svg>
+<tr><td>bench-ffi/rust-ffi/throughput/size=1024/pub=1/sub=1<td>549.2 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,3 6,2 9,15"/></svg>
+<tr><td>bench-ffi/rust-ffi/throughput/size=1024/pub=1/sub=4<td>729.1 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,7 6,1 9,15"/></svg>
+<tr><td>bench-ffi/rust-ffi/throughput/size=1024/pub=4/sub=1<td>522.9 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,6 3,13 6,1 9,15"/></svg>
+<tr><td>bench-ffi/rust-ffi/throughput/size=1024/pub=4/sub=4<td>697.1 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,10 3,11 6,1 9,15"/></svg>
+<tr><td>bench-ffi/rust-ffi/throughput/size=1048576/pub=1/sub=1<td>7,023 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,15 6,1 9,11"/></svg>
+<tr><td>bench-ffi/rust-ffi/throughput/size=65536/pub=1/sub=1<td>6,857 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,15 6,1 9,13"/></svg>
+<tr><td>bench-ffi/rust-net/cpu/size=100/pub=1/sub=1<td>3.773 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,11 6,2 9,1"/></svg>
+<tr><td>bench-ffi/rust-net/cpu/size=100/pub=1/sub=1 vs rust-ffi<td>0.2123 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,10 6,1 9,2"/></svg>
+<tr><td>bench-ffi/rust-net/cpu/size=1024/pub=1/sub=1<td>0.6143 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,5 6,9 9,1"/></svg>
+<tr><td>bench-ffi/rust-net/cpu/size=1024/pub=1/sub=1 vs rust-ffi<td>0.299 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,6 9,3"/></svg>
+<tr><td>bench-ffi/rust-net/cpu/size=1024/pub=1/sub=4<td>0.226 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,8 6,4 9,1"/></svg>
+<tr><td>bench-ffi/rust-net/cpu/size=1024/pub=1/sub=4 vs rust-ffi<td>0.143 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,6 6,1 9,3"/></svg>
+<tr><td>bench-ffi/rust-net/cpu/size=1024/pub=4/sub=1<td>0.6741 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,12 9,3"/></svg>
+<tr><td>bench-ffi/rust-net/cpu/size=1024/pub=4/sub=1 vs rust-ffi<td>0.3173 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,9 9,5"/></svg>
+<tr><td>bench-ffi/rust-net/cpu/size=1024/pub=4/sub=4<td>0.2443 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,10 9,1"/></svg>
+<tr><td>bench-ffi/rust-net/cpu/size=1024/pub=4/sub=4 vs rust-ffi<td>0.1486 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,7 9,4"/></svg>
+<tr><td>bench-ffi/rust-net/cpu/size=1048576/pub=1/sub=1<td>0.076 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,12 3,1 6,15 9,5"/></svg>
+<tr><td>bench-ffi/rust-net/cpu/size=1048576/pub=1/sub=1 vs rust-ffi<td>0.5274 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,15 6,1 9,11"/></svg>
+<tr><td>bench-ffi/rust-net/cpu/size=65536/pub=1/sub=1<td>0.0772 ms/MB<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,9 3,4 6,15 9,1"/></svg>
+<tr><td>bench-ffi/rust-net/cpu/size=65536/pub=1/sub=1 vs rust-ffi<td>0.5187 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,15 6,1 9,3"/></svg>
+<tr><td>bench-ffi/rust-net/throughput/size=100/pub=1/sub=1<td>265.1 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,6 6,14 9,15"/></svg>
+<tr><td>bench-ffi/rust-net/throughput/size=100/pub=1/sub=1 vs rust-ffi<td>0.2476 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,10 6,1 9,2"/></svg>
+<tr><td>bench-ffi/rust-net/throughput/size=1024/pub=1/sub=1<td>1,628 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,11 6,7 9,15"/></svg>
+<tr><td>bench-ffi/rust-net/throughput/size=1024/pub=1/sub=1 vs rust-ffi<td>0.3374 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,6 9,2"/></svg>
+<tr><td>bench-ffi/rust-net/throughput/size=1024/pub=1/sub=4<td>4,425 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,8 6,12 9,15"/></svg>
+<tr><td>bench-ffi/rust-net/throughput/size=1024/pub=1/sub=4 vs rust-ffi<td>0.1648 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,8 6,1 9,3"/></svg>
+<tr><td>bench-ffi/rust-net/throughput/size=1024/pub=4/sub=1<td>1,483 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,5 9,13"/></svg>
+<tr><td>bench-ffi/rust-net/throughput/size=1024/pub=4/sub=1 vs rust-ffi<td>0.3525 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,9 9,4"/></svg>
+<tr><td>bench-ffi/rust-net/throughput/size=1024/pub=4/sub=4<td>4,094 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,7 9,15"/></svg>
+<tr><td>bench-ffi/rust-net/throughput/size=1024/pub=4/sub=4 vs rust-ffi<td>0.1703 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,6 9,3"/></svg>
+<tr><td>bench-ffi/rust-net/throughput/size=1048576/pub=1/sub=1<td>13,156 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,15 6,1 9,11"/></svg>
+<tr><td>bench-ffi/rust-net/throughput/size=1048576/pub=1/sub=1 vs rust-ffi<td>0.5338 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,15 6,1 9,10"/></svg>
+<tr><td>bench-ffi/rust-net/throughput/size=65536/pub=1/sub=1<td>12,953 MB/s<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,8 3,12 6,1 9,15"/></svg>
+<tr><td>bench-ffi/rust-net/throughput/size=65536/pub=1/sub=1 vs rust-ffi<td>0.5294 x<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,12 3,15 6,1 9,3"/></svg></tbody></table></details><details><summary>bench-js (841) <span class="muted">stale: last measured 2026-10-22 at 33940b6e3, 0 days ago</span></summary><table><thead><tr><th>Series<th>Latest<th>Baseline<th>Change<th>Trend</thead><tbody><tr><td>bench-js/js/arrivals/handles=1/backlog=0/ns_per_handle_write<td>478 ns<td><td class="muted">1 of 8 points<td><svg width="87" height="16"><polyline points="0,8"/></svg>
 <tr><td>bench-js/js/arrivals/handles=1/backlog=256/ns_per_handle_write<td>252 ns<td><td class="muted">1 of 8 points<td><svg width="87" height="16"><polyline points="0,8"/></svg>
 <tr><td>bench-js/js/arrivals/handles=1/backlog=4096/ns_per_handle_write<td>409 ns<td><td class="muted">1 of 8 points<td><svg width="87" height="16"><polyline points="0,8"/></svg>
 <tr><td>bench-js/js/arrivals/handles=16/backlog=0/ns_per_handle_write<td>159 ns<td><td class="muted">1 of 8 points<td><svg width="87" height="16"><polyline points="0,8"/></svg>
@@ -1062,7 +1062,7 @@ reproduction</a></p>
 <tr><td>bench-js/js/varint/format=quic/value=4-byte/op=encode/ns_per_op<td>53.3 ns<td><td class="muted">1 of 8 points<td><svg width="87" height="16"><polyline points="0,8"/></svg>
 <tr><td>bench-js/js/varint/format=quic/value=8-byte/op=decode-varint/ns_per_op<td>11.1 ns<td><td class="muted">1 of 8 points<td><svg width="87" height="16"><polyline points="0,8"/></svg>
 <tr><td>bench-js/js/varint/format=quic/value=8-byte/op=decode/ns_per_op<td>17.1 ns<td><td class="muted">1 of 8 points<td><svg width="87" height="16"><polyline points="0,8"/></svg>
-<tr><td>bench-js/js/varint/format=quic/value=8-byte/op=encode/ns_per_op<td>49.7 ns<td><td class="muted">1 of 8 points<td><svg width="87" height="16"><polyline points="0,8"/></svg></tbody></table></details><details><summary>bench-rust (1706)</summary><table><thead><tr><th>Series<th>Latest<th>Baseline<th>Change<th>Trend</thead><tbody><tr><td>bench-rust/rust/gst/moqsink/eos/renditions=1/1<td>2,380 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,4 3,15 6,1"/></svg>
+<tr><td>bench-js/js/varint/format=quic/value=8-byte/op=encode/ns_per_op<td>49.7 ns<td><td class="muted">1 of 8 points<td><svg width="87" height="16"><polyline points="0,8"/></svg></tbody></table></details><details><summary>bench-rust (1706) <span class="muted">stale: last measured 2026-10-22 at 33940b6e3, 0 days ago</span></summary><table><thead><tr><th>Series<th>Latest<th>Baseline<th>Change<th>Trend</thead><tbody><tr><td>bench-rust/rust/gst/moqsink/eos/renditions=1/1<td>2,380 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,4 3,15 6,1"/></svg>
 <tr><td>bench-rust/rust/gst/moqsink/eos/renditions=1/64<td>152,086 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,15 6,1"/></svg>
 <tr><td>bench-rust/rust/gst/moqsink/eos/renditions=1/8<td>18,987 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,3 3,15 6,1"/></svg>
 <tr><td>bench-rust/rust/gst/moqsink/eos/renditions=16/1<td>3,156 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,4 3,15 6,1"/></svg>
@@ -2767,128 +2767,128 @@ reproduction</a></p>
 <tr><td>bench-rust/rust/shared/worker_turns/sockets-16/8<td>370,639 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,1"/></svg>
 <tr><td>bench-rust/rust/shared/worker_turns/sockets-4/1<td>12,368 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,2"/></svg>
 <tr><td>bench-rust/rust/shared/worker_turns/sockets-4/64<td>745,641 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,2 3,15 6,1"/></svg>
-<tr><td>bench-rust/rust/shared/worker_turns/sockets-4/8<td>88,581 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,2"/></svg></tbody></table></details><details><summary>bench-rust-extra (88) <span class="muted">stale: last measured 2026-10-21 at bc64b9c52, 1 days ago</span></summary><table><thead><tr><th>Series<th>Latest<th>Baseline<th>Change<th>Trend</thead><tbody><tr><td>bench-rust-extra/rust/extra/baseline/from_slice/big_static<td>85,607 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/baseline/from_slice/telemetry<td>4,981 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/baseline/to_value/big_static<td>61,750 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/baseline/to_value/telemetry<td>3,418 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/consumer/merge/big_static<td>30,770 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/consumer/merge/telemetry<td>6,653 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/consumer/snapshot/big_static<td>91,644 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/consumer/snapshot/telemetry<td>6,263 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/decode_patch/json_patch/big_static<td>29,933 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/decode_patch/json_patch/telemetry<td>2,895 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/decode_patch/merge_owned/big_static<td>30,037 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/decode_patch/merge_owned/telemetry<td>3,651 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/deflate/big_static<td>4,430 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/deflate/telemetry<td>8,412 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/encode_patch/big_static<td>20,438 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/encode_patch/telemetry<td>5,052 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/inflate/big_static<td>423.3 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/inflate/telemetry<td>1,292 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/jitter_acquisition/1/16<td>2,042 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/jitter_acquisition/1/256<td>16,255 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/jitter_acquisition/1/64<td>5,126 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/jitter_acquisition/16/16<td>25,269 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/jitter_acquisition/16/256<td>310,638 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/jitter_acquisition/16/64<td>85,140 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/jitter_acquisition/4/16<td>6,196 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/jitter_acquisition/4/256<td>67,082 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/jitter_acquisition/4/64<td>18,875 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/jitter_acquisition/64/16<td>115,266 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/jitter_acquisition/64/256<td>1,459,830 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/jitter_acquisition/64/64<td>395,416 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/jitter_steering/1/10<td>14,394 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/jitter_steering/1/100<td>148,513 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/jitter_steering/1/300<td>520,675 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/jitter_steering/16/10<td>118,121 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/jitter_steering/16/100<td>1,705,921 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/jitter_steering/16/300<td>8,227,651 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/jitter_steering/4/10<td>29,759 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/jitter_steering/4/100<td>416,244 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/jitter_steering/4/300<td>2,028,518 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/jitter_steering/64/10<td>862,171 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/jitter_steering/64/100<td>10,766,903 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/jitter_steering/64/300<td>45,040,576 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/marshal/full/big_static<td>11,873 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/marshal/full/telemetry<td>1,144 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/marshal/patch/big_static<td>74.36 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/marshal/patch/telemetry<td>538.2 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/producer/merge/big_static<td>26,537 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/producer/merge/telemetry<td>16,456 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/producer/snapshot/big_static<td>26,336 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/producer/snapshot/telemetry<td>11,701 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/protect/datagram_opus160<td>411.9 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/protect/grouped_1k<td>2,119 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/snapshot_budget/bounded/100<td>4,596 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/snapshot_budget/bounded/1000<td>47,808 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/snapshot_budget/bounded/10000<td>530,724 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/snapshot_budget/unbounded/100<td>138.1 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/snapshot_budget/unbounded/1000<td>142.5 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/snapshot_budget/unbounded/10000<td>146.8 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/table/json.z/1%/100<td>54,258 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/table/json.z/1%/1000<td>500,484 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/table/json.z/1%/10000<td>5,106,614 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/table/json.z/1%/20000<td>10,247,358 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/table/json.z/10%/100<td>73,183 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/table/json.z/10%/1000<td>759,721 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/table/json.z/10%/10000<td>7,105,358 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/table/json.z/10%/20000<td>14,249,666 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/table/json.z/100%/100<td>263,932 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/table/json.z/100%/1000<td>3,079,310 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/table/json.z/100%/10000<td>46,248,973 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/table/json.z/100%/20000<td>69,229,288 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg>
-<tr><td>bench-rust-extra/rust/extra/table/json/1%/100<td>44,498 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/table/json/1%/1000<td>452,013 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/table/json/1%/10000<td>4,785,380 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/table/json/1%/20000<td>9,453,050 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/table/json/10%/100<td>44,560 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/table/json/10%/1000<td>455,127 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/table/json/10%/10000<td>4,757,020 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/table/json/10%/20000<td>9,384,909 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/table/json/100%/100<td>44,623 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/table/json/100%/1000<td>456,308 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/table/json/100%/10000<td>4,817,676 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/table/json/100%/20000<td>9,516,950 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/writer/10 groups/1<td>969,987 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/writer/10 groups/10<td>2,458,833 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/writer/10 groups/100<td>26,427,228 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/writer/100 groups/1<td>4,683,439 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/writer/100 groups/10<td>52,292,643 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1"/></svg>
-<tr><td>bench-rust-extra/rust/extra/writer/100 groups/100<td>564,981,164 ns<td><td class="muted">2 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15"/></svg></tbody></table></details><details><summary>bench-rust-uring (35)</summary><table><thead><tr><th>Series<th>Latest<th>Baseline<th>Change<th>Trend</thead><tbody><tr><td>bench-rust-uring/rust/uring-echo_quic/echo_quic/udp/all-off<td>7,691,984 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,13 6,15"/></svg>
-<tr><td>bench-rust-uring/rust/uring-echo_quic/echo_quic/udp/all-on<td>3,413,475 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15"/></svg>
-<tr><td>bench-rust-uring/rust/uring-echo_quic/echo_quic/udp/no-gro<td>3,801,984 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,10 6,15"/></svg>
-<tr><td>bench-rust-uring/rust/uring-echo_quic/echo_quic/udp/no-gso<td>5,239,928 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,13 6,15"/></svg>
-<tr><td>bench-rust-uring/rust/uring-echo_quic/echo_quic/udp/oneshot<td>3,343,638 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,14 6,15"/></svg>
-<tr><td>bench-rust-uring/rust/uring-session_lite/session_lite/all-off<td>8,955,464 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,14 6,15"/></svg>
-<tr><td>bench-rust-uring/rust/uring-session_lite/session_lite/all-on<td>2,764,007 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,13"/></svg>
-<tr><td>bench-rust-uring/rust/uring-session_lite/session_lite/no-gro<td>3,702,511 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15"/></svg>
-<tr><td>bench-rust-uring/rust/uring-session_lite/session_lite/no-gso<td>4,811,291 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,14 6,15"/></svg>
-<tr><td>bench-rust-uring/rust/uring-session_lite/session_lite/oneshot<td>2,731,070 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,11 6,15"/></svg>
-<tr><td>bench-rust-uring/rust/uring-timers/timers/rearm/1<td>56.84 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,2"/></svg>
-<tr><td>bench-rust-uring/rust/uring-timers/timers/rearm/1024<td>72.98 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,7 3,1 6,15"/></svg>
-<tr><td>bench-rust-uring/rust/uring-timers/timers/rearm/16384<td>86.4 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,1 6,15"/></svg>
-<tr><td>bench-rust-uring/rust/uring-timers/timers/rearm/64<td>58.85 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,10 3,15 6,1"/></svg>
-<tr><td>bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmmsg_gro-off_gso-off<td>14,839,448 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15"/></svg>
-<tr><td>bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmmsg_gro-off_gso-on<td>6,706,877 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15"/></svg>
-<tr><td>bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmmsg_gro-on_gso-off<td>14,879,005 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15"/></svg>
-<tr><td>bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmmsg_gro-on_gso-on<td>1,540,463 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,14"/></svg>
-<tr><td>bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmsg_gro-off_gso-off<td>17,057,264 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,13"/></svg>
-<tr><td>bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmsg_gro-off_gso-on<td>8,719,952 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15"/></svg>
-<tr><td>bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmsg_gro-on_gso-off<td>16,890,912 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15"/></svg>
-<tr><td>bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmsg_gro-on_gso-on<td>1,495,023 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15"/></svg>
-<tr><td>bench-rust-uring/rust/uring-udp_uring/udp_io_uring/recvmsg-multishot_gro-off_gso-off<td>15,236,426 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15"/></svg>
-<tr><td>bench-rust-uring/rust/uring-udp_uring/udp_io_uring/recvmsg-multishot_gro-off_gso-on<td>6,361,322 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,14"/></svg>
-<tr><td>bench-rust-uring/rust/uring-udp_uring/udp_io_uring/recvmsg-multishot_gro-on_gso-off<td>15,179,128 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,14"/></svg>
-<tr><td>bench-rust-uring/rust/uring-udp_uring/udp_io_uring/recvmsg-multishot_gro-on_gso-on<td>1,648,911 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,13"/></svg>
-<tr><td>bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-1/1<td>44,648 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,14"/></svg>
-<tr><td>bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-1/64<td>3,240,264 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,4 6,15"/></svg>
-<tr><td>bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-1/8<td>373,618 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,11 6,15"/></svg>
-<tr><td>bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-256/1<td>45,467 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,1 6,15"/></svg>
-<tr><td>bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-256/64<td>3,283,658 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,3 3,15 6,1"/></svg>
-<tr><td>bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-256/8<td>379,278 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,3 3,15 6,1"/></svg>
-<tr><td>bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-4096/1<td>47,148 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15"/></svg>
-<tr><td>bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-4096/64<td>3,343,074 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,2 3,15 6,1"/></svg>
-<tr><td>bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-4096/8<td>395,016 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,6"/></svg></tbody></table></details>
+<tr><td>bench-rust/rust/shared/worker_turns/sockets-4/8<td>88,581 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,2"/></svg></tbody></table></details><details><summary>bench-rust-extra (88)</summary><table><thead><tr><th>Series<th>Latest<th>Baseline<th>Change<th>Trend</thead><tbody><tr><td>bench-rust-extra/rust/extra/baseline/from_slice/big_static<td>85,523 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,2"/></svg>
+<tr><td>bench-rust-extra/rust/extra/baseline/from_slice/telemetry<td>4,932 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,5 6,15"/></svg>
+<tr><td>bench-rust-extra/rust/extra/baseline/to_value/big_static<td>59,630 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,12"/></svg>
+<tr><td>bench-rust-extra/rust/extra/baseline/to_value/telemetry<td>3,362 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,15"/></svg>
+<tr><td>bench-rust-extra/rust/extra/consumer/merge/big_static<td>31,244 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,10"/></svg>
+<tr><td>bench-rust-extra/rust/extra/consumer/merge/telemetry<td>6,632 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,2"/></svg>
+<tr><td>bench-rust-extra/rust/extra/consumer/snapshot/big_static<td>91,173 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,10"/></svg>
+<tr><td>bench-rust-extra/rust/extra/consumer/snapshot/telemetry<td>6,174 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,11"/></svg>
+<tr><td>bench-rust-extra/rust/extra/decode_patch/json_patch/big_static<td>30,989 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,6 3,15 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/decode_patch/json_patch/telemetry<td>2,886 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,14 6,15"/></svg>
+<tr><td>bench-rust-extra/rust/extra/decode_patch/merge_owned/big_static<td>31,019 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,2 3,15 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/decode_patch/merge_owned/telemetry<td>3,657 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,8"/></svg>
+<tr><td>bench-rust-extra/rust/extra/deflate/big_static<td>4,603 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,5 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/deflate/telemetry<td>10,384 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,7"/></svg>
+<tr><td>bench-rust-extra/rust/extra/encode_patch/big_static<td>20,576 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,15 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/encode_patch/telemetry<td>5,096 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,11 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/inflate/big_static<td>432.2 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,14"/></svg>
+<tr><td>bench-rust-extra/rust/extra/inflate/telemetry<td>1,338 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,3"/></svg>
+<tr><td>bench-rust-extra/rust/extra/jitter_acquisition/1/16<td>2,069 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,4 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/jitter_acquisition/1/256<td>16,274 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,2 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/jitter_acquisition/1/64<td>5,177 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,4 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/jitter_acquisition/16/16<td>25,504 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,3 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/jitter_acquisition/16/256<td>313,318 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,5 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/jitter_acquisition/16/64<td>85,949 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,4 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/jitter_acquisition/4/16<td>6,300 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,5 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/jitter_acquisition/4/256<td>67,759 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,5 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/jitter_acquisition/4/64<td>18,878 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/jitter_acquisition/64/16<td>116,146 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,2 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/jitter_acquisition/64/256<td>1,478,340 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,7 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/jitter_acquisition/64/64<td>403,079 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,6 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/jitter_steering/1/10<td>14,087 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,7 3,1 6,15"/></svg>
+<tr><td>bench-rust-extra/rust/extra/jitter_steering/1/100<td>145,309 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,1 6,15"/></svg>
+<tr><td>bench-rust-extra/rust/extra/jitter_steering/1/300<td>514,721 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,3 6,15"/></svg>
+<tr><td>bench-rust-extra/rust/extra/jitter_steering/16/10<td>120,513 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,8 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/jitter_steering/16/100<td>1,730,400 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,8 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/jitter_steering/16/300<td>8,331,707 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,10 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/jitter_steering/4/10<td>29,880 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,5 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/jitter_steering/4/100<td>419,783 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,9 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/jitter_steering/4/300<td>2,044,627 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,7 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/jitter_steering/64/10<td>868,840 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,6 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/jitter_steering/64/100<td>10,898,653 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,10 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/jitter_steering/64/300<td>45,517,111 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,11 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/marshal/full/big_static<td>11,850 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,11 6,15"/></svg>
+<tr><td>bench-rust-extra/rust/extra/marshal/full/telemetry<td>1,122 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,1 6,15"/></svg>
+<tr><td>bench-rust-extra/rust/extra/marshal/patch/big_static<td>74.73 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,2 3,15 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/marshal/patch/telemetry<td>536.1 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,12 6,15"/></svg>
+<tr><td>bench-rust-extra/rust/extra/producer/10 groups/1<td>40,903 ns<td><td class="muted">1 of 8 points<td><svg width="87" height="16"><polyline points="0,8"/></svg>
+<tr><td>bench-rust-extra/rust/extra/producer/10 groups/10<td>421,136 ns<td><td class="muted">1 of 8 points<td><svg width="87" height="16"><polyline points="0,8"/></svg>
+<tr><td>bench-rust-extra/rust/extra/producer/10 groups/100<td>4,441,869 ns<td><td class="muted">1 of 8 points<td><svg width="87" height="16"><polyline points="0,8"/></svg>
+<tr><td>bench-rust-extra/rust/extra/producer/100 groups/1<td>373,605 ns<td><td class="muted">1 of 8 points<td><svg width="87" height="16"><polyline points="0,8"/></svg>
+<tr><td>bench-rust-extra/rust/extra/producer/100 groups/10<td>3,960,326 ns<td><td class="muted">1 of 8 points<td><svg width="87" height="16"><polyline points="0,8"/></svg>
+<tr><td>bench-rust-extra/rust/extra/producer/100 groups/100<td>41,559,062 ns<td><td class="muted">1 of 8 points<td><svg width="87" height="16"><polyline points="0,8"/></svg>
+<tr><td>bench-rust-extra/rust/extra/producer/merge/big_static<td>26,851 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,2 3,15 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/producer/merge/telemetry<td>19,289 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,6"/></svg>
+<tr><td>bench-rust-extra/rust/extra/producer/snapshot/big_static<td>26,026 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,14 6,15"/></svg>
+<tr><td>bench-rust-extra/rust/extra/producer/snapshot/telemetry<td>16,229 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,3"/></svg>
+<tr><td>bench-rust-extra/rust/extra/protect/datagram_opus160<td>417.1 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,14 3,15 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/protect/grouped_1k<td>2,343 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,7 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/snapshot_budget/bounded/100<td>4,506 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,4 3,1 6,15"/></svg>
+<tr><td>bench-rust-extra/rust/extra/snapshot_budget/bounded/1000<td>49,043 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,14 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/snapshot_budget/bounded/10000<td>530,398 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,13 6,15"/></svg>
+<tr><td>bench-rust-extra/rust/extra/snapshot_budget/unbounded/100<td>136.3 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,1 6,15"/></svg>
+<tr><td>bench-rust-extra/rust/extra/snapshot_budget/unbounded/1000<td>140.6 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,14"/></svg>
+<tr><td>bench-rust-extra/rust/extra/snapshot_budget/unbounded/10000<td>143.9 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,14"/></svg>
+<tr><td>bench-rust-extra/rust/extra/table/json.z/1%/100<td>54,163 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,2"/></svg>
+<tr><td>bench-rust-extra/rust/extra/table/json.z/1%/1000<td>498,155 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,3"/></svg>
+<tr><td>bench-rust-extra/rust/extra/table/json.z/1%/10000<td>5,091,810 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,6"/></svg>
+<tr><td>bench-rust-extra/rust/extra/table/json.z/1%/20000<td>11,180,541 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,15 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/table/json.z/10%/100<td>71,354 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,7 3,1 6,15"/></svg>
+<tr><td>bench-rust-extra/rust/extra/table/json.z/10%/1000<td>686,539 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,2 3,1 6,15"/></svg>
+<tr><td>bench-rust-extra/rust/extra/table/json.z/10%/10000<td>7,283,521 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,8"/></svg>
+<tr><td>bench-rust-extra/rust/extra/table/json.z/10%/20000<td>14,674,141 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,8"/></svg>
+<tr><td>bench-rust-extra/rust/extra/table/json.z/100%/100<td>219,355 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,2 3,1 6,15"/></svg>
+<tr><td>bench-rust-extra/rust/extra/table/json.z/100%/1000<td>2,411,190 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,2 6,15"/></svg>
+<tr><td>bench-rust-extra/rust/extra/table/json.z/100%/10000<td>27,398,375 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,10 3,1 6,15"/></svg>
+<tr><td>bench-rust-extra/rust/extra/table/json.z/100%/20000<td>55,110,393 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,2 6,15"/></svg>
+<tr><td>bench-rust-extra/rust/extra/table/json/1%/100<td>44,549 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/table/json/1%/1000<td>453,880 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,2 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/table/json/1%/10000<td>4,839,136 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,3 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/table/json/1%/20000<td>9,725,170 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,13 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/table/json/10%/100<td>44,541 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/table/json/10%/1000<td>456,110 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,2 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/table/json/10%/10000<td>4,853,773 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,5 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/table/json/10%/20000<td>9,783,043 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,13 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/table/json/100%/100<td>44,707 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,2 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/table/json/100%/1000<td>456,419 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/table/json/100%/10000<td>4,861,353 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,3 6,1"/></svg>
+<tr><td>bench-rust-extra/rust/extra/table/json/100%/20000<td>9,721,410 ns<td><td class="muted">3 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,10 6,1"/></svg></tbody></table></details><details><summary>bench-rust-uring (35)</summary><table><thead><tr><th>Series<th>Latest<th>Baseline<th>Change<th>Trend</thead><tbody><tr><td>bench-rust-uring/rust/uring-echo_quic/echo_quic/udp/all-off<td>8,049,004 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,13 6,15 9,11"/></svg>
+<tr><td>bench-rust-uring/rust/uring-echo_quic/echo_quic/udp/all-on<td>3,514,945 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15 9,11"/></svg>
+<tr><td>bench-rust-uring/rust/uring-echo_quic/echo_quic/udp/no-gro<td>4,135,798 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,10 6,15 9,6"/></svg>
+<tr><td>bench-rust-uring/rust/uring-echo_quic/echo_quic/udp/no-gso<td>5,390,710 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,13 6,15 9,11"/></svg>
+<tr><td>bench-rust-uring/rust/uring-echo_quic/echo_quic/udp/oneshot<td>3,452,710 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,14 6,15 9,11"/></svg>
+<tr><td>bench-rust-uring/rust/uring-session_lite/session_lite/all-off<td>10,535,625 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,14 6,15 9,5"/></svg>
+<tr><td>bench-rust-uring/rust/uring-session_lite/session_lite/all-on<td>2,838,272 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,13 9,11"/></svg>
+<tr><td>bench-rust-uring/rust/uring-session_lite/session_lite/no-gro<td>4,034,130 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,6 3,15 6,15 9,1"/></svg>
+<tr><td>bench-rust-uring/rust/uring-session_lite/session_lite/no-gso<td>5,039,903 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,14 6,15 9,6"/></svg>
+<tr><td>bench-rust-uring/rust/uring-session_lite/session_lite/oneshot<td>3,015,527 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,7 3,13 6,15 9,1"/></svg>
+<tr><td>bench-rust-uring/rust/uring-timers/timers/rearm/1<td>54.1 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,15 3,1 6,2 9,14"/></svg>
+<tr><td>bench-rust-uring/rust/uring-timers/timers/rearm/1024<td>72.67 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,3 3,1 6,7 9,15"/></svg>
+<tr><td>bench-rust-uring/rust/uring-timers/timers/rearm/16384<td>86.46 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,1 6,15 9,13"/></svg>
+<tr><td>bench-rust-uring/rust/uring-timers/timers/rearm/64<td>59.26 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,15 6,5 9,1"/></svg>
+<tr><td>bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmmsg_gro-off_gso-off<td>15,146,491 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15 9,13"/></svg>
+<tr><td>bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmmsg_gro-off_gso-on<td>6,769,988 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15 9,14"/></svg>
+<tr><td>bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmmsg_gro-on_gso-off<td>15,209,787 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15 9,13"/></svg>
+<tr><td>bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmmsg_gro-on_gso-on<td>1,551,325 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,14 9,13"/></svg>
+<tr><td>bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmsg_gro-off_gso-off<td>16,997,350 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,13 9,14"/></svg>
+<tr><td>bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmsg_gro-off_gso-on<td>8,812,164 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15 9,14"/></svg>
+<tr><td>bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmsg_gro-on_gso-off<td>16,956,202 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15 9,15"/></svg>
+<tr><td>bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmsg_gro-on_gso-on<td>1,488,424 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,14 6,14 9,15"/></svg>
+<tr><td>bench-rust-uring/rust/uring-udp_uring/udp_io_uring/recvmsg-multishot_gro-off_gso-off<td>15,457,316 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15 9,13"/></svg>
+<tr><td>bench-rust-uring/rust/uring-udp_uring/udp_io_uring/recvmsg-multishot_gro-off_gso-on<td>6,477,110 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,14 9,13"/></svg>
+<tr><td>bench-rust-uring/rust/uring-udp_uring/udp_io_uring/recvmsg-multishot_gro-on_gso-off<td>15,422,550 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,14 9,13"/></svg>
+<tr><td>bench-rust-uring/rust/uring-udp_uring/udp_io_uring/recvmsg-multishot_gro-on_gso-on<td>1,677,954 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,13 9,8"/></svg>
+<tr><td>bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-1/1<td>44,975 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,4 3,15 6,15 9,1"/></svg>
+<tr><td>bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-1/64<td>3,407,869 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,12 6,15 9,1"/></svg>
+<tr><td>bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-1/8<td>378,816 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,12 3,14 6,15 9,1"/></svg>
+<tr><td>bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-256/1<td>46,011 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,11 3,11 6,15 9,1"/></svg>
+<tr><td>bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-256/64<td>3,289,384 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,5 3,15 6,3 9,1"/></svg>
+<tr><td>bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-256/8<td>383,968 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,12 3,15 6,11 9,1"/></svg>
+<tr><td>bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-4096/1<td>47,274 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,15 9,15"/></svg>
+<tr><td>bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-4096/64<td>3,331,050 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,2 3,15 6,1 9,4"/></svg>
+<tr><td>bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-4096/8<td>394,763 ns<td><td class="muted">4 of 8 points<td><svg width="87" height="16"><polyline points="0,1 3,15 6,6 9,7"/></svg></tbody></table></details>
 <script>
 const filter = document.getElementById('filter');
 filter.oninput = () => {
