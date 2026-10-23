@@ -1,13 +1,12 @@
-publishing smoke-js-web-5313-29917.hang (fake camera, vite) to https://relay.moqtail.dev
+publishing smoke-js-web-5088-11722.hang (fake camera, vite) to https://relay.moqtail.dev
 [page] negotiated protocol: moqt-18
-[page] subscribe_namespace written: requestId=2
+[page] subscribe_namespace written: requestId=0
 [page] announced: broadcast=moqtail/testsrc active=true
 [page] announced: broadcast=moqtail/ch02 active=true
 [page] announced: broadcast=moqtail/ch07 active=true
 [page] announced: broadcast=moqtail/ch05 active=true
 [page] announced: broadcast=moqtail/ch01 active=true
 [page] announced: broadcast=moqtail/ch06 active=true
-[page] announced: broadcast=smoke-js-web-5313-29917.hang active=true
 [page] announced: broadcast=moqtail/ch03 active=true
 [page] announced: broadcast=moqtail/ch00 active=true
 [page] announced: broadcast=moqtail/ch04 active=true

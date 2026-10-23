@@ -1,7 +1,5 @@
-publishing smoke-js-web-5313-6572.hang (fake camera, vite) to https://aiomoqt-relay.marzresearch.net:4443/
+publishing smoke-js-web-5088-19785.hang (fake camera, vite) to https://aiomoqt-relay.marzresearch.net:4443/
 [page] negotiated protocol: moqt-22
-[page] subscribe_namespace written: requestId=0
-[page] announced: broadcast=smoke-js-web-5313-6572.hang active=true
-[page] publish ok: broadcast=smoke-js-web-5313-6572.hang track=catalog.json
-[page] announced: broadcast=aiomoqt-watchdog/36265-0 active=true
-[page] announced: broadcast=aiomoqt-watchdog/36265-0 active=false
+[page] subscribe_namespace written: requestId=2
+[page] announced: broadcast=smoke-js-web-5088-19785.hang active=true
+[page] publish ok: broadcast=smoke-js-web-5088-19785.hang track=catalog.json
