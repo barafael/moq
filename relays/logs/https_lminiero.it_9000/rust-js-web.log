@@ -1,3 +1,18 @@
 [page] negotiated protocol: moqt-22
 [page] subscribe_namespace written: requestId=0
-decoded 0 frames from smoke-rust-4937-5973.hang (vite)
+[page] announced: broadcast=smoke-rust-4893-19594.hang active=true
+[page] subscribe start: id=2 broadcast=smoke-rust-4893-19594.hang track=catalog.json
+[page] subscribe written: id=2 broadcast=smoke-rust-4893-19594.hang track=catalog.json
+[page] subscribe ok: id=2 broadcast=smoke-rust-4893-19594.hang track=catalog.json
+[page] received catalog hang smoke-rust-4893-19594.hang {video: Object, audio: Object, archive: Object, clock: Object}
+[page] subscribe start: id=4 broadcast=smoke-rust-4893-19594.hang track=0.avc3
+[page] subscribe written: id=4 broadcast=smoke-rust-4893-19594.hang track=0.avc3
+[page] subscribe ok: id=4 broadcast=smoke-rust-4893-19594.hang track=0.avc3
+[page] spawn error Error: object IDs must start at 0 and increment by 1, got a delta of 4
+    at e.decode (http://localhost:41821/assets/index-BU3XZjMy.js:1:177558)
+    at a (http://localhost:41821/assets/index-BU3XZjMy.js:1:225643)
+    at #f (http://localhost:41821/assets/index-BU3XZjMy.js:1:100769)
+    at Os.tryDecode (http://localhost:41821/assets/index-BU3XZjMy.js:1:100300)
+    at Df.handleGroup (http://localhost:41821/assets/index-BU3XZjMy.js:1:225703)
+    at async #g (http://localhost:41821/assets/index-BU3XZjMy.js:1:230220)
+decoded 8 frames from smoke-rust-4893-19594.hang (vite)

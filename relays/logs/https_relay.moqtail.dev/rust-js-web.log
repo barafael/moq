@@ -6,14 +6,14 @@
 [page] announced: broadcast=moqtail/ch05 active=true
 [page] announced: broadcast=moqtail/ch01 active=true
 [page] announced: broadcast=moqtail/ch06 active=true
-[page] announced: broadcast=smoke-rust-4937-29011.hang active=true
-[page] subscribe start: id=2 broadcast=smoke-rust-4937-29011.hang track=catalog.json
+[page] announced: broadcast=smoke-rust-4893-8564.hang active=true
+[page] subscribe start: id=2 broadcast=smoke-rust-4893-8564.hang track=catalog.json
 [page] announced: broadcast=moqtail/ch03 active=true
 [page] announced: broadcast=moqtail/ch00 active=true
 [page] announced: broadcast=moqtail/ch04 active=true
-[page] subscribe written: id=2 broadcast=smoke-rust-4937-29011.hang track=catalog.json
-[page] subscribe error: id=2 broadcast=smoke-rust-4937-29011.hang track=catalog.json error=subscribe timed out after 10000ms waiting for SUBSCRIBE_OK (browser stream limit reached?)
-[page] catalog subscription ended smoke-rust-4937-29011.hang Stream: subscribe timed out after 10000ms waiting for SUBSCRIBE_OK (browser stream limit reached?)
-    at $e (http://localhost:36965/assets/index-BU3XZjMy.js:1:16184)
-    at #b (http://localhost:36965/assets/index-BU3XZjMy.js:1:219779)
-decoded 0 frames from smoke-rust-4937-29011.hang (vite)
+[page] subscribe written: id=2 broadcast=smoke-rust-4893-8564.hang track=catalog.json
+[page] subscribe error: id=2 broadcast=smoke-rust-4893-8564.hang track=catalog.json error=subscribe timed out after 10000ms waiting for SUBSCRIBE_OK (browser stream limit reached?)
+[page] catalog subscription ended smoke-rust-4893-8564.hang Stream: subscribe timed out after 10000ms waiting for SUBSCRIBE_OK (browser stream limit reached?)
+    at $e (http://localhost:43519/assets/index-BU3XZjMy.js:1:16184)
+    at #b (http://localhost:43519/assets/index-BU3XZjMy.js:1:219779)
+decoded 0 frames from smoke-rust-4893-8564.hang (vite)

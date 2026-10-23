@@ -8,21 +8,25 @@ announced: broadcast=moqtail/ch07 active=true
 announced: broadcast=moqtail/ch05 active=true
 announced: broadcast=moqtail/ch01 active=true
 announced: broadcast=moqtail/ch06 active=true
-announced: broadcast=smoke-rust-4937-29011.hang active=true
-subscribe start: id=2 broadcast=smoke-rust-4937-29011.hang track=catalog.json
 announced: broadcast=moqtail/ch03 active=true
 announced: broadcast=moqtail/ch00 active=true
 announced: broadcast=moqtail/ch04 active=true
-subscribe written: id=2 broadcast=smoke-rust-4937-29011.hang track=catalog.json
-subscribe error: id=2 broadcast=smoke-rust-4937-29011.hang track=catalog.json error=subscribe timed out after 10000ms waiting for SUBSCRIBE_OK (browser stream limit reached?)
-error: subscribe timed out after 10000ms waiting for SUBSCRIBE_OK (browser stream limit reached?)
+error: timed out waiting for data
+subscribe_namespace error: session error: connection error: closed
 announced: broadcast=moqtail/testsrc active=false
 announced: broadcast=moqtail/ch02 active=false
 announced: broadcast=moqtail/ch07 active=false
 announced: broadcast=moqtail/ch05 active=false
 announced: broadcast=moqtail/ch01 active=false
 announced: broadcast=moqtail/ch06 active=false
-announced: broadcast=smoke-rust-4937-29011.hang active=false
 announced: broadcast=moqtail/ch03 active=false
 announced: broadcast=moqtail/ch00 active=false
 announced: broadcast=moqtail/ch04 active=false
+broadcast discovery failed; broadcasts resolve on request only. warn: session error: connection error: closed
+ code: "GenericFailure"
+
+      at async #fill (/home/runner/work/moq/moq/test/smoke/clients/js-native/node_modules/@moq/net/stream.js:167:50)
+      at async done (/home/runner/work/moq/moq/test/smoke/clients/js-native/node_modules/@moq/net/stream.js:333:29)
+
+subscribe start: id=2 broadcast=smoke-rust-4893-8564.hang track=catalog.json
+subscribe error: id=2 broadcast=smoke-rust-4893-8564.hang track=catalog.json error=subscribe abandoned before it was accepted
