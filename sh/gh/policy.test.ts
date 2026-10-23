@@ -37,9 +37,16 @@ for (const step of scoped) {
 	assert.equal(base({ base_ref: "main", event: { pull_request: { base: { sha: "pr-base" } } } }), "pr-base");
 	assert.equal(base({ base_ref: "release" }), "--all");
 }
-// biome-ignore lint/suspicious/noTemplateCurlyInString: GitHub expression is literal YAML.
-assert.equal(check.concurrency.group, "check-${{ github.ref }}");
-assert.equal(check.concurrency["cancel-in-progress"], true);
+// Merged PRs use the base ref, but must still cancel the same PR's open run.
+for (const config of [check, gate]) {
+	const group = (number: number, ref: string) =>
+		config.concurrency.group.replace(/\$\{\{(.+?)\}\}/g, (_: string, expression: string) =>
+			new Function("github", `return (${expression});`)({ ref, event: { pull_request: { number } } }),
+		);
+	assert.equal(group(1, "refs/pull/1/merge"), group(1, "refs/heads/main"));
+	assert.notEqual(group(1, "refs/heads/main"), group(2, "refs/heads/main"));
+	assert.equal(config.concurrency["cancel-in-progress"], true);
+}
 
 // Every other workflow stays out of main PRs: optional
 // checks run nightly on main, and on release PRs through the Release gate.

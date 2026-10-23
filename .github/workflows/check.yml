@@ -13,7 +13,7 @@ on:
 
 # Cancel superseded builds for this PR, including when it closes.
 concurrency:
-  group: check-${{ github.ref }}
+  group: check-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
