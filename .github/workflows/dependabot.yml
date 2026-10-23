@@ -1,7 +1,7 @@
 name: Dependabot
 
 # Enables auto-merge on Dependabot pull requests, so a bump lands on its own
-# once the required PR check passes. dependabot.yml holds every new version
+# once the required Check passes. dependabot.yml holds every new version
 # for 7 days, so nothing merges unreviewed by CI or the
 # moment it is published.
 #

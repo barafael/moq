@@ -19,7 +19,7 @@ concurrency:
 jobs:
   # One checkout, dev shell, cache restore, and dispatcher for lints and tests.
   check:
-    name: PR check
+    name: Check
     if: github.event.action != 'closed'
     runs-on: ubuntu-24.04-arm
     # Backstop a hang instead of holding the runner for the 6-hour default.
@@ -57,7 +57,7 @@ jobs:
           secret-access-key: ${{ secrets.MBX_R2_SECRET_ACCESS_KEY }}
 
       # The pre-setup query and execution use the same impact map.
-      - name: PR check
+      - name: Check
         if: steps.scope.outputs.needed == 'true'
         run: |
           rm -rf target/cargo-timings

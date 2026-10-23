@@ -2,7 +2,7 @@ name: Release gate
 
 # Every optional workflow a PR into `release` must pass, behind one required
 # context. Main PRs run none of them (nightly.yml covers main). The release
-# ruleset requires both `PR check` and `Release gate`.
+# ruleset requires both `Check` and `Release gate`.
 #
 # Each workflow keeps the paths that select it, here rather than in its own
 # trigger, so a workflow the diff skips still reports through this gate instead

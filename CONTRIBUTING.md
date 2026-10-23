@@ -40,7 +40,7 @@ Fix any merge conflicts and failing CI checks.
 
 # Merging
 
-PRs into `main` run **PR check** independently, and `just ci` runs the same gate locally.
+PRs into `main` run **Check** independently, and `just ci` runs the same gate locally.
 Merge with `gh pr merge --squash <number>` once checks pass, the review is clean, and the maintainer has approved merging that PR, by number or through a standing go-ahead that covers it. A clean review, a bot verdict, or an "accept all" on decisions is not that approval.
 Checks select only what the diff touches, so a break can reach `main`; `just gate` runs the full suite, and it, the feature matrix, optimized binding builds, macOS, Windows, and the other optional workflows run nightly on `main` and on PRs into `release`.
 

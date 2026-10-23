@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # These feature sets and optimized artifacts cannot share the PR check's
+        # These feature sets and optimized artifacts cannot share the Check's
         # default-feature test build. Release binding workflows cover their
         # optimized libraries separately, nightly and on release PRs.
         recipe: ["rs features", "js wasm"]
