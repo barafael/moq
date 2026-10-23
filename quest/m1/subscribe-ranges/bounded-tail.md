@@ -1,4 +1,4 @@
-# [M] A copy that stopped at a request's end bound accepts its tail
+# [XL] A copy that stopped at a request's end bound accepts its tail
 
 ## Goal
 
@@ -40,18 +40,34 @@ these cases: control and data streams can arrive out of order. Remembering
 every historical end has unbounded cost without a retirement signal. Never
 declare an early FIN to have reached a requested end.
 
-Recommendation: make each stream's admitted end unambiguous, then append its
-tail into the existing copy. A stream-specific end bound in the unpublished
-lite-07 GROUP header would let FIN below that bound finish the source group,
-and FIN exactly at it leave the copy resumable. An explicit final-versus-
-bounded terminal is an alternative. This is a wire decision, not an approved
-format change. Lite-06 also carries frame bounds and must remain compatible:
-its solution needs negotiated signaling or request-identity correlation, not
-an unconditional new header field. Changing only lite-07 would leave the Goal
-unmet. Lite-05 and earlier round bounds outward to whole groups. Reuse IETF's
-existing end bit/status rather than extending its wire format, including
-emitting a genuine early end when the header did not promise one. Mirror lite
-changes in JS and its draft.
+Decided by the maintainer (2026-10-23), superseding the earlier park:
+
+- Lite-07-wip carries an explicit stream-level indication of bounded versus
+  final, updated in `drafts/draft-lcurley-moq-lite.md`. It is unpublished, so
+  its framing changes freely. Proposed shape: a GROUP `Frame End` (exclusive,
+  0 when the stream runs to the group's end). A FIN below it ends the group;
+  a FIN at it ends only the stream, and the publisher serves the tail on a
+  later stream for the same sequence once the end widens. FRAME has no type
+  byte, so a trailing terminal message would need new framing.
+- Lite-06 has no such field: it falls back to request correlation, a fresh
+  request identity for each end revision, so a stream's bound is its
+  request's.
+- IETF reuses `has_end` / END_OF_GROUP, with no new wire, including emitting
+  a genuine early end that the header did not promise.
+- `js/net` mirrors the lite-07 change.
+- Too big for one PR: split rather than land part of it. Lite-05 and earlier
+  round bounds outward to whole groups and need nothing.
+
+Proposed split, awaiting the maintainer, in order:
+
+1. Lite-07 end to end: the draft, the GROUP codec in Rust and JS, Rust and JS
+   publishers labelling capped streams and serving the tail after the end
+   widens, and the Rust subscriber appending into the cached copy (append
+   ownership below). JS subscribers never ask for frame bounds, so they only
+   decode the field.
+2. Lite-06 request correlation on top of 1's append path.
+3. IETF `has_end` / END_OF_GROUP on top of 1's append path, with the
+   Object-ID/ordinal handling.
 
 For append ownership, transfer one private writer permission into cache-owned
 group state between streams. Never park a producer/parent clone or permit two
@@ -69,8 +85,13 @@ header, and the converse where a real early FIN follows the update. Neither
 test may depend on sleeps or accepting a missing tail. Exercise the matching
 JS path and cross-language interop after the boundary contract is settled.
 
-Public API: none expected. Wire: lite boundary signaling needs a decision;
-no format change is implemented by this checkpoint.
+The publisher half is missing too: the lite publisher marks a capped group
+served and its cursor moves past it, so a widening SUBSCRIBE_UPDATE never
+reaches the tail even on one hop, and the draft forbids a second Group Stream
+for a sequence on one subscription.
+
+Public API: none expected. Wire: lite-07 GROUP gains the bounded/final
+indication above; no format change is implemented by this checkpoint.
 
 ## Related
 
