@@ -76,8 +76,39 @@ fn bench_packet(c: &mut Criterion) {
     group.finish();
 }
 
+/// Header protection alone, which graviola leaves to RustCrypto.
+fn bench_header(c: &mut Criterion) {
+    let mut group = c.benchmark_group("header");
+    for suite in [
+        CipherSuite::TLS13_AES_128_GCM_SHA256,
+        CipherSuite::TLS13_AES_256_GCM_SHA384,
+        CipherSuite::TLS13_CHACHA20_POLY1305_SHA256,
+    ] {
+        for (name, provider) in providers() {
+            let tls13 = provider
+                .cipher_suites
+                .iter()
+                .find_map(|s| s.tls13().filter(|t| t.common.suite == suite))
+                .expect("a TLS 1.3 suite");
+            let quic = tls13.quic.expect("a QUIC-capable suite");
+            let keys = Keys::initial(Version::V1, tls13, quic, &[1; 8], Side::Client);
+            let header = keys.local.header;
+            let sample = [5u8; 16];
+            let (mut first, mut number) = (0x43u8, [1u8, 2, 3]);
+            group.bench_function(format!("{suite:?}/{name}"), |b| {
+                b.iter(|| {
+                    header
+                        .encrypt_in_place(&sample, &mut first, &mut number)
+                        .unwrap()
+                })
+            });
+        }
+    }
+    group.finish();
+}
+
 /// A full TLS 1.3 handshake in memory: an ECDSA P-256 server certificate the client verifies,
-/// under the provider's preferred key exchange and under X25519 alone.
+/// under the post-quantum hybrid moq-relay prefers and under X25519 alone.
 fn bench_handshake(c: &mut Criterion) {
     let certified = rcgen::generate_simple_self_signed(vec!["localhost".into()]).unwrap();
     let cert = CertificateDer::from(certified.cert.der().to_vec());
@@ -88,12 +119,11 @@ fn bench_handshake(c: &mut Criterion) {
 
     let mut group = c.benchmark_group("handshake");
     for (name, provider) in providers() {
-        for kx in [None, Some(NamedGroup::X25519)] {
+        for kx in [NamedGroup::X25519MLKEM768, NamedGroup::X25519] {
             let mut provider = provider.clone();
-            if let Some(kx) = kx {
-                provider.kx_groups.retain(|group| group.name() == kx);
-            }
-            let kx_name = format!("{:?}", provider.kx_groups[0].name());
+            provider.kx_groups.retain(|group| group.name() == kx);
+            assert_eq!(provider.kx_groups.len(), 1, "{name} offers {kx:?}");
+            let kx_name = format!("{kx:?}");
             let provider = Arc::new(provider);
             let server = Arc::new(
                 ServerConfig::builder_with_provider(provider.clone())
@@ -142,5 +172,5 @@ fn handshake(client: &Arc<ClientConfig>, server: &Arc<ServerConfig>) {
     }
 }
 
-criterion_group!(benches, bench_packet, bench_handshake);
+criterion_group!(benches, bench_packet, bench_header, bench_handshake);
 criterion_main!(benches);
