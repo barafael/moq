@@ -2,16 +2,16 @@ https://aiomoqt-relay.marzresearch.net:4443/ connected via WebTransport
 https://aiomoqt-relay.marzresearch.net:4443/ negotiated ALPN: moqt-22
 connected version=moq-transport-22
 subscribe_namespace written: requestId=0
-announced: broadcast=smoke-js-web-5155-14627.hang active=true
-subscribe start: id=2 broadcast=smoke-js-web-5155-14627.hang track=catalog.json
-subscribe written: id=2 broadcast=smoke-js-web-5155-14627.hang track=catalog.json
-subscribe ok: id=2 broadcast=smoke-js-web-5155-14627.hang track=catalog.json
-subscribe start: id=4 broadcast=smoke-js-web-5155-14627.hang track=video
-subscribe written: id=4 broadcast=smoke-js-web-5155-14627.hang track=video
-subscribe ok: id=4 broadcast=smoke-js-web-5155-14627.hang track=video
-received 7366 bytes from smoke-js-web-5155-14627.hang
+announced: broadcast=smoke-js-web-4865-13226.hang active=true
+subscribe start: id=2 broadcast=smoke-js-web-4865-13226.hang track=catalog.json
+subscribe written: id=2 broadcast=smoke-js-web-4865-13226.hang track=catalog.json
+subscribe ok: id=2 broadcast=smoke-js-web-4865-13226.hang track=catalog.json
+subscribe start: id=4 broadcast=smoke-js-web-4865-13226.hang track=video
+subscribe written: id=4 broadcast=smoke-js-web-4865-13226.hang track=video
+subscribe ok: id=4 broadcast=smoke-js-web-4865-13226.hang track=video
+received 7043 bytes from smoke-js-web-4865-13226.hang
 subscribe_namespace error: session error: connection error: closed
-announced: broadcast=smoke-js-web-5155-14627.hang active=false
+announced: broadcast=smoke-js-web-4865-13226.hang active=false
 broadcast discovery failed; broadcasts resolve on request only. warn: session error: connection error: closed
  code: "GenericFailure"
 
@@ -19,5 +19,5 @@ broadcast discovery failed; broadcasts resolve on request only. warn: session er
       at async done (/home/runner/work/moq/moq/test/smoke/clients/js-native/node_modules/@moq/net/stream.js:333:29)
       at async <anonymous> (/home/runner/work/moq/moq/test/smoke/clients/js-native/node_modules/@moq/net/ietf/subscriber.js:278:58)
 
-subscribe error: id=2 broadcast=smoke-js-web-5155-14627.hang track=catalog.json error=session error: connection error: closed
-subscribe error: id=4 broadcast=smoke-js-web-5155-14627.hang track=video error=session error: connection error: closed
+subscribe error: id=4 broadcast=smoke-js-web-4865-13226.hang track=video error=session error: connection error: closed
+subscribe error: id=2 broadcast=smoke-js-web-4865-13226.hang track=catalog.json error=session error: connection error: closed
