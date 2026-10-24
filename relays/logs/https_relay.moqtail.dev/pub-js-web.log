@@ -1,6 +1,6 @@
-publishing smoke-js-web-4893-31186.hang (fake camera, vite) to https://relay.moqtail.dev
+publishing smoke-js-web-4956-24807.hang (fake camera, vite) to https://relay.moqtail.dev
 [page] negotiated protocol: moqt-18
-[page] subscribe_namespace written: requestId=0
+[page] subscribe_namespace written: requestId=2
 [page] announced: broadcast=moqtail/testsrc active=true
 [page] announced: broadcast=moqtail/ch02 active=true
 [page] announced: broadcast=moqtail/ch07 active=true
@@ -10,3 +10,4 @@ publishing smoke-js-web-4893-31186.hang (fake camera, vite) to https://relay.moq
 [page] announced: broadcast=moqtail/ch03 active=true
 [page] announced: broadcast=moqtail/ch00 active=true
 [page] announced: broadcast=moqtail/ch04 active=true
+[page] announced: broadcast=smoke-js-web-4956-24807.hang active=true
