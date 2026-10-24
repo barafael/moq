@@ -47,6 +47,10 @@ let
       ]);
       stop = pkgs.writeShellScript "github-runner-vm-stop" ''
         set -euo pipefail
+        # A completed JIT job powers off QEMU itself; systemd then has no PID.
+        if test -z "''${MAINPID:-}"; then
+          exit 0
+        fi
         ${
           pkgs.python3.withPackages (p: [ p.qemu-qmp ])
         }/bin/python3 ${../runner/stop.py} "$RUNTIME_DIRECTORY/qmp"

@@ -103,5 +103,7 @@ assert pkgs.lib.any (item: !item.assertion) duplicate.config.assertions;
 assert pkgs.lib.any (item: !item.assertion) wrongUplink.config.assertions;
 assert pkgs.lib.any (item: !item.assertion) fixedAddress.config.assertions;
 pkgs.runCommand "github-runner-vm-config-test" { } ''
+  # ExecStop also runs after QEMU has already exited on guest poweroff.
+  env -u MAINPID ${valid.config.systemd.services.first.serviceConfig.ExecStop}
   touch "$out"
 ''
