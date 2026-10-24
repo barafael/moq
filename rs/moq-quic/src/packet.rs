@@ -938,10 +938,19 @@ mod tests {
         }
     }
 
-    #[cfg(any(feature = "rustls-aws-lc-rs", feature = "rustls-ring"))]
+    #[cfg(any(
+        feature = "rustls-aws-lc-rs",
+        feature = "rustls-ring",
+        feature = "rustls-graviola"
+    ))]
     #[test]
     fn header_encoding() {
         use crate::Side;
+        #[cfg(all(
+            feature = "rustls-graviola",
+            not(any(feature = "rustls-aws-lc-rs", feature = "rustls-ring"))
+        ))]
+        use crate::crypto::rustls::graviola::default_provider;
         use crate::crypto::rustls::{initial_keys, initial_suite_from_provider};
         #[cfg(all(feature = "rustls-aws-lc-rs", not(feature = "rustls-ring")))]
         use rustls::crypto::aws_lc_rs::default_provider;

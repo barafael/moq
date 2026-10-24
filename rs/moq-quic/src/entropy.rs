@@ -21,7 +21,14 @@ pub(crate) fn std_rng() -> rand::rngs::StdRng {
 pub(crate) use seeded::{rng, std_rng};
 
 // Only the crate's `tests` module reseeds, and it needs a rustls provider.
-#[cfg(all(test, any(feature = "rustls-aws-lc-rs", feature = "rustls-ring")))]
+#[cfg(all(
+    test,
+    any(
+        feature = "rustls-aws-lc-rs",
+        feature = "rustls-ring",
+        feature = "rustls-graviola"
+    )
+))]
 pub(crate) use seeded::reseed;
 
 #[cfg(test)]

@@ -17,11 +17,21 @@ use crate::{
     transport_parameters::TransportParameters,
 };
 
+/// Endpoint keys on graviola, when neither *ring* nor aws-lc-rs is enabled
+#[cfg(all(
+    feature = "graviola",
+    not(any(feature = "aws-lc-rs", feature = "ring"))
+))]
+pub(crate) mod graviola;
 /// Cryptography interface based on *ring*
 #[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
 pub(crate) mod ring_like;
 /// TLS interface based on rustls
-#[cfg(any(feature = "rustls-aws-lc-rs", feature = "rustls-ring"))]
+#[cfg(any(
+    feature = "rustls-aws-lc-rs",
+    feature = "rustls-ring",
+    feature = "rustls-graviola"
+))]
 pub mod rustls;
 
 /// A cryptographic session (commonly TLS)

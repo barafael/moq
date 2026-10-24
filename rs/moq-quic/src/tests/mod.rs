@@ -22,6 +22,26 @@ use ring::hmac;
 use rustls::crypto::aws_lc_rs::default_provider;
 #[cfg(feature = "rustls-ring")]
 use rustls::crypto::ring::default_provider;
+
+#[cfg(all(
+    feature = "rustls-graviola",
+    not(any(feature = "rustls-aws-lc-rs", feature = "rustls-ring"))
+))]
+use crate::crypto::rustls::graviola::default_provider;
+
+/// *ring*'s HMAC constructor, on graviola.
+#[cfg(not(any(feature = "aws-lc-rs", feature = "ring")))]
+mod hmac {
+    pub(super) const HMAC_SHA256: () = ();
+
+    pub(super) struct Key;
+
+    impl Key {
+        pub(super) fn new(_: (), key: &[u8]) -> crate::crypto::graviola::HmacKey {
+            crate::crypto::graviola::HmacKey::new(key)
+        }
+    }
+}
 use rustls::{
     AlertDescription, RootCertStore,
     pki_types::{CertificateDer, PrivateKeyDer, PrivatePkcs8KeyDer},

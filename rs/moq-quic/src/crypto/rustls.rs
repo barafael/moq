@@ -25,6 +25,9 @@ use crate::{
     transport_parameters::TransportParameters,
 };
 
+#[cfg(feature = "rustls-graviola")]
+pub mod graviola;
+
 impl From<Side> for rustls::Side {
     fn from(s: Side) -> Self {
         match s {
@@ -201,11 +204,8 @@ impl crypto::Session for TlsSession {
             _ => unreachable!(),
         };
 
-        let nonce = aead::Nonce::assume_unique_for_key(nonce);
-        let key = aead::LessSafeKey::new(aead::UnboundKey::new(&aead::AES_128_GCM, &key).unwrap());
-
         let (aad, tag) = pseudo_packet.split_at_mut(tag_start);
-        key.open_in_place(nonce, aead::Aad::from(aad), tag).is_ok()
+        retry_open(&key, nonce, aad, tag)
     }
 
     fn export_keying_material(
@@ -567,15 +567,7 @@ impl crypto::ServerConfig for QuicServerConfig {
         pseudo_packet.extend_from_slice(&orig_dst_cid);
         pseudo_packet.extend_from_slice(packet);
 
-        let nonce = aead::Nonce::assume_unique_for_key(nonce);
-        let key = aead::LessSafeKey::new(aead::UnboundKey::new(&aead::AES_128_GCM, &key).unwrap());
-
-        let tag = key
-            .seal_in_place_separate_tag(nonce, aead::Aad::from(pseudo_packet), &mut [])
-            .unwrap();
-        let mut result = [0; 16];
-        result.copy_from_slice(tag.as_ref());
-        result
+        retry_seal(&key, nonce, &pseudo_packet)
     }
 }
 
@@ -597,7 +589,47 @@ pub(crate) fn configured_provider() -> Arc<rustls::crypto::CryptoProvider> {
     let provider = rustls::crypto::aws_lc_rs::default_provider();
     #[cfg(feature = "rustls-ring")]
     let provider = rustls::crypto::ring::default_provider();
+    #[cfg(all(
+        feature = "rustls-graviola",
+        not(any(feature = "rustls-aws-lc-rs", feature = "rustls-ring"))
+    ))]
+    let provider = graviola::default_provider();
     Arc::new(provider)
+}
+
+/// Check a Retry packet's AES-128-GCM integrity tag over `aad`.
+fn retry_open(key: &[u8; 16], nonce: [u8; 12], aad: &[u8], tag: &mut [u8]) -> bool {
+    #[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+    {
+        let nonce = aead::Nonce::assume_unique_for_key(nonce);
+        let key = aead::LessSafeKey::new(aead::UnboundKey::new(&aead::AES_128_GCM, key).unwrap());
+        key.open_in_place(nonce, aead::Aad::from(aad), tag).is_ok()
+    }
+    #[cfg(not(any(feature = "aws-lc-rs", feature = "ring")))]
+    {
+        ::graviola::aead::AesGcm::new(key)
+            .decrypt(&nonce, aad, &mut [], tag)
+            .is_ok()
+    }
+}
+
+/// Compute a Retry packet's AES-128-GCM integrity tag over `aad`.
+fn retry_seal(key: &[u8; 16], nonce: [u8; 12], aad: &[u8]) -> [u8; 16] {
+    #[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+    {
+        let nonce = aead::Nonce::assume_unique_for_key(nonce);
+        let key = aead::LessSafeKey::new(aead::UnboundKey::new(&aead::AES_128_GCM, key).unwrap());
+        let tag = key
+            .seal_in_place_separate_tag(nonce, aead::Aad::from(aad), &mut [])
+            .unwrap();
+        tag.as_ref().try_into().unwrap()
+    }
+    #[cfg(not(any(feature = "aws-lc-rs", feature = "ring")))]
+    {
+        let mut tag = [0; 16];
+        ::graviola::aead::AesGcm::new(key).encrypt(&nonce, aad, &mut [], &mut tag);
+        tag
+    }
 }
 
 fn to_vec(params: &TransportParameters) -> Vec<u8> {

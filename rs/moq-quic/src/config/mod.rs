@@ -5,9 +5,17 @@ use std::{
     sync::Arc,
 };
 
-#[cfg(any(feature = "rustls-aws-lc-rs", feature = "rustls-ring"))]
+#[cfg(any(
+    feature = "rustls-aws-lc-rs",
+    feature = "rustls-ring",
+    feature = "rustls-graviola"
+))]
 use rustls::client::WebPkiServerVerifier;
-#[cfg(any(feature = "rustls-aws-lc-rs", feature = "rustls-ring"))]
+#[cfg(any(
+    feature = "rustls-aws-lc-rs",
+    feature = "rustls-ring",
+    feature = "rustls-graviola"
+))]
 use rustls::pki_types::{CertificateDer, PrivateKeyDer};
 use thiserror::Error;
 
@@ -15,7 +23,11 @@ use thiserror::Error;
 use crate::BloomTokenLog;
 #[cfg(not(feature = "bloom"))]
 use crate::NoneTokenLog;
-#[cfg(any(feature = "rustls-aws-lc-rs", feature = "rustls-ring"))]
+#[cfg(any(
+    feature = "rustls-aws-lc-rs",
+    feature = "rustls-ring",
+    feature = "rustls-graviola"
+))]
 use crate::crypto::rustls::{QuicServerConfig, configured_provider};
 use crate::{
     DEFAULT_SUPPORTED_VERSIONS, Duration, MAX_CID_SIZE, RandomConnectionIdGenerator, SystemTime,
@@ -105,30 +117,51 @@ impl EndpointConfig {
     /// every peer waiting on a reset at once: 1000 a second resets 2,000 connections in 2s, where
     /// 20ms takes 40s. A reset is always smaller than the packet that drew it, so this never
     /// amplifies, and the limit still caps what a flood of spoofed packets can reflect.
-    #[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+    #[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
     pub fn reset_secret(&mut self, secret: &[u8; 32]) -> &mut Self {
-        #[cfg(all(feature = "aws-lc-rs", not(feature = "ring")))]
-        use aws_lc_rs::{hkdf, hmac};
-        #[cfg(feature = "ring")]
-        use ring::{hkdf, hmac};
+        #[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+        let (reset_key, cid_key) = {
+            #[cfg(all(feature = "aws-lc-rs", not(feature = "ring")))]
+            use aws_lc_rs::{hkdf, hmac};
+            #[cfg(feature = "ring")]
+            use ring::{hkdf, hmac};
 
-        struct Len(usize);
-        impl hkdf::KeyType for Len {
-            fn len(&self) -> usize {
-                self.0
+            struct Len(usize);
+            impl hkdf::KeyType for Len {
+                fn len(&self) -> usize {
+                    self.0
+                }
             }
-        }
 
-        let prk = hkdf::Salt::new(hkdf::HKDF_SHA256, &[]).extract(secret);
-        let reset_key = prk
-            .expand(&[b"moq-quic reset key"], hmac::HMAC_SHA256)
-            .expect("an HMAC key fits HKDF-SHA256");
-        self.reset_key = Arc::new(hmac::Key::from(reset_key));
+            let prk = hkdf::Salt::new(hkdf::HKDF_SHA256, &[]).extract(secret);
+            let reset_key = prk
+                .expand(&[b"moq-quic reset key"], hmac::HMAC_SHA256)
+                .expect("an HMAC key fits HKDF-SHA256");
 
-        let mut cid_key = [0; 8];
-        prk.expand(&[b"moq-quic cid key"], Len(cid_key.len()))
-            .and_then(|okm| okm.fill(&mut cid_key))
-            .expect("8 bytes fit HKDF-SHA256");
+            let mut cid_key = [0; 8];
+            prk.expand(&[b"moq-quic cid key"], Len(cid_key.len()))
+                .and_then(|okm| okm.fill(&mut cid_key))
+                .expect("8 bytes fit HKDF-SHA256");
+            (
+                Arc::new(hmac::Key::from(reset_key)) as Arc<dyn HmacKey>,
+                cid_key,
+            )
+        };
+        #[cfg(not(any(feature = "aws-lc-rs", feature = "ring")))]
+        let (reset_key, cid_key) = {
+            let prk = crypto::graviola::extract(secret);
+            let mut reset_key = [0; 32];
+            prk.expand(b"moq-quic reset key", &mut reset_key)
+                .expect("an HMAC key fits HKDF-SHA256");
+            let mut cid_key = [0; 8];
+            prk.expand(b"moq-quic cid key", &mut cid_key)
+                .expect("8 bytes fit HKDF-SHA256");
+            (
+                Arc::new(crypto::graviola::HmacKey::new(&reset_key)) as Arc<dyn HmacKey>,
+                cid_key,
+            )
+        };
+        self.reset_key = reset_key;
         let cid_key = u64::from_le_bytes(cid_key);
         self.connection_id_generator_factory =
             Arc::new(move || Box::new(HashedConnectionIdGenerator::from_key(cid_key)));
@@ -221,7 +254,7 @@ impl fmt::Debug for EndpointConfig {
     }
 }
 
-#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 impl Default for EndpointConfig {
     fn default() -> Self {
         #[cfg(all(feature = "aws-lc-rs", not(feature = "ring")))]
@@ -233,7 +266,11 @@ impl Default for EndpointConfig {
         let mut reset_key = [0; 64];
         crate::entropy::rng().fill_bytes(&mut reset_key);
 
-        Self::new(Arc::new(hmac::Key::new(hmac::HMAC_SHA256, &reset_key)))
+        #[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+        let reset_key = hmac::Key::new(hmac::HMAC_SHA256, &reset_key);
+        #[cfg(not(any(feature = "aws-lc-rs", feature = "ring")))]
+        let reset_key = crypto::graviola::HmacKey::new(&reset_key);
+        Self::new(Arc::new(reset_key))
     }
 }
 
@@ -416,7 +453,11 @@ impl ServerConfig {
     }
 }
 
-#[cfg(any(feature = "rustls-aws-lc-rs", feature = "rustls-ring"))]
+#[cfg(any(
+    feature = "rustls-aws-lc-rs",
+    feature = "rustls-ring",
+    feature = "rustls-graviola"
+))]
 impl ServerConfig {
     /// Create a server config with the given certificate chain to be presented to clients
     ///
@@ -431,7 +472,7 @@ impl ServerConfig {
     }
 }
 
-#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 impl ServerConfig {
     /// Create a server config with the given [`crypto::ServerConfig`]
     ///
@@ -446,7 +487,10 @@ impl ServerConfig {
         let rng = &mut crate::entropy::rng();
         let mut master_key = [0u8; 64];
         rng.fill_bytes(&mut master_key);
+        #[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
         let master_key = hkdf::Salt::new(hkdf::HKDF_SHA256, &[]).extract(&master_key);
+        #[cfg(not(any(feature = "aws-lc-rs", feature = "ring")))]
+        let master_key = crypto::graviola::extract(&master_key);
 
         Self::new(crypto, Arc::new(master_key))
     }
@@ -664,7 +708,11 @@ impl ClientConfig {
     }
 }
 
-#[cfg(any(feature = "rustls-aws-lc-rs", feature = "rustls-ring"))]
+#[cfg(any(
+    feature = "rustls-aws-lc-rs",
+    feature = "rustls-ring",
+    feature = "rustls-graviola"
+))]
 impl ClientConfig {
     /// Create a client configuration that trusts the platform's native roots
     #[cfg(feature = "platform-verifier")]

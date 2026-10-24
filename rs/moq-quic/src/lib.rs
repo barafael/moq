@@ -32,12 +32,19 @@ mod entropy;
 // the `fuzz/` harness. The connection target needs ring or aws-lc-rs for the endpoint's keys.
 #[cfg(all(
     any(test, feature = "fuzz"),
-    any(feature = "aws-lc-rs", feature = "ring")
+    any(feature = "aws-lc-rs", feature = "ring", feature = "graviola")
 ))]
 #[doc(hidden)]
 pub mod fuzz;
 mod range_set;
-#[cfg(all(test, any(feature = "rustls-aws-lc-rs", feature = "rustls-ring")))]
+#[cfg(all(
+    test,
+    any(
+        feature = "rustls-aws-lc-rs",
+        feature = "rustls-ring",
+        feature = "rustls-graviola"
+    )
+))]
 #[expect(
     clippy::disallowed_methods,
     reason = "tests read the host clock directly"

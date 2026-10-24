@@ -409,13 +409,44 @@ impl fmt::Display for ResetToken {
     }
 }
 
-#[cfg(all(test, any(feature = "aws-lc-rs", feature = "ring")))]
+#[cfg(all(
+    test,
+    any(feature = "aws-lc-rs", feature = "ring", feature = "graviola")
+))]
 mod test {
     use super::*;
     #[cfg(all(feature = "aws-lc-rs", not(feature = "ring")))]
     use aws_lc_rs::hkdf;
     #[cfg(feature = "ring")]
     use ring::hkdf;
+
+    /// *ring*'s HKDF extract, on RustCrypto.
+    #[cfg(not(any(feature = "aws-lc-rs", feature = "ring")))]
+    mod hkdf {
+        pub(super) const HKDF_SHA256: () = ();
+
+        pub(super) struct Salt;
+
+        impl Salt {
+            pub(super) fn new(_: (), _: &[u8]) -> Self {
+                Self
+            }
+
+            pub(super) fn extract(&self, secret: &[u8]) -> crate::crypto::graviola::Prk {
+                crate::crypto::graviola::extract(secret)
+            }
+        }
+    }
+
+    /// A reset secret derives the same tokens on every crypto backend, so a restart onto
+    /// another backend can still reset the connections the previous process left.
+    #[test]
+    fn reset_secret_is_backend_independent() {
+        let mut config = crate::EndpointConfig::default();
+        config.reset_secret(&[7; 32]);
+        let token = ResetToken::new(&*config.reset_key, ConnectionId::new(&[1, 2, 3, 4]));
+        assert_eq!(token.to_string(), "de2db2fb58d7792deb5bf211915374b4");
+    }
 
     fn token_round_trip(payload: TokenPayload) -> TokenPayload {
         let rng = &mut rand::rng();
