@@ -1,4 +1,5 @@
 [workspace]
+exclude = ["patch/rustls-acme"]
 members = [
     "demo/carla/bridge",
     "rs/hang",
@@ -129,7 +130,7 @@ ash = "0.38"
 async-trait = "0.1"
 aws-lc-rs = "1"
 axum = { version = "0.8", features = ["tokio"] }
-axum-server = { version = "0.8", features = ["tls-rustls"] }
+axum-server = { version = "0.8", features = ["tls-rustls-no-provider"] }
 base64 = "0.23"
 bitflags = "2"
 block2 = "0.6.2"
@@ -287,6 +288,8 @@ zeroize = { version = "1", features = ["derive"] }
 # this, the lock carries a second kio whose pin drifts behind the member, and the
 # next publish that reaches both fails to resolve a single version (#3551).
 kio = { path = "rs/kio" }
+# moq-relay's ACME client on graviola instead of aws-lc-rs; see its Cargo.toml.
+rustls-acme = { path = "patch/rustls-acme" }
 
 [profile.dev]
 # Full DWARF is what makes a debug build enormous: the debug `libmoq_ffi.a`

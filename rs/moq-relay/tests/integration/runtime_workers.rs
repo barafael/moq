@@ -71,7 +71,7 @@ async fn connect(client: moq_tokio::Client, url: url::Url) -> moq_tokio::Connect
 /// it is what this asserts, whichever way the placement lands.
 #[tokio::test]
 async fn workers_serve_quic_and_share_one_origin() {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 
 	let dir = tempfile::tempdir().expect("tempdir");
 	let (cert, key) = certificate(dir.path());

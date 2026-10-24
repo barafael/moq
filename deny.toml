@@ -9,12 +9,11 @@ all-features = true
 version = 2
 yanked = "deny"
 ignore = [
-    # rsa 0.9.x Marvin Attack (RSA private-key timing sidechannel). The
-    # `rsa` crate is a direct dep of moq-auth but is only used for keygen
-    # and PEM serialization of JWK components. JWT signing/verification
-    # itself runs through `jsonwebtoken` backed by `aws-lc-rs` (constant
-    # time), so the vulnerable code path is not exercised. Drop the ignore
-    # when rustcrypto/RSA publishes a constant-time fix.
+    # rsa 0.9.x Marvin Attack (RSA private-key timing sidechannel). On this
+    # pure-Rust spike, `jsonwebtoken`'s `rust_crypto` backend signs RS*/PS*
+    # tokens with `rsa`, so signing with an RSA key IS exposed; verifying is
+    # not. Ignored only so the spike audits clean. Drop the ignore when
+    # rustcrypto/RSA publishes a constant-time fix.
     "RUSTSEC-2023-0071",
 
     # paste is unmaintained (proc-macro, build-time only). Pulled by

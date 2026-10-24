@@ -109,6 +109,8 @@ moq-clock = { path = "../moq-clock" }
 moq-quic = { path = ".", default-features = false, features = ["mux"] }
 proptest = { workspace = true }
 rcgen = { workspace = true, features = ["pem", "ring"] }
+# aws-lc-rs for the crypto bench to compare graviola against.
+rustls = { version = "0.23.5", default-features = false, features = ["std", "aws-lc-rs"] }
 stats_alloc = "0.1.10"
 tracing-subscriber = { version = "0.3.0", default-features = false, features = ["env-filter", "fmt", "ansi", "time", "local-time"] }
 wasm-bindgen-test = "0.3.45"
@@ -143,6 +145,12 @@ required-features = ["fuzz"]
 name = "wire"
 harness = false
 required-features = ["fuzz"]
+
+# graviola against aws-lc-rs, the provider it would replace.
+[[bench]]
+name = "crypto"
+harness = false
+required-features = ["rustls-graviola"]
 
 # quinn's workspace lints, kept so upstream code stays clean against them. Cargo
 # can't extend the workspace table per crate, so its suppression rule is repeated.

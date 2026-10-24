@@ -147,7 +147,7 @@ async fn stop(trigger: moq_relay::shutdown::Trigger, running: tokio::task::JoinH
 /// Load, mount a custom route, clone the origin, run the owner, prove QUIC
 /// plus HTTP, then stop it through the trigger and prove its sockets closed.
 async fn embed_and_stop(mut config: Config) {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 
 	// No drain window: the sessions are already gone by the time the owner
 	// stops, and the test should not wait out the default.

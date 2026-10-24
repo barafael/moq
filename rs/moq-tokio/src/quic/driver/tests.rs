@@ -1,9 +1,11 @@
-#![cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+#![cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 
 #[cfg(all(feature = "aws-lc-rs", not(feature = "ring")))]
 use rustls::crypto::aws_lc_rs::default_provider;
 #[cfg(feature = "ring")]
 use rustls::crypto::ring::default_provider;
+#[cfg(all(feature = "graviola", not(any(feature = "aws-lc-rs", feature = "ring"))))]
+use crate::crypto::graviola as default_provider;
 
 use std::{
     convert::TryInto,

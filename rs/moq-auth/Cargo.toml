@@ -19,17 +19,18 @@ serve = ["dep:axum", "tokio", "dep:tracing", "tokio/net"]
 tokio = ["dep:tokio", "dep:rand", "moq-clock/runtime"]
 
 [dependencies]
-aws-lc-rs = { workspace = true }
 axum = { workspace = true, optional = true }
 base64 = { workspace = true }
-jsonwebtoken = { workspace = true, features = ["aws_lc_rs"] }
+# Randomness and Ed25519 keys; jsonwebtoken signs and verifies on RustCrypto.
+graviola = "0.4"
+jsonwebtoken = { workspace = true, features = ["rust_crypto"] }
 kio = { workspace = true }
 moq-clock = { version = "0.11.0", path = "../moq-clock", default-features = false }
 moq-pattern = { workspace = true, features = ["serde"] }
 p256 = "0.14.0"
 p384 = "0.14.0"
 rand = { workspace = true, optional = true }
-reqwest = { workspace = true, features = ["rustls", "json"], optional = true }
+reqwest = { workspace = true, features = ["rustls-no-provider", "json"], optional = true }
 rsa = "0.9.10"
 rustls = { version = "0.23", default-features = false, optional = true }
 serde = { workspace = true }

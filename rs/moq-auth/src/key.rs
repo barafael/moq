@@ -426,6 +426,7 @@ impl Key {
 	}
 
 	fn to_decoding_key(&self) -> crate::Result<&DecodingKey> {
+		select_jwt_backend();
 		if let Some(key) = self.decode.get() {
 			return Ok(key);
 		}
@@ -490,6 +491,7 @@ impl Key {
 	}
 
 	fn to_encoding_key(&self) -> crate::Result<&EncodingKey> {
+		select_jwt_backend();
 		if let Some(key) = self.encode.get() {
 			return Ok(key);
 		}
@@ -523,11 +525,14 @@ impl Key {
 			} => {
 				let d = d.as_ref().ok_or(KeyError::MissingPrivateKey)?;
 
-				let key_pair =
-					aws_lc_rs::signature::Ed25519KeyPair::from_seed_and_public_key(d.as_slice(), x.as_slice())?;
+				let key_pair = graviola::signing::eddsa::Ed25519SigningKey::from_bytes(d)?;
+				if key_pair.public_key().as_bytes().as_slice() != x.as_slice() {
+					return Err(crate::Error::Crypto("Ed25519 public key does not match its seed".into()));
+				}
+				let mut pkcs8 = [0u8; 128];
 
 				match curve {
-					EllipticCurve::Ed25519 => EncodingKey::from_ed_der(key_pair.to_pkcs8()?.as_ref()),
+					EllipticCurve::Ed25519 => EncodingKey::from_ed_der(key_pair.to_pkcs8_der(&mut pkcs8)?),
 					_ => return Err(KeyError::InvalidCurve("OKP").into()),
 				}
 			}
@@ -648,6 +653,13 @@ pub(crate) fn validate_times(claims: &Claims, now: std::time::SystemTime) -> cra
 }
 
 /// Serialize bytes as base64url without padding
+/// Make jsonwebtoken's RustCrypto backend the process default, unless one is already
+/// installed. Its automatic choice panics once any other crate in the build enables its
+/// aws-lc-rs backend too.
+fn select_jwt_backend() {
+	let _ = jsonwebtoken::crypto::rust_crypto::DEFAULT_PROVIDER.install_default();
+}
+
 fn serialize_base64url<S>(bytes: &[u8], serializer: S) -> Result<S::Ok, S::Error>
 where
 	S: Serializer,

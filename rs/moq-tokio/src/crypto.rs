@@ -15,10 +15,21 @@ pub fn provider() -> Provider {
 	return Arc::new(rustls::crypto::aws_lc_rs::default_provider());
 	#[cfg(all(feature = "ring", not(feature = "aws-lc-rs")))]
 	return Arc::new(rustls::crypto::ring::default_provider());
+	#[cfg(all(feature = "graviola", not(any(feature = "aws-lc-rs", feature = "ring"))))]
+	return Arc::new(graviola());
 	#[allow(unreachable_code, reason = "unreachable when a crypto feature returns above")]
 	{
-		panic!("no CryptoProvider available; install_default() or enable either the aws-lc-rs or ring feature");
+		panic!("no CryptoProvider available; install_default() or enable the aws-lc-rs, ring, or graviola feature");
 	}
+}
+
+/// graviola's provider, with the QUIC keys moq-quic adds when QUIC is compiled in.
+#[cfg(all(feature = "graviola", not(any(feature = "aws-lc-rs", feature = "ring"))))]
+pub(crate) fn graviola() -> rustls::crypto::CryptoProvider {
+	#[cfg(feature = "driver")]
+	return moq_quic::crypto::rustls::graviola::default_provider();
+	#[cfg(not(feature = "driver"))]
+	return rustls_graviola::default_provider();
 }
 
 /// Install the provider selected by crate features as rustls' process default.

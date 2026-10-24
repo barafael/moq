@@ -35,7 +35,7 @@ impl Drop for Fixture {
 
 impl Fixture {
 	async fn new(sessions: usize, tokens: usize) -> Self {
-		let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+		let _ = moq_tokio::crypto::install_default();
 		let (auth, mut admissions) = auth::Auth::embedded("bench");
 		let (send, mut receive) = tokio::sync::mpsc::unbounded_channel();
 		let decider = tokio::spawn(async move {
@@ -167,7 +167,7 @@ impl Drop for Queue {
 
 impl Queue {
 	async fn new(verifications: usize, waiting: usize) -> Self {
-		let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+		let _ = moq_tokio::crypto::install_default();
 		let (auth, mut admissions) = auth::Auth::embedded("bench");
 		let auth = auth.with_verifications(verifications);
 		let mut config = moq_tokio::listen::Config::default();

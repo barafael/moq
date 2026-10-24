@@ -53,7 +53,7 @@ struct Running {
 }
 
 async fn start(config: Config) -> Running {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	let relay = Relay::load(config).await.expect("load relay");
 	let stats = relay.stats().registry().clone();
 	let origin = relay.cluster().origin.consume();

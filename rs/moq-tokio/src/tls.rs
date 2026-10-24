@@ -19,7 +19,7 @@ use std::path::{Path, PathBuf};
 use std::sync::{Arc, RwLock};
 use std::{fs, io};
 
-#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 use rustls::pki_types::PrivatePkcs8KeyDer;
 
 /// Errors loading or generating TLS certificates and keys.
@@ -281,14 +281,14 @@ impl fmt::Debug for Certified {
 /// Set it on [`Listen::identity`] to serve it and [`Connect::identity`] to
 /// present it. Generated in memory and never written to disk, so it lasts as
 /// long as the process and a restart is a new principal.
-#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 #[derive(Clone)]
 pub struct Identity {
 	key: Arc<Certified>,
 	fingerprint: String,
 }
 
-#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 impl Identity {
 	/// Generate a fresh identity, valid for `hostnames`.
 	///
@@ -318,7 +318,7 @@ impl Identity {
 	}
 }
 
-#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 impl fmt::Debug for Identity {
 	fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
 		formatter
@@ -329,11 +329,11 @@ impl fmt::Debug for Identity {
 }
 
 /// Presents one fixed [`Identity`] whenever a server asks for a client certificate.
-#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 #[derive(Debug)]
 struct IdentityResolver(Arc<rustls::sign::CertifiedKey>);
 
-#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 impl rustls::client::ResolvesClientCert for IdentityResolver {
 	fn resolve(
 		&self,
@@ -488,7 +488,7 @@ pub struct Connect {
 	/// generates its identity at startup rather than loading one from disk.
 	/// Setting both is an error. Not settable from the CLI or a config file,
 	/// since it never exists on disk.
-	#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+	#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 	#[usage(skip)]
 	#[serde(skip)]
 	pub identity: Option<Identity>,
@@ -1110,7 +1110,7 @@ impl Connect {
 		&self,
 		builder: rustls::ConfigBuilder<rustls::ClientConfig, rustls::client::WantsClientCert>,
 	) -> Result<rustls::ClientConfig> {
-		#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+		#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 		if let Some(identity) = &self.identity {
 			if self.cert.is_some() || self.key.is_some() {
 				return Err(Error::ConflictingClientAuth);
@@ -1143,9 +1143,20 @@ impl Connect {
 /// Valid for two weeks starting yesterday: WebTransport refuses anything longer,
 /// and the backdating absorbs clock drift between two hosts that have never
 /// agreed on a time source.
-#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 fn generate(provider: &crypto::Provider, hostnames: &[String]) -> Result<Certified> {
-	let key_pair = rcgen::KeyPair::generate()?;
+	#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+	let (key_pair, key) = {
+		let key_pair = rcgen::KeyPair::generate()?;
+		let key = key_pair.serialized_der().to_vec();
+		(key_pair, key)
+	};
+	#[cfg(not(any(feature = "aws-lc-rs", feature = "ring")))]
+	let (key_pair, key) = {
+		let key_pair = P256Key::generate();
+		let key = key_pair.pkcs8();
+		(key_pair, key)
+	};
 
 	let mut params = rcgen::CertificateParams::new(hostnames)?;
 	params.not_before = ::time::OffsetDateTime::now_utc() - ::time::Duration::days(1);
@@ -1154,13 +1165,61 @@ fn generate(provider: &crypto::Provider, hostnames: &[String]) -> Result<Certifi
 	let cert = params.self_signed(&key_pair)?;
 
 	// Convert the rcgen types to the rustls ones.
-	let key = PrivatePkcs8KeyDer::from(key_pair.serialized_der().to_vec());
+	let key = PrivatePkcs8KeyDer::from(key);
 
 	Certified::new(provider, vec![cert.into()], key.into())
 }
 
+/// A P-256 key for rcgen to self-sign with. graviola cannot generate an ECDSA key, so
+/// RustCrypto does; rustls then signs handshakes with graviola from its PKCS#8 form.
+#[cfg(all(feature = "graviola", not(any(feature = "aws-lc-rs", feature = "ring"))))]
+struct P256Key {
+	key: p256::ecdsa::SigningKey,
+	public: Box<[u8]>,
+}
+
+#[cfg(all(feature = "graviola", not(any(feature = "aws-lc-rs", feature = "ring"))))]
+impl P256Key {
+	fn generate() -> Self {
+		use p256::elliptic_curve::Generate;
+		let key = p256::ecdsa::SigningKey::generate_from_rng(&mut rand::rng());
+		// Uncompressed, as X.509 and graviola's verifier expect.
+		let public = key.verifying_key().to_sec1_point(false).as_bytes().into();
+		Self { key, public }
+	}
+
+	fn pkcs8(&self) -> Vec<u8> {
+		use p256::pkcs8::EncodePrivateKey;
+		let der = self.key.to_pkcs8_der().expect("a P-256 key encodes as PKCS#8");
+		der.as_bytes().to_vec()
+	}
+}
+
+#[cfg(all(feature = "graviola", not(any(feature = "aws-lc-rs", feature = "ring"))))]
+impl rcgen::PublicKeyData for P256Key {
+	fn der_bytes(&self) -> &[u8] {
+		&self.public
+	}
+
+	fn algorithm(&self) -> &'static rcgen::SignatureAlgorithm {
+		&rcgen::PKCS_ECDSA_P256_SHA256
+	}
+}
+
+#[cfg(all(feature = "graviola", not(any(feature = "aws-lc-rs", feature = "ring"))))]
+impl rcgen::SigningKey for P256Key {
+	fn sign(&self, msg: &[u8]) -> std::result::Result<Vec<u8>, rcgen::Error> {
+		use p256::ecdsa::signature::Signer;
+		let signature: p256::ecdsa::Signature = self.key.sign(msg);
+		Ok(signature.to_der().as_bytes().to_vec())
+	}
+}
+
 /// Refuse at runtime when no crypto provider can sign a fresh certificate.
-#[cfg(all(feature = "_certs", not(any(feature = "aws-lc-rs", feature = "ring"))))]
+#[cfg(all(
+	feature = "_certs",
+	not(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))
+))]
 fn generate(_provider: &crypto::Provider, _hostnames: &[String]) -> Result<Certified> {
 	Err(Error::NoCryptoProvider)
 }
@@ -1252,7 +1311,7 @@ pub struct Listen {
 	/// The programmatic alternative to `generate`, for a peer that hands the same
 	/// identity to [`Connect::identity`] so both roles share one fingerprint. Not
 	/// settable from the CLI or a config file, since it never exists on disk.
-	#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+	#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 	#[usage(skip)]
 	#[serde(skip)]
 	pub identity: Option<Identity>,
@@ -1394,11 +1453,11 @@ impl Listen {
 			|| self.peers.is_some()
 			|| self.resolver.is_some()
 			|| {
-				#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+				#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 				{
 					self.identity.is_some()
 				}
-				#[cfg(not(any(feature = "aws-lc-rs", feature = "ring")))]
+				#[cfg(not(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola")))]
 				{
 					false
 				}
@@ -1468,9 +1527,9 @@ impl Listen {
 		let Some(resolver) = &self.resolver else {
 			return Ok(None);
 		};
-		#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+		#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 		let in_memory = self.identity.is_some();
-		#[cfg(not(any(feature = "aws-lc-rs", feature = "ring")))]
+		#[cfg(not(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola")))]
 		let in_memory = false;
 		if !self.cert.is_empty() || !self.key.is_empty() || !self.generate.is_empty() || in_memory {
 			return Err(Error::ConflictingResolver);
@@ -3120,9 +3179,9 @@ impl ServeCerts {
 		}
 		// An in-memory identity is a certificate source like the other two, so a
 		// listener configured with only that one still has something to serve.
-		#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+		#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 		let in_memory = config.identity.is_some();
-		#[cfg(not(any(feature = "aws-lc-rs", feature = "ring")))]
+		#[cfg(not(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola")))]
 		let in_memory = false;
 		if config.cert.is_empty() && config.generate.is_empty() && !in_memory {
 			return Err(Error::NoCertSource);
@@ -3140,7 +3199,7 @@ impl ServeCerts {
 			certs.push(self.generated(&config.generate)?);
 		}
 
-		#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+		#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 		if let Some(identity) = &config.identity {
 			certs.push(identity.certified());
 		}

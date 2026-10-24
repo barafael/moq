@@ -466,7 +466,7 @@ fn refusing() -> (tokio::net::TcpSocket, SocketAddr) {
 }
 
 fn fingerprint(leaf: &CertificateDer<'_>) -> String {
-	hex::encode(aws_lc_rs::digest::digest(&aws_lc_rs::digest::SHA256, leaf))
+	hex::encode(<graviola::hashing::Sha256 as graviola::hashing::Hash>::hash(leaf))
 }
 
 /// The first start issues over the HTTPS acceptor, and QUIC serves the same certificate.

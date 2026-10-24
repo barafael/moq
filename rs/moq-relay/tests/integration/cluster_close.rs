@@ -58,7 +58,7 @@ async fn assert_closed_by_shutdown(conn: driver::Connection) {
 
 #[tokio::test]
 async fn closing_a_cluster_closes_its_static_dials() {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	let (connect, quic) = dial_template();
 	let server = bare_server(&connect);
 
@@ -129,7 +129,7 @@ async fn closing_a_cluster_ends_its_websocket_dials() {
 
 #[tokio::test]
 async fn a_relay_shutdown_closes_its_cluster_dials() {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	let (connect, quic) = dial_template();
 	let server = bare_server(&connect);
 

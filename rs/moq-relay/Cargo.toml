@@ -53,12 +53,12 @@ _uring = ["dep:moq-sock", "dep:moq-uring", "dep:moq-quic"]
 [dependencies]
 anyhow = { workspace = true, features = ["backtrace"] }
 async-trait = { workspace = true }
-aws-lc-rs = { workspace = true }
 axum = { workspace = true }
 axum-server = { workspace = true }
 bytes = { workspace = true }
 bytesize = "2.4.2"
 futures = { workspace = true }
+graviola = "0.4"
 hex = { workspace = true }
 http-body = "1.0.1"
 # A 1.0 prerelease: the latest stable (0.16) is still on reqwest 0.12 and
@@ -72,13 +72,13 @@ moq-net = { workspace = true }
 # The flow-control limits both QUIC runtimes take, for widening a peer's connection.
 moq-quic = { workspace = true, optional = true }
 moq-stats = { workspace = true }
-moq-tokio = { workspace = true, default-features = false, features = ["aws-lc-rs", "watch", "tcp"] }
+moq-tokio = { workspace = true, default-features = false, features = ["graviola", "watch", "tcp"] }
 qmux = { workspace = true, features = ["ws"], optional = true }
 rand = { workspace = true }
-reqwest = { workspace = true, features = ["rustls"] }
+reqwest = { workspace = true, features = ["rustls-no-provider"] }
 reqwest-middleware = "0.5"
-rustls = { version = "0.23", features = ["aws-lc-rs"], default-features = false }
-rustls-acme = { version = "0.15.4", default-features = false, features = ["aws-lc-rs", "webpki-roots"] }
+rustls = { version = "0.23", default-features = false }
+rustls-acme = { version = "0.15.4", default-features = false, features = ["webpki-roots"] }
 serde = { workspace = true }
 serde_json = { workspace = true }
 serde_with = { workspace = true, features = ["json", "base64"] }
@@ -111,6 +111,9 @@ moq-auth = { path = "../moq-auth", features = ["client", "serve"] }
 moq-clock = { path = "../moq-clock", features = ["manual", "sim"] }
 moq-shaper = { path = "../moq-shaper", features = ["test"] }
 qmux = { workspace = true, features = ["tcp"] }
+# The tests' own HTTP clients fall back to aws-lc-rs when they run before a relay
+# installs graviola, which also checks the two interoperate.
+reqwest = { workspace = true, features = ["rustls"] }
 rcgen = { workspace = true, features = ["pem", "ring", "x509-parser"] }
 tempfile = { workspace = true }
 # Runs the tests that need a variable set or unset in a child process given it.

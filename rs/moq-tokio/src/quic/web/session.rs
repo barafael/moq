@@ -25,7 +25,7 @@ use crate::quic::web::{
 ///
 /// The driver only exposes the ALPN via a downcast of the boxed handshake data, so the result
 /// is owned rather than borrowed from the connection.
-#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 fn negotiated_alpn(conn: &crate::quic::driver::Connection) -> Option<String> {
 	let data = conn.handshake_data()?;
 	let data = data
@@ -43,7 +43,7 @@ fn negotiated_alpn(conn: &crate::quic::driver::Connection) -> Option<String> {
 /// brings its own endpoint can still establish one, and [`Session::protocol`] reports
 /// `None` for those raw sessions. Enable this crate's `aws-lc-rs` or `ring` feature to
 /// get the ALPN.
-#[cfg(not(any(feature = "aws-lc-rs", feature = "ring")))]
+#[cfg(not(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola")))]
 fn negotiated_alpn(_conn: &crate::quic::driver::Connection) -> Option<String> {
 	None
 }
@@ -1048,7 +1048,7 @@ impl web_transport_trait::Session for Session {
 	}
 }
 
-#[cfg(all(test, any(feature = "aws-lc-rs", feature = "ring")))]
+#[cfg(all(test, any(feature = "aws-lc-rs", feature = "ring", feature = "graviola")))]
 #[expect(clippy::disallowed_methods, reason = "tests read the host clock directly")]
 mod tests {
 	use std::{
@@ -1143,7 +1143,7 @@ mod tests {
 		Arc<Gate>,
 	) {
 		#[cfg(all(feature = "aws-lc-rs", feature = "ring"))]
-		let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+		let _ = crate::crypto::install_default();
 
 		let CertifiedKey { cert, signing_key } = rcgen::generate_simple_self_signed(vec!["localhost".into()]).unwrap();
 		let key = PrivateKeyDer::Pkcs8(PrivatePkcs8KeyDer::from(KeyPair::serialize_der(&signing_key)));

@@ -74,7 +74,7 @@ async fn setup_through(
 	transport: driver::TransportConfig,
 	profile: Option<moq_shaper::Profile>,
 ) -> Setup {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	let version: moq_net::Version = version.parse().expect("version");
 
 	let publisher = moq_tokio::origin::spawn();
@@ -391,7 +391,7 @@ struct Reversed {
 }
 
 async fn reversed(version: &str) -> Reversed {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	let version: moq_net::Version = version.parse().expect("version");
 	let alpn = version.alpn().as_bytes().to_vec();
 
@@ -596,7 +596,7 @@ async fn ietf_largest_unit_completes_under_pressure() {
 /// connection window is [`WINDOW`] and sends a low-priority frame twice that size. The
 /// receiver stops it, a high-priority frame completes, and a later low group arrives.
 async fn javascript_partial_frame_gives_way(version: &str) {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	let version: moq_net::Version = version.parse().expect("version");
 
 	// The sender pins this certificate, so it needs no name or CA.
@@ -937,7 +937,7 @@ impl rustls::client::danger::ServerCertVerifier for AnyCert {
 	}
 
 	fn supported_verify_schemes(&self) -> Vec<rustls::SignatureScheme> {
-		rustls::crypto::aws_lc_rs::default_provider()
+		moq_tokio::crypto::provider()
 			.signature_verification_algorithms
 			.supported_schemes()
 	}

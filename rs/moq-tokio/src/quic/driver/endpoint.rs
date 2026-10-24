@@ -1076,7 +1076,7 @@ struct PollProgress {
     keep_going: bool,
 }
 
-#[cfg(all(test, any(unix, windows), any(feature = "ring", feature = "aws-lc-rs")))]
+#[cfg(all(test, any(unix, windows), any(feature = "ring", feature = "aws-lc-rs", feature = "graviola")))]
 mod tests {
     use std::net::UdpSocket;
 

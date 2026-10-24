@@ -81,7 +81,7 @@ fn grant(path: &str) -> Grant {
 }
 
 async fn node(id: u64, connect: Vec<Peer>) -> Node {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	let mut tasks = tokio::task::JoinSet::new();
 
 	let mut listen = moq_tokio::listen::Config::default();

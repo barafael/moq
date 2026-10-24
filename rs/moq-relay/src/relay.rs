@@ -122,6 +122,9 @@ impl Relay {
 	}
 
 	async fn load_inner(mut config: Config) -> anyhow::Result<Self> {
+		// rustls picks no graviola provider on its own, and the HTTP clients built below
+		// read the process default, so install the QUIC-capable one unless an embedder has.
+		let _ = moq_tokio::crypto::install_default();
 		config.resolve()?;
 		// A relay keeps the moq-transport object state it forwards across a moq-lite hop to
 		// another relay. Only negotiated when both sides offer it, so other peers never see it.

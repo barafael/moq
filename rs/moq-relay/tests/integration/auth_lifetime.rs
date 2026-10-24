@@ -168,7 +168,7 @@ async fn spawn_relay_with(
 	auth: moq_relay::auth::Auth,
 	cluster: cluster::Cluster,
 ) -> (u16, tokio::task::JoinHandle<()>) {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 
 	let mut config = moq_tokio::listen::Config::default();
 	config.tcp.bind = Some("127.0.0.1:0".parse().expect("parse addr"));
@@ -201,7 +201,7 @@ async fn spawn_ws_relay_with(
 	auth: moq_relay::auth::Auth,
 	cluster: cluster::Cluster,
 ) -> (u16, tokio::task::JoinHandle<()>) {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 
 	// Stream listeners bind lazily, so this server never opens a socket; only
 	// its certificate handle is used.
@@ -355,7 +355,7 @@ async fn spawn_quic_relay_with(
 	root: Option<std::path::PathBuf>,
 	cluster: cluster::Cluster,
 ) -> (std::net::SocketAddr, tokio::task::JoinHandle<()>) {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	let mut config = moq_tokio::listen::Config::default();
 	config.bind = Some("127.0.0.1:0".parse().unwrap());
 	config.tls.generate = vec!["localhost".into()];
@@ -1111,7 +1111,7 @@ async fn the_drain_waits_for_a_closed_session_to_report_its_end() {
 /// with a client certificate, and over WebSocket where none can be presented.
 #[tokio::test]
 async fn a_certificate_admits_only_what_the_server_grants() {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	let dir = tempfile::tempdir().expect("tempdir");
 	let (root, client_cert, client_key) = signed_client(dir.path());
 
@@ -1203,7 +1203,7 @@ async fn an_mtls_client_ingests_here() {
 /// The source the relay records for a broadcast announced over a certificate
 /// session, admitted by `moq auth serve` with `mtls_peer` set as given.
 async fn mtls_route_source(mtls_peer: bool) -> moq_net::origin::Source {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	let dir = tempfile::tempdir().expect("tempdir");
 	let (root, client_cert, client_key) = signed_client(dir.path());
 
@@ -1457,7 +1457,7 @@ async fn closes_at_expires(clock: &moq_clock::Installed, consumer: moq_auth::lea
 /// decider's grant admits sessions through the assembled relay.
 #[tokio::test]
 async fn a_relay_without_an_auth_source_is_decided_by_the_embedder() {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	let config = || {
 		let mut config = Config::default();
 		config.listen.tcp.bind = Some("127.0.0.1:0".parse().expect("parse addr"));
@@ -1500,7 +1500,7 @@ async fn connect_through_embedded_admission(
 	auth::Admissions,
 	tokio::task::JoinHandle<moq_tokio::Result<moq_tokio::Connection>>,
 ) {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	let mut config = Config::default();
 	config.listen.tcp.bind = Some("127.0.0.1:0".parse().expect("parse addr"));
 	config.listen.timeout = Some(timeout);

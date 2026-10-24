@@ -35,9 +35,13 @@ pub fn default_provider() -> Provider {
 	{
 		return Arc::new(rustls::crypto::ring::default_provider());
 	}
+	#[cfg(all(feature = "graviola", not(any(feature = "aws-lc-rs", feature = "ring"))))]
+	{
+		return Arc::new(crate::crypto::graviola());
+	}
 	#[allow(unreachable_code, reason = "unreachable when a crypto feature returns above")]
 	{
-		panic!("CryptoProvider::set_default() must be called; or only enable one ring/aws-lc-rs feature.");
+		panic!("CryptoProvider::set_default() must be called; or only enable one ring/aws-lc-rs/graviola feature.");
 	}
 }
 

@@ -32,7 +32,7 @@ pub enum ClientError {
 	#[error("invalid DNS name: {0}")]
 	InvalidDnsName(String),
 
-	#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+	#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 	#[error("rustls error: {0}")]
 	Rustls(#[from] rustls::Error),
 }
@@ -337,7 +337,7 @@ pub enum ServerError {
 	#[error("io error: {0}")]
 	IoError(Arc<std::io::Error>),
 
-	#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+	#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 	#[error("rustls error: {0}")]
 	Rustls(#[from] rustls::Error),
 }

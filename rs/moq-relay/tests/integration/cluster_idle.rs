@@ -89,7 +89,7 @@ fn silent_peer_detected_within_idle_timeout() {
 }
 
 async fn silent_peer_detected() {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 
 	let (port, peer) = spawn_peer().await;
 

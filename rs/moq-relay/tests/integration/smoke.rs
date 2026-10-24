@@ -56,7 +56,7 @@ fn new_cluster() -> cluster::Cluster {
 async fn build_web_with(web_config: web::Config, cluster: cluster::Cluster) -> web::Web {
 	// Crypto provider is process-global; reinstalls after the first one are
 	// no-ops, but the test binary may run before any other moq code does.
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 
 	// A public grant of `**` lets any path through.
 	let mut auth_config = auth::Config::default();
@@ -569,7 +569,7 @@ async fn spawn_accept_relay(
 	Option<std::net::SocketAddr>,
 	tokio::task::JoinHandle<()>,
 ) {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 
 	let server = config.init(Default::default()).expect("server init");
 

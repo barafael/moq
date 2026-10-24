@@ -109,7 +109,7 @@ async fn connect(client: moq_tokio::Client, url: url::Url) -> moq_tokio::Connect
 /// shared origin.
 #[tokio::test]
 async fn uring_workers_serve_webtransport_and_raw_quic() {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	if !supported() {
 		return;
 	}
@@ -199,7 +199,7 @@ async fn uring_workers_serve_webtransport_and_raw_quic() {
 /// each of which must negotiate exactly the version it was pinned to.
 #[tokio::test]
 async fn uring_workers_serve_every_configured_version() {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	if !supported() {
 		return;
 	}
@@ -295,7 +295,7 @@ async fn uring_workers_serve_every_configured_version() {
 /// sends no SNI, rather than the WebTransport CONNECT host.
 #[tokio::test]
 async fn uring_workers_report_link_facts() {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	if !supported() {
 		return;
 	}
@@ -352,7 +352,7 @@ async fn uring_workers_report_link_facts() {
 /// reads it through the shared runtime, whose supervision this path shares.
 #[tokio::test]
 async fn uring_workers_drain_on_the_trigger() {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	if !supported() {
 		return;
 	}
@@ -441,7 +441,7 @@ async fn http_get(addr: SocketAddr, path: &str) -> String {
 /// The advertised fingerprint pins fresh handshakes before and after rotation.
 #[tokio::test]
 async fn workers_publish_their_rotated_certificate_fingerprint() {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	for io_uring in [false, true] {
 		if io_uring && !supported() {
 			continue;
@@ -503,7 +503,7 @@ async fn workers_publish_their_rotated_certificate_fingerprint() {
 /// A generated worker identity is advertised once and accepted by pinned clients.
 #[tokio::test]
 async fn workers_share_a_generated_identity() {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	for io_uring in [false, true] {
 		if io_uring && !supported() {
 			continue;
@@ -553,7 +553,7 @@ async fn workers_share_a_generated_identity() {
 /// nothing else, so only the mTLS path can carry the round trip through.
 #[tokio::test]
 async fn an_mtls_client_authenticates_without_a_token() {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	if !supported() {
 		return;
 	}
@@ -646,7 +646,7 @@ async fn an_mtls_client_authenticates_without_a_token() {
 #[cfg(feature = "qlog")]
 #[tokio::test]
 async fn uring_workers_write_qlog_traces() {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	if !supported() {
 		return;
 	}
@@ -732,7 +732,7 @@ async fn uring_workers_write_qlog_traces() {
 /// refuses, over WebTransport and raw QUIC alike.
 #[tokio::test]
 async fn uring_refusals_reach_metrics() {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	if !supported() {
 		return;
 	}
@@ -821,7 +821,7 @@ async fn next_update(announced: &mut moq_net::announce::Consumer) -> Option<(moq
 async fn uring_forwards_the_setup_token() {
 	use moq_tokio::quic::{driver, web};
 
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	if !supported() {
 		return;
 	}
@@ -908,7 +908,7 @@ async fn uring_forwards_the_setup_token() {
 /// The embedded auth decider receives the same transport facts as the Tokio path.
 #[tokio::test]
 async fn uring_auth_reports_distinct_quic_and_webtransport() {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	if !supported() {
 		return;
 	}
@@ -967,7 +967,7 @@ fn uring_workers_bound_stalled_handshakes() {
 
 	const LISTEN: Duration = Duration::from_millis(200);
 
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	if !supported() {
 		return;
 	}
@@ -1097,7 +1097,7 @@ async fn stall_after_hello(server: SocketAddr) -> (SocketAddr, tokio::sync::ones
 #[tokio::test]
 async fn uring_sessions_log_their_close_under_a_connection_span() {
 	use tracing_subscriber::layer::SubscriberExt;
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	if !supported() {
 		return;
 	}

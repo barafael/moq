@@ -1,18 +1,18 @@
-#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 use std::sync::Arc;
 
 use futures::{StreamExt, future::BoxFuture, stream::FuturesUnordered};
-#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 use rustls::pki_types::{CertificateDer, PrivateKeyDer};
 
-#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 use crate::quic::web::{CongestionControl, crypto};
 use crate::quic::web::{
 	Connecting, ServerError, Session, Settings,
 	proto::{ConnectRequest, ConnectResponse},
 };
 
-#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 /// Construct a WebTransport [Server] using sane defaults.
 ///
 /// This is optional; advanced users may use [Server::new] directly.
@@ -22,14 +22,14 @@ pub struct ServerBuilder {
 	congestion_controller: Option<Arc<dyn crate::quic::driver::congestion::ControllerFactory + Send + Sync + 'static>>,
 }
 
-#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 impl Default for ServerBuilder {
 	fn default() -> Self {
 		Self::new()
 	}
 }
 
-#[cfg(any(feature = "aws-lc-rs", feature = "ring"))]
+#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 impl ServerBuilder {
 	/// Create a server builder with sane defaults.
 	pub fn new() -> Self {

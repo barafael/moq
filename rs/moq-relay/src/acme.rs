@@ -392,7 +392,8 @@ struct Cache {
 
 impl Cache {
 	fn path(&self, kind: &str, names: &[String], directory: &str) -> PathBuf {
-		let mut digest = aws_lc_rs::digest::Context::new(&aws_lc_rs::digest::SHA256);
+		use graviola::hashing::{Hash, HashContext};
+		let mut digest = graviola::hashing::Sha256::new();
 		for name in names {
 			digest.update(name.as_bytes());
 			digest.update(&[0]);

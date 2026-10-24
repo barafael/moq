@@ -220,8 +220,7 @@ from_message! {
 	p256::elliptic_curve::Error => Crypto,
 	rsa::Error => Crypto,
 	rsa::pkcs1::Error => Crypto,
-	aws_lc_rs::error::Unspecified => Crypto,
-	aws_lc_rs::error::KeyRejected => Crypto,
+	graviola::Error => Crypto,
 }
 
 #[cfg(feature = "client")]

@@ -20,9 +20,7 @@ use moq_relay::{Config, Relay};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-	rustls::crypto::aws_lc_rs::default_provider()
-		.install_default()
-		.expect("failed to install default crypto provider");
+	moq_tokio::crypto::install_default().expect("failed to install default crypto provider");
 
 	let mut config = Config::default();
 	config.listen.bind = Some("127.0.0.1:0".parse().unwrap());

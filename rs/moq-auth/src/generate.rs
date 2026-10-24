@@ -1,7 +1,5 @@
 use crate::error::KeyError;
 use crate::{Algorithm, EllipticCurve, Jwk, Key, KeyMaterial, RsaPublicKey};
-use aws_lc_rs::encoding::AsBigEndian;
-use aws_lc_rs::signature::KeyPair;
 use p256::elliptic_curve::array::typenum::Unsigned;
 use p256::elliptic_curve::point::PointCompression;
 use p256::elliptic_curve::sec1::{FromSec1Point, ModulusSize, ToSec1Point};
@@ -32,13 +30,14 @@ pub fn generate(algorithm: Algorithm, id: Option<crate::KeyId>) -> crate::Result
 
 fn generate_hmac_key<const SIZE: usize>() -> crate::Result<KeyMaterial> {
 	let mut key = [0u8; SIZE];
-	aws_lc_rs::rand::fill(&mut key)?;
+	graviola::random::fill(&mut key)?;
 	Ok(KeyMaterial::OCT { secret: key.to_vec() })
 }
 
-struct AwsRng;
+/// The system RNG, behind the rand_core version rsa takes.
+struct SystemRng;
 
-impl rsa::rand_core::RngCore for AwsRng {
+impl rsa::rand_core::RngCore for SystemRng {
 	fn next_u32(&mut self) -> u32 {
 		let mut buf = [0u8; 4];
 		self.fill_bytes(&mut buf);
@@ -52,18 +51,18 @@ impl rsa::rand_core::RngCore for AwsRng {
 	}
 
 	fn fill_bytes(&mut self, dest: &mut [u8]) {
-		aws_lc_rs::rand::fill(dest).unwrap();
+		graviola::random::fill(dest).unwrap();
 	}
 
 	fn try_fill_bytes(&mut self, dest: &mut [u8]) -> Result<(), rsa::rand_core::Error> {
-		aws_lc_rs::rand::fill(dest).map_err(|_| rsa::rand_core::Error::new("aws-lc-rs failed"))
+		graviola::random::fill(dest).map_err(rsa::rand_core::Error::new)
 	}
 }
 
-impl rsa::rand_core::CryptoRng for AwsRng {}
+impl rsa::rand_core::CryptoRng for SystemRng {}
 
 fn generate_rsa_key(size: usize) -> crate::Result<KeyMaterial> {
-	let mut rng = AwsRng;
+	let mut rng = SystemRng;
 	let mut key = rsa::RsaPrivateKey::new(&mut rng, size)?;
 	key.precompute()?;
 
@@ -92,7 +91,7 @@ where
 {
 	let mut bytes = vec![0u8; C::FieldBytesSize::to_usize()];
 	let secret = loop {
-		aws_lc_rs::rand::fill(&mut bytes)?;
+		graviola::random::fill(&mut bytes)?;
 
 		if let Ok(secret) = SecretKey::<C>::from_slice(&bytes) {
 			break secret;
@@ -114,10 +113,10 @@ where
 }
 
 fn generate_ed25519_key() -> crate::Result<KeyMaterial> {
-	let key_pair = aws_lc_rs::signature::Ed25519KeyPair::generate()?;
+	let key_pair = graviola::signing::eddsa::Ed25519SigningKey::generate()?;
 
-	let public_key = key_pair.public_key().as_ref().to_vec();
-	let seed = key_pair.seed()?.as_be_bytes()?.as_ref().to_vec();
+	let public_key = key_pair.public_key().as_bytes().to_vec();
+	let seed = key_pair.as_seed().to_vec();
 
 	Ok(KeyMaterial::OKP {
 		curve: EllipticCurve::Ed25519,

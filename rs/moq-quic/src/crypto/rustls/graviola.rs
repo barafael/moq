@@ -11,7 +11,7 @@ use graviola::aead::{AesGcm, ChaCha20Poly1305};
 use rustls::{
     CipherSuite, Error, SupportedCipherSuite, Tls13CipherSuite,
     crypto::{
-        CryptoProvider,
+        CipherSuiteCommon, CryptoProvider,
         cipher::{AeadKey, Iv, Nonce},
     },
     quic,
@@ -58,7 +58,7 @@ fn quic_suite(suite: CipherSuite) -> Option<&'static Tls13CipherSuite> {
 fn with_quic(suite: SupportedCipherSuite, quic: &'static Algorithm) -> Tls13CipherSuite {
     let suite = suite.tls13().expect("a TLS 1.3 suite");
     Tls13CipherSuite {
-        common: rustls::crypto::CipherSuiteCommon {
+        common: CipherSuiteCommon {
             suite: suite.common.suite,
             hash_provider: suite.common.hash_provider,
             confidentiality_limit: suite.common.confidentiality_limit,
@@ -99,16 +99,8 @@ impl Algorithm {
         confidentiality_limit: u64::MAX,
         integrity_limit: 1 << 36,
     };
-}
 
-impl quic::Algorithm for Algorithm {
-    fn packet_key(&self, key: AeadKey, iv: Iv) -> Box<dyn quic::PacketKey> {
-        let aead = match self.cipher {
-            Cipher::Aes128Gcm | Cipher::Aes256Gcm => Aead::AesGcm(AesGcm::new(key.as_ref())),
-            Cipher::ChaCha20Poly1305 => Aead::ChaCha20Poly1305(ChaCha20Poly1305::new(
-                key.as_ref().try_into().expect("a 32-byte ChaCha20 key"),
-            )),
-        };
+    fn packet<A: Aead>(&self, aead: A, iv: Iv) -> Box<dyn quic::PacketKey> {
         Box::new(PacketKey {
             aead,
             iv,
@@ -116,20 +108,32 @@ impl quic::Algorithm for Algorithm {
             integrity_limit: self.integrity_limit,
         })
     }
+}
+
+impl quic::Algorithm for Algorithm {
+    fn packet_key(&self, key: AeadKey, iv: Iv) -> Box<dyn quic::PacketKey> {
+        match self.cipher {
+            Cipher::Aes128Gcm | Cipher::Aes256Gcm => self.packet(AesGcm::new(key.as_ref()), iv),
+            Cipher::ChaCha20Poly1305 => self.packet(
+                ChaCha20Poly1305::new(key.as_ref().try_into().expect("a 32-byte ChaCha20 key")),
+                iv,
+            ),
+        }
+    }
 
     fn header_protection_key(&self, key: AeadKey) -> Box<dyn quic::HeaderProtectionKey> {
         let key = key.as_ref();
-        Box::new(match self.cipher {
-            Cipher::Aes128Gcm => {
-                HeaderProtectionKey::Aes128(aes::Aes128::new_from_slice(key).expect("AES-128 key"))
-            }
-            Cipher::Aes256Gcm => {
-                HeaderProtectionKey::Aes256(aes::Aes256::new_from_slice(key).expect("AES-256 key"))
-            }
-            Cipher::ChaCha20Poly1305 => {
-                HeaderProtectionKey::ChaCha20(key.try_into().expect("a 32-byte ChaCha20 key"))
-            }
-        })
+        match self.cipher {
+            Cipher::Aes128Gcm => Box::new(HeaderProtectionKey(
+                aes::Aes128::new_from_slice(key).expect("an AES-128 key"),
+            )),
+            Cipher::Aes256Gcm => Box::new(HeaderProtectionKey(
+                aes::Aes256::new_from_slice(key).expect("an AES-256 key"),
+            )),
+            Cipher::ChaCha20Poly1305 => Box::new(HeaderProtectionKey(ChaCha20(
+                key.try_into().expect("a 32-byte ChaCha20 key"),
+            ))),
+        }
     }
 
     fn aead_key_len(&self) -> usize {
@@ -140,27 +144,45 @@ impl quic::Algorithm for Algorithm {
     }
 }
 
-enum Aead {
-    AesGcm(AesGcm),
-    ChaCha20Poly1305(ChaCha20Poly1305),
-}
-
 const TAG_LEN: usize = 16;
 
-struct PacketKey {
-    aead: Aead,
+/// A graviola AEAD with a 96-bit nonce and a 128-bit tag.
+trait Aead: Send + Sync + 'static {
+    fn seal(&self, nonce: &[u8; 12], aad: &[u8], data: &mut [u8], tag: &mut [u8; TAG_LEN]);
+    fn open(&self, nonce: &[u8; 12], aad: &[u8], data: &mut [u8], tag: &[u8]) -> bool;
+}
+
+impl Aead for AesGcm {
+    fn seal(&self, nonce: &[u8; 12], aad: &[u8], data: &mut [u8], tag: &mut [u8; TAG_LEN]) {
+        self.encrypt(nonce, aad, data, tag)
+    }
+
+    fn open(&self, nonce: &[u8; 12], aad: &[u8], data: &mut [u8], tag: &[u8]) -> bool {
+        self.decrypt(nonce, aad, data, tag).is_ok()
+    }
+}
+
+impl Aead for ChaCha20Poly1305 {
+    fn seal(&self, nonce: &[u8; 12], aad: &[u8], data: &mut [u8], tag: &mut [u8; TAG_LEN]) {
+        self.encrypt(nonce, aad, data, tag)
+    }
+
+    fn open(&self, nonce: &[u8; 12], aad: &[u8], data: &mut [u8], tag: &[u8]) -> bool {
+        self.decrypt(nonce, aad, data, tag).is_ok()
+    }
+}
+
+struct PacketKey<A> {
+    aead: A,
     iv: Iv,
     confidentiality_limit: u64,
     integrity_limit: u64,
 }
 
-impl PacketKey {
+impl<A: Aead> PacketKey<A> {
     fn seal(&self, nonce: Nonce, header: &[u8], payload: &mut [u8]) -> quic::Tag {
         let mut tag = [0u8; TAG_LEN];
-        match &self.aead {
-            Aead::AesGcm(aead) => aead.encrypt(&nonce.0, header, payload, &mut tag),
-            Aead::ChaCha20Poly1305(aead) => aead.encrypt(&nonce.0, header, payload, &mut tag),
-        }
+        self.aead.seal(&nonce.0, header, payload, &mut tag);
         quic::Tag::from(&tag[..])
     }
 
@@ -175,16 +197,14 @@ impl PacketKey {
             .checked_sub(TAG_LEN)
             .ok_or(Error::DecryptError)?;
         let (plain, tag) = payload.split_at_mut(plain_len);
-        match &self.aead {
-            Aead::AesGcm(aead) => aead.decrypt(&nonce.0, header, plain, tag),
-            Aead::ChaCha20Poly1305(aead) => aead.decrypt(&nonce.0, header, plain, tag),
+        match self.aead.open(&nonce.0, header, plain, tag) {
+            true => Ok(plain),
+            false => Err(Error::DecryptError),
         }
-        .map_err(|_| Error::DecryptError)?;
-        Ok(plain)
     }
 }
 
-impl quic::PacketKey for PacketKey {
+impl<A: Aead> quic::PacketKey for PacketKey<A> {
     fn encrypt_in_place(
         &self,
         packet_number: u64,
@@ -238,43 +258,54 @@ impl quic::PacketKey for PacketKey {
     }
 }
 
-enum HeaderProtectionKey {
-    Aes128(aes::Aes128),
-    Aes256(aes::Aes256),
-    ChaCha20([u8; 32]),
-}
-
 const SAMPLE_LEN: usize = 16;
 
-impl HeaderProtectionKey {
-    /// The five-byte mask of RFC 9001 sections 5.4.3 and 5.4.4.
-    fn mask(&self, sample: &[u8]) -> Result<[u8; 5], Error> {
-        let sample: &[u8; SAMPLE_LEN] = sample
-            .try_into()
-            .map_err(|_| Error::General("sample of invalid length".into()))?;
-        let mut mask = [0u8; 5];
-        match self {
-            Self::Aes128(key) => {
-                let mut block = (*sample).into();
-                key.encrypt_block(&mut block);
-                mask.copy_from_slice(&block[..5]);
-            }
-            Self::Aes256(key) => {
-                let mut block = (*sample).into();
-                key.encrypt_block(&mut block);
-                mask.copy_from_slice(&block[..5]);
-            }
-            Self::ChaCha20(key) => {
-                let (counter, nonce) = sample.split_at(4);
-                let counter = u32::from_le_bytes(counter.try_into().unwrap());
-                let mut chacha = chacha20::ChaCha20::new(key.into(), nonce.try_into().unwrap());
-                chacha.seek(u64::from(counter) * 64);
-                chacha.apply_keystream(&mut mask);
-            }
-        }
-        Ok(mask)
-    }
+/// The five-byte header protection mask of RFC 9001 sections 5.4.3 and 5.4.4.
+trait Mask: Send + Sync + 'static {
+    fn mask(&self, sample: &[u8; SAMPLE_LEN]) -> [u8; 5];
+}
 
+fn aes_mask(
+    key: &impl BlockCipherEncrypt<BlockSize = aes::cipher::consts::U16>,
+    sample: &[u8; SAMPLE_LEN],
+) -> [u8; 5] {
+    let mut block = (*sample).into();
+    key.encrypt_block(&mut block);
+    let mut mask = [0u8; 5];
+    mask.copy_from_slice(&block[..5]);
+    mask
+}
+
+impl Mask for aes::Aes128 {
+    fn mask(&self, sample: &[u8; SAMPLE_LEN]) -> [u8; 5] {
+        aes_mask(self, sample)
+    }
+}
+
+impl Mask for aes::Aes256 {
+    fn mask(&self, sample: &[u8; SAMPLE_LEN]) -> [u8; 5] {
+        aes_mask(self, sample)
+    }
+}
+
+/// A ChaCha20 header protection key: the sample is the block counter and nonce.
+struct ChaCha20([u8; 32]);
+
+impl Mask for ChaCha20 {
+    fn mask(&self, sample: &[u8; SAMPLE_LEN]) -> [u8; 5] {
+        let (counter, nonce) = sample.split_at(4);
+        let counter = u32::from_le_bytes(counter.try_into().unwrap());
+        let mut chacha = chacha20::ChaCha20::new((&self.0).into(), nonce.try_into().unwrap());
+        chacha.seek(u64::from(counter) * 64);
+        let mut mask = [0u8; 5];
+        chacha.apply_keystream(&mut mask);
+        mask
+    }
+}
+
+struct HeaderProtectionKey<M>(M);
+
+impl<M: Mask> HeaderProtectionKey<M> {
     // RFC 9001 section 5.4.1, as rustls applies it for its own providers.
     fn xor_in_place(
         &self,
@@ -283,7 +314,10 @@ impl HeaderProtectionKey {
         packet_number: &mut [u8],
         masked: bool,
     ) -> Result<(), Error> {
-        let mask = self.mask(sample)?;
+        let sample = sample
+            .try_into()
+            .map_err(|_| Error::General("sample of invalid length".into()))?;
+        let mask = self.0.mask(sample);
         let (first_mask, pn_mask) = mask.split_first().unwrap();
         if packet_number.len() > pn_mask.len() {
             return Err(Error::General("packet number too long".into()));
@@ -308,7 +342,7 @@ impl HeaderProtectionKey {
     }
 }
 
-impl quic::HeaderProtectionKey for HeaderProtectionKey {
+impl<M: Mask> quic::HeaderProtectionKey for HeaderProtectionKey<M> {
     fn encrypt_in_place(
         &self,
         sample: &[u8],
@@ -335,17 +369,15 @@ impl quic::HeaderProtectionKey for HeaderProtectionKey {
 #[cfg(test)]
 mod tests {
     use hex_literal::hex;
-    use rustls::quic::{Algorithm as _, HeaderProtectionKey as _, PacketKey as _};
+    use rustls::quic::Algorithm as _;
 
     use super::*;
 
     /// RFC 9001 appendix A.2: the client Initial's AES-128 header protection.
     #[test]
     fn aes_128_mask() {
-        let key = HeaderProtectionKey::Aes128(
-            aes::Aes128::new_from_slice(&hex!("9f50449e04a0e810283a1e9933adedd2")).unwrap(),
-        );
-        let mask = key.mask(&hex!("d1b1c98dd7689fb8ec11d242b123dc9b")).unwrap();
+        let key = aes::Aes128::new_from_slice(&hex!("9f50449e04a0e810283a1e9933adedd2")).unwrap();
+        let mask = key.mask(&hex!("d1b1c98dd7689fb8ec11d242b123dc9b"));
         assert_eq!(mask, hex!("437b9aec36"));
     }
 

@@ -82,7 +82,7 @@ impl Fixture {
 /// Connect, crash the server and restart it on the same port, then report how the
 /// client's connection ended once it next sent something.
 fn restart(reset_secret: bool) -> Result<driver::ConnectionError, tokio::time::error::Elapsed> {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 	let fixture = Fixture::new();
 	let client = tokio::runtime::Builder::new_current_thread()
 		.enable_all()

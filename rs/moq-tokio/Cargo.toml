@@ -51,7 +51,7 @@ qlog = ["moq-quic?/qlog"]
 # are off on the dependency), so a backend without aws-lc-rs/ring has no initial cipher.
 # A provider is also all it takes to sign and serve certificates, so each turns on
 # `_certs` even where there is no QUIC backend to serve them for.
-aws-lc-rs = ["_certs", "rustls/aws-lc-rs", "rcgen/aws_lc_rs", "moq-quic?/rustls-aws-lc-rs"]
+aws-lc-rs = ["_certs", "rustls/aws-lc-rs", "rustls/prefer-post-quantum", "rcgen/aws_lc_rs", "moq-quic?/rustls-aws-lc-rs"]
 iroh = ["_transport", "dep:web-transport-iroh", "dep:web-transport-proto", "dep:noq-proto"]
 # LAN peer discovery over mDNS (the `mdns` module).
 mdns = ["dep:mdns-sd", "dep:hmac", "dep:sha2", "dep:subtle"]
@@ -65,6 +65,8 @@ uds = ["tcp", "qmux/uds"]
 # Native WebRTC data channels over str0m, with a full ICE agent (the `webrtc` module).
 webrtc = ["_transport", "dep:qmux", "dep:moq-ice", "dep:str0m", "dep:if-addrs", "dep:mdns-sd"]
 ring = ["_certs", "rustls/ring", "rcgen/ring", "moq-quic?/rustls-ring"]
+# graviola as the rustls provider, with RustCrypto's P-256 to generate self-signed keys.
+graviola = ["_certs", "dep:rustls-graviola", "dep:p256", "moq-quic?/rustls-graviola"]
 
 [dependencies]
 bytes = "1"
@@ -94,16 +96,19 @@ noq-proto = { workspace = true, optional = true }
 notify = { version = "8", optional = true }
 pin-project-lite = { version = "0.2", optional = true }
 qmux = { workspace = true, features = ["wss", "tls", "tcp"], optional = true }
+# Generates self-signed certificate keys under `graviola`, which cannot.
+p256 = { version = "0.14", optional = true }
 rand = "0.10.1"
 rcgen = { workspace = true, optional = true }
 reqwest = { version = "0.13", default-features = false, optional = true }
 rustc-hash = { workspace = true, optional = true }
-rustls = "0.23"
+rustls = { version = "0.23", default-features = false, features = ["std", "logging", "tls12"] }
+rustls-graviola = { version = "0.4", optional = true }
 # The WebTransport client trusts the OS store alongside its custom roots.
 rustls-native-certs = { version = "0.8", optional = true }
 # OS-native server-cert verifier for the rustls backend.
 rustls-platform-verifier = "0.7"
-rustls-webpki = { version = "0.103", features = ["aws-lc-rs"], optional = true }
+rustls-webpki = { version = "0.103", default-features = false, features = ["std"], optional = true }
 serde = { version = "1", features = ["derive"] }
 serde_with = { version = "3", features = ["hex"] }
 sha2 = { workspace = true, optional = true }

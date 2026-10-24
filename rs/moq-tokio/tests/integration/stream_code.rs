@@ -69,7 +69,7 @@ async fn serve() -> Server {
 /// Dial the server over raw QUIC with `alpn`, send an empty SETUP and a GROUP for an
 /// unknown subscription, and return the code the server stopped the GROUP with.
 async fn refused_code(server: &Server, alpn: &str) -> Option<driver::VarInt> {
-	let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+	let _ = moq_tokio::crypto::install_default();
 
 	let mut roots = rustls::RootCertStore::empty();
 	roots.add(server.cert.clone()).expect("root");

@@ -27,8 +27,13 @@
 
 // The protocol crates need a compiled provider for reset and retry-token keys. A rustls provider
 // installed at runtime cannot supply constructors removed by their compile-time feature gates.
-#[cfg(all(feature = "driver", not(any(feature = "aws-lc-rs", feature = "ring"))))]
-compile_error!("a rustls QUIC backend requires a crypto provider: enable either the `aws-lc-rs` or `ring` feature");
+#[cfg(all(
+	feature = "driver",
+	not(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))
+))]
+compile_error!(
+	"a rustls QUIC backend requires a crypto provider: enable the `aws-lc-rs`, `ring`, or `graviola` feature"
+);
 
 #[cfg(any(feature = "net", all(feature = "watch", feature = "_certs")))]
 mod abort;

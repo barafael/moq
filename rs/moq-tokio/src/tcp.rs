@@ -366,10 +366,10 @@ mod tests {
 	/// that does not trust the certificate is refused. Client-certificate policy
 	/// meant for QUIC (CA roots or pinned peers) never makes the TCP listener ask
 	/// for one, so a token-only client still gets through.
-	#[cfg(feature = "aws-lc-rs")]
+	#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 	#[tokio::test]
 	async fn tls_carries_qmux_and_refuses_an_untrusted_certificate() {
-		let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
+		let _ = crate::crypto::install_default();
 		let dir = tempfile::tempdir().unwrap();
 		for pinned in [false, true] {
 			let mut listen = crate::listen::Config::default();
@@ -396,7 +396,7 @@ mod tests {
 		}
 	}
 
-	#[cfg(feature = "aws-lc-rs")]
+	#[cfg(any(feature = "aws-lc-rs", feature = "ring", feature = "graviola"))]
 	async fn tls_round_trip(listen: crate::listen::Config) {
 		let mut server = listen.init(Default::default()).unwrap().listen().await.unwrap();
 		let port = server.tcp_local_addr().unwrap().port();
