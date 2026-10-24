@@ -1,0 +1,130 @@
+rm -rf mlog/
+mkdir -p mlog/relay mlog/client
+Running interop tests...
+  Relay:  moq-interop-relay:local
+  Client: ghcr.io/englishm/moq-interop-runner-moq-test-client-draft-14:latest
+  URL:    https://relay:4443
+time="2026-10-24T00:57:24Z" level=warning msg="The \"PORT\" variable is not set. Defaulting to a blank string."
+time="2026-10-24T00:57:24Z" level=warning msg="The \"PORT\" variable is not set. Defaulting to a blank string."
+time="2026-10-24T00:57:24Z" level=warning msg="The \"PORT\" variable is not set. Defaulting to a blank string."
+time="2026-10-24T00:57:24Z" level=warning msg="The \"HEX\" variable is not set. Defaulting to a blank string."
+time="2026-10-24T00:57:24Z" level=warning msg="The \"HEX\" variable is not set. Defaulting to a blank string."
+ Container runner-upstream-test-client-1  Recreate
+ Container runner-upstream-test-client-1  Recreated
+Attaching to relay-1, test-client-1
+relay-1        | [2m2026-10-24T00:57:24.356935Z[0m [33m WARN[0m [2mmoq_sock::bind[0m[2m:[0m UDP receive buffer is smaller than requested; raise `net.core.rmem_max` or expect packet loss under load [3mwanted[0m[2m=[0m8388608 [3mgranted[0m[2m=[0m1048576
+relay-1        | [2m2026-10-24T00:57:24.356953Z[0m [33m WARN[0m [2mmoq_sock::bind[0m[2m:[0m UDP send buffer is smaller than requested; raise `net.core.wmem_max` or expect packet loss under load [3mwanted[0m[2m=[0m8388608 [3mgranted[0m[2m=[0m212992
+relay-1        | [2m2026-10-24T00:57:24.357154Z[0m [32m INFO[0m [2mmoq_relay::cluster[0m[2m:[0m cluster initialized [3mhop_id[0m[2m=[0m8270510978892862 [3mconfigured[0m[2m=[0mfalse
+relay-1        | [2m2026-10-24T00:57:24.358333Z[0m [32m INFO[0m [2mmoq_relay::relay[0m[2m:[0m listening [3maddr[0m[2m=[0m[::]:4443 [3mkind[0m[2m=[0m"quic"
+relay-1        | [2m2026-10-24T00:57:24.358443Z[0m [32m INFO[0m [2mmoq_relay::cluster[0m[2m:[0m no cluster peers configured; running standalone
+test-client-1  | TAP version 14
+test-client-1  | # moq-test-client v0.1.7
+test-client-1  | # Relay: https://relay:4443/
+test-client-1  | 1..6
+test-client-1  | [2m2026-10-24T00:57:29.966888Z[0m [32m INFO[0m [2mmoq_native_ietf::quic[0m[2m:[0m UDP socket bound [3mbind[0m[2m=[0m[::]:0 [3mlocal[0m[2m=[0m[::]:41832 [3mdual_stack[0m[2m=[0mtrue
+relay-1        | [2m2026-10-24T00:57:30.011622Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m0 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:41832 [3msession[0m[2m=[0m"72b7d654f37f5bc188f616de2f512144"[1m}[0m[2m:[0m [2mmoq_relay::cluster[0m[2m:[0m session accepted [3mtransport[0m[2m=[0mwebtransport [3mrequest.role[0m[2m=[0mNone [3mtier[0m[2m=[0m [3mroot[0m[2m=[0m [3mpublish[0m[2m=[0mSome(Patterns([Pattern("**")])) [3msubscribe[0m[2m=[0mSome(Patterns([Pattern("**")]))
+relay-1        | [2m2026-10-24T00:57:30.011733Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m0 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:41832 [3msession[0m[2m=[0m"72b7d654f37f5bc188f616de2f512144"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m negotiated [3mversion[0m[2m=[0mmoq-transport-14 [3mtransport[0m[2m=[0mwebtransport
+test-client-1  | [2m2026-10-24T00:57:30.011987Z[0m [32m INFO[0m [2mmoq_test_client::scenarios[0m[2m:[0m SETUP exchange completed successfully
+test-client-1  | ok 1 - setup-only
+test-client-1  |   ---
+test-client-1  |   duration_ms: 46
+test-client-1  |   connection_id: 81f4b217b3f63bdffeb4b4c74d24c19d
+test-client-1  |   ...
+relay-1        | [2m2026-10-24T00:57:30.012102Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m0 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:41832 [3msession[0m[2m=[0m"72b7d654f37f5bc188f616de2f512144"[1m}[0m[2m:[0m [2mmoq_net::ietf::session[0m[2m:[0m session error [3merr[0m[2m=[0mprotocol violation
+test-client-1  | [2m2026-10-24T00:57:30.012369Z[0m [33m WARN[0m [2mweb_transport_quinn::session[0m[2m:[0m unknown capsule [3mtyp[0m[2m=[0m0 [3msize[0m[2m=[0m25
+relay-1        | [2m2026-10-24T00:57:30.012537Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m0 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:41832 [3msession[0m[2m=[0m"72b7d654f37f5bc188f616de2f512144"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m connection closed [3mid[0m[2m=[0m0 [3merr[0m[2m=[0mno error
+test-client-1  | [2m2026-10-24T00:57:30.012956Z[0m [32m INFO[0m [2mmoq_native_ietf::quic[0m[2m:[0m UDP socket bound [3mbind[0m[2m=[0m[::]:0 [3mlocal[0m[2m=[0m[::]:56611 [3mdual_stack[0m[2m=[0mtrue
+relay-1        | [2m2026-10-24T00:57:30.014865Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m1 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:56611 [3msession[0m[2m=[0m"19292e71e931eed14037d399dec7f562"[1m}[0m[2m:[0m [2mmoq_relay::cluster[0m[2m:[0m session accepted [3mtransport[0m[2m=[0mwebtransport [3mrequest.role[0m[2m=[0mNone [3mtier[0m[2m=[0m [3mroot[0m[2m=[0m [3mpublish[0m[2m=[0mSome(Patterns([Pattern("**")])) [3msubscribe[0m[2m=[0mSome(Patterns([Pattern("**")]))
+relay-1        | [2m2026-10-24T00:57:30.014925Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m1 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:56611 [3msession[0m[2m=[0m"19292e71e931eed14037d399dec7f562"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m negotiated [3mversion[0m[2m=[0mmoq-transport-14 [3mtransport[0m[2m=[0mwebtransport
+test-client-1  | [2m2026-10-24T00:57:30.015124Z[0m [32m INFO[0m [2mmoq_test_client::scenarios[0m[2m:[0m Announcing namespace: moq-test/interop
+test-client-1  | [2m2026-10-24T00:57:32.016590Z[0m [32m INFO[0m [2mmoq_test_client::scenarios[0m[2m:[0m Announce succeeded (no error received, waiting for subscriptions timed out)
+relay-1        | [2m2026-10-24T00:57:32.016810Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m1 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:56611 [3msession[0m[2m=[0m"19292e71e931eed14037d399dec7f562"[1m}[0m[2m:[0m [2mmoq_net::ietf::session[0m[2m:[0m session error [3merr[0m[2m=[0mprotocol violation
+relay-1        | [2m2026-10-24T00:57:32.017275Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m1 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:56611 [3msession[0m[2m=[0m"19292e71e931eed14037d399dec7f562"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m connection closed [3mid[0m[2m=[0m1 [3merr[0m[2m=[0mno error
+test-client-1  | ok 2 - announce-only
+test-client-1  |   ---
+test-client-1  |   duration_ms: 2004
+test-client-1  |   connection_id: 3f314f86c78cb0a6dc1d0a8da0185617
+test-client-1  |   ...
+test-client-1  | [2m2026-10-24T00:57:32.017053Z[0m [33m WARN[0m [2mweb_transport_quinn::session[0m[2m:[0m unknown capsule [3mtyp[0m[2m=[0m0 [3msize[0m[2m=[0m25
+test-client-1  | [2m2026-10-24T00:57:32.017604Z[0m [32m INFO[0m [2mmoq_native_ietf::quic[0m[2m:[0m UDP socket bound [3mbind[0m[2m=[0m[::]:0 [3mlocal[0m[2m=[0m[::]:36746 [3mdual_stack[0m[2m=[0mtrue
+relay-1        | [2m2026-10-24T00:57:32.019685Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m2 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:36746 [3msession[0m[2m=[0m"0817dcaa99d2b29ff040c76706c902e4"[1m}[0m[2m:[0m [2mmoq_relay::cluster[0m[2m:[0m session accepted [3mtransport[0m[2m=[0mwebtransport [3mrequest.role[0m[2m=[0mNone [3mtier[0m[2m=[0m [3mroot[0m[2m=[0m [3mpublish[0m[2m=[0mSome(Patterns([Pattern("**")])) [3msubscribe[0m[2m=[0mSome(Patterns([Pattern("**")]))
+relay-1        | [2m2026-10-24T00:57:32.019760Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m2 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:36746 [3msession[0m[2m=[0m"0817dcaa99d2b29ff040c76706c902e4"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m negotiated [3mversion[0m[2m=[0mmoq-transport-14 [3mtransport[0m[2m=[0mwebtransport
+test-client-1  | [2m2026-10-24T00:57:32.020041Z[0m [32m INFO[0m [2mmoq_test_client::scenarios[0m[2m:[0m Subscribing to non-existent track: nonexistent/namespace/test-track
+relay-1        | [2m2026-10-24T00:57:32.020213Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m2 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:36746 [3msession[0m[2m=[0m"0817dcaa99d2b29ff040c76706c902e4"[1m}[0m[2m:[0m [2mmoq_net::ietf::publisher[0m[2m:[0m subscribe started [3mid[0m[2m=[0m0 [3mbroadcast[0m[2m=[0mnonexistent/namespace [3mtrack[0m[2m=[0mtest-track
+test-client-1  | [2m2026-10-24T00:57:32.020390Z[0m [33m WARN[0m [2mmoq_test_client::scenarios[0m[2m:[0m Got error but not clearly 'not found': closed, code=4. This may indicate a different error type than expected.
+relay-1        | [2m2026-10-24T00:57:32.020477Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m2 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:36746 [3msession[0m[2m=[0m"0817dcaa99d2b29ff040c76706c902e4"[1m}[0m[2m:[0m [2mmoq_net::ietf::session[0m[2m:[0m session error [3merr[0m[2m=[0mprotocol violation
+test-client-1  | ok 3 - subscribe-error
+test-client-1  |   ---
+relay-1        | [2m2026-10-24T00:57:32.020775Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m2 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:36746 [3msession[0m[2m=[0m"0817dcaa99d2b29ff040c76706c902e4"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m connection closed [3mid[0m[2m=[0m2 [3merr[0m[2m=[0mno error
+test-client-1  |   duration_ms: 3
+test-client-1  |   connection_id: 851be2e33a2fd2610da20090db5c21a8
+test-client-1  |   ...
+test-client-1  | [2m2026-10-24T00:57:32.020641Z[0m [33m WARN[0m [2mweb_transport_quinn::session[0m[2m:[0m unknown capsule [3mtyp[0m[2m=[0m0 [3msize[0m[2m=[0m25
+test-client-1  | [2m2026-10-24T00:57:32.021329Z[0m [32m INFO[0m [2mmoq_native_ietf::quic[0m[2m:[0m UDP socket bound [3mbind[0m[2m=[0m[::]:0 [3mlocal[0m[2m=[0m[::]:36893 [3mdual_stack[0m[2m=[0mtrue
+relay-1        | [2m2026-10-24T00:57:32.022985Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m3 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:36893 [3msession[0m[2m=[0m"74b30ed07b28e4359847bb101a387c2d"[1m}[0m[2m:[0m [2mmoq_relay::cluster[0m[2m:[0m session accepted [3mtransport[0m[2m=[0mwebtransport [3mrequest.role[0m[2m=[0mNone [3mtier[0m[2m=[0m [3mroot[0m[2m=[0m [3mpublish[0m[2m=[0mSome(Patterns([Pattern("**")])) [3msubscribe[0m[2m=[0mSome(Patterns([Pattern("**")]))
+relay-1        | [2m2026-10-24T00:57:32.023045Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m3 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:36893 [3msession[0m[2m=[0m"74b30ed07b28e4359847bb101a387c2d"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m negotiated [3mversion[0m[2m=[0mmoq-transport-14 [3mtransport[0m[2m=[0mwebtransport
+test-client-1  | [2m2026-10-24T00:57:32.023862Z[0m [32m INFO[0m [2mmoq_native_ietf::quic[0m[2m:[0m UDP socket bound [3mbind[0m[2m=[0m[::]:0 [3mlocal[0m[2m=[0m[::]:44392 [3mdual_stack[0m[2m=[0mtrue
+relay-1        | [2m2026-10-24T00:57:32.025519Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m4 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:44392 [3msession[0m[2m=[0m"aa9711987ed9d25c876a083b2b92b805"[1m}[0m[2m:[0m [2mmoq_relay::cluster[0m[2m:[0m session accepted [3mtransport[0m[2m=[0mwebtransport [3mrequest.role[0m[2m=[0mNone [3mtier[0m[2m=[0m [3mroot[0m[2m=[0m [3mpublish[0m[2m=[0mSome(Patterns([Pattern("**")])) [3msubscribe[0m[2m=[0mSome(Patterns([Pattern("**")]))
+relay-1        | [2m2026-10-24T00:57:32.025569Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m4 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:44392 [3msession[0m[2m=[0m"aa9711987ed9d25c876a083b2b92b805"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m negotiated [3mversion[0m[2m=[0mmoq-transport-14 [3mtransport[0m[2m=[0mwebtransport
+test-client-1  | [2m2026-10-24T00:57:32.025775Z[0m [32m INFO[0m [2mmoq_test_client::scenarios[0m[2m:[0m Publisher announcing namespace: moq-test/interop
+test-client-1  | [2m2026-10-24T00:57:32.025786Z[0m [32m INFO[0m [2mmoq_test_client::scenarios[0m[2m:[0m Subscriber subscribing to track: moq-test/interop/test-track
+relay-1        | [2m2026-10-24T00:57:32.026102Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m4 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:44392 [3msession[0m[2m=[0m"aa9711987ed9d25c876a083b2b92b805"[1m}[0m[2m:[0m [2mmoq_net::ietf::publisher[0m[2m:[0m subscribe started [3mid[0m[2m=[0m0 [3mbroadcast[0m[2m=[0mmoq-test/interop [3mtrack[0m[2m=[0mtest-track
+relay-1        | [2m2026-10-24T00:57:32.026361Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m3 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:36893 [3msession[0m[2m=[0m"74b30ed07b28e4359847bb101a387c2d"[1m}[0m[2m:[0m [2mmoq_net::ietf::subscriber[0m[2m:[0m subscribe started [3mbroadcast[0m[2m=[0mmoq-test/interop [3mtrack[0m[2m=[0mtest-track
+test-client-1  | [2m2026-10-24T00:57:35.026766Z[0m [32m INFO[0m [2mmoq_test_client::scenarios[0m[2m:[0m Test timeout reached - subscription routing may still be in progress
+test-client-1  | ok 4 - announce-subscribe
+test-client-1  |   ---
+test-client-1  |   duration_ms: 3006
+test-client-1  |   publisher_connection_id: 289247cce2a8981156839935c9de27cc
+test-client-1  |   subscriber_connection_id: 06f7199b35fb0c1e1d0bd60fbcdfc2bf
+test-client-1  |   ...
+relay-1        | [2m2026-10-24T00:57:35.027023Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m4 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:44392 [3msession[0m[2m=[0m"aa9711987ed9d25c876a083b2b92b805"[1m}[0m[2m:[0m [2mmoq_net::ietf::session[0m[2m:[0m session error [3merr[0m[2m=[0mprotocol violation
+relay-1        | [2m2026-10-24T00:57:35.027087Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m3 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:36893 [3msession[0m[2m=[0m"74b30ed07b28e4359847bb101a387c2d"[1m}[0m[2m:[0m [2mmoq_net::ietf::session[0m[2m:[0m session error [3merr[0m[2m=[0mprotocol violation
+test-client-1  | [2m2026-10-24T00:57:35.027285Z[0m [33m WARN[0m [2mweb_transport_quinn::session[0m[2m:[0m unknown capsule [3mtyp[0m[2m=[0m0 [3msize[0m[2m=[0m25
+test-client-1  | [2m2026-10-24T00:57:35.027374Z[0m [33m WARN[0m [2mweb_transport_quinn::session[0m[2m:[0m unknown capsule [3mtyp[0m[2m=[0m0 [3msize[0m[2m=[0m25
+relay-1        | [2m2026-10-24T00:57:35.027633Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m4 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:44392 [3msession[0m[2m=[0m"aa9711987ed9d25c876a083b2b92b805"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m connection closed [3mid[0m[2m=[0m4 [3merr[0m[2m=[0mno error
+relay-1        | [2m2026-10-24T00:57:35.027816Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m3 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:36893 [3msession[0m[2m=[0m"74b30ed07b28e4359847bb101a387c2d"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m connection closed [3mid[0m[2m=[0m3 [3merr[0m[2m=[0mno error
+test-client-1  | [2m2026-10-24T00:57:35.027765Z[0m [32m INFO[0m [2mmoq_native_ietf::quic[0m[2m:[0m UDP socket bound [3mbind[0m[2m=[0m[::]:0 [3mlocal[0m[2m=[0m[::]:52932 [3mdual_stack[0m[2m=[0mtrue
+relay-1        | [2m2026-10-24T00:57:35.031456Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m5 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:52932 [3msession[0m[2m=[0m"d4d64df194629ad6a17503f467ef84a9"[1m}[0m[2m:[0m [2mmoq_relay::cluster[0m[2m:[0m session accepted [3mtransport[0m[2m=[0mwebtransport [3mrequest.role[0m[2m=[0mNone [3mtier[0m[2m=[0m [3mroot[0m[2m=[0m [3mpublish[0m[2m=[0mSome(Patterns([Pattern("**")])) [3msubscribe[0m[2m=[0mSome(Patterns([Pattern("**")]))
+relay-1        | [2m2026-10-24T00:57:35.031521Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m5 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:52932 [3msession[0m[2m=[0m"d4d64df194629ad6a17503f467ef84a9"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m negotiated [3mversion[0m[2m=[0mmoq-transport-14 [3mtransport[0m[2m=[0mwebtransport
+test-client-1  | [2m2026-10-24T00:57:35.031775Z[0m [32m INFO[0m [2mmoq_test_client::scenarios[0m[2m:[0m Subscriber subscribing BEFORE announce: moq-test/interop/test-track
+relay-1        | [2m2026-10-24T00:57:35.031944Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m5 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:52932 [3msession[0m[2m=[0m"d4d64df194629ad6a17503f467ef84a9"[1m}[0m[2m:[0m [2mmoq_net::ietf::publisher[0m[2m:[0m subscribe started [3mid[0m[2m=[0m0 [3mbroadcast[0m[2m=[0mmoq-test/interop [3mtrack[0m[2m=[0mtest-track
+relay-1        | [2m2026-10-24T00:57:35.032175Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m5 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:52932 [3msession[0m[2m=[0m"d4d64df194629ad6a17503f467ef84a9"[1m}[0m[2m:[0m [2mmoq_net::ietf::session[0m[2m:[0m session error [3merr[0m[2m=[0mprotocol violation
+test-client-1  | [2m2026-10-24T00:57:35.032305Z[0m [33m WARN[0m [2mweb_transport_quinn::session[0m[2m:[0m unknown capsule [3mtyp[0m[2m=[0m0 [3msize[0m[2m=[0m25
+relay-1        | [2m2026-10-24T00:57:35.032462Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m5 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:52932 [3msession[0m[2m=[0m"d4d64df194629ad6a17503f467ef84a9"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m connection closed [3mid[0m[2m=[0m5 [3merr[0m[2m=[0mno error
+test-client-1  | [2m2026-10-24T00:57:35.532849Z[0m [32m INFO[0m [2mmoq_native_ietf::quic[0m[2m:[0m UDP socket bound [3mbind[0m[2m=[0m[::]:0 [3mlocal[0m[2m=[0m[::]:34143 [3mdual_stack[0m[2m=[0mtrue
+relay-1        | [2m2026-10-24T00:57:35.535294Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m6 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:34143 [3msession[0m[2m=[0m"8db65ae891a997f9ad1388c9f0dd3273"[1m}[0m[2m:[0m [2mmoq_relay::cluster[0m[2m:[0m session accepted [3mtransport[0m[2m=[0mwebtransport [3mrequest.role[0m[2m=[0mNone [3mtier[0m[2m=[0m [3mroot[0m[2m=[0m [3mpublish[0m[2m=[0mSome(Patterns([Pattern("**")])) [3msubscribe[0m[2m=[0mSome(Patterns([Pattern("**")]))
+relay-1        | [2m2026-10-24T00:57:35.535366Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m6 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:34143 [3msession[0m[2m=[0m"8db65ae891a997f9ad1388c9f0dd3273"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m negotiated [3mversion[0m[2m=[0mmoq-transport-14 [3mtransport[0m[2m=[0mwebtransport
+test-client-1  | [2m2026-10-24T00:57:35.535612Z[0m [32m INFO[0m [2mmoq_test_client::scenarios[0m[2m:[0m Publisher announcing namespace (after subscriber): moq-test/interop
+test-client-1  | [2m2026-10-24T00:57:38.536349Z[0m [32m INFO[0m [2mmoq_test_client::scenarios[0m[2m:[0m Publisher announce timeout (expected)
+test-client-1  | [2m2026-10-24T00:57:38.536375Z[0m [32m INFO[0m [2mmoq_test_client::scenarios[0m[2m:[0m Subscriber got error: closed, code=4 (may be expected)
+test-client-1  | ok 5 - subscribe-before-announce
+test-client-1  |   ---
+test-client-1  |   duration_ms: 3509
+test-client-1  |   subscriber_connection_id: 36bce6e05dd905a8c369be789fee7773
+test-client-1  |   publisher_connection_id: 585a8485a2009ab409745bf3ce993724
+test-client-1  |   ...
+relay-1        | [2m2026-10-24T00:57:38.536556Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m6 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:34143 [3msession[0m[2m=[0m"8db65ae891a997f9ad1388c9f0dd3273"[1m}[0m[2m:[0m [2mmoq_net::ietf::session[0m[2m:[0m session error [3merr[0m[2m=[0mprotocol violation
+test-client-1  | [2m2026-10-24T00:57:38.536722Z[0m [33m WARN[0m [2mweb_transport_quinn::session[0m[2m:[0m unknown capsule [3mtyp[0m[2m=[0m0 [3msize[0m[2m=[0m25
+relay-1        | [2m2026-10-24T00:57:38.537029Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m6 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:34143 [3msession[0m[2m=[0m"8db65ae891a997f9ad1388c9f0dd3273"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m connection closed [3mid[0m[2m=[0m6 [3merr[0m[2m=[0mno error
+test-client-1  | [2m2026-10-24T00:57:38.537515Z[0m [32m INFO[0m [2mmoq_native_ietf::quic[0m[2m:[0m UDP socket bound [3mbind[0m[2m=[0m[::]:0 [3mlocal[0m[2m=[0m[::]:50652 [3mdual_stack[0m[2m=[0mtrue
+relay-1        | [2m2026-10-24T00:57:38.540264Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m7 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:50652 [3msession[0m[2m=[0m"e49818287ed8d14f432c223d447f2ffc"[1m}[0m[2m:[0m [2mmoq_relay::cluster[0m[2m:[0m session accepted [3mtransport[0m[2m=[0mwebtransport [3mrequest.role[0m[2m=[0mNone [3mtier[0m[2m=[0m [3mroot[0m[2m=[0m [3mpublish[0m[2m=[0mSome(Patterns([Pattern("**")])) [3msubscribe[0m[2m=[0mSome(Patterns([Pattern("**")]))
+relay-1        | [2m2026-10-24T00:57:38.540326Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m7 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:50652 [3msession[0m[2m=[0m"e49818287ed8d14f432c223d447f2ffc"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m negotiated [3mversion[0m[2m=[0mmoq-transport-14 [3mtransport[0m[2m=[0mwebtransport
+test-client-1  | [2m2026-10-24T00:57:38.540529Z[0m [32m INFO[0m [2mmoq_test_client::scenarios[0m[2m:[0m Announcing namespace: moq-test/interop
+test-client-1  | [2m2026-10-24T00:57:40.541411Z[0m [32m INFO[0m [2mmoq_test_client::scenarios[0m[2m:[0m Announce active, now sending PUBLISH_NAMESPACE_DONE
+relay-1        | [2m2026-10-24T00:57:40.541638Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m7 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:50652 [3msession[0m[2m=[0m"e49818287ed8d14f432c223d447f2ffc"[1m}[0m[2m:[0m [2mmoq_net::ietf::session[0m[2m:[0m session error [3merr[0m[2m=[0mprotocol violation
+test-client-1  | [2m2026-10-24T00:57:40.541873Z[0m [33m WARN[0m [2mweb_transport_quinn::session[0m[2m:[0m unknown capsule [3mtyp[0m[2m=[0m0 [3msize[0m[2m=[0m25
+relay-1        | [2m2026-10-24T00:57:40.542158Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m7 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:50652 [3msession[0m[2m=[0m"e49818287ed8d14f432c223d447f2ffc"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m connection closed [3mid[0m[2m=[0m7 [3merr[0m[2m=[0mno error
+test-client-1  | [2m2026-10-24T00:57:40.642442Z[0m [32m INFO[0m [2mmoq_test_client::scenarios[0m[2m:[0m PUBLISH_NAMESPACE_DONE sent successfully
+test-client-1  | ok 6 - publish-namespace-done
+test-client-1  |   ---
+test-client-1  |   duration_ms: 2106
+test-client-1  |   connection_id: b088be6f4b3e55a10c48521fc9fb2da7
+test-client-1  |   ...
+[Ktest-client-1 exited with code 0
+Aborting on container exit...
+ Container runner-upstream-test-client-1  Stopping
+ Container runner-upstream-test-client-1  Stopped
+ Container runner-upstream-relay-1  Stopping
+ Container runner-upstream-relay-1  Stopped
+
+Test results in mlog/

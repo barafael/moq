@@ -1,0 +1,386 @@
+{
+  "runs": [
+    {
+      "client": "moq-rs-draft-18",
+      "relay": "moq-dev-rs",
+      "version": "draft-18",
+      "classification": "at",
+      "mode": "docker",
+      "target": "moq-interop-relay:local",
+      "status": "fail",
+      "exit_code": 2
+    },
+    {
+      "client": "moqlivemock",
+      "relay": "moq-dev-rs",
+      "version": "draft-18",
+      "classification": "at",
+      "mode": "docker",
+      "target": "moq-interop-relay:local",
+      "status": "pass",
+      "exit_code": 0
+    },
+    {
+      "client": "moqx",
+      "relay": "moq-dev-rs",
+      "version": "draft-18",
+      "classification": "at",
+      "mode": "docker",
+      "target": "moq-interop-relay:local",
+      "status": "fail",
+      "exit_code": 2
+    },
+    {
+      "client": "xquic-draft-18",
+      "relay": "moq-dev-rs",
+      "version": "draft-18",
+      "classification": "at",
+      "mode": "docker",
+      "target": "moq-interop-relay:local",
+      "status": "fail",
+      "exit_code": 2
+    },
+    {
+      "client": "moq5",
+      "relay": "moq-dev-rs",
+      "version": "draft-18",
+      "classification": "at",
+      "mode": "docker",
+      "target": "moq-interop-relay:local",
+      "status": "pass",
+      "exit_code": 0
+    },
+    {
+      "client": "moqtopus",
+      "relay": "moq-dev-rs",
+      "version": "draft-18",
+      "classification": "at",
+      "mode": "docker",
+      "target": "moq-interop-relay:local",
+      "status": "fail",
+      "exit_code": 2
+    },
+    {
+      "client": "moq-playa",
+      "relay": "moq-dev-rs",
+      "version": "draft-18",
+      "classification": "at",
+      "mode": "docker",
+      "target": "moq-interop-relay:local",
+      "status": "pass",
+      "exit_code": 0
+    },
+    {
+      "client": "quic-zig",
+      "relay": "moq-dev-rs",
+      "version": "draft-18",
+      "classification": "at",
+      "mode": "docker",
+      "target": "moq-interop-relay:local",
+      "status": "pass",
+      "exit_code": 0
+    },
+    {
+      "client": "aiomoqt",
+      "relay": "moq-dev-rs",
+      "version": "draft-22",
+      "classification": "ahead",
+      "mode": "docker",
+      "target": "moq-interop-relay:local",
+      "status": "fail",
+      "exit_code": 2
+    },
+    {
+      "client": "imquic",
+      "relay": "moq-dev-rs",
+      "version": "draft-22",
+      "classification": "ahead",
+      "mode": "docker",
+      "target": "moq-interop-relay:local",
+      "status": "pass",
+      "exit_code": 0
+    },
+    {
+      "client": "moq-dev-js",
+      "relay": "moq-dev-rs",
+      "version": "draft-22",
+      "classification": "ahead",
+      "mode": "docker",
+      "target": "moq-interop-relay:local",
+      "status": "pass",
+      "exit_code": 0
+    },
+    {
+      "client": "moq-dev-rs",
+      "relay": "moq-dev-rs",
+      "version": "draft-22",
+      "classification": "ahead",
+      "mode": "docker",
+      "target": "moq-interop-relay:local",
+      "status": "pass",
+      "exit_code": 0
+    },
+    {
+      "client": "moq-go",
+      "relay": "moq-dev-rs",
+      "version": "draft-22",
+      "classification": "ahead",
+      "mode": "docker",
+      "target": "moq-interop-relay:local",
+      "status": "fail",
+      "exit_code": 2
+    },
+    {
+      "client": "moxygen",
+      "relay": "moq-dev-rs",
+      "version": "draft-22",
+      "classification": "ahead",
+      "mode": "docker",
+      "target": "moq-interop-relay:local",
+      "status": "fail",
+      "exit_code": 2
+    },
+    {
+      "client": "stitcher-moq",
+      "relay": "moq-dev-rs",
+      "version": "draft-22",
+      "classification": "ahead",
+      "mode": "docker",
+      "target": "moq-interop-relay:local",
+      "status": "pass",
+      "exit_code": 0
+    },
+    {
+      "client": "moq-rs",
+      "relay": "moq-dev-rs",
+      "version": "draft-16",
+      "classification": "behind",
+      "mode": "docker",
+      "target": "moq-interop-relay:local",
+      "status": "fail",
+      "exit_code": 2
+    },
+    {
+      "client": "moq-rs-draft-14",
+      "relay": "moq-dev-rs",
+      "version": "draft-14",
+      "classification": "behind",
+      "mode": "docker",
+      "target": "moq-interop-relay:local",
+      "status": "pass",
+      "exit_code": 0
+    },
+    {
+      "client": "xquic",
+      "relay": "moq-dev-rs",
+      "version": "draft-14",
+      "classification": "behind",
+      "mode": "docker",
+      "target": "moq-interop-relay:local",
+      "status": "fail",
+      "exit_code": 2
+    },
+    {
+      "client": "moq-dev-js",
+      "relay": "moq-rs-draft-18",
+      "version": "draft-18",
+      "classification": "at",
+      "mode": "docker",
+      "target": "ghcr.io/englishm/moq-interop-runner-moq-relay-ietf-draft-18:latest",
+      "status": "fail",
+      "exit_code": 2
+    },
+    {
+      "client": "moq-dev-js",
+      "relay": "moqlivemock",
+      "version": "draft-18",
+      "classification": "at",
+      "mode": "docker",
+      "target": "ghcr.io/eyevinn/mlmrel:latest",
+      "status": "fail",
+      "exit_code": 2
+    },
+    {
+      "client": "moq-dev-js",
+      "relay": "quiche-moq",
+      "version": "draft-18",
+      "classification": "at",
+      "mode": "docker",
+      "target": "ghcr.io/englishm/moq-interop-runner-quiche-moq-relay:latest",
+      "status": "fail",
+      "exit_code": 2
+    },
+    {
+      "client": "moq-dev-js",
+      "relay": "xquic-draft-18",
+      "version": "draft-18",
+      "classification": "at",
+      "mode": "docker",
+      "target": "ghcr.io/englishm/moq-interop-runner-xquic-moq-relay-draft-18:latest",
+      "status": "fail",
+      "exit_code": 2
+    },
+    {
+      "client": "moq-dev-js",
+      "relay": "quic-zig",
+      "version": "draft-18",
+      "classification": "at",
+      "mode": "docker",
+      "target": "ghcr.io/endel/quic-zig-moq-relay:latest",
+      "status": "fail",
+      "exit_code": 2
+    },
+    {
+      "client": "moq-dev-rs",
+      "relay": "moq-rs-draft-18",
+      "version": "draft-18",
+      "classification": "at",
+      "mode": "docker",
+      "target": "ghcr.io/englishm/moq-interop-runner-moq-relay-ietf-draft-18:latest",
+      "status": "pass",
+      "exit_code": 0
+    },
+    {
+      "client": "moq-dev-rs",
+      "relay": "moqlivemock",
+      "version": "draft-18",
+      "classification": "at",
+      "mode": "docker",
+      "target": "ghcr.io/eyevinn/mlmrel:latest",
+      "status": "fail",
+      "exit_code": 2
+    },
+    {
+      "client": "moq-dev-rs",
+      "relay": "quiche-moq",
+      "version": "draft-18",
+      "classification": "at",
+      "mode": "docker",
+      "target": "ghcr.io/englishm/moq-interop-runner-quiche-moq-relay:latest",
+      "status": "pass",
+      "exit_code": 0
+    },
+    {
+      "client": "moq-dev-rs",
+      "relay": "xquic-draft-18",
+      "version": "draft-18",
+      "classification": "at",
+      "mode": "docker",
+      "target": "ghcr.io/englishm/moq-interop-runner-xquic-moq-relay-draft-18:latest",
+      "status": "fail",
+      "exit_code": 2
+    },
+    {
+      "client": "moq-dev-rs",
+      "relay": "quic-zig",
+      "version": "draft-18",
+      "classification": "at",
+      "mode": "docker",
+      "target": "ghcr.io/endel/quic-zig-moq-relay:latest",
+      "status": "fail",
+      "exit_code": 2
+    },
+    {
+      "client": "moq-dev-js",
+      "relay": "imquic",
+      "version": "draft-22",
+      "classification": "ahead",
+      "mode": "docker",
+      "target": "ghcr.io/englishm/moq-interop-runner-imquic-moq-relay:latest",
+      "status": "fail",
+      "exit_code": 2
+    },
+    {
+      "client": "moq-dev-js",
+      "relay": "moq-go",
+      "version": "draft-22",
+      "classification": "ahead",
+      "mode": "docker",
+      "target": "ghcr.io/englishm/moq-interop-runner-moq-go-relay:latest",
+      "status": "fail",
+      "exit_code": 2
+    },
+    {
+      "client": "moq-dev-rs",
+      "relay": "imquic",
+      "version": "draft-22",
+      "classification": "ahead",
+      "mode": "docker",
+      "target": "ghcr.io/englishm/moq-interop-runner-imquic-moq-relay:latest",
+      "status": "pass",
+      "exit_code": 0
+    },
+    {
+      "client": "moq-dev-rs",
+      "relay": "moq-go",
+      "version": "draft-22",
+      "classification": "ahead",
+      "mode": "docker",
+      "target": "ghcr.io/englishm/moq-interop-runner-moq-go-relay:latest",
+      "status": "pass",
+      "exit_code": 0
+    },
+    {
+      "client": "moq-dev-js",
+      "relay": "moq-rs",
+      "version": "draft-16",
+      "classification": "behind",
+      "mode": "docker",
+      "target": "ghcr.io/englishm/moq-interop-runner-moq-relay-ietf:latest",
+      "status": "pass",
+      "exit_code": 0
+    },
+    {
+      "client": "moq-dev-js",
+      "relay": "moq-rs-draft-14",
+      "version": "draft-14",
+      "classification": "behind",
+      "mode": "docker",
+      "target": "ghcr.io/englishm/moq-interop-runner-moq-relay-ietf-draft-14:latest",
+      "status": "fail",
+      "exit_code": 2
+    },
+    {
+      "client": "moq-dev-js",
+      "relay": "xquic",
+      "version": "draft-14",
+      "classification": "behind",
+      "mode": "docker",
+      "target": "ghcr.io/englishm/moq-interop-runner-xquic-moq-relay:latest",
+      "status": "fail",
+      "exit_code": 2
+    },
+    {
+      "client": "moq-dev-rs",
+      "relay": "moq-rs",
+      "version": "draft-16",
+      "classification": "behind",
+      "mode": "docker",
+      "target": "ghcr.io/englishm/moq-interop-runner-moq-relay-ietf:latest",
+      "status": "fail",
+      "exit_code": 2
+    },
+    {
+      "client": "moq-dev-rs",
+      "relay": "moq-rs-draft-14",
+      "version": "draft-14",
+      "classification": "behind",
+      "mode": "docker",
+      "target": "ghcr.io/englishm/moq-interop-runner-moq-relay-ietf-draft-14:latest",
+      "status": "fail",
+      "exit_code": 2
+    },
+    {
+      "client": "moq-dev-rs",
+      "relay": "xquic",
+      "version": "draft-14",
+      "classification": "behind",
+      "mode": "docker",
+      "target": "ghcr.io/englishm/moq-interop-runner-xquic-moq-relay:latest",
+      "status": "fail",
+      "exit_code": 2
+    }
+  ],
+  "target_version": "draft-18",
+  "timestamp": "2026-10-24T00:54:22Z"
+}
