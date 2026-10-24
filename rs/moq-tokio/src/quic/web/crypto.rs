@@ -15,7 +15,7 @@ pub type Provider = Arc<CryptoProvider>;
 /// Returns the default crypto provider.
 ///
 /// This function checks for a process-wide default provider first,
-/// then falls back to feature-enabled providers (aws-lc-rs or ring).
+/// then falls back to feature-enabled providers (aws-lc-rs, ring, or graviola).
 ///
 /// # Panics
 ///

@@ -161,7 +161,7 @@ pub enum Error {
 	Rcgen(String),
 
 	/// The crate was built without a crypto provider, so no TLS is possible.
-	#[error("no crypto provider available; enable aws-lc-rs or ring feature")]
+	#[error("no crypto provider available; enable the aws-lc-rs, ring, or graviola feature")]
 	NoCryptoProvider,
 
 	/// The section was parsed from released spellings that no longer work. The
@@ -1161,6 +1161,16 @@ fn generate(provider: &crypto::Provider, hostnames: &[String]) -> Result<Certifi
 	let mut params = rcgen::CertificateParams::new(hostnames)?;
 	params.not_before = ::time::OffsetDateTime::now_utc() - ::time::Duration::days(1);
 	params.not_after = params.not_before + ::time::Duration::days(14);
+	// rcgen derives a serial number only with its own crypto backend; pick a random,
+	// positive one of RFC 5280's 20-byte maximum otherwise.
+	#[cfg(not(any(feature = "aws-lc-rs", feature = "ring")))]
+	{
+		use rand::Rng;
+		let mut serial = [0u8; 20];
+		rand::rng().fill_bytes(&mut serial);
+		serial[0] &= 0x7f;
+		params.serial_number = Some(rcgen::SerialNumber::from_slice(&serial));
+	}
 
 	let cert = params.self_signed(&key_pair)?;
 

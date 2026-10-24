@@ -114,6 +114,11 @@ impl Account {
             None => return Err(AcmeError::NoTlsAlpn01Challenge),
         };
         let mut params = rcgen::CertificateParams::new(vec![domain])?;
+        // rcgen derives a serial number only with its own crypto backend.
+        let mut serial = [0u8; 20];
+        graviola::random::fill(&mut serial).map_err(|_| rcgen::Error::RemoteKeyError)?;
+        serial[0] &= 0x7f;
+        params.serial_number = Some(rcgen::SerialNumber::from_slice(&serial));
         let key_auth = key_authorization_sha256(&self.key_pair, &challenge.token)?;
         params.custom_extensions = vec![CustomExtension::new_acme_identifier(key_auth.as_ref())];
         let key_pair = crate::crypto::signature::CertKey::generate();
