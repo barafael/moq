@@ -896,7 +896,7 @@ impl MoqSession {
 	/// Finish or abort live tracks first; [`shutdown`](Self::shutdown) and
 	/// [`cancel`](Self::cancel) stay immediate. Explicit `moq-lite-07-wip` waits for
 	/// the peer to receive the tail. Older Lite versions, including the default
-	/// lite-06, wait only for transport ACKs. IETF also waits for transport ACKs.
+	/// lite-06, wait only for transport ACKs. moq-transport (IETF) closes without waiting.
 	pub async fn drain(&self) -> Result<(), MoqError> {
 		let inner = self.inner.clone();
 		crate::ffi::detached(async move {

@@ -74,7 +74,8 @@ class Session:
 
         Finish or abort live tracks first; :meth:`shutdown` and :meth:`cancel` stay
         immediate. The drain waits for the transport to acknowledge the tail, not
-        for the peer to read it."""
+        for the peer to read it; a moq-transport (IETF) session closes without
+        waiting."""
         await self._inner.drain()
 
     def publish(self) -> OriginProducer:
