@@ -18,6 +18,10 @@ let
           services.github-runner-vms = pkgs.lib.mapAttrs (_: id: {
             enable = true;
             runner.url = "https://github.com/example/project";
+            githubApp = {
+              appId = 1;
+              installationId = 2;
+            };
             network = {
               inherit id;
               uplink = "eth0";
@@ -31,6 +35,7 @@ let
     second = 1;
   };
   valid = evaluate ids { };
+  guest = valid.config.services.github-runner-vms.first.guest.config;
   mixedNetworking = valid.extendModules {
     modules = [
       {
@@ -71,6 +76,19 @@ assert pkgs.lib.all (
   item: item.assertion
 ) minimumDisk.config.services.github-runner-vms.first.guest.config.assertions;
 assert !valid.config.networking.firewall.filterForward;
+assert guest.systemd.services.github-runner-runner.serviceConfig.StateDirectory == [ ];
+assert guest.systemd.services.github-runner-runner.serviceConfig.Restart == "no";
+assert guest.systemd.services.github-runner-runner.unitConfig.SuccessAction == "poweroff";
+assert guest.systemd.services.github-runner-runner.unitConfig.FailureAction == "poweroff";
+assert
+  guest.services.github-runners.runner.extraEnvironment.RUNNER_ROOT == "/run/github-runner/runner";
+assert !(valid.config.systemd.services.first.serviceConfig ? LoadCredential);
+assert
+  valid.config.systemd.services.github-runner-jit-first.serviceConfig.LoadCredential == [
+    "app-key:/var/lib/secrets/github-runner-first.pem"
+  ];
+assert pkgs.lib.hasInfix "credentials/runner-jit" valid.config.systemd.services.first.script;
+assert !(pkgs.lib.hasInfix "app-key" valid.config.systemd.services.first.script);
 assert mixedNetworking.config.systemd.network.wait-online.enable;
 assert !valid.config.systemd.network.wait-online.enable;
 assert pkgs.lib.all (
