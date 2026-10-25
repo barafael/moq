@@ -3,10 +3,3 @@ https://lminiero.it:9000/ negotiated ALPN: moqt-22
 connected version=moq-transport-22
 subscribe_namespace written: requestId=0
 error: timed out waiting for data
-subscribe_namespace error: session error: connection error: closed
-broadcast discovery failed; broadcasts resolve on request only. warn: session error: connection error: closed
- code: "GenericFailure"
-
-
-subscribe start: id=2 broadcast=smoke-rust-4865-10473.hang track=catalog.json
-subscribe error: id=2 broadcast=smoke-rust-4865-10473.hang track=catalog.json error=subscribe abandoned before it was accepted
