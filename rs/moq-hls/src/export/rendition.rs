@@ -276,8 +276,9 @@ pub struct Rendition {
 	live: Arc<segments::Producer>,
 	/// This rendition's own timeline, which resolves each segment to its frames.
 	spans: Arc<Spans>,
-	/// The broadcast carrying the catalog and every timeline.
-	catalog: moq_net::broadcast::Consumer,
+	/// The source whose catalog broadcast carries every timeline. Timelines and the inline init
+	/// bootstrap are [control](moq_mux::Source::control) reads.
+	source: moq_mux::Source,
 	/// Feeds [`spans`](Self::spans); aborted when the rendition drops.
 	watcher: Mutex<Option<tokio::task::JoinHandle<()>>>,
 	/// The broadcast serving this rendition's media. A sibling is bound when the rendition is
@@ -374,7 +375,7 @@ impl Rendition {
 			clock,
 			live: Arc::new(segments::Producer::new()),
 			spans: Arc::new(Spans::new()),
-			catalog: source.broadcast(),
+			source: source.clone(),
 			watcher: Mutex::new(None),
 			media,
 			run: Mutex::default(),
@@ -406,7 +407,7 @@ impl Rendition {
 			clock,
 			live: Arc::new(segments::Producer::new()),
 			spans: Arc::new(Spans::new()),
-			catalog: source.broadcast(),
+			source: source.clone(),
 			watcher: Mutex::new(None),
 			media,
 			run: Mutex::default(),
@@ -417,7 +418,7 @@ impl Rendition {
 	/// Start following this rendition's own timeline, trimmed to the listed segments.
 	pub(crate) fn watch(&self) {
 		let watcher = tokio::spawn(watch_spans(
-			self.catalog.clone(),
+			self.source.clone(),
 			self.section.clone(),
 			self.track_name().to_string(),
 			self.spans.clone(),
@@ -1029,8 +1030,17 @@ impl Rendition {
 				let Some(sequence) = latest.or_else(|| self.live.latest_keyframe_group(&reference)) else {
 					return Ok(None);
 				};
-				let Some((broadcast, track)) = self.track(&binding).await? else {
+				let Some((media, track)) = self.track(&binding).await? else {
 					return Ok(None);
+				};
+				// A bootstrap read: through the control origin when there is one, on the bound
+				// instance.
+				let (broadcast, track) = match self.source.control(&media).await? {
+					Some(control) => match control.track(self.track_name()) {
+						Ok(track) => (control, track),
+						Err(_) => return Ok(None),
+					},
+					None => (media, track),
 				};
 				let Ok(mut group) = fetch(&track, hang::timeline::Position::group(sequence), None, &broadcast).await?
 				else {
@@ -1200,14 +1210,17 @@ fn last_group(range: &std::ops::Range<hang::timeline::Position>) -> u64 {
 
 /// Follow `track`'s own timeline into `spans` until it ends, then mark nothing pending.
 async fn watch_spans(
-	broadcast: moq_net::broadcast::Consumer,
+	source: moq_mux::Source,
 	section: Archive,
 	track: String,
 	spans: Arc<Spans>,
 	live: Arc<segments::Producer>,
 ) {
 	let result: Result<()> = async {
-		let mut timeline = moq_mux::timeline::Consumer::<()>::subscribe(&broadcast, &section, &track).await?;
+		let catalog = source.broadcast();
+		let control = source.control(&catalog).await?;
+		let broadcast = control.as_ref().unwrap_or(&catalog);
+		let mut timeline = moq_mux::timeline::Consumer::<()>::subscribe(broadcast, &section, &track).await?;
 		while let Some(event) = timeline.next().await? {
 			match event {
 				moq_mux::timeline::Event::Push { entry, .. } => spans.push(entry),

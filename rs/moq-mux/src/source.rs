@@ -34,6 +34,10 @@ type Pins = Arc<Mutex<HashMap<moq_net::PathOwned, moq_net::broadcast::Consumer>>
 /// A reader that follows a sibling's announcements instead, restarting on each new instance,
 /// uses [`follow`](Self::follow), which holds nothing.
 ///
+/// Control reads (the catalog, and whatever else an export reads only to stay in sync, as
+/// opposed to the media it delivers) can go through another origin than media reads: see
+/// [`with_control`](Self::with_control).
+///
 /// A reference may name the instance it expects with an epoch (the catalog's optional `epoch`
 /// beside `broadcast`). A held or resolved broadcast serving another epoch fails that reference
 /// with [`Error::EpochMismatch`](crate::Error::EpochMismatch) rather than replacing the held
@@ -47,6 +51,8 @@ pub struct Source {
 	/// What each rendition an export reads through this source has received. See
 	/// [`stats`](Self::stats).
 	received: Arc<crate::stats::Registry<crate::stats::Received>>,
+	/// The origin control reads go through, when not `origin`. See [`control`](Self::control).
+	control: Option<moq_net::origin::Consumer>,
 }
 
 impl Source {
@@ -66,7 +72,19 @@ impl Source {
 			path,
 			pins: Arc::new(Mutex::new(pins)),
 			received: Default::default(),
+			control: None,
 		}
+	}
+
+	/// Read control tracks through `control` rather than this source's origin.
+	///
+	/// `control` is another view of the same origin, at the same root (typically scoped the
+	/// same, with different stats or other per-handle settings), so it hands out the very
+	/// broadcasts this source resolves. Media is still read through the source's origin. See
+	/// [`control`](Self::control).
+	pub fn with_control(mut self, control: moq_net::origin::Consumer) -> Self {
+		self.control = Some(control);
+		self
 	}
 
 	/// This source holding nothing but `broadcast` at its own path: an export switching to
@@ -78,6 +96,7 @@ impl Source {
 			path: self.path.clone(),
 			pins: Arc::new(Mutex::new(pins)),
 			received: self.received.clone(),
+			control: self.control.clone(),
 		}
 	}
 
@@ -120,7 +139,7 @@ impl Source {
 		pins.get(&self.path).expect("the own path is always held").clone()
 	}
 
-	/// Subscribe to this broadcast's catalog.
+	/// Subscribe to this broadcast's catalog, through the [`control`](Self::control) origin.
 	///
 	/// The stream rejects a catalog carrying a `broadcast` reference that walks above the root
 	/// (see [`Error::EscapingBroadcast`](crate::Error::EscapingBroadcast)), so every snapshot a
@@ -129,7 +148,32 @@ impl Source {
 		&self,
 		format: crate::catalog::CatalogFormat,
 	) -> crate::Result<crate::catalog::Consumer<E>> {
-		crate::catalog::Consumer::new(&self.broadcast(), format).await
+		let broadcast = self.broadcast();
+		let control = self.control(&broadcast).await?;
+		crate::catalog::Consumer::new(control.as_ref().unwrap_or(&broadcast), format).await
+	}
+
+	/// `broadcast` as the [`with_control`](Self::with_control) origin hands it out, for a control
+	/// read: the catalog, or anything else an export reads only to stay in sync with the media.
+	///
+	/// `broadcast` is one this source resolved (its [`broadcast`](Self::broadcast) or a bound
+	/// sibling). It is requested again at its path, pinned to its epoch, and must come back as the
+	/// same instance, else [`Error::ControlMismatch`](crate::Error::ControlMismatch): control and
+	/// media never describe different publishers. A refusal or an unroutable path fails as the
+	/// request does. `None` without a control origin: read `broadcast` itself.
+	pub async fn control(
+		&self,
+		broadcast: &moq_net::broadcast::Consumer,
+	) -> crate::Result<Option<moq_net::broadcast::Consumer>> {
+		let Some(control) = &self.control else {
+			return Ok(None);
+		};
+		let info = broadcast.info();
+		let handle = control.request_broadcast(&info.path, info.epoch.clone()).await?;
+		if !handle.is_clone(broadcast) {
+			return Err(crate::Error::ControlMismatch(info.path.to_string()));
+		}
+		Ok(Some(handle))
 	}
 
 	/// The catalog broadcast, as a binding.
@@ -625,6 +669,47 @@ mod tests {
 		);
 		let bound = source.bind(Some(&sibling), None).unwrap().broadcast().await.unwrap();
 		assert!(bound.is_clone(&first), "a binding honors the pin too");
+	}
+
+	/// A control origin hands out the very instances the source reads media from, for the
+	/// catalog broadcast and a bound sibling alike, through its own handles.
+	#[tokio::test(start_paused = true)]
+	async fn a_control_origin_reads_the_same_instances() {
+		let origin = produce_origin();
+		let _catalog = origin.publish("a/pub", Default::default()).unwrap();
+		let _sibling = origin.publish("a/source", Default::default()).unwrap();
+		settle().await;
+		let source = resolved(&origin, "a/pub").await;
+		let sibling = source.resolve(Some(&Relative::new("./source")), None).await.unwrap();
+		assert!(source.control(&source.broadcast()).await.unwrap().is_none());
+
+		let source = source.with_control(origin.consume());
+		for broadcast in [source.broadcast(), sibling] {
+			let control = source.control(&broadcast).await.unwrap().expect("a control handle");
+			assert!(control.is_clone(&broadcast));
+			assert_eq!(control.info().path, broadcast.info().path);
+		}
+	}
+
+	/// A control origin that would serve a replacement fails the read rather than describe
+	/// another publisher's media.
+	#[tokio::test(start_paused = true)]
+	async fn a_control_origin_refuses_another_instance() {
+		let origin = produce_origin();
+		let _old = origin.publish("a/pub", Default::default()).unwrap();
+		settle().await;
+		let source = resolved(&origin, "a/pub").await.with_control(origin.consume());
+		let _new = origin.publish("a/pub", Default::default()).unwrap();
+		settle().await;
+
+		assert!(matches!(
+			source.control(&source.broadcast()).await,
+			Err(crate::Error::ControlMismatch(path)) if path == "a/pub"
+		));
+		assert!(
+			source.catalog::<()>(crate::catalog::CatalogFormat::Hang).await.is_err(),
+			"the catalog is a control read"
+		);
 	}
 
 	fn route(epoch: &moq_net::Epoch) -> moq_net::origin::Route {

@@ -16,6 +16,9 @@
 //! other rendition resolves each segment against its own timeline.
 //! An inline-parameter-set codec with no catalog `description` GETs one keyframe
 //! group on the first playlist render to build its init, then caches it.
+//! The catalog, the timelines, and that bootstrap are control reads: they go through the
+//! source's [control origin](moq_mux::Source::with_control) when it has one, and only
+//! segment fetches read through its own origin.
 //!
 //! The same machinery serves two kinds of consumer:
 //!
@@ -401,9 +404,15 @@ async fn watch_catalog(source: moq_mux::Source, renditions: renditions::Producer
 	// check below all refer to the one broadcast it was built from.
 	let broadcast = &source.broadcast();
 	let mut delay = CATALOG_RETRY_MIN;
-	let mut consumer = loop {
-		match catalog::Consumer::<()>::new(broadcast, CatalogFormat::Hang).await {
-			Ok(consumer) => break consumer,
+	let (control, mut consumer) = loop {
+		// The catalog and the reference timeline are control reads.
+		let subscribe = async {
+			let control = source.control(broadcast).await?.unwrap_or_else(|| broadcast.clone());
+			let consumer = catalog::Consumer::<()>::new(&control, CatalogFormat::Hang).await?;
+			moq_mux::Result::Ok((control, consumer))
+		};
+		match subscribe.await {
+			Ok(subscribed) => break subscribed,
 			Err(err) => {
 				tracing::warn!(%err, "failed to subscribe to broadcast catalog, retrying");
 				let wait = delay.mul_f64(0.5 + rand::rng().random::<f64>() / 2.0);
@@ -435,7 +444,7 @@ async fn watch_catalog(source: moq_mux::Source, renditions: renditions::Producer
 					}
 					if let (Some(next), Some(archive)) = (&next, catalog.archive.clone()) {
 						*watcher = Some(tokio::spawn(watch_timeline(
-							broadcast.clone(),
+							control.clone(),
 							archive,
 							next.clone(),
 							renditions.fanout(),
@@ -1793,6 +1802,64 @@ mod tests {
 			media.write(vp8_frame(micros, keyframe)).unwrap();
 		}
 		(catalog, registration, media)
+	}
+
+	/// The catalog, every timeline, and an inline init's bootstrap read through the source's
+	/// control origin, so only segment fetches read through its media origin.
+	#[tokio::test(start_paused = true)]
+	async fn only_segments_read_through_the_media_origin() {
+		let origin = produce_origin();
+		let broadcast = origin.create_broadcast("live").expect("publish allowed");
+		let (_catalog, mut registration, _media) = publish_vp8(&mut broadcast.broadcast().clone());
+		// No geometry, so the init bootstraps from a keyframe group.
+		registration
+			.set(hang::catalog::VideoConfig::new(hang::catalog::VideoCodec::VP8))
+			.unwrap();
+		broadcast.announce(moq_net::origin::Route::default()).unwrap();
+		settle().await;
+
+		let registry = moq_net::stats::Registry::new(moq_net::stats::Config::new());
+		let tagged = |tier: &'static str| {
+			let session = registry.tier(moq_net::stats::Tier::new(tier)).session("");
+			origin.consume().with_stats(session)
+		};
+		let media = tagged("media");
+		let live = media.request_broadcast("live", None).await.unwrap();
+		let source = moq_mux::Source::new(media, live).with_control(tagged("control"));
+		let broadcaster = Broadcaster::new(source, Config::default());
+		broadcaster.ready().await;
+		let rendition = broadcaster.rendition(Kind::Video, "video0").expect("rendition");
+		rendition
+			.playlist(None)
+			.await
+			.unwrap()
+			.expect("a playlist with its init");
+
+		let read = |tier: &str| {
+			let traffic = registry.snapshot().traffic().into_iter();
+			traffic
+				.filter(|(label, role, _)| label.label().as_str() == tier && *role == moq_net::stats::Role::Publisher)
+				.map(|(_, _, traffic)| (traffic.subscriptions_started, traffic.fetches, traffic.bytes > 0))
+				.next()
+				.unwrap_or_default()
+		};
+		// The catalog, the reference's timeline and the rendition's own (here the same track), then
+		// the init bootstrap's keyframe group.
+		assert_eq!(read("control"), (3, 1, true));
+		assert_eq!(read("media"), (0, 0, false));
+
+		assert!(
+			!rendition
+				.listed_segment(0)
+				.await
+				.unwrap()
+				.expect("a segment")
+				.is_empty()
+		);
+		let (subscriptions, fetches, bytes) = read("media");
+		assert_eq!((subscriptions, bytes), (0, true));
+		assert!(fetches > 0);
+		assert_eq!(read("control").1, 1, "a segment is a media read");
 	}
 
 	/// A completed segment already decoded its inline codec metadata. Finishing the

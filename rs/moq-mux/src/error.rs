@@ -260,6 +260,11 @@ pub enum Error {
 		actual: moq_net::Epoch,
 	},
 
+	/// A [`Source`](crate::Source)'s control origin serves another instance of a broadcast than
+	/// the one the source reads media from, so control reads would describe other media.
+	#[error("control origin serves another instance of broadcast {0}")]
+	ControlMismatch(String),
+
 	/// A rendition tried to lower jitter already advertised to subscribers.
 	#[error("catalog jitter cannot decrease for a published rendition")]
 	JitterDecreased,
