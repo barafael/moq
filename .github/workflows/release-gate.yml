@@ -285,12 +285,19 @@ jobs:
     needs: scope
     if: needs.scope.outputs.release-kt-lib == 'true'
     uses: ./.github/workflows/release-kt-lib.yml
+    permissions:
+      contents: read
+      actions: read
 
   release-swift-lib:
     name: Release Swift Lib
     needs: scope
     if: needs.scope.outputs.release-swift-lib == 'true'
     uses: ./.github/workflows/release-swift-lib.yml
+    # Its publisher check reads upstream run jobs.
+    permissions:
+      contents: read
+      actions: read
 
   gate:
     # The one context the release ruleset requires. Skipped jobs pass it; a
