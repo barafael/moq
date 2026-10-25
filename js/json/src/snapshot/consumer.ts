@@ -5,6 +5,9 @@ import { Decoder } from "./decoder.ts";
 import type { Config as CodecConfig } from "./encoder.ts";
 
 const GAPS: Moq.StreamCode[] = [
+	// Before lite-07, SUBSCRIBE_DROP reports a missing group as NotFound.
+	// This only handles a failed group read; a track refusal still propagates.
+	Moq.StreamCode.NotFound,
 	Moq.StreamCode.TooFarBehind,
 	Moq.StreamCode.Old,
 	Moq.StreamCode.Evicted,
