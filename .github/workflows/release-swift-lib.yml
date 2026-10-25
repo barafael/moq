@@ -26,17 +26,8 @@ on:
       - "sh/swift/verify.sh"
       - ".github/workflows/release-swift-lib.yml"
       - "sh/gh/release.sh"
-  pull_request:
-    paths:
-      - "swift/VERSION"
-      - "swift/Package.swift.template"
-      - "swift/Sources/Moq/**"
-      - "swift/Tests/**"
-      - "sh/swift/package.sh"
-      - "sh/swift/publish.sh"
-      - "sh/swift/verify.sh"
-      - ".github/workflows/release-swift-lib.yml"
-      - "sh/gh/release.sh"
+  # Pull request dry-runs, through release-gate.yml.
+  workflow_call:
   workflow_run:
     workflows: ["Release FFI", "Release Swift FFI"]
     types:

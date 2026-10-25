@@ -5,18 +5,7 @@ name: Audio quality
 # consumer and rings on a simulated clock, so they are deterministic and take
 # seconds, unlike the browser rows, which stay in nightly.yml.
 on:
-  pull_request:
-    paths:
-      - "js/watch/**"
-      # The container consumer decides what a replay delivers, waits for, and skips, on the
-      # groups, tracks, and signals underneath it.
-      - "js/hang/**"
-      - "js/net/**"
-      - "js/signals/**"
-      - "test/audio-quality/**"
-      - "test/lib/**"
-      - "test/justfile"
-      - ".github/workflows/audio-quality.yml"
+  workflow_call:
 
 concurrency:
   group: audio-quality-${{ github.ref }}

@@ -31,29 +31,7 @@ permissions:
   contents: read
 
 on:
-  pull_request:
-    # `closed` is here only so merging/closing a PR cancels its in-flight run
-    # via the concurrency group below; the job itself is skipped on close.
-    types: [opened, synchronize, reopened, closed]
-    paths:
-      - "rs/moq-wasm/**"
-      - "rs/moq-net/**"
-      - "rs/kio/**"
-      - "js/wasm/**"
-      - "test/wasm/**"
-      - "test/lib/**"
-      - "justfile"
-      - "js/justfile"
-      - "test/justfile"
-      - ".cargo/config.toml"
-      - "package.json"
-      - "bun.lock"
-      - "Cargo.toml"
-      - "Cargo.lock"
-      - "rust-toolchain.toml"
-      - "flake.nix"
-      - "flake.lock"
-      - ".github/workflows/wasm.yml"
+  workflow_call:
 
 concurrency:
   group: wasm-${{ github.ref }}
@@ -62,7 +40,6 @@ concurrency:
 jobs:
   wasm:
     name: WASM
-    if: github.event.action != 'closed'
     # ARM64 like check.yml, the only architecture cache.yml warms a Rust store
     # for; the harness builds the relay natively, which that store covers.
     runs-on: ubuntu-24.04-arm

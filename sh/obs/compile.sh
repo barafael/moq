@@ -16,8 +16,8 @@
 # test/ is in scope because each test file defines the libmoq entry points the
 # plugin calls, so a signature that drifts from the generated moq.h is a
 # conflicting C declaration. Catching that needs only headers, which is why it
-# belongs here: `just obs ci` finds the same drift, but only where obs.yml's
-# path filter reaches, and `just obs test` is manual.
+# belongs here: `just obs ci` finds the same drift, but only where release-gate.yml's
+# OBS filter reaches, and `just obs test` is manual.
 set -euo pipefail
 
 here=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)

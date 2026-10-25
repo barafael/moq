@@ -1,0 +1,329 @@
+name: Release gate
+
+# Every optional workflow a PR into `release` must pass, behind one required
+# context. `release` has no merge queue, so its ruleset requires `Check` and
+# `Release gate`.
+#
+# Each workflow keeps the paths that select it, here rather than in its own
+# trigger, so a workflow the diff skips still reports through this gate instead
+# of never reporting and blocking the PR forever.
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    branches: [release]
+    # `closed` only cancels an in-flight run. `edited` runs the gate when a main
+    # PR is retargeted to release. Any edit reruns it, since a skipped rerun
+    # would post a passing context over a failed one.
+    types: [opened, synchronize, reopened, edited, closed]
+
+concurrency:
+  group: release-gate-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  scope:
+    name: Scope
+    if: github.event.action != 'closed'
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 10
+    outputs:
+      android: ${{ steps.filter.outputs.android }}
+      audio-quality: ${{ steps.filter.outputs.audio-quality }}
+      interop: ${{ steps.filter.outputs.interop }}
+      obs: ${{ steps.filter.outputs.obs }}
+      platform: ${{ steps.filter.outputs.platform }}
+      release-dart: ${{ steps.filter.outputs.release-dart }}
+      release-dart-ffi: ${{ steps.filter.outputs.release-dart-ffi }}
+      release-go-ffi: ${{ steps.filter.outputs.release-go-ffi }}
+      release-js: ${{ steps.filter.outputs.release-js }}
+      release-kt-lib: ${{ steps.filter.outputs.release-kt-lib }}
+      release-swift-lib: ${{ steps.filter.outputs.release-swift-lib }}
+      swift: ${{ steps.filter.outputs.swift }}
+      wasm: ${{ steps.filter.outputs.wasm }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      # Diff with git against the merge base: the REST file list a token would
+      # use stops at 3,000 files, which a cut can exceed.
+      - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        id: filter
+        with:
+          token: ""
+          base: ${{ github.base_ref }}
+          filters: |
+            android:
+              - "rs/moq-video/**"
+              - "rs/moq-mux/**"
+              - "rs/moq-net/**"
+              - "rs/moq-nvenc/**"
+              - "rs/moq-loc/**"
+              - "rs/moq-msf/**"
+              - "rs/moq-json/**"
+              - "rs/moq-binary/**"
+              - "rs/moq-flate/**"
+              - "rs/moq-pattern/**"
+              - "rs/hang/**"
+              - "rs/kio/**"
+              - "rs/justfile"
+              - "justfile"
+              - ".cargo/config.toml"
+              - "Cargo.toml"
+              - "Cargo.lock"
+              - "rust-toolchain.toml"
+              - ".github/workflows/android.yml"
+            audio-quality:
+              - "js/watch/**"
+              # The container consumer decides what a replay delivers, waits for, and skips, on the
+              # groups, tracks, and signals underneath it.
+              - "js/hang/**"
+              - "js/net/**"
+              - "js/signals/**"
+              - "test/audio-quality/**"
+              - "test/lib/**"
+              - "test/justfile"
+              - ".github/workflows/audio-quality.yml"
+            # A change to the harness itself; source regressions surface nightly.
+            interop:
+              - "test/lib/**"
+              - "test/interop/**"
+              # The TS/IRD compliance harness runs in the same job.
+              - "test/ts/**"
+              # The interop job also depends on the recipe that invokes it and the
+              # workspace membership that links the JS clients to source.
+              - "test/justfile"
+              - "package.json"
+              # The Go client builds against the modules this script stages.
+              - "sh/go/**"
+              - ".github/workflows/interop.yml"
+            obs:
+              - "cpp/obs/**"
+              - "sh/obs/**"
+              - "rs/libmoq/**"
+              - "doc/lib/c/**"
+              - "doc/lib/samples.sh"
+              - "rs/**/Cargo.toml"
+              - "rs/**/build.rs"
+              - "Cargo.toml"
+              - "Cargo.lock"
+              - "rust-toolchain.toml"
+              - "flake.nix"
+              - "flake.lock"
+              - ".github/workflows/obs.yml"
+            platform:
+              - "rs/**"
+              - ".cargo/**"
+              - "Cargo.toml"
+              - "Cargo.lock"
+              - "rust-toolchain.toml"
+              - "justfile"
+              - "sh/**"
+              - ".github/workflows/platform.yml"
+            release-dart:
+              - ".github/workflows/release-dart.yml"
+              - "dart/moq/**"
+              - "sh/dart/**"
+            # Packaging changes only, like the other FFI release workflows. A
+            # change to the moq-ffi sources is covered on every platform by
+            # cheaper gates: Check compiles it and regenerates the Dart
+            # bindings, Platform and Swift compile it for macOS, Windows, and
+            # iOS, and nightly runs this full matrix.
+            release-dart-ffi:
+              - ".github/workflows/release-dart-ffi.yml"
+              - ".github/workflows/release-ffi.yml"
+              - "dart/moq_ffi/**"
+              - "sh/dart/**"
+              - "rs/moq-ffi/build.sh"
+            release-go-ffi:
+              - ".github/workflows/release-go-ffi.yml"
+              - ".github/workflows/release-ffi.yml"
+              - ".github/workflows/release-shared-ffi.yml"
+              - "sh/gh/ffi*"
+              - "sh/gh/release.sh"
+              - "go/ffi/**"
+              - "sh/go/package-ffi.sh"
+              - "sh/go/publish-ffi.sh"
+              - "rs/moq-ffi/build.sh"
+            release-js:
+              - "js/**"
+              - ".github/workflows/release-js.yml"
+            release-kt-lib:
+              - "kt/moq/**"
+              - "kt/gradle.properties"
+              - "kt/build.gradle.kts"
+              - "kt/settings.gradle.kts"
+              - ".github/workflows/release-kt-lib.yml"
+              - "sh/gh/release.sh"
+              - "rs/moq-ffi/build.sh"
+            release-swift-lib:
+              - "swift/VERSION"
+              - "swift/Package.swift.template"
+              - "swift/Sources/Moq/**"
+              - "swift/Tests/**"
+              - "sh/swift/package.sh"
+              - "sh/swift/publish.sh"
+              - "sh/swift/verify.sh"
+              - ".github/workflows/release-swift-lib.yml"
+              - "sh/gh/release.sh"
+            swift:
+              - "swift/**"
+              - "sh/swift/**"
+              - "doc/lib/swift/**"
+              - "doc/lib/samples.sh"
+              - "rs/moq-ffi/**"
+              - "rs/moq-video/**"
+              - "Cargo.lock"
+              - ".github/workflows/swift.yml"
+            wasm:
+              - "rs/moq-wasm/**"
+              - "rs/moq-net/**"
+              - "rs/kio/**"
+              - "js/wasm/**"
+              - "test/wasm/**"
+              - "test/lib/**"
+              - "justfile"
+              - "js/justfile"
+              - "test/justfile"
+              - ".cargo/config.toml"
+              - "package.json"
+              - "bun.lock"
+              - "Cargo.toml"
+              - "Cargo.lock"
+              - "rust-toolchain.toml"
+              - "flake.nix"
+              - "flake.lock"
+              - ".github/workflows/wasm.yml"
+
+  android:
+    name: Android
+    needs: scope
+    if: needs.scope.outputs.android == 'true'
+    uses: ./.github/workflows/android.yml
+
+  audio-quality:
+    name: Audio quality
+    needs: scope
+    if: needs.scope.outputs.audio-quality == 'true'
+    uses: ./.github/workflows/audio-quality.yml
+
+  interop:
+    name: Interop
+    needs: scope
+    if: needs.scope.outputs.interop == 'true'
+    uses: ./.github/workflows/interop.yml
+    permissions:
+      contents: read
+      id-token: write
+
+  obs:
+    name: OBS
+    needs: scope
+    if: needs.scope.outputs.obs == 'true'
+    uses: ./.github/workflows/obs.yml
+
+  # Selects the crates to compile from the diff itself.
+  platform:
+    name: Platform
+    needs: scope
+    if: needs.scope.outputs.platform == 'true'
+    uses: ./.github/workflows/platform.yml
+
+  swift:
+    name: Swift
+    needs: scope
+    if: needs.scope.outputs.swift == 'true'
+    uses: ./.github/workflows/swift.yml
+
+  wasm:
+    name: WASM
+    needs: scope
+    if: needs.scope.outputs.wasm == 'true'
+    uses: ./.github/workflows/wasm.yml
+
+  # The release workflows as dry-runs: they gate publishing on a tag or a push
+  # and get no secrets. A caller grants every permission a nested job declares,
+  # skipped or not, so these carry the release-time grants that nothing here
+  # uses.
+  release-dart:
+    name: Release Dart
+    needs: scope
+    if: needs.scope.outputs.release-dart == 'true'
+    uses: ./.github/workflows/release-dart.yml
+    permissions:
+      contents: read
+      id-token: write
+
+  release-dart-ffi:
+    name: Release Dart FFI
+    needs: scope
+    if: needs.scope.outputs.release-dart-ffi == 'true'
+    uses: ./.github/workflows/release-dart-ffi.yml
+    permissions:
+      contents: write
+      id-token: write
+
+  release-go-ffi:
+    name: Release Go FFI
+    needs: scope
+    if: needs.scope.outputs.release-go-ffi == 'true'
+    uses: ./.github/workflows/release-go-ffi.yml
+
+  release-js:
+    name: Release JS
+    needs: scope
+    if: needs.scope.outputs.release-js == 'true'
+    uses: ./.github/workflows/release-js.yml
+    permissions:
+      contents: read
+      id-token: write
+
+  release-kt-lib:
+    name: Release Kotlin lib
+    needs: scope
+    if: needs.scope.outputs.release-kt-lib == 'true'
+    uses: ./.github/workflows/release-kt-lib.yml
+    permissions:
+      contents: read
+      actions: read
+
+  release-swift-lib:
+    name: Release Swift Lib
+    needs: scope
+    if: needs.scope.outputs.release-swift-lib == 'true'
+    uses: ./.github/workflows/release-swift-lib.yml
+    # Its publisher check reads upstream run jobs.
+    permissions:
+      contents: read
+      actions: read
+
+  gate:
+    # The one context the release ruleset requires. Skipped jobs pass it; a
+    # failed scope fails it, rather than skipping what it would have selected.
+    # `always()` also runs it in a cancelled run, so a rerun on `edited` cannot
+    # leave a skipped, passing context on the same commit while it runs.
+    name: Release gate
+    needs:
+      - scope
+      - android
+      - audio-quality
+      - interop
+      - obs
+      - platform
+      - swift
+      - wasm
+      - release-dart
+      - release-dart-ffi
+      - release-go-ffi
+      - release-js
+      - release-kt-lib
+      - release-swift-lib
+    if: always() && github.event.action != 'closed'
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 5
+    steps:
+      - name: Fail on a failed or cancelled workflow
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: exit 1

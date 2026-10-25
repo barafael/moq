@@ -14,17 +14,6 @@ on:
         type: boolean
         default: false
   workflow_dispatch:
-  pull_request:
-    paths:
-      - ".github/workflows/release-go-ffi.yml"
-      - ".github/workflows/release-ffi.yml"
-      - ".github/workflows/release-shared-ffi.yml"
-      - "sh/gh/ffi*"
-      - "sh/gh/release.sh"
-      - "go/ffi/**"
-      - "sh/go/package-ffi.sh"
-      - "sh/go/publish-ffi.sh"
-      - "rs/moq-ffi/build.sh"
 
 permissions:
   contents: read

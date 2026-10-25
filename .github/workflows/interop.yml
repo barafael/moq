@@ -11,21 +11,8 @@ on:
   # Nightly: catch an interop regression in the current tree before a user does.
   schedule:
     - cron: "0 8 * * *"
-  # On PRs that touch the harness itself, so a change to the interop test is
-  # validated before it merges. Source regressions still surface nightly.
-  pull_request:
-    paths:
-      - "test/lib/**"
-      - "test/interop/**"
-      # The TS/IRD compliance harness runs in the same job (see below).
-      - "test/ts/**"
-      # The interop job also depends on the recipe that invokes it and the
-      # workspace membership that links the JS clients to source.
-      - "test/justfile"
-      - "package.json"
-      # The Go client builds against the modules this script stages.
-      - "sh/go/**"
-      - ".github/workflows/interop.yml"
+  # release-gate.yml, on PRs that touch the harness.
+  workflow_call:
 
 concurrency:
   group: interop-${{ github.ref }}
