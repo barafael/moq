@@ -1,13 +1,12 @@
 [page] negotiated protocol: moq-lite-06
 [page] announced: prefix=
 [page] announce: prefix=
-[page] announced: broadcast=alluno/comms/8afe57cd-9e40-4f0f-946e-dbca939eb524/b767c775-2ef2-492f-b8b6-d0827cce48d3/Adidharma_Torutama active=true
 [page] announced: broadcast=anon/doom/game/e1m1 active=true
 [page] announced: broadcast=room/6add59f11d8068f32675c9f9.hang active=true
-[page] announced: broadcast=smoke-rust-4998-81.hang active=true
-[page] subscribe start: id=0 broadcast=smoke-rust-4998-81.hang track=catalog.json
-[page] subscribe ok: id=0 broadcast=smoke-rust-4998-81.hang track=catalog.json
-[page] received catalog hang smoke-rust-4998-81.hang {video: Object, audio: Object, archive: Object, clock: Object}
-[page] subscribe start: id=1 broadcast=smoke-rust-4998-81.hang track=0.avc3
-[page] subscribe ok: id=1 broadcast=smoke-rust-4998-81.hang track=0.avc3
-decoded 9 frames from smoke-rust-4998-81.hang (vite)
+[page] announced: broadcast=smoke-rust-5080-1499.hang active=true
+[page] subscribe start: id=0 broadcast=smoke-rust-5080-1499.hang track=catalog.json
+[page] subscribe ok: id=0 broadcast=smoke-rust-5080-1499.hang track=catalog.json
+[page] received catalog hang smoke-rust-5080-1499.hang {video: Object, audio: Object, archive: Object, clock: Object}
+[page] subscribe start: id=1 broadcast=smoke-rust-5080-1499.hang track=0.avc3
+[page] subscribe ok: id=1 broadcast=smoke-rust-5080-1499.hang track=0.avc3
+decoded 10 frames from smoke-rust-5080-1499.hang (vite)

@@ -1,18 +1,18 @@
-[2m2026-10-25T13:02:27.675010Z[0m [32m INFO[0m [2mmoq_relay::cluster[0m[2m:[0m cluster initialized [3mhop_id[0m[2m=[0m3560610644443243 [3mconfigured[0m[2m=[0mfalse
-[2m2026-10-25T13:02:27.681617Z[0m [33m WARN[0m [2mmoq_sock::bind[0m[2m:[0m UDP receive buffer is smaller than requested; raise `net.core.rmem_max` or expect packet loss under load [3mwanted[0m[2m=[0m8388608 [3mgranted[0m[2m=[0m1048576
-[2m2026-10-25T13:02:27.681635Z[0m [33m WARN[0m [2mmoq_sock::bind[0m[2m:[0m UDP send buffer is smaller than requested; raise `net.core.wmem_max` or expect packet loss under load [3mwanted[0m[2m=[0m8388608 [3mgranted[0m[2m=[0m212992
-[2m2026-10-25T13:02:27.688124Z[0m [32m INFO[0m [2mmoq_relay::cluster[0m[2m:[0m no cluster peers configured; running standalone
-[2m2026-10-25T13:02:27.688504Z[0m [32m INFO[0m [2mmoq_tokio::connection[0m[2m:[0m connecting [3mpeer[0m[2m=[0mhttps://us-west-2.relay.quicr.org:33437
-[2m2026-10-25T13:02:28.010445Z[0m [33m WARN[0m [2mmoq_tokio::client[0m[2m:[0m QUIC connection failed [3merr[0m[2m=[0mfailed to exchange h3 connect: protocol error: expected 200, got: Some(404): protocol error: expected 200, got: Some(404): expected 200, got: Some(404)
-[2m2026-10-25T13:02:28.010478Z[0m [31mERROR[0m [2mmoq_tokio::connection[0m[2m:[0m connection loop exited [3merr[0m[2m=[0mfailed to exchange h3 connect: protocol error: expected 200, got: Some(404): protocol error: expected 200, got: Some(404): expected 200, got: Some(404)
-[2m2026-10-25T13:02:28.010586Z[0m [33m WARN[0m [2mmoq_net::model::track[0m[2m:[0m track::Producer dropped without finish() or abort() [3mtrack[0m[2m=[0m0.avc3
-[2m2026-10-25T13:02:28.010604Z[0m [33m WARN[0m [2mmoq_net::model::group[0m[2m:[0m group::Producer dropped without finish() or abort() [3msequence[0m[2m=[0m0
-[2m2026-10-25T13:02:28.010954Z[0m [33m WARN[0m [2mmoq_net::model::track[0m[2m:[0m track::Producer dropped without finish() or abort() [3mtrack[0m[2m=[0mcatalog.json
-[2m2026-10-25T13:02:28.010963Z[0m [33m WARN[0m [2mmoq_net::model::track[0m[2m:[0m track::Producer dropped without finish() or abort() [3mtrack[0m[2m=[0mcatalog.json.z
-[2m2026-10-25T13:02:28.011010Z[0m [33m WARN[0m [2mmoq_net::model::track[0m[2m:[0m track::Producer dropped without finish() or abort() [3mtrack[0m[2m=[0mcatalog
-[2m2026-10-25T13:02:28.011024Z[0m [33m WARN[0m [2mmoq_net::model::track[0m[2m:[0m track::Producer dropped without finish() or abort() [3mtrack[0m[2m=[0mtimeline.z
+[2m2026-10-25T14:56:46.361618Z[0m [32m INFO[0m [2mmoq_relay::cluster[0m[2m:[0m cluster initialized [3mhop_id[0m[2m=[0m3639174351401530 [3mconfigured[0m[2m=[0mfalse
+[2m2026-10-25T14:56:46.366844Z[0m [33m WARN[0m [2mmoq_sock::bind[0m[2m:[0m UDP receive buffer is smaller than requested; raise `net.core.rmem_max` or expect packet loss under load [3mwanted[0m[2m=[0m8388608 [3mgranted[0m[2m=[0m1048576
+[2m2026-10-25T14:56:46.366867Z[0m [33m WARN[0m [2mmoq_sock::bind[0m[2m:[0m UDP send buffer is smaller than requested; raise `net.core.wmem_max` or expect packet loss under load [3mwanted[0m[2m=[0m8388608 [3mgranted[0m[2m=[0m212992
+[2m2026-10-25T14:56:46.372357Z[0m [32m INFO[0m [2mmoq_relay::cluster[0m[2m:[0m no cluster peers configured; running standalone
+[2m2026-10-25T14:56:46.372672Z[0m [32m INFO[0m [2mmoq_tokio::connection[0m[2m:[0m connecting [3mpeer[0m[2m=[0mhttps://us-west-2.relay.quicr.org:33437
+[2m2026-10-25T14:56:46.703987Z[0m [33m WARN[0m [2mmoq_tokio::client[0m[2m:[0m QUIC connection failed [3merr[0m[2m=[0mfailed to exchange h3 connect: protocol error: expected 200, got: Some(404): protocol error: expected 200, got: Some(404): expected 200, got: Some(404)
+[2m2026-10-25T14:56:46.704027Z[0m [31mERROR[0m [2mmoq_tokio::connection[0m[2m:[0m connection loop exited [3merr[0m[2m=[0mfailed to exchange h3 connect: protocol error: expected 200, got: Some(404): protocol error: expected 200, got: Some(404): expected 200, got: Some(404)
+[2m2026-10-25T14:56:46.704133Z[0m [33m WARN[0m [2mmoq_net::model::track[0m[2m:[0m track::Producer dropped without finish() or abort() [3mtrack[0m[2m=[0m0.avc3
+[2m2026-10-25T14:56:46.704152Z[0m [33m WARN[0m [2mmoq_net::model::group[0m[2m:[0m group::Producer dropped without finish() or abort() [3msequence[0m[2m=[0m0
+[2m2026-10-25T14:56:46.704546Z[0m [33m WARN[0m [2mmoq_net::model::track[0m[2m:[0m track::Producer dropped without finish() or abort() [3mtrack[0m[2m=[0mcatalog.json
+[2m2026-10-25T14:56:46.704556Z[0m [33m WARN[0m [2mmoq_net::model::track[0m[2m:[0m track::Producer dropped without finish() or abort() [3mtrack[0m[2m=[0mcatalog.json.z
+[2m2026-10-25T14:56:46.704613Z[0m [33m WARN[0m [2mmoq_net::model::track[0m[2m:[0m track::Producer dropped without finish() or abort() [3mtrack[0m[2m=[0mcatalog
+[2m2026-10-25T14:56:46.704632Z[0m [33m WARN[0m [2mmoq_net::model::track[0m[2m:[0m track::Producer dropped without finish() or abort() [3mtrack[0m[2m=[0mtimeline.z
 Error: failed to exchange h3 connect: protocol error: expected 200, got: Some(404): protocol error: expected 200, got: Some(404): expected 200, got: Some(404)
-[vost#0:0/libx264 @ 0x55de6c569180] Error submitting a packet to the muxer: Broken pipe
-[out#0/h264 @ 0x55de6c567e80] Error muxing a packet
-[out#0/h264 @ 0x55de6c567e80] Error writing trailer: Broken pipe
-[out#0/h264 @ 0x55de6c567e80] Error closing file: Broken pipe
+[vost#0:0/libx264 @ 0x55659db3c180] Error submitting a packet to the muxer: Broken pipe
+[out#0/h264 @ 0x55659db3ae80] Error muxing a packet
+[out#0/h264 @ 0x55659db3ae80] Error writing trailer: Broken pipe
+[out#0/h264 @ 0x55659db3ae80] Error closing file: Broken pipe
