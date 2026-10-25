@@ -13,15 +13,6 @@ on:
   # workflow this way so a broken build surfaces before the tag is cut.
   workflow_call:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - ".github/workflows/release-go-ffi.yml"
-      - ".github/workflows/release-ffi.yml"
-      - "sh/gh/release.sh"
-      - "go/ffi/**"
-      - "sh/go/package-ffi.sh"
-      - "sh/go/publish-ffi.sh"
-      - "rs/moq-ffi/build.sh"
 
 permissions:
   contents: read

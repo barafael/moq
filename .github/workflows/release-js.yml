@@ -11,11 +11,9 @@ on:
       - 'js/**'
       - '.github/workflows/release-js.yml'
   # Dry-run: builds, packs, and runs `deno publish --dry-run`, which catches
-  # JSR-only failures before they break a release on `release`.
-  pull_request:
-    paths:
-      - 'js/**'
-      - '.github/workflows/release-js.yml'
+  # JSR-only failures before they break a release on `release`. Only a push
+  # publishes; release-gate.yml calls this on pull requests.
+  workflow_call:
 
 # Only publishing runs share the serialized group. GitHub keeps a single pending
 # run per group and drops the older one, so a PR sharing it would cancel a

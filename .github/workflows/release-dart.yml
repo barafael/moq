@@ -8,11 +8,9 @@ on:
   push:
     tags:
       - "moq-dart-v*"
-  pull_request:
-    paths:
-      - ".github/workflows/release-dart.yml"
-      - "dart/moq/**"
-      - "sh/dart/**"
+  # Dry-run: check the source package, publish nothing. Only a tag push
+  # publishes; release-gate.yml calls this on pull requests.
+  workflow_call:
 
 permissions:
   contents: read

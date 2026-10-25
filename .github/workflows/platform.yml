@@ -36,25 +36,11 @@ on:
       - "justfile"
       - "sh/**"
       - ".github/workflows/platform.yml"
-  pull_request:
-    # `closed` is here only so merging/closing a PR cancels its in-flight run
-    # via the concurrency group below; the jobs themselves are skipped on close.
-    types: [opened, synchronize, reopened, closed]
-    paths:
-      - "rs/**"
-      - ".cargo/**"
-      - "Cargo.toml"
-      - "Cargo.lock"
-      - "rust-toolchain.toml"
-      - "justfile"
-      - "sh/**"
-      - ".github/workflows/platform.yml"
+  # Pull requests, through release-gate.yml.
+  workflow_call:
 
 concurrency:
-  # Keyed by event, so a merged pull request's `closed` run can't cancel the push
-  # run it triggers. Pull requests key by number rather than ref, since a merged
-  # PR's `closed` run can report the base branch as its ref instead of the PR's
-  # merge ref, and then wouldn't cancel the PR's in-flight run.
+  # Keyed by event, so a pull request's run can't cancel a push run.
   group: platform-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   # Pushes queue instead: `main` merges faster than these jobs finish, so
   # cancelling meant almost no push run ever reported. Actions keeps only the
@@ -64,7 +50,6 @@ concurrency:
 jobs:
   windows:
     name: Windows
-    if: github.event.action != 'closed'
     runs-on: windows-latest
     timeout-minutes: 60
 
@@ -96,7 +81,6 @@ jobs:
 
   macos:
     name: macOS
-    if: github.event.action != 'closed'
     runs-on: macos-latest
     timeout-minutes: 60
 

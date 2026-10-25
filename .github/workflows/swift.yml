@@ -21,31 +21,18 @@ on:
       - "rs/moq-video/**"
       - "Cargo.lock"
       - ".github/workflows/swift.yml"
-  pull_request:
-    # `closed` is here only so merging/closing a PR cancels its in-flight run
-    # via the concurrency group below; the job itself is skipped on close.
-    types: [opened, synchronize, reopened, closed]
-    paths:
-      - "swift/**"
-      - "sh/swift/**"
-      - "doc/lib/swift/**"
-      - "doc/lib/samples.sh"
-      - "rs/moq-ffi/**"
-      - "rs/moq-video/**"
-      - "Cargo.lock"
-      - ".github/workflows/swift.yml"
+  # Pull requests, through release-gate.yml.
+  workflow_call:
 
 concurrency:
-  # Keyed by event as well as ref: a merged pull request's `closed` run and the
-  # `main` push run it triggers are simultaneous, and if they shared a group the
-  # skipped one could cancel the cache writer.
+  # Keyed by event as well as ref, so a pull request's run can't cancel the
+  # cache writer.
   group: swift-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   check:
     name: Swift
-    if: github.event.action != 'closed'
     runs-on: macos-latest
     timeout-minutes: 60
 

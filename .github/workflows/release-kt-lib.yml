@@ -30,15 +30,8 @@ on:
       - "kt/settings.gradle.kts"
       - ".github/workflows/release-kt-lib.yml"
       - "sh/gh/release.sh"
-  pull_request:
-    paths:
-      - "kt/moq/**"
-      - "kt/gradle.properties"
-      - "kt/build.gradle.kts"
-      - "kt/settings.gradle.kts"
-      - ".github/workflows/release-kt-lib.yml"
-      - "sh/gh/release.sh"
-      - "rs/moq-ffi/build.sh"
+  # Pull request dry-runs, through release-gate.yml.
+  workflow_call:
   # Manual trigger so a wrapper bump can be published once the bindings it
   # depends on land on Maven Central (the guard below skips otherwise). Only a
   # dispatch on `release` publishes.

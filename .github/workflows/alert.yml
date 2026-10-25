@@ -18,14 +18,14 @@ on:
   workflow_run:
     # Matched by workflow `name:`, not filename. Every workflow that can run
     # outside a pull request belongs here; the pull-request-only ones (Check,
-    # Android) are omitted so they don't spawn a skipped Alert run on every
-    # push to every PR. `just gh check` enforces both halves of that.
+    # Release gate, and what only it calls, like Android) are omitted so they
+    # don't spawn a skipped Alert run on every push to every PR. `just gh check`
+    # enforces both halves of that.
     #
     # Swift, OBS, and Platform are here despite also running on pull requests:
     # Swift warms its own Rust cache on `main`, and OBS and Platform build every
     # merge to `main` and `dev`. Those push runs are nobody's check, so a break in them
-    # would otherwise go unseen. The cost is a skipped Alert run per pull
-    # request.
+    # would otherwise go unseen.
     workflows:
       - apt-repo
       - Cache

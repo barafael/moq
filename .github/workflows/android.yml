@@ -11,38 +11,16 @@ name: Android
 # recipe is still `just rs android`, so a local run and this one compile the
 # same thing, and rust-toolchain.toml still pins the compiler.
 #
-# Narrow trigger, like wasm.yml. The filter is moq-video's in-repo dependency
-# graph (`cargo metadata`, normal dependencies), plus the files that decide how
-# it is built. A crate added to that graph has to be added here too.
+# Narrow trigger, like wasm.yml. release-gate.yml's filter is moq-video's
+# in-repo dependency graph (`cargo metadata`, normal dependencies), plus the
+# files that decide how it is built. A crate added to that graph has to be
+# added there too.
 
 permissions:
   contents: read
 
 on:
-  pull_request:
-    # `closed` is here only so merging/closing a PR cancels its in-flight run
-    # via the concurrency group below; the job itself is skipped on close.
-    types: [opened, synchronize, reopened, closed]
-    paths:
-      - "rs/moq-video/**"
-      - "rs/moq-mux/**"
-      - "rs/moq-net/**"
-      - "rs/moq-nvenc/**"
-      - "rs/moq-loc/**"
-      - "rs/moq-msf/**"
-      - "rs/moq-json/**"
-      - "rs/moq-binary/**"
-      - "rs/moq-flate/**"
-      - "rs/moq-pattern/**"
-      - "rs/hang/**"
-      - "rs/kio/**"
-      - "rs/justfile"
-      - "justfile"
-      - ".cargo/config.toml"
-      - "Cargo.toml"
-      - "Cargo.lock"
-      - "rust-toolchain.toml"
-      - ".github/workflows/android.yml"
+  workflow_call:
 
 concurrency:
   group: android-${{ github.ref }}
@@ -54,7 +32,6 @@ env:
 jobs:
   android:
     name: Android
-    if: github.event.action != 'closed'
     # x86_64 rather than the arm runners check.yml uses: GitHub documents the
     # Android SDK and NDK as preinstalled on this image.
     runs-on: ubuntu-24.04
