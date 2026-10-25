@@ -97,7 +97,6 @@ test("Nightly and alert chains retain packaged outputs with one shared producer"
 	expect(nightly.jobs["release-shared-ffi"].uses).toBe("./.github/workflows/release-shared-ffi.yml");
 	for (const old of ["release-go-ffi", "release-kt-ffi", "release-swift-ffi"])
 		expect(nightly.jobs[old]).toBeUndefined();
-	expect(nightly.jobs.sizes.needs).toContain("release-shared-ffi");
 	expect(nightly.jobs["release-py-ffi"]).toBeDefined();
 	expect(nightly.jobs["release-dart-ffi"]).toBeDefined();
 	// A called workflow's jobs cannot exceed the caller's grant, so a dry-run

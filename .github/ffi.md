@@ -35,10 +35,6 @@ rerun publisher still releases its wrapper. Missing publisher names or an API
 error fail loudly. No publication is polled.
 The legacy per-language workflow names remain accepted for in-flight runs.
 
-`sh/size/release.py` reads shared native libraries under the existing Go size
-history keys and excludes Android/iOS libraries already counted inside their
-language packages. Package artifact names and size comparisons stay stable.
-
 ## Evidence and validation
 
 [The sampled Nightly](https://github.com/moq-dev/moq/actions/runs/38564590314)
@@ -59,7 +55,7 @@ byte-identical; no executable code or binding metadata differs. The source
 build command is the same target/default-feature Cargo invocation for every
 consumer. Sharing preserves the same native code and library files.
 
-`just gh test` runs local fixtures for artifact subsets, stable size keys,
+`just gh test` runs local fixtures for artifact subsets,
 build-free binding generation, independent language outcomes, failed API
 queries and workflow guards. `just gh check` validates workflow syntax and
 alert coverage. The first Nightly after landing measures actual elapsed time;

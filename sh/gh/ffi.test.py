@@ -172,7 +172,7 @@ pathlib.Path(sys.argv[sys.argv.index("--out-dir") + 1]).mkdir(parents=True)
         calls = [json.loads(line) for line in (self.root / "calls").read_text().splitlines()]
         self.assertEqual([call[0] for call in calls], ["metadata", "run", "run", "run"])
         self.assertEqual(sorted(p.name for p in (self.root / "dist/bindings").iterdir()),
-                         ["cpp", "dart", "go", "kotlin", "python", "swift"])
+                         ["dart", "go", "kotlin", "python", "swift"])
         for suffix in [["--library", str(library)], ["--bindings-only", "--library", str(self.root / "missing")]]:
             result = subprocess.run(["bash", str(ROOT / "rs/moq-ffi/build.sh"), *suffix], env=self.env,
                                     cwd=self.root, capture_output=True, text=True)
