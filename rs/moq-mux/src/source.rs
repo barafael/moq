@@ -160,20 +160,18 @@ impl Source {
 	/// sibling). It is requested again at its path, pinned to its epoch, and must come back as the
 	/// same instance, else [`Error::ControlMismatch`](crate::Error::ControlMismatch): control and
 	/// media never describe different publishers. A refusal or an unroutable path fails as the
-	/// request does. `None` without a control origin: read `broadcast` itself.
-	pub async fn control(
-		&self,
-		broadcast: &moq_net::broadcast::Consumer,
-	) -> crate::Result<Option<moq_net::broadcast::Consumer>> {
-		let Some(control) = &self.control else {
-			return Ok(None);
-		};
+	/// request does. `None` without a control origin: read `broadcast` itself. Poll the result, or
+	/// await it.
+	pub fn control(&self, broadcast: &moq_net::broadcast::Consumer) -> kio::Pending<Controlling> {
 		let info = broadcast.info();
-		let handle = control.request_broadcast(&info.path, info.epoch.clone()).await?;
-		if !handle.is_clone(broadcast) {
-			return Err(crate::Error::ControlMismatch(info.path.to_string()));
-		}
-		Ok(Some(handle))
+		let request = self
+			.control
+			.as_ref()
+			.map(|control| control.request_broadcast(&info.path, info.epoch.clone()).into_inner());
+		kio::Pending::new(Controlling {
+			request,
+			broadcast: broadcast.clone(),
+		})
 	}
 
 	/// The catalog broadcast, as a binding.
@@ -362,6 +360,30 @@ impl Source {
 			}
 			false => crate::follow::Instances::new(&self.origin, &path, epoch)?,
 		})
+	}
+}
+
+/// The pollable result of [`Source::control`].
+pub struct Controlling {
+	/// The request through the control origin, or `None` without one.
+	request: Option<moq_net::origin::Requesting>,
+	/// The instance the request must resolve to.
+	broadcast: moq_net::broadcast::Consumer,
+}
+
+impl kio::Task for Controlling {
+	type Output = crate::Result<Option<moq_net::broadcast::Consumer>>;
+
+	fn poll(&mut self, waiter: &kio::Waiter) -> Poll<Self::Output> {
+		let Some(request) = &mut self.request else {
+			return Poll::Ready(Ok(None));
+		};
+		let handle = ready!(kio::Task::poll(request, waiter))?;
+		if !handle.is_clone(&self.broadcast) {
+			let path = self.broadcast.info().path.to_string();
+			return Poll::Ready(Err(crate::Error::ControlMismatch(path)));
+		}
+		Poll::Ready(Ok(Some(handle)))
 	}
 }
 
@@ -681,7 +703,12 @@ mod tests {
 		settle().await;
 		let source = resolved(&origin, "a/pub").await;
 		let sibling = source.resolve(Some(&Relative::new("./source")), None).await.unwrap();
-		assert!(source.control(&source.broadcast()).await.unwrap().is_none());
+		// Without a control origin it answers at once, whoever drives it.
+		let mut uncontrolled = source.control(&source.broadcast()).into_inner();
+		assert!(matches!(
+			kio::Task::poll(&mut uncontrolled, &kio::Waiter::noop()),
+			Poll::Ready(Ok(None))
+		));
 
 		let source = source.with_control(origin.consume());
 		for broadcast in [source.broadcast(), sibling] {

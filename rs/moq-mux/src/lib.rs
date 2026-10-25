@@ -58,7 +58,7 @@ pub use clock::Clock;
 pub use error::*;
 pub use linger::Linger;
 pub use pace::Pacer;
-pub use source::{Binding, Source};
+pub use source::{Binding, Controlling, Source};
 
 /// Translate a catalog entry's declared compression into the flag the codecs take.
 ///
