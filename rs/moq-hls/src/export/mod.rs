@@ -3103,7 +3103,7 @@ mod tests {
 	}
 
 	/// Finish the media before End while retaining its track cache for a late recorder.
-	async fn ended_rendition(sibling: bool) -> Ended {
+	async fn ended_rendition(sibling: bool, control: bool) -> Ended {
 		const KEYFRAME: &[u8] = &[0x10, 0x00, 0x00, 0x9d, 0x01, 0x2a, 0x40, 0x01, 0xf0, 0x00];
 		let origin = produce_origin();
 		let broadcast = origin.create_broadcast("live").unwrap();
@@ -3123,7 +3123,10 @@ mod tests {
 		catalog.finish().unwrap();
 		settle().await;
 
-		let source = crate::resolved(&origin, "live").await;
+		let mut source = crate::resolved(&origin, "live").await;
+		if control {
+			source = source.with_control(origin.consume());
+		}
 		let mut config = hang::catalog::VideoConfig::new(hang::catalog::VideoCodec::VP8);
 		if sibling {
 			config.broadcast = Some(moq_net::path::Relative::new("media").to_owned());
@@ -3151,17 +3154,32 @@ mod tests {
 	#[tokio::test]
 	async fn init_bootstraps_after_the_catalog_broadcast_ends() {
 		tokio::time::pause();
-		let ended = ended_rendition(false).await;
+		let ended = ended_rendition(false, false).await;
 		let result = ended.rendition.latest_init().await;
 		ended.watcher.abort();
 		let init = result.unwrap().expect("inline init bootstraps after End");
 		assert!(contains(&init, b"ftyp"));
 	}
 
+	// A control origin cannot reach an ended instance, so an inline init it has not built yet
+	// stays unbuilt rather than failing, while retained segments still drain as media.
+	#[tokio::test]
+	async fn an_ended_instance_leaves_a_controlled_init_unbuilt() {
+		tokio::time::pause();
+		for sibling in [false, true] {
+			let ended = ended_rendition(sibling, true).await;
+			let init = ended.rendition.latest_init().await;
+			let segment = ended.rendition.listed_segment(0).await;
+			ended.watcher.abort();
+			assert!(init.unwrap().is_none(), "sibling={sibling}");
+			assert!(segment.unwrap().is_some(), "sibling={sibling}");
+		}
+	}
+
 	#[tokio::test]
 	async fn segments_drain_after_the_catalog_broadcast_ends() {
 		tokio::time::pause();
-		let ended = ended_rendition(false).await;
+		let ended = ended_rendition(false, false).await;
 		let result = ended.rendition.listed_segment(0).await;
 		ended.watcher.abort();
 		assert!(result.unwrap().is_some(), "retained segment drains after End");
@@ -3170,7 +3188,7 @@ mod tests {
 	#[tokio::test]
 	async fn init_bootstraps_after_the_sibling_broadcast_ends() {
 		tokio::time::pause();
-		let ended = ended_rendition(true).await;
+		let ended = ended_rendition(true, false).await;
 		let result = ended.rendition.latest_init().await;
 		ended.watcher.abort();
 		assert!(result.unwrap().is_some(), "sibling init bootstraps after End");
@@ -3179,7 +3197,7 @@ mod tests {
 	#[tokio::test]
 	async fn segments_drain_after_the_sibling_broadcast_ends() {
 		tokio::time::pause();
-		let ended = ended_rendition(true).await;
+		let ended = ended_rendition(true, false).await;
 		let result = ended.rendition.listed_segment(0).await;
 		ended.watcher.abort();
 		assert!(result.unwrap().is_some(), "retained sibling segment drains after End");
@@ -3193,7 +3211,7 @@ mod tests {
 		const OLD: &[u8] = &[0x10, 0x00, 0x00, 0x9d, 0x01, 0x2a, 0x40, 0x01, 0xf0, 0x00];
 		const NEW: &[u8] = &[0x10, 0x00, 0x00, 0x9d, 0x01, 0x2a, 0x80, 0x02, 0xe0, 0x01];
 		for sibling in [false, true] {
-			let ended = ended_rendition(sibling).await;
+			let ended = ended_rendition(sibling, false).await;
 			let path = if sibling { "media" } else { "live" };
 			let next = ended.origin.create_broadcast(path).unwrap();
 			next.announce(Default::default()).unwrap();

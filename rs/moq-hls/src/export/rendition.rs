@@ -1034,8 +1034,16 @@ impl Rendition {
 					return Ok(None);
 				};
 				// A bootstrap read: through the control origin when there is one, on the bound
-				// instance.
-				let (broadcast, track) = match self.source.control(&media).await? {
+				// instance. One that no longer routes there (ended or replaced) is a gone
+				// publisher, as for a fetch: the init stays unbuilt.
+				let control = match self.source.control(&media).await {
+					Ok(control) => control,
+					Err(moq_mux::Error::Moq(moq_net::Error::Unroutable) | moq_mux::Error::ControlMismatch(_)) => {
+						return Ok(None);
+					}
+					Err(err) => return Err(err.into()),
+				};
+				let (broadcast, track) = match control {
 					Some(control) => match control.track(self.track_name()) {
 						Ok(track) => (control, track),
 						Err(_) => return Ok(None),
