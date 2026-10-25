@@ -802,7 +802,6 @@ export class Publisher {
 			}
 			streams.opened += 1;
 
-			await stream.u53(FetchHeader.type);
 			await new FetchHeader({ requestId }).encode(stream, version);
 
 			if (fill.kind !== "group") {
