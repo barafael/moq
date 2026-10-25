@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1792845816860,
+  "lastUpdate": 1792934181730,
   "repoUrl": "https://github.com/moq-dev/moq",
   "entries": {
     "MoQ nightly costs": [
@@ -90962,6 +90962,7050 @@ window.BENCHMARK_DATA = {
             "range": "57.88..57.91",
             "unit": "ns",
             "extra": "Mean nanoseconds per iteration; 0513c07369357ae0ecd6109d0f6afc61d16b597f"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Luke Curley",
+            "username": "kixelated",
+            "email": "kixelated@gmail.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "66af72315bd333d09199ecd0efee699c9e9e23bd",
+          "message": "feat(stats)!: publish groups as tracks of one node broadcast (#6428)\n\nCo-authored-by: Luke Curley <432854+kixelated@users.noreply.github.com>\nCo-authored-by: Claude Opus 5.5 <noreply@anthropic.com>",
+          "timestamp": "2026-10-25T06:44:52Z",
+          "url": "https://github.com/moq-dev/moq/commit/66af72315bd333d09199ecd0efee699c9e9e23bd"
+        },
+        "date": 1792934181054,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "bench-ffi/rust-net/throughput/size=100/pub=1/sub=1 vs rust-ffi",
+            "value": 0.23804947043309357,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/rust-net/cpu/size=100/pub=1/sub=1",
+            "value": 3.659067023045576,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/rust-net/cpu/size=100/pub=1/sub=1 vs rust-ffi",
+            "value": 0.20707694283499384,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/rust-net/throughput/size=1024/pub=1/sub=1 vs rust-ffi",
+            "value": 0.31398375832185854,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/rust-net/cpu/size=1024/pub=1/sub=1",
+            "value": 0.5736145937353149,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/rust-net/cpu/size=1024/pub=1/sub=1 vs rust-ffi",
+            "value": 0.2803837629254639,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/rust-net/throughput/size=65536/pub=1/sub=1 vs rust-ffi",
+            "value": 0.48883176346798857,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/rust-net/cpu/size=65536/pub=1/sub=1",
+            "value": 0.07429246257569196,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/rust-net/cpu/size=65536/pub=1/sub=1 vs rust-ffi",
+            "value": 0.4796940729136387,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/rust-net/throughput/size=1048576/pub=1/sub=1 vs rust-ffi",
+            "value": 0.5320045991432774,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/rust-net/cpu/size=1048576/pub=1/sub=1",
+            "value": 0.07187644712460767,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/rust-net/cpu/size=1048576/pub=1/sub=1 vs rust-ffi",
+            "value": 0.5255308065450791,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/rust-net/throughput/size=1024/pub=1/sub=4 vs rust-ffi",
+            "value": 0.16109117144919022,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/rust-net/cpu/size=1024/pub=1/sub=4",
+            "value": 0.22270397302767103,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/rust-net/cpu/size=1024/pub=1/sub=4 vs rust-ffi",
+            "value": 0.14266746865650293,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/rust-net/throughput/size=1024/pub=4/sub=1 vs rust-ffi",
+            "value": 0.31435591234164517,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/rust-net/cpu/size=1024/pub=4/sub=1",
+            "value": 0.5882098478083437,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/rust-net/cpu/size=1024/pub=4/sub=1 vs rust-ffi",
+            "value": 0.28515339113023064,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/rust-net/throughput/size=1024/pub=4/sub=4 vs rust-ffi",
+            "value": 0.16194509826800807,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/rust-net/cpu/size=1024/pub=4/sub=4",
+            "value": 0.23116048177083331,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/rust-net/cpu/size=1024/pub=4/sub=4 vs rust-ffi",
+            "value": 0.14316099938200758,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/rust-ffi/cpu/size=100/pub=1/sub=1",
+            "value": 17.670084235120513,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/rust-ffi/cpu/size=1024/pub=1/sub=1",
+            "value": 2.045819585807479,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/rust-ffi/cpu/size=65536/pub=1/sub=1",
+            "value": 0.15487467277726222,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/rust-ffi/cpu/size=1048576/pub=1/sub=1",
+            "value": 0.1367692364166709,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/rust-ffi/cpu/size=1024/pub=1/sub=4",
+            "value": 1.5610003816908682,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/rust-ffi/cpu/size=1024/pub=4/sub=1",
+            "value": 2.0627839826029146,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/rust-ffi/cpu/size=1024/pub=4/sub=4",
+            "value": 1.6146889360139902,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/rust-ffi/call/sequence",
+            "value": 0.8667818283310089,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-ffi/rust-ffi/call/info",
+            "value": 2.3746538950168006,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-ffi/cpp/throughput/size=100/pub=1/sub=1 vs rust-ffi",
+            "value": 2.93090891015956,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/cpp/cpu/size=100/pub=1/sub=1",
+            "value": 60.7514,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/cpp/cpu/size=100/pub=1/sub=1 vs rust-ffi",
+            "value": 3.4380934007803083,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/cpp/throughput/size=1024/pub=1/sub=1 vs rust-ffi",
+            "value": 8.701458211378739,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/cpp/cpu/size=1024/pub=1/sub=1",
+            "value": 25.4247,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/cpp/cpu/size=1024/pub=1/sub=1 vs rust-ffi",
+            "value": 12.427635445656831,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/cpp/throughput/size=65536/pub=1/sub=1 vs rust-ffi",
+            "value": 82.84856665035295,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/cpp/cpu/size=65536/pub=1/sub=1",
+            "value": 21.128,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/cpp/cpu/size=65536/pub=1/sub=1 vs rust-ffi",
+            "value": 136.41998153168583,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/cpp/throughput/size=1048576/pub=1/sub=1 vs rust-ffi",
+            "value": 99.82642387641039,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/cpp/cpu/size=1048576/pub=1/sub=1",
+            "value": 21.1868,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/cpp/cpu/size=1048576/pub=1/sub=1 vs rust-ffi",
+            "value": 154.90910496461268,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/cpp/throughput/size=1024/pub=1/sub=4 vs rust-ffi",
+            "value": 11.06863261193955,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/cpp/cpu/size=1024/pub=1/sub=4",
+            "value": 17.895,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/cpp/cpu/size=1024/pub=1/sub=4 vs rust-ffi",
+            "value": 11.463802449949577,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/cpp/throughput/size=1024/pub=4/sub=1 vs rust-ffi",
+            "value": 8.34728307273436,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/cpp/cpu/size=1024/pub=4/sub=1",
+            "value": 25.2203,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/cpp/cpu/size=1024/pub=4/sub=1 vs rust-ffi",
+            "value": 12.22634081547205,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/cpp/throughput/size=1024/pub=4/sub=4 vs rust-ffi",
+            "value": 10.701121674051118,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/cpp/cpu/size=1024/pub=4/sub=4",
+            "value": 17.8803,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/cpp/cpu/size=1024/pub=4/sub=4 vs rust-ffi",
+            "value": 11.073526052726404,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/cpp/call/sequence",
+            "value": 22.5328,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-ffi/cpp/call/sequence vs rust-ffi",
+            "value": 25.99593030623055,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/cpp/call/info",
+            "value": 172.758,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-ffi/cpp/call/info vs rust-ffi",
+            "value": 72.75081238682058,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/dart/throughput/size=100/pub=1/sub=1 vs rust-ffi",
+            "value": 8.405397426245305,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/dart/cpu/size=100/pub=1/sub=1",
+            "value": 150.3402634297521,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/dart/cpu/size=100/pub=1/sub=1 vs rust-ffi",
+            "value": 8.508180347603576,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/dart/throughput/size=1024/pub=1/sub=1 vs rust-ffi",
+            "value": 9.234644577513938,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/dart/cpu/size=1024/pub=1/sub=1",
+            "value": 17.8773490104886,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/dart/cpu/size=1024/pub=1/sub=1 vs rust-ffi",
+            "value": 8.738477788808765,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/dart/throughput/size=65536/pub=1/sub=1 vs rust-ffi",
+            "value": 23.35802799301875,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/dart/cpu/size=65536/pub=1/sub=1",
+            "value": 3.560536047991587,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/dart/cpu/size=65536/pub=1/sub=1 vs rust-ffi",
+            "value": 22.989788996114825,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/dart/throughput/size=1048576/pub=1/sub=1 vs rust-ffi",
+            "value": 32.169319083993074,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/dart/cpu/size=1048576/pub=1/sub=1",
+            "value": 6.97589346340725,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/dart/cpu/size=1048576/pub=1/sub=1 vs rust-ffi",
+            "value": 51.00484323941837,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/dart/throughput/size=1024/pub=1/sub=4 vs rust-ffi",
+            "value": 8.661073169903283,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/dart/cpu/size=1024/pub=1/sub=4",
+            "value": 12.48612598191981,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/dart/cpu/size=1024/pub=1/sub=4 vs rust-ffi",
+            "value": 7.998797520084459,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/dart/throughput/size=1024/pub=4/sub=1 vs rust-ffi",
+            "value": 7.891613517848269,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/dart/cpu/size=1024/pub=4/sub=1",
+            "value": 15.172244038821198,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/dart/cpu/size=1024/pub=4/sub=1 vs rust-ffi",
+            "value": 7.355226803572602,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/dart/throughput/size=1024/pub=4/sub=4 vs rust-ffi",
+            "value": 7.960188113765493,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/dart/cpu/size=1024/pub=4/sub=4",
+            "value": 11.807089760189962,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/dart/cpu/size=1024/pub=4/sub=4 vs rust-ffi",
+            "value": 7.312299909192951,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/dart/call/sequence",
+            "value": 176.6939929328622,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-ffi/dart/call/sequence vs rust-ffi",
+            "value": 203.85059672176908,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/dart/call/info",
+            "value": 427.7238135955537,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-ffi/dart/call/info vs rust-ffi",
+            "value": 180.1204859761374,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/go/call/info",
+            "value": 660.2737504109797,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-ffi/go/call/info vs rust-ffi",
+            "value": 278.0505200343346,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/go/call/sequence",
+            "value": 242.70404402288008,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-ffi/go/call/sequence vs rust-ffi",
+            "value": 280.0059208557792,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/go/cpu/size=100/pub=1/sub=1",
+            "value": 151.7055949312715,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/go/cpu/size=100/pub=1/sub=1 vs rust-ffi",
+            "value": 8.585448315506394,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/go/cpu/size=1024/pub=1/sub=1",
+            "value": 20.414674436891232,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/go/cpu/size=1024/pub=1/sub=1 vs rust-ffi",
+            "value": 9.978726657284211,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/go/cpu/size=1024/pub=1/sub=4",
+            "value": 12.742122014363607,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/go/cpu/size=1024/pub=1/sub=4 vs rust-ffi",
+            "value": 8.162792375849007,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/go/cpu/size=1024/pub=4/sub=1",
+            "value": 17.556399390811013,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/go/cpu/size=1024/pub=4/sub=1 vs rust-ffi",
+            "value": 8.511021773912336,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/go/cpu/size=1024/pub=4/sub=4",
+            "value": 11.749588815789474,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/go/cpu/size=1024/pub=4/sub=4 vs rust-ffi",
+            "value": 7.276688750214904,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/go/cpu/size=1048576/pub=1/sub=1",
+            "value": 4.300258597549127,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/go/cpu/size=1048576/pub=1/sub=1 vs rust-ffi",
+            "value": 31.441709482447365,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/go/cpu/size=65536/pub=1/sub=1",
+            "value": 4.777805805206299,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/go/cpu/size=65536/pub=1/sub=1 vs rust-ffi",
+            "value": 30.849497335678944,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/go/throughput/size=100/pub=1/sub=1 vs rust-ffi",
+            "value": 7.127373905279739,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/go/throughput/size=1024/pub=1/sub=1 vs rust-ffi",
+            "value": 7.004144221895125,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/go/throughput/size=1024/pub=1/sub=4 vs rust-ffi",
+            "value": 3.669624674372813,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/go/throughput/size=1024/pub=4/sub=1 vs rust-ffi",
+            "value": 3.8703559005469903,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/go/throughput/size=1024/pub=4/sub=4 vs rust-ffi",
+            "value": 2.6975052016924597,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/go/throughput/size=1048576/pub=1/sub=1 vs rust-ffi",
+            "value": 21.160778057614575,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/go/throughput/size=65536/pub=1/sub=1 vs rust-ffi",
+            "value": 17.530364639396762,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/kotlin/throughput/size=100/pub=1/sub=1 vs rust-ffi",
+            "value": 72.61479440466717,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/kotlin/cpu/size=100/pub=1/sub=1",
+            "value": 2332.589285714286,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/kotlin/cpu/size=100/pub=1/sub=1 vs rust-ffi",
+            "value": 132.00781924276873,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/kotlin/throughput/size=1024/pub=1/sub=1 vs rust-ffi",
+            "value": 35.70004022847512,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/kotlin/cpu/size=1024/pub=1/sub=1",
+            "value": 122.59198050213675,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/kotlin/cpu/size=1024/pub=1/sub=1 vs rust-ffi",
+            "value": 59.923162996677476,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/kotlin/throughput/size=65536/pub=1/sub=1 vs rust-ffi",
+            "value": 26.65882305808233,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/kotlin/cpu/size=65536/pub=1/sub=1",
+            "value": 10.264121879965572,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/kotlin/cpu/size=65536/pub=1/sub=1 vs rust-ffi",
+            "value": 66.27372762702934,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/kotlin/throughput/size=1048576/pub=1/sub=1 vs rust-ffi",
+            "value": 22.43978717074304,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/kotlin/cpu/size=1048576/pub=1/sub=1",
+            "value": 3.6954879760742183,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/kotlin/cpu/size=1048576/pub=1/sub=1 vs rust-ffi",
+            "value": 27.01987722455232,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/kotlin/throughput/size=1024/pub=1/sub=4 vs rust-ffi",
+            "value": 27.605809503955516,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/kotlin/cpu/size=1024/pub=1/sub=4",
+            "value": 40.435791015625,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/kotlin/cpu/size=1024/pub=1/sub=4 vs rust-ffi",
+            "value": 25.903767539009277,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/kotlin/throughput/size=1024/pub=4/sub=1 vs rust-ffi",
+            "value": 53.840406358644366,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/kotlin/cpu/size=1024/pub=4/sub=1",
+            "value": 333.28407689144734,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/kotlin/cpu/size=1024/pub=4/sub=1 vs rust-ffi",
+            "value": 161.57003336379137,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/kotlin/throughput/size=1024/pub=4/sub=4 vs rust-ffi",
+            "value": 28.63898009106844,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/kotlin/cpu/size=1024/pub=4/sub=4",
+            "value": 64.849853515625,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/kotlin/cpu/size=1024/pub=4/sub=4 vs rust-ffi",
+            "value": 40.162443718548595,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/kotlin/call/sequence",
+            "value": 12270.883109756098,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-ffi/kotlin/call/sequence vs rust-ffi",
+            "value": 14156.830137271938,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/kotlin/call/info",
+            "value": 38485.05126923077,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-ffi/kotlin/call/info vs rust-ffi",
+            "value": 16206.593874581664,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/python/throughput/size=100/pub=1/sub=1 vs rust-ffi",
+            "value": 49.92688998132613,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/python/cpu/size=100/pub=1/sub=1",
+            "value": 769.5886948529409,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/python/cpu/size=100/pub=1/sub=1 vs rust-ffi",
+            "value": 43.553198989472286,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/python/throughput/size=1024/pub=1/sub=1 vs rust-ffi",
+            "value": 45.27109489137746,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/python/cpu/size=1024/pub=1/sub=1",
+            "value": 82.97589276288005,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/python/cpu/size=1024/pub=1/sub=1 vs rust-ffi",
+            "value": 40.558753732983604,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/python/throughput/size=65536/pub=1/sub=1 vs rust-ffi",
+            "value": 28.836105676506367,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/python/cpu/size=65536/pub=1/sub=1",
+            "value": 4.394591938365588,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/python/cpu/size=65536/pub=1/sub=1 vs rust-ffi",
+            "value": 28.375149141950445,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/python/throughput/size=1048576/pub=1/sub=1 vs rust-ffi",
+            "value": 20.982098221993493,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/python/cpu/size=1048576/pub=1/sub=1",
+            "value": 2.8412702471710896,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/python/cpu/size=1048576/pub=1/sub=1 vs rust-ffi",
+            "value": 20.774191050647445,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/python/throughput/size=1024/pub=1/sub=4 vs rust-ffi",
+            "value": 34.48299994568644,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/python/cpu/size=1024/pub=1/sub=4",
+            "value": 47.86898766034912,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/python/cpu/size=1024/pub=1/sub=4 vs rust-ffi",
+            "value": 30.665583571797505,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/python/throughput/size=1024/pub=4/sub=1 vs rust-ffi",
+            "value": 38.96879666539842,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/python/cpu/size=1024/pub=4/sub=1",
+            "value": 73.15207427402717,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/python/cpu/size=1024/pub=4/sub=1 vs rust-ffi",
+            "value": 35.46278955575394,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/python/throughput/size=1024/pub=4/sub=4 vs rust-ffi",
+            "value": 31.66417711722824,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/python/cpu/size=1024/pub=4/sub=4",
+            "value": 45.39216648448598,
+            "unit": "ms/MB"
+          },
+          {
+            "name": "bench-ffi/python/cpu/size=1024/pub=4/sub=4 vs rust-ffi",
+            "value": 28.112019270126893,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/python/call/sequence",
+            "value": 4696.138887324273,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-ffi/python/call/sequence vs rust-ffi",
+            "value": 5417.901868532134,
+            "unit": "x"
+          },
+          {
+            "name": "bench-ffi/python/call/info",
+            "value": 12634.574962501689,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-ffi/python/call/info vs rust-ffi",
+            "value": 5320.596398917452,
+            "unit": "x"
+          },
+          {
+            "name": "bench-js/js/arrivals/handles=1/backlog=0/ns_per_handle_write",
+            "value": 530,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/arrivals/handles=1/backlog=256/ns_per_handle_write",
+            "value": 256,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/arrivals/handles=1/backlog=4096/ns_per_handle_write",
+            "value": 444,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/arrivals/handles=4/backlog=0/ns_per_handle_write",
+            "value": 173,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/arrivals/handles=4/backlog=256/ns_per_handle_write",
+            "value": 147,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/arrivals/handles=4/backlog=4096/ns_per_handle_write",
+            "value": 149,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/arrivals/handles=16/backlog=0/ns_per_handle_write",
+            "value": 166,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/arrivals/handles=16/backlog=256/ns_per_handle_write",
+            "value": 103,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/arrivals/handles=16/backlog=4096/ns_per_handle_write",
+            "value": 115,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=1/frames=120/warmup=0ms/ns_per_callback",
+            "value": 272.4,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=1/frames=120/warmup=80ms/ns_per_callback",
+            "value": 308.6,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=1/frames=960/warmup=0ms/ns_per_callback",
+            "value": 118.4,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=1/frames=960/warmup=80ms/ns_per_callback",
+            "value": 83.8,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=1/frames=2880/warmup=0ms/ns_per_callback",
+            "value": 156.9,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=1/frames=2880/warmup=80ms/ns_per_callback",
+            "value": 152.7,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=16/frames=120/warmup=0ms/ns_per_callback",
+            "value": 35.1,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=16/frames=120/warmup=80ms/ns_per_callback",
+            "value": 37.4,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=16/frames=960/warmup=0ms/ns_per_callback",
+            "value": 34.6,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=16/frames=960/warmup=80ms/ns_per_callback",
+            "value": 31.9,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=16/frames=2880/warmup=0ms/ns_per_callback",
+            "value": 32.1,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=16/frames=2880/warmup=80ms/ns_per_callback",
+            "value": 52.2,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=64/frames=120/warmup=0ms/ns_per_callback",
+            "value": 29.9,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=64/frames=120/warmup=80ms/ns_per_callback",
+            "value": 36.9,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=64/frames=960/warmup=0ms/ns_per_callback",
+            "value": 49,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=64/frames=960/warmup=80ms/ns_per_callback",
+            "value": 50.5,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=64/frames=2880/warmup=0ms/ns_per_callback",
+            "value": 30.7,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=64/frames=2880/warmup=80ms/ns_per_callback",
+            "value": 30,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=unscoped/routes=8/observers=1/update_us",
+            "value": 283.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=unscoped/routes=8/observers=8/update_us",
+            "value": 3269.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=unscoped/routes=8/observers=32/update_us",
+            "value": 2041.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=unscoped/routes=32/observers=1/update_us",
+            "value": 244.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=unscoped/routes=32/observers=8/update_us",
+            "value": 1338,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=unscoped/routes=32/observers=32/update_us",
+            "value": 5558.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=unscoped/routes=128/observers=1/update_us",
+            "value": 755,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=unscoped/routes=128/observers=8/update_us",
+            "value": 5784.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=unscoped/routes=128/observers=32/update_us",
+            "value": 21400.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=distinct-scopes/routes=8/observers=1/update_us",
+            "value": 159.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=distinct-scopes/routes=8/observers=8/update_us",
+            "value": 416,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=distinct-scopes/routes=8/observers=32/update_us",
+            "value": 1265.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=distinct-scopes/routes=32/observers=1/update_us",
+            "value": 174.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=distinct-scopes/routes=32/observers=8/update_us",
+            "value": 1176.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=distinct-scopes/routes=32/observers=32/update_us",
+            "value": 4143.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=distinct-scopes/routes=128/observers=1/update_us",
+            "value": 564.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=distinct-scopes/routes=128/observers=8/update_us",
+            "value": 4014,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=distinct-scopes/routes=128/observers=32/update_us",
+            "value": 15385.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=producer-scopes/routes=8/observers=1/update_us",
+            "value": 107.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=producer-scopes/routes=8/observers=8/update_us",
+            "value": 299.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=producer-scopes/routes=8/observers=32/update_us",
+            "value": 1220.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=producer-scopes/routes=32/observers=1/update_us",
+            "value": 138.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=producer-scopes/routes=32/observers=8/update_us",
+            "value": 1047.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=producer-scopes/routes=32/observers=32/update_us",
+            "value": 4067.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=producer-scopes/routes=128/observers=1/update_us",
+            "value": 571.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=producer-scopes/routes=128/observers=8/update_us",
+            "value": 3972.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=producer-scopes/routes=128/observers=32/update_us",
+            "value": 15324.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=rooted-producers/routes=8/observers=1/update_us",
+            "value": 61.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=rooted-producers/routes=8/observers=8/update_us",
+            "value": 319,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=rooted-producers/routes=8/observers=32/update_us",
+            "value": 1224.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=rooted-producers/routes=32/observers=1/update_us",
+            "value": 166.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=rooted-producers/routes=32/observers=8/update_us",
+            "value": 1065.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=rooted-producers/routes=32/observers=32/update_us",
+            "value": 5392.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=rooted-producers/routes=128/observers=1/update_us",
+            "value": 615.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=rooted-producers/routes=128/observers=8/update_us",
+            "value": 4404.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=rooted-producers/routes=128/observers=32/update_us",
+            "value": 17236.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=8/observers=1/demand_update_us",
+            "value": 13.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=8/observers=8/demand_update_us",
+            "value": 11.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=8/observers=32/demand_update_us",
+            "value": 8.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=32/observers=1/demand_update_us",
+            "value": 6.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=32/observers=8/demand_update_us",
+            "value": 5.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=32/observers=32/demand_update_us",
+            "value": 8.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=128/observers=1/demand_update_us",
+            "value": 9.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=128/observers=8/demand_update_us",
+            "value": 7.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=128/observers=32/demand_update_us",
+            "value": 5.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=8/listings=1/create_remove_and_read_us",
+            "value": 11.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=8/listings=8/create_remove_and_read_us",
+            "value": 29.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=8/listings=32/create_remove_and_read_us",
+            "value": 60.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=128/listings=1/create_remove_and_read_us",
+            "value": 3.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=128/listings=8/create_remove_and_read_us",
+            "value": 14.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=128/listings=32/create_remove_and_read_us",
+            "value": 39.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=1024/listings=1/create_remove_and_read_us",
+            "value": 3.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=1024/listings=8/create_remove_and_read_us",
+            "value": 11.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=1024/listings=32/create_remove_and_read_us",
+            "value": 34.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=unpinned/routes=8/readers=1/update_and_read_us",
+            "value": 81.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=unpinned/routes=8/readers=8/update_and_read_us",
+            "value": 42.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=unpinned/routes=8/readers=32/update_and_read_us",
+            "value": 43.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=unpinned/routes=32/readers=1/update_and_read_us",
+            "value": 23.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=unpinned/routes=32/readers=8/update_and_read_us",
+            "value": 24.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=unpinned/routes=32/readers=32/update_and_read_us",
+            "value": 33.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=unpinned/routes=128/readers=1/update_and_read_us",
+            "value": 59.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=unpinned/routes=128/readers=8/update_and_read_us",
+            "value": 29.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=unpinned/routes=128/readers=32/update_and_read_us",
+            "value": 37.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=pinned/routes=8/readers=1/update_and_read_us",
+            "value": 14.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=pinned/routes=8/readers=8/update_and_read_us",
+            "value": 12.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=pinned/routes=8/readers=32/update_and_read_us",
+            "value": 26,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=pinned/routes=32/readers=1/update_and_read_us",
+            "value": 15.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=pinned/routes=32/readers=8/update_and_read_us",
+            "value": 15.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=pinned/routes=32/readers=32/update_and_read_us",
+            "value": 22.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=pinned/routes=128/readers=1/update_and_read_us",
+            "value": 16.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=pinned/routes=128/readers=8/update_and_read_us",
+            "value": 24.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=pinned/routes=128/readers=32/update_and_read_us",
+            "value": 35.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/auth=fetch/patterns=8/fetches=1/grant_update_us",
+            "value": 4.51,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/auth=fetch/patterns=8/fetches=8/grant_update_us",
+            "value": 22.16,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/auth=fetch/patterns=8/fetches=32/grant_update_us",
+            "value": 73.96,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/auth=fetch/patterns=32/fetches=1/grant_update_us",
+            "value": 9.37,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/auth=fetch/patterns=32/fetches=8/grant_update_us",
+            "value": 64.93,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/auth=fetch/patterns=32/fetches=32/grant_update_us",
+            "value": 266.13,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/auth=fetch/patterns=128/fetches=1/grant_update_us",
+            "value": 33.62,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/auth=fetch/patterns=128/fetches=8/grant_update_us",
+            "value": 259.15,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/auth=fetch/patterns=128/fetches=32/grant_update_us",
+            "value": 1070.42,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/restart=restart/paths=8/readers=1/update_us",
+            "value": 419.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/restart=restart/paths=8/readers=8/update_us",
+            "value": 103.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/restart=restart/paths=8/readers=32/update_us",
+            "value": 122.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/restart=restart/paths=32/readers=1/update_us",
+            "value": 184.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/restart=restart/paths=32/readers=8/update_us",
+            "value": 216.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/restart=restart/paths=32/readers=32/update_us",
+            "value": 229.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/restart=restart/paths=128/readers=1/update_us",
+            "value": 763.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/restart=restart/paths=128/readers=8/update_us",
+            "value": 384.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/restart=restart/paths=128/readers=32/update_us",
+            "value": 549.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/subscriber=cache/announcements=8/consumers=8/update_and_consume_us",
+            "value": 3.63,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/subscriber=cache/announcements=8/consumers=32/update_and_consume_us",
+            "value": 4.75,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/subscriber=cache/announcements=8/consumers=128/update_and_consume_us",
+            "value": 7.47,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/subscriber=cache/announcements=32/consumers=8/update_and_consume_us",
+            "value": 1.17,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/subscriber=cache/announcements=32/consumers=32/update_and_consume_us",
+            "value": 1.22,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/subscriber=cache/announcements=32/consumers=128/update_and_consume_us",
+            "value": 1.88,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/subscriber=cache/announcements=128/consumers=8/update_and_consume_us",
+            "value": 1.94,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/subscriber=cache/announcements=128/consumers=32/update_and_consume_us",
+            "value": 1.33,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/subscriber=cache/announcements=128/consumers=128/update_and_consume_us",
+            "value": 1.14,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/alternation=alternation/announcements=8/consumers=1/duplicates=0/select_us",
+            "value": 3.63,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/alternation=alternation/announcements=8/consumers=8/duplicates=0/select_us",
+            "value": 16.56,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/alternation=alternation/announcements=8/consumers=32/duplicates=0/select_us",
+            "value": 49.78,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/alternation=alternation/announcements=32/consumers=1/duplicates=0/select_us",
+            "value": 20.34,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/alternation=alternation/announcements=32/consumers=8/duplicates=0/select_us",
+            "value": 13.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/alternation=alternation/announcements=32/consumers=32/duplicates=0/select_us",
+            "value": 50.57,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/alternation=alternation/announcements=128/consumers=1/duplicates=0/select_us",
+            "value": 1.76,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/alternation=alternation/announcements=128/consumers=8/duplicates=0/select_us",
+            "value": 13.05,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/alternation=alternation/announcements=128/consumers=32/duplicates=0/select_us",
+            "value": 69.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/blind=blind/announcements=8/consumers=1/stale=0/invalidate_us",
+            "value": 5.75,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/blind=blind/announcements=8/consumers=8/stale=0/invalidate_us",
+            "value": 18.68,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/blind=blind/announcements=8/consumers=32/stale=0/invalidate_us",
+            "value": 66.43,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/blind=blind/announcements=32/consumers=1/stale=0/invalidate_us",
+            "value": 5.45,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/blind=blind/announcements=32/consumers=8/stale=0/invalidate_us",
+            "value": 16.51,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/blind=blind/announcements=32/consumers=32/stale=0/invalidate_us",
+            "value": 56.24,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/blind=blind/announcements=128/consumers=1/stale=0/invalidate_us",
+            "value": 3.17,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/blind=blind/announcements=128/consumers=8/stale=0/invalidate_us",
+            "value": 13.43,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/blind=blind/announcements=128/consumers=32/stale=0/invalidate_us",
+            "value": 81.75,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/retirement=retirement/routes=8/consumers=1/refused=256/retire_us",
+            "value": 5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/retirement=retirement/routes=8/consumers=8/refused=2048/retire_us",
+            "value": 20.72,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/retirement=retirement/routes=8/consumers=32/refused=8192/retire_us",
+            "value": 72.39,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/retirement=retirement/routes=32/consumers=1/refused=256/retire_us",
+            "value": 8.22,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/retirement=retirement/routes=32/consumers=8/refused=2048/retire_us",
+            "value": 21.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/retirement=retirement/routes=32/consumers=32/refused=8192/retire_us",
+            "value": 76.24,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/retirement=retirement/routes=128/consumers=1/refused=256/retire_us",
+            "value": 11.13,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/retirement=retirement/routes=128/consumers=8/refused=2048/retire_us",
+            "value": 27.92,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/retirement=retirement/routes=128/consumers=32/refused=8192/retire_us",
+            "value": 80.53,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=stalled-announce/routes=8/observers=1/update_us",
+            "value": 1037.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=stalled-announce/routes=8/observers=8/update_us",
+            "value": 143.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=stalled-announce/routes=8/observers=32/update_us",
+            "value": 256.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=stalled-announce/routes=32/observers=1/update_us",
+            "value": 66.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=stalled-announce/routes=32/observers=8/update_us",
+            "value": 275.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=stalled-announce/routes=32/observers=32/update_us",
+            "value": 851.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=stalled-announce/routes=128/observers=1/update_us",
+            "value": 204.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=stalled-announce/routes=128/observers=8/update_us",
+            "value": 853.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=stalled-announce/routes=128/observers=32/update_us",
+            "value": 2719.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/catalog/tracks=1/viewers=1/catalog_publishes=2/subscribe_updates=2/unlimited_subscribe_updates=1000/elapsed_ms",
+            "value": 44.5,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/catalog/tracks=1/viewers=4/catalog_publishes=2/subscribe_updates=8/unlimited_subscribe_updates=4000/elapsed_ms",
+            "value": 35.5,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/catalog/tracks=1/viewers=16/catalog_publishes=2/subscribe_updates=32/unlimited_subscribe_updates=16000/elapsed_ms",
+            "value": 36.1,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/catalog/tracks=4/viewers=1/catalog_publishes=2/subscribe_updates=8/unlimited_subscribe_updates=4000/elapsed_ms",
+            "value": 48.3,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/catalog/tracks=4/viewers=4/catalog_publishes=2/subscribe_updates=32/unlimited_subscribe_updates=16000/elapsed_ms",
+            "value": 48.8,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/catalog/tracks=4/viewers=16/catalog_publishes=2/subscribe_updates=128/unlimited_subscribe_updates=64000/elapsed_ms",
+            "value": 52.3,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/catalog/tracks=16/viewers=1/catalog_publishes=2/subscribe_updates=32/unlimited_subscribe_updates=16000/elapsed_ms",
+            "value": 113,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/catalog/tracks=16/viewers=4/catalog_publishes=2/subscribe_updates=128/unlimited_subscribe_updates=64000/elapsed_ms",
+            "value": 112.6,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/catalog/tracks=16/viewers=16/catalog_publishes=2/subscribe_updates=512/unlimited_subscribe_updates=256000/elapsed_ms",
+            "value": 118.7,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=100/ready=1/arm_us",
+            "value": 176.91000000000034,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=100/ready=1/advance_us",
+            "value": 5.89500000000065,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=100/ready=1/cancel_us",
+            "value": 237.99299999999945,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=100/ready=10/arm_us",
+            "value": 105.86600000000068,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=100/ready=10/advance_us",
+            "value": 10.438999999999865,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=100/ready=10/cancel_us",
+            "value": 135.85600000000042,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=100/ready=100/arm_us",
+            "value": 72.54000000000005,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=100/ready=100/advance_us",
+            "value": 62.54000000000026,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=100/ready=100/cancel_us",
+            "value": 71.1959999999987,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=1000/ready=1/arm_us",
+            "value": 704.4770000000007,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=1000/ready=1/advance_us",
+            "value": 6.342999999997545,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=1000/ready=1/cancel_us",
+            "value": 1483.854000000001,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=1000/ready=10/arm_us",
+            "value": 670.6469999999954,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=1000/ready=10/advance_us",
+            "value": 12.608000000000175,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=1000/ready=10/cancel_us",
+            "value": 1316.703000000004,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=1000/ready=100/arm_us",
+            "value": 591.4119999999982,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=1000/ready=100/advance_us",
+            "value": 56.532000000004246,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=1000/ready=100/cancel_us",
+            "value": 1306.2319999999943,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=1000/ready=1000/arm_us",
+            "value": 647.592000000003,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=1000/ready=1000/advance_us",
+            "value": 331.82800000000157,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=1000/ready=1000/cancel_us",
+            "value": 633.2900000000024,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=10000/ready=1/arm_us",
+            "value": 7909.604000000001,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=10000/ready=1/advance_us",
+            "value": 8.918999999991684,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=10000/ready=1/cancel_us",
+            "value": 18908.33900000001,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=10000/ready=10/arm_us",
+            "value": 8087.424999999996,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=10000/ready=10/advance_us",
+            "value": 18.863000000010288,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=10000/ready=10/cancel_us",
+            "value": 19685.01900000001,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=10000/ready=100/arm_us",
+            "value": 8248.39200000008,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=10000/ready=100/advance_us",
+            "value": 98.79399999999805,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=10000/ready=100/cancel_us",
+            "value": 19905.982999999993,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=10000/ready=1000/arm_us",
+            "value": 8474.282000000017,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=10000/ready=1000/advance_us",
+            "value": 634.8329999999578,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=10000/ready=1000/cancel_us",
+            "value": 19385.774000000085,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=100/ready=1/arm_us",
+            "value": 51.51699999998982,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=100/ready=1/advance_us",
+            "value": 0.6959999999480715,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=100/ready=1/cancel_us",
+            "value": 26.805999999965024,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=100/ready=10/arm_us",
+            "value": 51.541000000042914,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=100/ready=10/advance_us",
+            "value": 2.910999999926389,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=100/ready=10/cancel_us",
+            "value": 24.08700000000863,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=100/ready=100/arm_us",
+            "value": 53.276999999980035,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=100/ready=100/advance_us",
+            "value": 22.687000000018998,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=100/ready=100/cancel_us",
+            "value": 1.4149999999517604,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=1000/ready=1/arm_us",
+            "value": 1744.9889999999186,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=1000/ready=1/advance_us",
+            "value": 3.367000000025655,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=1000/ready=1/cancel_us",
+            "value": 360.95399999999245,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=1000/ready=10/arm_us",
+            "value": 1742.8539999999657,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=1000/ready=10/advance_us",
+            "value": 8.935000000064974,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=1000/ready=10/cancel_us",
+            "value": 353.8660000000391,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=1000/ready=100/arm_us",
+            "value": 1708.4240000000364,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=1000/ready=100/advance_us",
+            "value": 48.636999999985164,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=1000/ready=100/cancel_us",
+            "value": 314.803999999981,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=1000/ready=1000/arm_us",
+            "value": 1735.0940000000037,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=1000/ready=1000/advance_us",
+            "value": 347.83500000003187,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=1000/ready=1000/cancel_us",
+            "value": 7.399000000077649,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=10000/ready=1/arm_us",
+            "value": 303821.26400000014,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=10000/ready=1/advance_us",
+            "value": 15.95099999985905,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=10000/ready=1/cancel_us",
+            "value": 12739.540999999917,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=10000/ready=10/arm_us",
+            "value": 314680.1389999996,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=10000/ready=10/advance_us",
+            "value": 52.637000000686385,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=10000/ready=10/cancel_us",
+            "value": 13176.234999999906,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=10000/ready=100/arm_us",
+            "value": 307804.2970000006,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=10000/ready=100/advance_us",
+            "value": 334.6590000001015,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=10000/ready=100/cancel_us",
+            "value": 13030.971999999565,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=10000/ready=1000/arm_us",
+            "value": 308220.1269999987,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=10000/ready=1000/advance_us",
+            "value": 2703.585000000203,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=10000/ready=1000/cancel_us",
+            "value": 10436.147999999775,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=100/ready=1/arm_us",
+            "value": 71.33900000007998,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=100/ready=1/advance_us",
+            "value": 55.3330000002461,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=100/ready=1/cancel_us",
+            "value": 138.09500000024855,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=100/ready=10/arm_us",
+            "value": 60.41200000072422,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=100/ready=10/advance_us",
+            "value": 130.47999999980675,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=100/ready=10/cancel_us",
+            "value": 119.83200000031502,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=100/ready=100/arm_us",
+            "value": 57.54899999919871,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=100/ready=100/advance_us",
+            "value": 681.9980000000214,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=100/ready=100/cancel_us",
+            "value": 69.38699999955134,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=1000/ready=1/arm_us",
+            "value": 848.4430000007706,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=1000/ready=1/advance_us",
+            "value": 46.02100000010978,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=1000/ready=1/cancel_us",
+            "value": 1403.2420000003185,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=1000/ready=10/arm_us",
+            "value": 649.6720000013738,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=1000/ready=10/advance_us",
+            "value": 126.48799999988114,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=1000/ready=10/cancel_us",
+            "value": 1456.1510000003182,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=1000/ready=100/arm_us",
+            "value": 607.2189999995317,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=1000/ready=100/advance_us",
+            "value": 762.9930000002787,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=1000/ready=100/cancel_us",
+            "value": 1466.1809999997786,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=1000/ready=1000/arm_us",
+            "value": 584.1400000008434,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=1000/ready=1000/advance_us",
+            "value": 6288.628000000244,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=1000/ready=1000/cancel_us",
+            "value": 726.3949999996839,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=10000/ready=1/arm_us",
+            "value": 11093.892000000778,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=10000/ready=1/advance_us",
+            "value": 95.99399999933667,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=10000/ready=1/cancel_us",
+            "value": 15461.406000000352,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=10000/ready=10/arm_us",
+            "value": 8418.424999999843,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=10000/ready=10/advance_us",
+            "value": 234.65800000121817,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=10000/ready=10/cancel_us",
+            "value": 19364.846000000398,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=10000/ready=100/arm_us",
+            "value": 9878.613999999288,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=10000/ready=100/advance_us",
+            "value": 889.5690000008472,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=10000/ready=100/cancel_us",
+            "value": 18498.473999999987,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=10000/ready=1000/arm_us",
+            "value": 9112.852000000203,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=10000/ready=1000/advance_us",
+            "value": 10999.714999999924,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=10000/ready=1000/cancel_us",
+            "value": 16122.526999999536,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=100/ready=1/arm_us",
+            "value": 69.66000000102213,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=100/ready=1/advance_us",
+            "value": 23.255000000062864,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=100/ready=1/cancel_us",
+            "value": 32.11800000099174,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=100/ready=10/arm_us",
+            "value": 70.72300000072573,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=100/ready=10/advance_us",
+            "value": 94.04999999969732,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=100/ready=10/cancel_us",
+            "value": 33.33399999974063,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=100/ready=100/arm_us",
+            "value": 79.90699999936623,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=100/ready=100/advance_us",
+            "value": 691.5110000009008,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=100/ready=100/cancel_us",
+            "value": 6.175000000439468,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=1000/ready=1/arm_us",
+            "value": 1827.6499999992666,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=1000/ready=1/advance_us",
+            "value": 36.99799999958486,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=1000/ready=1/cancel_us",
+            "value": 390.2490000000398,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=1000/ready=10/arm_us",
+            "value": 2108.448999999382,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=1000/ready=10/advance_us",
+            "value": 118.55300000024727,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=1000/ready=10/cancel_us",
+            "value": 383.3210000011604,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=1000/ready=100/arm_us",
+            "value": 1750.6150000008347,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=1000/ready=100/advance_us",
+            "value": 763.1700000001729,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=1000/ready=100/cancel_us",
+            "value": 347.46699999959674,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=1000/ready=1000/arm_us",
+            "value": 1810.2429999999003,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=1000/ready=1000/advance_us",
+            "value": 7033.497000000352,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=1000/ready=1000/cancel_us",
+            "value": 8.712000000741682,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=10000/ready=1/arm_us",
+            "value": 312121.4689999997,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=10000/ready=1/advance_us",
+            "value": 138.65599999917322,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=10000/ready=1/cancel_us",
+            "value": 12554.653000001053,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=10000/ready=10/arm_us",
+            "value": 268712.1100000004,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=10000/ready=10/advance_us",
+            "value": 814.5750000003318,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=10000/ready=10/cancel_us",
+            "value": 12865.185999999085,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=10000/ready=100/arm_us",
+            "value": 280359.4749999993,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=10000/ready=100/advance_us",
+            "value": 1522.8520000000572,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=10000/ready=100/cancel_us",
+            "value": 12605.314000000362,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=10000/ready=1000/arm_us",
+            "value": 286827.4139999994,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=10000/ready=1000/advance_us",
+            "value": 10286.910000000717,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=10000/ready=1000/cancel_us",
+            "value": 10063.31499999942,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/cmaf/mdat_bytes=1024/declared=1/decoded=1/us_per_fragment",
+            "value": 20.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/cmaf/mdat_bytes=1024/declared=64/decoded=64/us_per_fragment",
+            "value": 30.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/cmaf/mdat_bytes=1024/declared=1024/decoded=1024/us_per_fragment",
+            "value": 164,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/cmaf/mdat_bytes=1024/declared=4294967295/decoded=0/us_per_fragment",
+            "value": 6.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/cmaf/mdat_bytes=65536/declared=1/decoded=1/us_per_fragment",
+            "value": 63.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/cmaf/mdat_bytes=65536/declared=64/decoded=64/us_per_fragment",
+            "value": 60.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/cmaf/mdat_bytes=65536/declared=1024/decoded=1024/us_per_fragment",
+            "value": 153.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/cmaf/mdat_bytes=65536/declared=4294967295/decoded=0/us_per_fragment",
+            "value": 5.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=1/readers=1/phase=publish/us",
+            "value": 2909.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=1/readers=1/phase=publish/size_bytes",
+            "value": 740,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=1/readers=1/phase=read/us",
+            "value": 976.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=1/readers=1/phase=read/size_bytes",
+            "value": 71680,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=1/readers=4/phase=publish/us",
+            "value": 1175.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=1/readers=4/phase=publish/size_bytes",
+            "value": 740,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=1/readers=4/phase=read/us",
+            "value": 388,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=1/readers=4/phase=read/size_bytes",
+            "value": 71680,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=1/readers=16/phase=publish/us",
+            "value": 1171.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=1/readers=16/phase=publish/size_bytes",
+            "value": 740,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=1/readers=16/phase=read/us",
+            "value": 548.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=1/readers=16/phase=read/size_bytes",
+            "value": 71680,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=4/readers=1/phase=publish/us",
+            "value": 3850.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=4/readers=1/phase=publish/size_bytes",
+            "value": 2960,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=4/readers=1/phase=read/us",
+            "value": 899.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=4/readers=1/phase=read/size_bytes",
+            "value": 286720,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=4/readers=4/phase=publish/us",
+            "value": 3513.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=4/readers=4/phase=publish/size_bytes",
+            "value": 2960,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=4/readers=4/phase=read/us",
+            "value": 1284.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=4/readers=4/phase=read/size_bytes",
+            "value": 286720,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=4/readers=16/phase=publish/us",
+            "value": 3051.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=4/readers=16/phase=publish/size_bytes",
+            "value": 2960,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=4/readers=16/phase=read/us",
+            "value": 954.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=4/readers=16/phase=read/size_bytes",
+            "value": 286720,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=16/readers=1/phase=publish/us",
+            "value": 11083.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=16/readers=1/phase=publish/size_bytes",
+            "value": 11840,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=16/readers=1/phase=read/us",
+            "value": 2716.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=16/readers=1/phase=read/size_bytes",
+            "value": 1146880,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=16/readers=4/phase=publish/us",
+            "value": 9775.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=16/readers=4/phase=publish/size_bytes",
+            "value": 11840,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=16/readers=4/phase=read/us",
+            "value": 2852.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=16/readers=4/phase=read/size_bytes",
+            "value": 1146880,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=16/readers=16/phase=publish/us",
+            "value": 10305.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=16/readers=16/phase=publish/size_bytes",
+            "value": 11840,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=16/readers=16/phase=read/us",
+            "value": 3474.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=16/readers=16/phase=read/size_bytes",
+            "value": 1146880,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/tracks=1/queued=1/retained_bytes=-34254/deliver_us",
+            "value": 427.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/tracks=1/queued=8/retained_bytes=76828/deliver_us",
+            "value": 315.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/tracks=1/queued=64/retained_bytes=163531/deliver_us",
+            "value": 332.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/tracks=16/queued=1/retained_bytes=288388/deliver_us",
+            "value": 280.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/tracks=16/queued=8/retained_bytes=399021/deliver_us",
+            "value": 296.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/tracks=16/queued=64/retained_bytes=642260/deliver_us",
+            "value": 289.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/tracks=64/queued=1/retained_bytes=963575/deliver_us",
+            "value": 273.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/tracks=64/queued=8/retained_bytes=1194664/deliver_us",
+            "value": 293,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/tracks=64/queued=64/retained_bytes=3438968/deliver_us",
+            "value": 290.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/measurement=consumer_bundle/size_bytes",
+            "value": 106268,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/measurement=consumer_bundle_gzip/size_bytes",
+            "value": 31818,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/drift/retained=1/publishers=1/readers=1/ns_per_frame",
+            "value": 7141,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/retained=1/publishers=1/readers=8/ns_per_frame",
+            "value": 2727,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/retained=1/publishers=4/readers=1/ns_per_frame",
+            "value": 2719,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/retained=1/publishers=4/readers=8/ns_per_frame",
+            "value": 2612,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/retained=64/publishers=1/readers=1/ns_per_frame",
+            "value": 2905,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/retained=64/publishers=1/readers=8/ns_per_frame",
+            "value": 2686,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/retained=64/publishers=4/readers=1/ns_per_frame",
+            "value": 3728,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/retained=64/publishers=4/readers=8/ns_per_frame",
+            "value": 2802,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/retained=1024/publishers=1/readers=1/ns_per_frame",
+            "value": 4725,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/retained=1024/publishers=1/readers=8/ns_per_frame",
+            "value": 2731,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/retained=1024/publishers=4/readers=1/ns_per_frame",
+            "value": 2718,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/retained=1024/publishers=4/readers=8/ns_per_frame",
+            "value": 2988,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=160/depth=1/frames=1024/seal_us",
+            "value": 37.82,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=160/depth=1/frames=1024/open_us",
+            "value": 35.24,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=160/depth=8/frames=1024/seal_us",
+            "value": 36.11,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=160/depth=8/frames=1024/open_us",
+            "value": 34.36,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=160/depth=64/frames=1024/seal_us",
+            "value": 36.41,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=160/depth=64/frames=1024/open_us",
+            "value": 35.14,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=1160/depth=1/frames=1024/seal_us",
+            "value": 38.83,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=1160/depth=1/frames=1024/open_us",
+            "value": 38.47,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=1160/depth=8/frames=1024/seal_us",
+            "value": 38.82,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=1160/depth=8/frames=1024/open_us",
+            "value": 38.23,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=1160/depth=64/frames=1024/seal_us",
+            "value": 38.63,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=1160/depth=64/frames=1024/open_us",
+            "value": 36.84,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=16384/depth=1/frames=1024/seal_us",
+            "value": 59.79,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=16384/depth=1/frames=1024/open_us",
+            "value": 50.91,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=16384/depth=8/frames=1024/seal_us",
+            "value": 58.78,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=16384/depth=8/frames=1024/open_us",
+            "value": 49.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=16384/depth=64/frames=1024/seal_us",
+            "value": 59.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=16384/depth=64/frames=1024/open_us",
+            "value": 49.81,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=262144/depth=1/frames=128/seal_us",
+            "value": 219.81,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=262144/depth=1/frames=128/open_us",
+            "value": 221.42,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=262144/depth=8/frames=128/seal_us",
+            "value": 261.92,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=262144/depth=8/frames=128/open_us",
+            "value": 165.36,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=262144/depth=64/frames=128/seal_us",
+            "value": 291.02,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=262144/depth=64/frames=128/open_us",
+            "value": 192.82,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=covering/heads=1/routes=8/update_us",
+            "value": 303.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=covering/heads=1/routes=32/update_us",
+            "value": 386.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=covering/heads=1/routes=128/update_us",
+            "value": 927.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=covering/heads=4/routes=8/update_us",
+            "value": 209.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=covering/heads=4/routes=32/update_us",
+            "value": 331,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=covering/heads=4/routes=128/update_us",
+            "value": 792.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=covering/heads=16/routes=8/update_us",
+            "value": 157,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=covering/heads=16/routes=32/update_us",
+            "value": 375.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=covering/heads=16/routes=128/update_us",
+            "value": 831.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=single/heads=1/routes=8/update_us",
+            "value": 87.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=single/heads=1/routes=32/update_us",
+            "value": 235.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=single/heads=1/routes=128/update_us",
+            "value": 800,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=single/heads=4/routes=8/update_us",
+            "value": 85.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=single/heads=4/routes=32/update_us",
+            "value": 236.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=single/heads=4/routes=128/update_us",
+            "value": 758.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=single/heads=16/routes=8/update_us",
+            "value": 82.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=single/heads=16/routes=32/update_us",
+            "value": 189.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=single/heads=16/routes=128/update_us",
+            "value": 739.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/watchers=8/sessions=1/watch_us",
+            "value": 82.57,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/watchers=8/sessions=8/watch_us",
+            "value": 143.05,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/watchers=8/sessions=32/watch_us",
+            "value": 370.76,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/watchers=128/sessions=1/watch_us",
+            "value": 63.08,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/watchers=128/sessions=8/watch_us",
+            "value": 143.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/watchers=128/sessions=32/watch_us",
+            "value": 475.04,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/watchers=2048/sessions=1/watch_us",
+            "value": 62.71,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/watchers=2048/sessions=8/watch_us",
+            "value": 181.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/watchers=2048/sessions=32/watch_us",
+            "value": 492.63,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=16/chunk_bytes=24/frames_per_chunk=1.1/ns_per_frame",
+            "value": 4575,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=16/chunk_bytes=24/frames_per_chunk=1.1/first_frame_us",
+            "value": 9.88,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=16/chunk_bytes=1200/frames_per_chunk=50.0/ns_per_frame",
+            "value": 804,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=16/chunk_bytes=1200/frames_per_chunk=50.0/first_frame_us",
+            "value": 28.11,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=16/chunk_bytes=16384/frames_per_chunk=50.0/ns_per_frame",
+            "value": 801,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=16/chunk_bytes=16384/frames_per_chunk=50.0/first_frame_us",
+            "value": 27.21,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=16/chunk_bytes=65536/frames_per_chunk=50.0/ns_per_frame",
+            "value": 799,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=16/chunk_bytes=65536/frames_per_chunk=50.0/first_frame_us",
+            "value": 26.83,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=100/chunk_bytes=108/frames_per_chunk=1.0/ns_per_frame",
+            "value": 5495,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=100/chunk_bytes=108/frames_per_chunk=1.0/first_frame_us",
+            "value": 10.66,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=100/chunk_bytes=1200/frames_per_chunk=10.0/ns_per_frame",
+            "value": 1174,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=100/chunk_bytes=1200/frames_per_chunk=10.0/first_frame_us",
+            "value": 14.69,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=100/chunk_bytes=16384/frames_per_chunk=50.0/ns_per_frame",
+            "value": 791,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=100/chunk_bytes=16384/frames_per_chunk=50.0/first_frame_us",
+            "value": 27.89,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=100/chunk_bytes=65536/frames_per_chunk=50.0/ns_per_frame",
+            "value": 799,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=100/chunk_bytes=65536/frames_per_chunk=50.0/first_frame_us",
+            "value": 26.88,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=1000/chunk_bytes=1008/frames_per_chunk=1.0/ns_per_frame",
+            "value": 6172,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=1000/chunk_bytes=1008/frames_per_chunk=1.0/first_frame_us",
+            "value": 10.88,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=1000/chunk_bytes=1200/frames_per_chunk=1.2/ns_per_frame",
+            "value": 5624,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=1000/chunk_bytes=1200/frames_per_chunk=1.2/first_frame_us",
+            "value": 10,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=1000/chunk_bytes=16384/frames_per_chunk=12.5/ns_per_frame",
+            "value": 1427,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=1000/chunk_bytes=16384/frames_per_chunk=12.5/first_frame_us",
+            "value": 23.01,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=1000/chunk_bytes=65536/frames_per_chunk=50.0/ns_per_frame",
+            "value": 811,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=1000/chunk_bytes=65536/frames_per_chunk=50.0/first_frame_us",
+            "value": 28.11,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=16/chunk_bytes=65536/frames_per_chunk=3000.0/ns_per_frame",
+            "value": 807,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=16/chunk_bytes=65536/frames_per_chunk=3000.0/first_frame_us",
+            "value": 1538.26,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=16/chunk_bytes=24/frames_per_chunk=1.3/ns_per_frame",
+            "value": 7782,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=16/chunk_bytes=24/frames_per_chunk=1.3/first_frame_us",
+            "value": 58.94,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=16/chunk_bytes=1200/frames_per_chunk=50.0/ns_per_frame",
+            "value": 1576,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=16/chunk_bytes=1200/frames_per_chunk=50.0/first_frame_us",
+            "value": 57.17,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=16/chunk_bytes=16384/frames_per_chunk=50.0/ns_per_frame",
+            "value": 1393,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=16/chunk_bytes=16384/frames_per_chunk=50.0/first_frame_us",
+            "value": 41.45,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=16/chunk_bytes=65536/frames_per_chunk=50.0/ns_per_frame",
+            "value": 1478,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=16/chunk_bytes=65536/frames_per_chunk=50.0/first_frame_us",
+            "value": 45,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=100/chunk_bytes=108/frames_per_chunk=1.0/ns_per_frame",
+            "value": 7548,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=100/chunk_bytes=108/frames_per_chunk=1.0/first_frame_us",
+            "value": 28.05,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=100/chunk_bytes=1200/frames_per_chunk=10.0/ns_per_frame",
+            "value": 1890,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=100/chunk_bytes=1200/frames_per_chunk=10.0/first_frame_us",
+            "value": 27.97,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=100/chunk_bytes=16384/frames_per_chunk=50.0/ns_per_frame",
+            "value": 1185,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=100/chunk_bytes=16384/frames_per_chunk=50.0/first_frame_us",
+            "value": 39.41,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=100/chunk_bytes=65536/frames_per_chunk=50.0/ns_per_frame",
+            "value": 1138,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=100/chunk_bytes=65536/frames_per_chunk=50.0/first_frame_us",
+            "value": 36.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=1000/chunk_bytes=1008/frames_per_chunk=1.0/ns_per_frame",
+            "value": 9079,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=1000/chunk_bytes=1008/frames_per_chunk=1.0/first_frame_us",
+            "value": 28.85,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=1000/chunk_bytes=1200/frames_per_chunk=1.2/ns_per_frame",
+            "value": 8292,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=1000/chunk_bytes=1200/frames_per_chunk=1.2/first_frame_us",
+            "value": 43.16,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=1000/chunk_bytes=16384/frames_per_chunk=12.5/ns_per_frame",
+            "value": 1704,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=1000/chunk_bytes=16384/frames_per_chunk=12.5/first_frame_us",
+            "value": 33.43,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=1000/chunk_bytes=65536/frames_per_chunk=50.0/ns_per_frame",
+            "value": 977,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=1000/chunk_bytes=65536/frames_per_chunk=50.0/first_frame_us",
+            "value": 34.12,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=16/chunk_bytes=65536/frames_per_chunk=3000.0/ns_per_frame",
+            "value": 760,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=16/chunk_bytes=65536/frames_per_chunk=3000.0/first_frame_us",
+            "value": 1436.73,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/jitter/held=64/order=in/ns_per_frame",
+            "value": 165.8,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/jitter/held=64/order=reordered/ns_per_frame",
+            "value": 47.7,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/jitter/held=512/order=in/ns_per_frame",
+            "value": 128,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/jitter/held=512/order=reordered/ns_per_frame",
+            "value": 57,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/jitter/held=4096/order=in/ns_per_frame",
+            "value": 145.5,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/jitter/held=4096/order=reordered/ns_per_frame",
+            "value": 66,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/jitter/held=8192/order=in/ns_per_frame",
+            "value": 164.3,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/jitter/held=8192/order=reordered/ns_per_frame",
+            "value": 71.8,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=1/changed=1/compression=none/ms_per_update",
+            "value": 0.003511,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=1/changed=1/compression=deflate/ms_per_update",
+            "value": 0.086776,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=10/changed=1/compression=none/ms_per_update",
+            "value": 0.004544,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=10/changed=1/compression=deflate/ms_per_update",
+            "value": 0.057094,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=10/changed=10/compression=none/ms_per_update",
+            "value": 0.004788,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=10/changed=10/compression=deflate/ms_per_update",
+            "value": 0.075861,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=100/changed=1/compression=none/ms_per_update",
+            "value": 0.022879,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=100/changed=1/compression=deflate/ms_per_update",
+            "value": 0.071787,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=100/changed=10/compression=none/ms_per_update",
+            "value": 0.023711,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=100/changed=10/compression=deflate/ms_per_update",
+            "value": 0.086857,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=1000/changed=1/compression=none/ms_per_update",
+            "value": 0.657573,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=1000/changed=1/compression=deflate/ms_per_update",
+            "value": 0.732282,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=1000/changed=10/compression=none/ms_per_update",
+            "value": 0.671475,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=1000/changed=10/compression=deflate/ms_per_update",
+            "value": 0.756548,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-parse/frame=catalog/bytes=1026/json_parse_us",
+            "value": 2.28,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/json-parse/frame=catalog/bytes=1026/parse_us",
+            "value": 4.08,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/json-parse/frame=stats-10/bytes=1413/json_parse_us",
+            "value": 2.46,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/json-parse/frame=stats-10/bytes=1413/parse_us",
+            "value": 4.44,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/json-parse/frame=stats-100/bytes=14362/json_parse_us",
+            "value": 22.81,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/json-parse/frame=stats-100/bytes=14362/parse_us",
+            "value": 40.28,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/json-parse/frame=stats-1000/bytes=146993/json_parse_us",
+            "value": 340.73,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/json-parse/frame=stats-1000/bytes=146993/parse_us",
+            "value": 539.78,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/json-stream/records=64/payload_bytes=16/compression=none/ns_per_record",
+            "value": 4221.6,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/json-stream/records=64/payload_bytes=16/compression=deflate/ns_per_record",
+            "value": 50154.4,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/json-stream/records=64/payload_bytes=1024/compression=none/ns_per_record",
+            "value": 4922.8,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/json-stream/records=64/payload_bytes=1024/compression=deflate/ns_per_record",
+            "value": 42638.9,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/json-stream/records=1024/payload_bytes=16/compression=none/ns_per_record",
+            "value": 1065.4,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/json-stream/records=1024/payload_bytes=16/compression=deflate/ns_per_record",
+            "value": 31471.4,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/json-stream/records=1024/payload_bytes=1024/compression=none/ns_per_record",
+            "value": 2624.6,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/json-stream/records=1024/payload_bytes=1024/compression=deflate/ns_per_record",
+            "value": 22878.1,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Video/version=ff0dad06/bytes=369/encode_ns",
+            "value": 65691,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Video/version=ff0dad06/bytes=369/decode_ns",
+            "value": 9243,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Video/version=ff0dad07/bytes=304/encode_ns",
+            "value": 66422,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Video/version=ff0dad07/bytes=304/decode_ns",
+            "value": 9682,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Audio/version=ff0dad06/bytes=297/encode_ns",
+            "value": 55130,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Audio/version=ff0dad06/bytes=297/decode_ns",
+            "value": 7622,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Audio/version=ff0dad07/bytes=248/encode_ns",
+            "value": 55540,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Audio/version=ff0dad07/bytes=248/decode_ns",
+            "value": 7863,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Group/version=ff0dad06/bytes=5/encode_ns",
+            "value": 5501,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Group/version=ff0dad06/bytes=5/decode_ns",
+            "value": 2037,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Group/version=ff0dad07/bytes=5/encode_ns",
+            "value": 5399,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Group/version=ff0dad07/bytes=5/decode_ns",
+            "value": 1993,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Subscribe/version=ff0dad06/bytes=26/encode_ns",
+            "value": 12981,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Subscribe/version=ff0dad06/bytes=26/decode_ns",
+            "value": 5184,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Subscribe/version=ff0dad07/bytes=28/encode_ns",
+            "value": 14353,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Subscribe/version=ff0dad07/bytes=28/decode_ns",
+            "value": 5896,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Datagram/version=ff0dad06/bytes=11/encode_ns",
+            "value": 2658,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Datagram/version=ff0dad06/bytes=11/decode_ns",
+            "value": 1721,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Datagram/version=ff0dad07/bytes=8/encode_ns",
+            "value": 2635,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Datagram/version=ff0dad07/bytes=8/decode_ns",
+            "value": 1704,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Setup/version=ff0dad06/bytes=15/encode_ns",
+            "value": 9839,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Setup/version=ff0dad06/bytes=15/decode_ns",
+            "value": 5388,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Setup/version=ff0dad07/bytes=15/encode_ns",
+            "value": 9682,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Setup/version=ff0dad07/bytes=15/decode_ns",
+            "value": 5100,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=eager/connections=1/readers=0/held_estimates=1/update_us",
+            "value": 14.27,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=eager/connections=1/readers=1/held_estimates=1/update_us",
+            "value": 15.03,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=eager/connections=1/readers=8/held_estimates=1/update_us",
+            "value": 26.88,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=eager/connections=1/readers=64/held_estimates=1/update_us",
+            "value": 121.96,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=eager/connections=32/readers=0/held_estimates=32/update_us",
+            "value": 11.22,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=eager/connections=32/readers=1/held_estimates=32/update_us",
+            "value": 13.73,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=eager/connections=32/readers=8/held_estimates=32/update_us",
+            "value": 24.99,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=eager/connections=32/readers=64/held_estimates=32/update_us",
+            "value": 124.69,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=eager/connections=256/readers=0/held_estimates=256/update_us",
+            "value": 10.65,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=eager/connections=256/readers=1/held_estimates=256/update_us",
+            "value": 12.86,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=eager/connections=256/readers=8/held_estimates=256/update_us",
+            "value": 25.56,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=eager/connections=256/readers=64/held_estimates=256/update_us",
+            "value": 131.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=observed/connections=1/readers=0/held_estimates=0/update_us",
+            "value": 4.12,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=observed/connections=1/readers=1/held_estimates=1/update_us",
+            "value": 12.66,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=observed/connections=1/readers=8/held_estimates=1/update_us",
+            "value": 30.41,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=observed/connections=1/readers=64/held_estimates=1/update_us",
+            "value": 160.51,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=observed/connections=32/readers=0/held_estimates=0/update_us",
+            "value": 3.06,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=observed/connections=32/readers=1/held_estimates=32/update_us",
+            "value": 11.58,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=observed/connections=32/readers=8/held_estimates=32/update_us",
+            "value": 28.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=observed/connections=32/readers=64/held_estimates=32/update_us",
+            "value": 170.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=observed/connections=256/readers=0/held_estimates=0/update_us",
+            "value": 3.23,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=observed/connections=256/readers=1/held_estimates=256/update_us",
+            "value": 11.28,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=observed/connections=256/readers=8/held_estimates=256/update_us",
+            "value": 30.53,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=observed/connections=256/readers=64/held_estimates=256/update_us",
+            "value": 151.32,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/p2p/streams=1/bytes_per_stream=1024/records=3/elapsed_ms",
+            "value": 4.48,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/p2p/streams=1/bytes_per_stream=16384/records=4/elapsed_ms",
+            "value": 0.736,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/p2p/streams=1/bytes_per_stream=262144/records=19/elapsed_ms",
+            "value": 2.798,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/p2p/streams=8/bytes_per_stream=1024/records=17/elapsed_ms",
+            "value": 2.53,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/p2p/streams=8/bytes_per_stream=16384/records=25/elapsed_ms",
+            "value": 2.599,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/p2p/streams=8/bytes_per_stream=262144/records=145/elapsed_ms",
+            "value": 11.345,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/p2p/streams=64/bytes_per_stream=1024/records=129/elapsed_ms",
+            "value": 6.502,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/p2p/streams=64/bytes_per_stream=16384/records=193/elapsed_ms",
+            "value": 8.222,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/p2p/streams=64/bytes_per_stream=262144/records=1154/elapsed_ms",
+            "value": 53.334,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/priority/subscriptions=1/streams=4/ns_per_change",
+            "value": 5289.5,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/priority/subscriptions=1/streams=16/ns_per_change",
+            "value": 5833.7,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/priority/subscriptions=1/streams=64/ns_per_change",
+            "value": 21628.5,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/priority/subscriptions=16/streams=4/ns_per_change",
+            "value": 398.9,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/priority/subscriptions=16/streams=16/ns_per_change",
+            "value": 2564.9,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/priority/subscriptions=16/streams=64/ns_per_change",
+            "value": 15094.4,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/priority/subscriptions=128/streams=4/ns_per_change",
+            "value": 401.7,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/priority/subscriptions=128/streams=16/ns_per_change",
+            "value": 1601,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/priority/subscriptions=128/streams=64/ns_per_change",
+            "value": 15284.9,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/qmux-record/record_bytes=1025/kind=stream/frames=1/us_per_record",
+            "value": 11.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/qmux-record/record_bytes=1024/kind=stream/frames=16/us_per_record",
+            "value": 36.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/qmux-record/record_bytes=1024/kind=stream/frames=256/us_per_record",
+            "value": 239.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/qmux-record/record_bytes=1024/kind=empty/frames=256/us_per_record",
+            "value": 196.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/qmux-record/record_bytes=1024/kind=max_data/frames=204/us_per_record",
+            "value": 87.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/qmux-record/record_bytes=16381/kind=stream/frames=1/us_per_record",
+            "value": 5.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/qmux-record/record_bytes=16384/kind=stream/frames=16/us_per_record",
+            "value": 21.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/qmux-record/record_bytes=16128/kind=stream/frames=256/us_per_record",
+            "value": 243.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/qmux-record/record_bytes=16380/kind=empty/frames=4095/us_per_record",
+            "value": 3746.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/qmux-record/record_bytes=16380/kind=max_data/frames=3276/us_per_record",
+            "value": 1059.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/reader/frame_bytes=16384/chunk_bytes=1200/chunks=14/ns_per_byte",
+            "value": 0.857,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/reader/frame_bytes=16384/chunk_bytes=16384/chunks=1/ns_per_byte",
+            "value": 0.079,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/reader/frame_bytes=16384/chunk_bytes=1048576/chunks=1/ns_per_byte",
+            "value": 0.06,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/reader/frame_bytes=262144/chunk_bytes=1200/chunks=219/ns_per_byte",
+            "value": 0.444,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/reader/frame_bytes=262144/chunk_bytes=16384/chunks=16/ns_per_byte",
+            "value": 0.253,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/reader/frame_bytes=262144/chunk_bytes=1048576/chunks=1/ns_per_byte",
+            "value": 0.004,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/reader/frame_bytes=1048576/chunk_bytes=1200/chunks=874/ns_per_byte",
+            "value": 0.468,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/reader/frame_bytes=1048576/chunk_bytes=16384/chunks=64/ns_per_byte",
+            "value": 0.201,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/reader/frame_bytes=1048576/chunk_bytes=1048576/chunks=1/ns_per_byte",
+            "value": 0.003,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1/tracks=1/joined=1/refresh_us",
+            "value": 445.05,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1/tracks=1/joined=8/refresh_us",
+            "value": 495.12,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1/tracks=1/joined=32/refresh_us",
+            "value": 699.48,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1/tracks=8/joined=1/refresh_us",
+            "value": 256.26,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1/tracks=8/joined=8/refresh_us",
+            "value": 298.88,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1/tracks=8/joined=32/refresh_us",
+            "value": 519.89,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1/tracks=32/joined=1/refresh_us",
+            "value": 196.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1/tracks=32/joined=8/refresh_us",
+            "value": 236.51,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1/tracks=32/joined=32/refresh_us",
+            "value": 523.86,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=64/tracks=1/joined=1/refresh_us",
+            "value": 286.34,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=64/tracks=1/joined=8/refresh_us",
+            "value": 938.03,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=64/tracks=1/joined=32/refresh_us",
+            "value": 2893.06,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=64/tracks=8/joined=1/refresh_us",
+            "value": 229.68,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=64/tracks=8/joined=8/refresh_us",
+            "value": 726.89,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=64/tracks=8/joined=32/refresh_us",
+            "value": 2660.03,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=64/tracks=32/joined=1/refresh_us",
+            "value": 243.79,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=64/tracks=32/joined=8/refresh_us",
+            "value": 769.38,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=64/tracks=32/joined=32/refresh_us",
+            "value": 2606.39,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1024/tracks=1/joined=1/refresh_us",
+            "value": 5571.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1024/tracks=1/joined=8/refresh_us",
+            "value": 45282.63,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1024/tracks=1/joined=32/refresh_us",
+            "value": 174804.98,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1024/tracks=8/joined=1/refresh_us",
+            "value": 5523.14,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1024/tracks=8/joined=8/refresh_us",
+            "value": 44320.49,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1024/tracks=8/joined=32/refresh_us",
+            "value": 170244.13,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1024/tracks=32/joined=1/refresh_us",
+            "value": 5773.85,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1024/tracks=32/joined=8/refresh_us",
+            "value": 41653.07,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1024/tracks=32/joined=32/refresh_us",
+            "value": 169984.32,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=ordered/sessions=1/window=8/accepted=8/admit_us",
+            "value": 2.91,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=ordered/sessions=1/window=128/accepted=128/admit_us",
+            "value": 24.53,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=ordered/sessions=1/window=220000/accepted=220000/admit_us",
+            "value": 43278.75,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=ordered/sessions=8/window=8/accepted=64/admit_us",
+            "value": 7.09,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=ordered/sessions=8/window=128/accepted=1024/admit_us",
+            "value": 107.03,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=ordered/sessions=8/window=220000/accepted=1760000/admit_us",
+            "value": 326787.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=ordered/sessions=32/window=8/accepted=256/admit_us",
+            "value": 21.94,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=ordered/sessions=32/window=128/accepted=4096/admit_us",
+            "value": 311.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=ordered/sessions=32/window=220000/accepted=7040000/admit_us",
+            "value": 1136251.89,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=reordered/sessions=1/window=8/accepted=8/admit_us",
+            "value": 5.96,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=reordered/sessions=1/window=128/accepted=128/admit_us",
+            "value": 48.18,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=reordered/sessions=1/window=220000/accepted=220000/admit_us",
+            "value": 96861.71,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=reordered/sessions=8/window=8/accepted=64/admit_us",
+            "value": 17.13,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=reordered/sessions=8/window=128/accepted=1024/admit_us",
+            "value": 275.24,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=reordered/sessions=8/window=220000/accepted=1760000/admit_us",
+            "value": 674100.01,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=reordered/sessions=32/window=8/accepted=256/admit_us",
+            "value": 63.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=reordered/sessions=32/window=128/accepted=4096/admit_us",
+            "value": 1026.26,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=reordered/sessions=32/window=220000/accepted=7040000/admit_us",
+            "value": 2536238.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=scattered/sessions=1/window=8/accepted=8/admit_us",
+            "value": 3.31,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=scattered/sessions=1/window=128/accepted=128/admit_us",
+            "value": 48.39,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=scattered/sessions=1/window=220000/accepted=220000/admit_us",
+            "value": 134436.96,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=scattered/sessions=8/window=8/accepted=64/admit_us",
+            "value": 17.25,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=scattered/sessions=8/window=128/accepted=1024/admit_us",
+            "value": 326.18,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=scattered/sessions=8/window=220000/accepted=1760000/admit_us",
+            "value": 1089890.39,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=scattered/sessions=32/window=8/accepted=256/admit_us",
+            "value": 82.62,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=scattered/sessions=32/window=128/accepted=4096/admit_us",
+            "value": 1528.32,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/mode=scattered/sessions=32/window=220000/accepted=7040000/admit_us",
+            "value": 4598086.41,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-ordered/sessions=1/requests=8/accepted=8/admit_us",
+            "value": 1.98,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-ordered/sessions=1/requests=128/accepted=128/admit_us",
+            "value": 18.39,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-ordered/sessions=1/requests=220000/accepted=220000/admit_us",
+            "value": 21303.91,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-ordered/sessions=8/requests=8/accepted=64/admit_us",
+            "value": 5.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-ordered/sessions=8/requests=128/accepted=1024/admit_us",
+            "value": 86.73,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-ordered/sessions=8/requests=220000/accepted=1760000/admit_us",
+            "value": 102960.16,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-ordered/sessions=32/requests=8/accepted=256/admit_us",
+            "value": 15.73,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-ordered/sessions=32/requests=128/accepted=4096/admit_us",
+            "value": 248.11,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-ordered/sessions=32/requests=220000/accepted=7040000/admit_us",
+            "value": 415681.85,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-reordered/sessions=1/requests=8/accepted=8/admit_us",
+            "value": 4.15,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-reordered/sessions=1/requests=128/accepted=128/admit_us",
+            "value": 45.57,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-reordered/sessions=1/requests=220000/accepted=220000/admit_us",
+            "value": 66130,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-reordered/sessions=8/requests=8/accepted=64/admit_us",
+            "value": 20.75,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-reordered/sessions=8/requests=128/accepted=1024/admit_us",
+            "value": 297.15,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-reordered/sessions=8/requests=220000/accepted=1760000/admit_us",
+            "value": 517400.02,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-reordered/sessions=32/requests=8/accepted=256/admit_us",
+            "value": 71.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-reordered/sessions=32/requests=128/accepted=4096/admit_us",
+            "value": 1205.16,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-reordered/sessions=32/requests=220000/accepted=7040000/admit_us",
+            "value": 2055469.75,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-scattered/sessions=1/requests=8/accepted=8/admit_us",
+            "value": 2.47,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-scattered/sessions=1/requests=128/accepted=128/admit_us",
+            "value": 47.08,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-scattered/sessions=1/requests=220000/accepted=220000/admit_us",
+            "value": 134955.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-scattered/sessions=8/requests=8/accepted=64/admit_us",
+            "value": 18.32,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-scattered/sessions=8/requests=128/accepted=1024/admit_us",
+            "value": 365.87,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-scattered/sessions=8/requests=220000/accepted=1760000/admit_us",
+            "value": 1092581.75,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-scattered/sessions=32/requests=8/accepted=256/admit_us",
+            "value": 79.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-scattered/sessions=32/requests=128/accepted=4096/admit_us",
+            "value": 1644.42,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/request-ids/modern_mode=modern-scattered/sessions=32/requests=220000/accepted=7040000/admit_us",
+            "value": 4704498.21,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=watched/routes=8/followers=1/update_us",
+            "value": 38.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=watched/routes=8/followers=8/update_us",
+            "value": 50.02,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=watched/routes=8/followers=32/update_us",
+            "value": 107.76,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=watched/routes=32/followers=1/update_us",
+            "value": 30.11,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=watched/routes=32/followers=8/update_us",
+            "value": 42.64,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=watched/routes=32/followers=32/update_us",
+            "value": 103.81,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=watched/routes=128/followers=1/update_us",
+            "value": 41.39,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=watched/routes=128/followers=8/update_us",
+            "value": 63.32,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=watched/routes=128/followers=32/update_us",
+            "value": 131.02,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=unrelated/routes=8/followers=1/update_us",
+            "value": 14.79,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=unrelated/routes=8/followers=8/update_us",
+            "value": 14.69,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=unrelated/routes=8/followers=32/update_us",
+            "value": 15.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=unrelated/routes=32/followers=1/update_us",
+            "value": 18.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=unrelated/routes=32/followers=8/update_us",
+            "value": 19.68,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=unrelated/routes=32/followers=32/update_us",
+            "value": 16.92,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=unrelated/routes=128/followers=1/update_us",
+            "value": 33.18,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=unrelated/routes=128/followers=8/update_us",
+            "value": 35.82,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=unrelated/routes=128/followers=32/update_us",
+            "value": 35.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/unrelated=8/waiters=1/cancel_us",
+            "value": 19.42,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/unrelated=8/waiters=8/cancel_us",
+            "value": 71.06,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/unrelated=8/waiters=32/cancel_us",
+            "value": 144.46,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/unrelated=128/waiters=1/cancel_us",
+            "value": 7.34,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/unrelated=128/waiters=8/cancel_us",
+            "value": 36.04,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/unrelated=128/waiters=32/cancel_us",
+            "value": 104.05,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/unrelated=2048/waiters=1/cancel_us",
+            "value": 8.03,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/unrelated=2048/waiters=8/cancel_us",
+            "value": 31.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/unrelated=2048/waiters=32/cancel_us",
+            "value": 103.66,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/failovers=0/extra_routes=0/cancel_us",
+            "value": 3.16,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/failovers=0/extra_routes=128/cancel_us",
+            "value": 3.62,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/failovers=1/extra_routes=0/cancel_us",
+            "value": 2.87,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/failovers=1/extra_routes=128/cancel_us",
+            "value": 4.06,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/failovers=16/extra_routes=0/cancel_us",
+            "value": 4.32,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/failovers=16/extra_routes=128/cancel_us",
+            "value": 6.57,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/failovers=128/extra_routes=0/cancel_us",
+            "value": 18.52,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/failovers=128/extra_routes=128/cancel_us",
+            "value": 17.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-forward/paths=1024/waiters=1/active_ms",
+            "value": 3.18,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-forward/paths=1024/waiters=1/settled_ms",
+            "value": 4.62,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-forward/paths=1024/waiters=4/active_ms",
+            "value": 9.32,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-forward/paths=1024/waiters=4/settled_ms",
+            "value": 14.81,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-forward/paths=4096/waiters=1/active_ms",
+            "value": 15.07,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-forward/paths=4096/waiters=1/settled_ms",
+            "value": 22.38,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-forward/paths=4096/waiters=4/active_ms",
+            "value": 43.44,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-forward/paths=4096/waiters=4/settled_ms",
+            "value": 69.68,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-forward/paths=16384/waiters=1/active_ms",
+            "value": 66.84,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-forward/paths=16384/waiters=1/settled_ms",
+            "value": 100.6,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-forward/paths=16384/waiters=4/active_ms",
+            "value": 183.51,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-forward/paths=16384/waiters=4/settled_ms",
+            "value": 292.4,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-reverse/paths=1024/waiters=1/active_ms",
+            "value": 3.98,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-reverse/paths=1024/waiters=1/settled_ms",
+            "value": 5.7,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-reverse/paths=1024/waiters=4/active_ms",
+            "value": 10.73,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-reverse/paths=1024/waiters=4/settled_ms",
+            "value": 16.4,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-reverse/paths=4096/waiters=1/active_ms",
+            "value": 18.66,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-reverse/paths=4096/waiters=1/settled_ms",
+            "value": 26.14,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-reverse/paths=4096/waiters=4/active_ms",
+            "value": 49.34,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-reverse/paths=4096/waiters=4/settled_ms",
+            "value": 74.48,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-reverse/paths=16384/waiters=1/active_ms",
+            "value": 76.02,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-reverse/paths=16384/waiters=1/settled_ms",
+            "value": 104.17,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-reverse/paths=16384/waiters=4/active_ms",
+            "value": 194.48,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-reverse/paths=16384/waiters=4/settled_ms",
+            "value": 319.39,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=drain-local/paths=1024/waiters=1/active_ms",
+            "value": 3.28,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=drain-local/paths=1024/waiters=1/settled_ms",
+            "value": 3.29,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=drain-local/paths=1024/waiters=4/active_ms",
+            "value": 3.22,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=drain-local/paths=1024/waiters=4/settled_ms",
+            "value": 3.22,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=drain-local/paths=4096/waiters=1/active_ms",
+            "value": 11.36,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=drain-local/paths=4096/waiters=1/settled_ms",
+            "value": 11.36,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=drain-local/paths=4096/waiters=4/active_ms",
+            "value": 12.95,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=drain-local/paths=4096/waiters=4/settled_ms",
+            "value": 12.95,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=drain-local/paths=16384/waiters=1/active_ms",
+            "value": 49.33,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=drain-local/paths=16384/waiters=1/settled_ms",
+            "value": 49.33,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=drain-local/paths=16384/waiters=4/active_ms",
+            "value": 79.25,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=drain-local/paths=16384/waiters=4/settled_ms",
+            "value": 79.26,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=1/cancelled=1/active_us",
+            "value": 9.42,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=1/cancelled=1/settled_us",
+            "value": 15.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=1/cancelled=64/active_us",
+            "value": 130.02,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=1/cancelled=64/settled_us",
+            "value": 245.87,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=1/cancelled=1024/active_us",
+            "value": 2307.47,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=1/cancelled=1024/settled_us",
+            "value": 4216.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=16/cancelled=1/active_us",
+            "value": 12.85,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=16/cancelled=1/settled_us",
+            "value": 21.29,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=16/cancelled=64/active_us",
+            "value": 133.23,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=16/cancelled=64/settled_us",
+            "value": 249.17,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=16/cancelled=1024/active_us",
+            "value": 2009.41,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=16/cancelled=1024/settled_us",
+            "value": 3348.02,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=128/cancelled=1/active_us",
+            "value": 19.61,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=128/cancelled=1/settled_us",
+            "value": 31.56,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=128/cancelled=64/active_us",
+            "value": 128.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=128/cancelled=64/settled_us",
+            "value": 238.56,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=128/cancelled=1024/active_us",
+            "value": 2472.39,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=128/cancelled=1024/settled_us",
+            "value": 3724.43,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=1/cancelled=1/active_us",
+            "value": 5.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=1/cancelled=1/settled_us",
+            "value": 11.72,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=1/cancelled=64/active_us",
+            "value": 100.44,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=1/cancelled=64/settled_us",
+            "value": 184.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=1/cancelled=1024/active_us",
+            "value": 2116.28,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=1/cancelled=1024/settled_us",
+            "value": 3810.27,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=16/cancelled=1/active_us",
+            "value": 7.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=16/cancelled=1/settled_us",
+            "value": 14.86,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=16/cancelled=64/active_us",
+            "value": 124.03,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=16/cancelled=64/settled_us",
+            "value": 216.91,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=16/cancelled=1024/active_us",
+            "value": 2066.21,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=16/cancelled=1024/settled_us",
+            "value": 3528.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=128/cancelled=1/active_us",
+            "value": 10.68,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=128/cancelled=1/settled_us",
+            "value": 22.85,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=128/cancelled=64/active_us",
+            "value": 140.74,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=128/cancelled=64/settled_us",
+            "value": 239.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=128/cancelled=1024/active_us",
+            "value": 2462.93,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=128/cancelled=1024/settled_us",
+            "value": 4137.96,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/namespace_update=namespace_update/draft=18/namespaces=1/subscribers=1/update_us",
+            "value": 617.01,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/namespace_update=namespace_update/draft=18/namespaces=1/subscribers=8/update_us",
+            "value": 1189.59,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/namespace_update=namespace_update/draft=18/namespaces=32/subscribers=1/update_us",
+            "value": 1523.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/namespace_update=namespace_update/draft=18/namespaces=32/subscribers=8/update_us",
+            "value": 8814.64,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/namespace_update=namespace_update/draft=18/namespaces=128/subscribers=1/update_us",
+            "value": 4466.43,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/namespace_update=namespace_update/draft=18/namespaces=128/subscribers=8/update_us",
+            "value": 31273.32,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/namespace_update=namespace_update/draft=21/namespaces=1/subscribers=1/update_us",
+            "value": 99.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/namespace_update=namespace_update/draft=21/namespaces=1/subscribers=8/update_us",
+            "value": 557.23,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/namespace_update=namespace_update/draft=21/namespaces=32/subscribers=1/update_us",
+            "value": 1031.08,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/namespace_update=namespace_update/draft=21/namespaces=32/subscribers=8/update_us",
+            "value": 7556.81,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/namespace_update=namespace_update/draft=21/namespaces=128/subscribers=1/update_us",
+            "value": 3676.36,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/namespace_update=namespace_update/draft=21/namespaces=128/subscribers=8/update_us",
+            "value": 29538.32,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/swaps=0/direct_us",
+            "value": 3.83,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/swaps=0/front_us",
+            "value": 5.87,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/swaps=0/fork_us",
+            "value": 5.91,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/swaps=0/direct_us",
+            "value": 2.09,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/swaps=0/front_us",
+            "value": 3.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/swaps=0/fork_us",
+            "value": 2.91,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/swaps=0/direct_us",
+            "value": 1.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/swaps=0/front_us",
+            "value": 2.95,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/swaps=0/fork_us",
+            "value": 2.61,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/swaps=1/direct_us",
+            "value": 3.24,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/swaps=1/front_us",
+            "value": 5.84,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/swaps=1/fork_us",
+            "value": 5.53,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/swaps=1/direct_us",
+            "value": 1.97,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/swaps=1/front_us",
+            "value": 3.31,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/swaps=1/fork_us",
+            "value": 3.24,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/swaps=1/direct_us",
+            "value": 2.08,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/swaps=1/front_us",
+            "value": 3.32,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/swaps=1/fork_us",
+            "value": 3.41,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/swaps=16/direct_us",
+            "value": 2.98,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/swaps=16/front_us",
+            "value": 5.53,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/swaps=16/fork_us",
+            "value": 5.44,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/swaps=16/direct_us",
+            "value": 2.35,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/swaps=16/front_us",
+            "value": 3.76,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/swaps=16/fork_us",
+            "value": 3.78,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/swaps=16/direct_us",
+            "value": 2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/swaps=16/front_us",
+            "value": 3.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/swaps=16/fork_us",
+            "value": 3.44,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/flaps=1/flap_us",
+            "value": 95.15,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/flaps=16/flap_us",
+            "value": 50.57,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/flaps=64/flap_us",
+            "value": 41.54,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/flaps=1/flap_us",
+            "value": 31.51,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/flaps=16/flap_us",
+            "value": 13.32,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/flaps=64/flap_us",
+            "value": 9.88,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/flaps=1/flap_us",
+            "value": 12.98,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/flaps=16/flap_us",
+            "value": 4.18,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/flaps=64/flap_us",
+            "value": 3.93,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/replayed_frames=0/readable_us",
+            "value": 8.54,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/replayed_frames=0/readable_us",
+            "value": 3.91,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/replayed_frames=0/readable_us",
+            "value": 1.94,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/replayed_frames=1/readable_us",
+            "value": 3.45,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/replayed_frames=1/readable_us",
+            "value": 2.05,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/replayed_frames=1/readable_us",
+            "value": 1.85,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/replayed_frames=64/readable_us",
+            "value": 8.33,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/replayed_frames=64/readable_us",
+            "value": 2.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/replayed_frames=64/readable_us",
+            "value": 2.67,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/replayed_frames=1024/readable_us",
+            "value": 85.23,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/replayed_frames=1024/readable_us",
+            "value": 53.17,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/replayed_frames=1024/readable_us",
+            "value": 52.54,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/datagram_readers=1/retained=1/us_per_datagram",
+            "value": 0.69,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/datagram_readers=4/retained=1/us_per_datagram",
+            "value": 0.43,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/datagram_readers=16/retained=1/us_per_datagram",
+            "value": 0.39,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/datagram_readers=1/retained=64/us_per_datagram",
+            "value": 0.53,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/datagram_readers=4/retained=64/us_per_datagram",
+            "value": 0.43,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/datagram_readers=16/retained=64/us_per_datagram",
+            "value": 0.31,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/datagram_readers=1/retained=4096/us_per_datagram",
+            "value": 0.39,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/datagram_readers=4/retained=4096/us_per_datagram",
+            "value": 0.34,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/datagram_readers=16/retained=4096/us_per_datagram",
+            "value": 0.31,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/signals/op=new-error/ns_per_op",
+            "value": 277,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/signals/op=create-close/ns_per_op",
+            "value": 2370,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/signals/op=create-get-close/ns_per_op",
+            "value": 2667,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/slow-group/groups=1/warnings=1/bytes=51/catchup_ms",
+            "value": 1.478,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/slow-group/groups=16/warnings=1/bytes=53/catchup_ms",
+            "value": 1.057,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/slow-group/groups=256/warnings=1/bytes=55/catchup_ms",
+            "value": 6.814,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/slow-group/groups=1024/warnings=1/bytes=57/catchup_ms",
+            "value": 22.278,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/subscribe-drop/publishers=1/subscribers=1/groups=128/drop_us",
+            "value": 104.75,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-drop/publishers=1/subscribers=4/groups=128/drop_us",
+            "value": 55.84,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-drop/publishers=1/subscribers=16/groups=128/drop_us",
+            "value": 52.24,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-drop/publishers=4/subscribers=1/groups=128/drop_us",
+            "value": 37.48,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-drop/publishers=4/subscribers=4/groups=128/drop_us",
+            "value": 47.25,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-drop/publishers=4/subscribers=16/groups=128/drop_us",
+            "value": 48.43,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-drop/publishers=16/subscribers=1/groups=128/drop_us",
+            "value": 42.61,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-drop/publishers=16/subscribers=4/groups=128/drop_us",
+            "value": 45.87,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-drop/publishers=16/subscribers=16/groups=128/drop_us",
+            "value": 50.36,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-tracks/broadcasts=1/subscribers=1/track_added_us",
+            "value": 370.72,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-tracks/broadcasts=1/subscribers=4/track_added_us",
+            "value": 418.26,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-tracks/broadcasts=1/subscribers=16/track_added_us",
+            "value": 675.55,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-tracks/broadcasts=16/subscribers=1/track_added_us",
+            "value": 76.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-tracks/broadcasts=16/subscribers=4/track_added_us",
+            "value": 164.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-tracks/broadcasts=16/subscribers=16/track_added_us",
+            "value": 627.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-tracks/broadcasts=128/subscribers=1/track_added_us",
+            "value": 54,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-tracks/broadcasts=128/subscribers=4/track_added_us",
+            "value": 169.08,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-tracks/broadcasts=128/subscribers=16/track_added_us",
+            "value": 576.23,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=1/held=0/operation=read/publish_us",
+            "value": 31,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=1/held=0/operation=read/end_us",
+            "value": 10.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=1/held=0/operation=read/idle_us",
+            "value": 53.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=1/held=0/operation=read/publish_us",
+            "value": 11.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=1/held=0/operation=read/end_us",
+            "value": 10.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=1/held=0/operation=read/idle_us",
+            "value": 103.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=1/held=0/operation=read/publish_us",
+            "value": 11.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=1/held=0/operation=read/end_us",
+            "value": 11.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=1/held=0/operation=read/idle_us",
+            "value": 416.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=1/held=0/operation=read/publish_us",
+            "value": 9.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=1/held=0/operation=read/end_us",
+            "value": 15,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=1/held=0/operation=read/idle_us",
+            "value": 1641.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=4/held=0/operation=read/publish_us",
+            "value": 26.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=4/held=0/operation=read/end_us",
+            "value": 16,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=4/held=0/operation=read/idle_us",
+            "value": 58.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=4/held=0/operation=read/publish_us",
+            "value": 25,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=4/held=0/operation=read/end_us",
+            "value": 10.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=4/held=0/operation=read/idle_us",
+            "value": 137.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=4/held=0/operation=read/publish_us",
+            "value": 24.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=4/held=0/operation=read/end_us",
+            "value": 13.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=4/held=0/operation=read/idle_us",
+            "value": 597.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=4/held=0/operation=read/publish_us",
+            "value": 24.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=4/held=0/operation=read/end_us",
+            "value": 19.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=4/held=0/operation=read/idle_us",
+            "value": 3907.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=16/held=0/operation=read/publish_us",
+            "value": 68.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=16/held=0/operation=read/end_us",
+            "value": 24.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=16/held=0/operation=read/idle_us",
+            "value": 117.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=16/held=0/operation=read/publish_us",
+            "value": 66.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=16/held=0/operation=read/end_us",
+            "value": 28.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=16/held=0/operation=read/idle_us",
+            "value": 463.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=16/held=0/operation=read/publish_us",
+            "value": 61.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=16/held=0/operation=read/end_us",
+            "value": 32.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=16/held=0/operation=read/idle_us",
+            "value": 1965,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=16/held=0/operation=read/publish_us",
+            "value": 59.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=16/held=0/operation=read/end_us",
+            "value": 30.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=16/held=0/operation=read/idle_us",
+            "value": 12848.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=1/held=16/operation=read/publish_us",
+            "value": 157.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=1/held=16/operation=read/end_us",
+            "value": 12.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=1/held=16/operation=read/idle_us",
+            "value": 168.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=1/held=16/operation=read/publish_us",
+            "value": 162.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=1/held=16/operation=read/end_us",
+            "value": 15.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=1/held=16/operation=read/idle_us",
+            "value": 216,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=1/held=16/operation=read/publish_us",
+            "value": 170.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=1/held=16/operation=read/end_us",
+            "value": 14.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=1/held=16/operation=read/idle_us",
+            "value": 525.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=1/held=16/operation=read/publish_us",
+            "value": 176.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=1/held=16/operation=read/end_us",
+            "value": 20.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=1/held=16/operation=read/idle_us",
+            "value": 2118.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=4/held=16/operation=read/publish_us",
+            "value": 953.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=4/held=16/operation=read/end_us",
+            "value": 14.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=4/held=16/operation=read/idle_us",
+            "value": 250.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=4/held=16/operation=read/publish_us",
+            "value": 933.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=4/held=16/operation=read/end_us",
+            "value": 15.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=4/held=16/operation=read/idle_us",
+            "value": 383.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=4/held=16/operation=read/publish_us",
+            "value": 828.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=4/held=16/operation=read/end_us",
+            "value": 15.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=4/held=16/operation=read/idle_us",
+            "value": 958.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=4/held=16/operation=read/publish_us",
+            "value": 777,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=4/held=16/operation=read/end_us",
+            "value": 15.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=4/held=16/operation=read/idle_us",
+            "value": 4092.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=16/held=16/operation=read/publish_us",
+            "value": 3508.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=16/held=16/operation=read/end_us",
+            "value": 26.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=16/held=16/operation=read/idle_us",
+            "value": 637.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=16/held=16/operation=read/publish_us",
+            "value": 3381.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=16/held=16/operation=read/end_us",
+            "value": 26.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=16/held=16/operation=read/idle_us",
+            "value": 1086.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=16/held=16/operation=read/publish_us",
+            "value": 3105.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=16/held=16/operation=read/end_us",
+            "value": 31,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=16/held=16/operation=read/idle_us",
+            "value": 3281.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=16/held=16/operation=read/publish_us",
+            "value": 3046.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=16/held=16/operation=read/end_us",
+            "value": 26.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=16/held=16/operation=read/idle_us",
+            "value": 14150.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=1/held=16/operation=open/publish_us",
+            "value": 95,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=1/held=16/operation=open/end_us",
+            "value": 9.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=1/held=16/operation=open/idle_us",
+            "value": 139.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=1/held=16/operation=open/publish_us",
+            "value": 96.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=1/held=16/operation=open/end_us",
+            "value": 8.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=1/held=16/operation=open/idle_us",
+            "value": 203.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=1/held=16/operation=open/publish_us",
+            "value": 99.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=1/held=16/operation=open/end_us",
+            "value": 9.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=1/held=16/operation=open/idle_us",
+            "value": 514.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=1/held=16/operation=open/publish_us",
+            "value": 96.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=1/held=16/operation=open/end_us",
+            "value": 11.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=1/held=16/operation=open/idle_us",
+            "value": 1879.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=4/held=16/operation=open/publish_us",
+            "value": 471.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=4/held=16/operation=open/end_us",
+            "value": 21.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=4/held=16/operation=open/idle_us",
+            "value": 275.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=4/held=16/operation=open/publish_us",
+            "value": 495.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=4/held=16/operation=open/end_us",
+            "value": 19.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=4/held=16/operation=open/idle_us",
+            "value": 355.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=4/held=16/operation=open/publish_us",
+            "value": 476.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=4/held=16/operation=open/end_us",
+            "value": 19.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=4/held=16/operation=open/idle_us",
+            "value": 975.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=4/held=16/operation=open/publish_us",
+            "value": 444.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=4/held=16/operation=open/end_us",
+            "value": 23.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=4/held=16/operation=open/idle_us",
+            "value": 4494.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=16/held=16/operation=open/publish_us",
+            "value": 1957.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=16/held=16/operation=open/end_us",
+            "value": 54.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=16/held=16/operation=open/idle_us",
+            "value": 712.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=16/held=16/operation=open/publish_us",
+            "value": 1938.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=16/held=16/operation=open/end_us",
+            "value": 48.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=16/held=16/operation=open/idle_us",
+            "value": 1002.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=16/held=16/operation=open/publish_us",
+            "value": 1864.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=16/held=16/operation=open/end_us",
+            "value": 60.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=16/held=16/operation=open/idle_us",
+            "value": 2984.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=16/held=16/operation=open/publish_us",
+            "value": 1801.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=16/held=16/operation=open/end_us",
+            "value": 52.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=16/held=16/operation=open/idle_us",
+            "value": 14501.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/varint/format=quic/value=1-byte/op=encode/ns_per_op",
+            "value": 48.3,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=quic/value=1-byte/op=decode/ns_per_op",
+            "value": 5.1,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=quic/value=1-byte/op=decode-varint/ns_per_op",
+            "value": 8,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=quic/value=2-byte/op=encode/ns_per_op",
+            "value": 48.7,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=quic/value=2-byte/op=decode/ns_per_op",
+            "value": 8.1,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=quic/value=2-byte/op=decode-varint/ns_per_op",
+            "value": 8.4,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=quic/value=4-byte/op=encode/ns_per_op",
+            "value": 52.6,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=quic/value=4-byte/op=decode/ns_per_op",
+            "value": 7.7,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=quic/value=4-byte/op=decode-varint/ns_per_op",
+            "value": 8.8,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=quic/value=8-byte/op=encode/ns_per_op",
+            "value": 49.7,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=quic/value=8-byte/op=decode/ns_per_op",
+            "value": 17,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=quic/value=8-byte/op=decode-varint/ns_per_op",
+            "value": 11.1,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=leading-ones/value=1-byte/op=encode/ns_per_op",
+            "value": 50.6,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=leading-ones/value=1-byte/op=decode/ns_per_op",
+            "value": 5.1,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=leading-ones/value=1-byte/op=decode-varint/ns_per_op",
+            "value": 12,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=leading-ones/value=2-byte/op=encode/ns_per_op",
+            "value": 50.5,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=leading-ones/value=2-byte/op=decode/ns_per_op",
+            "value": 8.1,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=leading-ones/value=2-byte/op=decode-varint/ns_per_op",
+            "value": 12.3,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=leading-ones/value=4-byte/op=encode/ns_per_op",
+            "value": 55.4,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=leading-ones/value=4-byte/op=decode/ns_per_op",
+            "value": 8.6,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=leading-ones/value=4-byte/op=decode-varint/ns_per_op",
+            "value": 12.9,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=leading-ones/value=8-byte/op=encode/ns_per_op",
+            "value": 60.6,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=leading-ones/value=8-byte/op=decode/ns_per_op",
+            "value": 21.1,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=leading-ones/value=8-byte/op=decode-varint/ns_per_op",
+            "value": 15.4,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/producer/10 groups/1",
+            "value": 44082.59619140625,
+            "range": "4.406e+04..4.411e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/producer/10 groups/10",
+            "value": 451155.2734375,
+            "range": "4.5e+05..4.523e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/producer/10 groups/100",
+            "value": 4792856.5,
+            "range": "4.781e+06..4.805e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/producer/100 groups/1",
+            "value": 402342.765625,
+            "range": "4.022e+05..4.025e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/producer/100 groups/10",
+            "value": 4123585.34375,
+            "range": "4.119e+06..4.128e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/producer/100 groups/100",
+            "value": 43857470.25,
+            "range": "4.379e+07..4.392e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/protect/datagram_opus160",
+            "value": 439.1830635070801,
+            "range": "438.6..439.8",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/protect/grouped_1k",
+            "value": 2215.0279998779297,
+            "range": "2189..2241",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/baseline/from_slice/big_static",
+            "value": 85746.4130859375,
+            "range": "8.572e+04..8.578e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/baseline/from_slice/telemetry",
+            "value": 4985.182464599609,
+            "range": "4977..4993",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/baseline/to_value/big_static",
+            "value": 59693.2431640625,
+            "range": "5.967e+04..5.972e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/baseline/to_value/telemetry",
+            "value": 3414.8956604003906,
+            "range": "3410..3419",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/consumer/merge/big_static",
+            "value": 31581.125,
+            "range": "3.157e+04..3.16e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/consumer/merge/telemetry",
+            "value": 6681.2437744140625,
+            "range": "6676..6686",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/consumer/snapshot/big_static",
+            "value": 91713.5751953125,
+            "range": "9.161e+04..9.182e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/consumer/snapshot/telemetry",
+            "value": 6231.5975341796875,
+            "range": "6188..6276",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_patch/json_patch/big_static",
+            "value": 30578.2197265625,
+            "range": "3.056e+04..3.06e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_patch/json_patch/telemetry",
+            "value": 2930.8212890625,
+            "range": "2928..2933",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_patch/merge_owned/big_static",
+            "value": 31044.70947265625,
+            "range": "3.096e+04..3.113e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_patch/merge_owned/telemetry",
+            "value": 3643.9901123046875,
+            "range": "3632..3655",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/deflate/big_static",
+            "value": 5072.929931640625,
+            "range": "4981..5165",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/deflate/telemetry",
+            "value": 11518.755859375,
+            "range": "9845..1.319e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/encode_patch/big_static",
+            "value": 20423.836547851562,
+            "range": "2.042e+04..2.043e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/encode_patch/telemetry",
+            "value": 4968.339141845703,
+            "range": "4955..4981",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/inflate/big_static",
+            "value": 477.3126220703125,
+            "range": "473.7..480.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/inflate/telemetry",
+            "value": 1379.0073547363281,
+            "range": "1309..1449",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/marshal/full/big_static",
+            "value": 11826.084167480469,
+            "range": "1.183e+04..1.183e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/marshal/full/telemetry",
+            "value": 1110.8484573364258,
+            "range": "1111..1111",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/marshal/patch/big_static",
+            "value": 75.37119436264038,
+            "range": "75.35..75.4",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/marshal/patch/telemetry",
+            "value": 516.1277732849121,
+            "range": "515.8..516.4",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/producer/merge/big_static",
+            "value": 27519.3173828125,
+            "range": "2.738e+04..2.766e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/producer/merge/telemetry",
+            "value": 18324.71044921875,
+            "range": "1.675e+04..1.99e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/producer/snapshot/big_static",
+            "value": 26632.4951171875,
+            "range": "2.64e+04..2.687e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/producer/snapshot/telemetry",
+            "value": 17936.259643554688,
+            "range": "1.59e+04..1.997e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/snapshot_budget/bounded/100",
+            "value": 4615.1788330078125,
+            "range": "4606..4624",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/snapshot_budget/bounded/1000",
+            "value": 49281.06005859375,
+            "range": "4.924e+04..4.933e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/snapshot_budget/bounded/10000",
+            "value": 541636.6796875,
+            "range": "5.414e+05..5.419e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/snapshot_budget/unbounded/100",
+            "value": 139.03639125823975,
+            "range": "139..139.1",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/snapshot_budget/unbounded/1000",
+            "value": 142.31739139556885,
+            "range": "142.1..142.5",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/snapshot_budget/unbounded/10000",
+            "value": 146.6241912841797,
+            "range": "146.5..146.8",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json/1%/100",
+            "value": 44195.666748046875,
+            "range": "4.419e+04..4.42e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json/1%/1000",
+            "value": 451976.83203125,
+            "range": "4.512e+05..4.528e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json/1%/10000",
+            "value": 4863226.34375,
+            "range": "4.858e+06..4.868e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json/1%/20000",
+            "value": 9851540.1875,
+            "range": "9.833e+06..9.87e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json/10%/100",
+            "value": 44161.62451171875,
+            "range": "4.414e+04..4.418e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json/10%/1000",
+            "value": 453811.140625,
+            "range": "4.535e+05..4.541e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json/10%/10000",
+            "value": 4889404.65625,
+            "range": "4.882e+06..4.897e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json/10%/20000",
+            "value": 9901878.4375,
+            "range": "9.896e+06..9.908e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json/100%/100",
+            "value": 44337.436767578125,
+            "range": "4.432e+04..4.435e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json/100%/1000",
+            "value": 455558.9140625,
+            "range": "4.552e+05..4.559e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json/100%/10000",
+            "value": 4909686.125,
+            "range": "4.889e+06..4.93e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json/100%/20000",
+            "value": 9916726.375,
+            "range": "9.89e+06..9.943e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json.z/1%/100",
+            "value": 54699.4013671875,
+            "range": "5.454e+04..5.486e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json.z/1%/1000",
+            "value": 501691.00390625,
+            "range": "5.009e+05..5.024e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json.z/1%/10000",
+            "value": 5181826.4375,
+            "range": "5.14e+06..5.223e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json.z/1%/20000",
+            "value": 10557400.1875,
+            "range": "1.054e+07..1.057e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json.z/10%/100",
+            "value": 71361.19140625,
+            "range": "7.123e+04..7.149e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json.z/10%/1000",
+            "value": 691341.33984375,
+            "range": "6.888e+05..6.939e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json.z/10%/10000",
+            "value": 7518409.0625,
+            "range": "7.511e+06..7.526e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json.z/10%/20000",
+            "value": 15135575,
+            "range": "1.512e+07..1.515e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json.z/100%/100",
+            "value": 220395.625,
+            "range": "2.173e+05..2.235e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json.z/100%/1000",
+            "value": 2411988.296875,
+            "range": "2.409e+06..2.415e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json.z/100%/10000",
+            "value": 27932791.6875,
+            "range": "2.791e+07..2.795e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json.z/100%/20000",
+            "value": 55528612.4375,
+            "range": "5.548e+07..5.558e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/backward/4096B/1000",
+            "value": 37556.685302734375,
+            "range": "3.754e+04..3.757e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/backward/4096B/10000",
+            "value": 464003.43359375,
+            "range": "4.637e+05..4.643e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/backward/4096B/100000",
+            "value": 5847294.90625,
+            "range": "5.833e+06..5.862e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/backward/64B/1000",
+            "value": 37690.77392578125,
+            "range": "3.764e+04..3.774e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/backward/64B/10000",
+            "value": 450140.58203125,
+            "range": "4.498e+05..4.505e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/backward/64B/100000",
+            "value": 5657304.53125,
+            "range": "5.642e+06..5.673e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/flat/4096B/1000",
+            "value": 40925.603271484375,
+            "range": "4.091e+04..4.095e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/flat/4096B/10000",
+            "value": 560272.78125,
+            "range": "5.601e+05..5.604e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/flat/4096B/100000",
+            "value": 6073934,
+            "range": "6.062e+06..6.085e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/flat/64B/1000",
+            "value": 41346.154052734375,
+            "range": "4.134e+04..4.135e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/flat/64B/10000",
+            "value": 546834.74609375,
+            "range": "5.438e+05..5.499e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/flat/64B/100000",
+            "value": 6061595.5625,
+            "range": "6.042e+06..6.081e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/pyramid/4096B/1000",
+            "value": 41984.90673828125,
+            "range": "4.198e+04..4.199e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/pyramid/4096B/10000",
+            "value": 509753.51171875,
+            "range": "5.091e+05..5.104e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/pyramid/4096B/100000",
+            "value": 6035182.5,
+            "range": "6.031e+06..6.039e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/pyramid/64B/1000",
+            "value": 41393.0419921875,
+            "range": "4.135e+04..4.144e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/pyramid/64B/10000",
+            "value": 500778.62890625,
+            "range": "5.003e+05..5.013e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/pyramid/64B/100000",
+            "value": 6030463.125,
+            "range": "6.011e+06..6.05e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_read/backward/1000",
+            "value": 35434.33154296875,
+            "range": "3.542e+04..3.545e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_read/backward/10000",
+            "value": 424947.640625,
+            "range": "4.249e+05..4.25e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_read/backward/100000",
+            "value": 4426955.15625,
+            "range": "4.427e+06..4.427e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_read/flat/1000",
+            "value": 38677.7724609375,
+            "range": "3.864e+04..3.871e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_read/flat/10000",
+            "value": 423435.72265625,
+            "range": "4.228e+05..4.241e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_read/flat/100000",
+            "value": 4268663.53125,
+            "range": "4.267e+06..4.27e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_read/pyramid/1000",
+            "value": 31223.24755859375,
+            "range": "3.122e+04..3.123e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_read/pyramid/10000",
+            "value": 312904.41796875,
+            "range": "3.127e+05..3.131e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_read/pyramid/100000",
+            "value": 3104528.578125,
+            "range": "3.103e+06..3.106e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_acquisition/1/16",
+            "value": 1731.2412872314453,
+            "range": "1730..1733",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_acquisition/1/256",
+            "value": 12190.02978515625,
+            "range": "1.219e+04..1.219e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_acquisition/1/64",
+            "value": 4020.893310546875,
+            "range": "4020..4022",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_acquisition/16/16",
+            "value": 20562.317260742188,
+            "range": "2.056e+04..2.057e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_acquisition/16/256",
+            "value": 230937.658203125,
+            "range": "2.309e+05..2.31e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_acquisition/16/64",
+            "value": 65208.49755859375,
+            "range": "6.515e+04..6.526e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_acquisition/4/16",
+            "value": 4934.1719970703125,
+            "range": "4931..4937",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_acquisition/4/256",
+            "value": 47874.826904296875,
+            "range": "4.787e+04..4.788e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_acquisition/4/64",
+            "value": 14240.561279296875,
+            "range": "1.424e+04..1.424e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_acquisition/64/16",
+            "value": 94664.24755859375,
+            "range": "9.46e+04..9.473e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_acquisition/64/256",
+            "value": 1139731.828125,
+            "range": "1.139e+06..1.141e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_acquisition/64/64",
+            "value": 315054.234375,
+            "range": "3.149e+05..3.152e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_steering/1/10",
+            "value": 13562.050903320312,
+            "range": "1.356e+04..1.357e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_steering/1/100",
+            "value": 141152.8447265625,
+            "range": "1.411e+05..1.412e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_steering/1/300",
+            "value": 501333.25390625,
+            "range": "5.013e+05..5.014e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_steering/16/10",
+            "value": 93643.8505859375,
+            "range": "9.356e+04..9.373e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_steering/16/100",
+            "value": 1444072.7265625,
+            "range": "1.443e+06..1.446e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_steering/16/300",
+            "value": 7442572.3125,
+            "range": "7.441e+06..7.445e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_steering/4/10",
+            "value": 26055.5771484375,
+            "range": "2.605e+04..2.606e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_steering/4/100",
+            "value": 378707.19921875,
+            "range": "3.786e+05..3.788e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_steering/4/300",
+            "value": 1915996.984375,
+            "range": "1.905e+06..1.927e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_steering/64/10",
+            "value": 567977.33203125,
+            "range": "5.678e+05..5.682e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_steering/64/100",
+            "value": 7637465.1875,
+            "range": "7.636e+06..7.639e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_steering/64/300",
+            "value": 35570279.75,
+            "range": "3.548e+07..3.566e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/1/1mbps",
+            "value": 300396.328125,
+            "range": "2.989e+05..3.019e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/1/4mbps",
+            "value": 852828.7109375,
+            "range": "8.492e+05..8.565e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/1+1000/1mbps",
+            "value": 778660.5,
+            "range": "7.779e+05..7.794e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/1+1000/4mbps",
+            "value": 1370951.71875,
+            "range": "1.365e+06..1.377e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/16/1mbps",
+            "value": 5192302.1875,
+            "range": "5.186e+06..5.198e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/16/4mbps",
+            "value": 15612036.125,
+            "range": "1.554e+07..1.569e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/16+1000/1mbps",
+            "value": 6783418.625,
+            "range": "6.752e+06..6.815e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/16+1000/4mbps",
+            "value": 17550448,
+            "range": "1.746e+07..1.764e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/4/1mbps",
+            "value": 1200143.1875,
+            "range": "1.198e+06..1.202e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/4/4mbps",
+            "value": 3520974.375,
+            "range": "3.494e+06..3.548e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/4+1000/1mbps",
+            "value": 1883004.6875,
+            "range": "1.882e+06..1.884e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/4+1000/4mbps",
+            "value": 4404032.40625,
+            "range": "4.377e+06..4.431e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_video/1048576/1024",
+            "value": 2087764.8125,
+            "range": "2.084e+06..2.092e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_video/1048576/64",
+            "value": 7861271.5625,
+            "range": "7.852e+06..7.87e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_video/1048576/65000",
+            "value": 1572052.640625,
+            "range": "1.569e+06..1.575e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_video/4096/1024",
+            "value": 242570.033203125,
+            "range": "2.402e+05..2.449e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_video/4096/64",
+            "value": 270643.19921875,
+            "range": "2.703e+05..2.709e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_video/4096/65000",
+            "value": 245561.9765625,
+            "range": "2.439e+05..2.473e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_video/65536/1024",
+            "value": 341238.7421875,
+            "range": "3.393e+05..3.432e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_video/65536/64",
+            "value": 725138.30859375,
+            "range": "7.184e+05..7.319e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_video/65536/65000",
+            "value": 352191.427734375,
+            "range": "3.462e+05..3.582e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmmsg_gro-off_gso-off",
+            "value": 14975844.75,
+            "range": "1.498e+07..1.498e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmmsg_gro-off_gso-on",
+            "value": 6688625.6875,
+            "range": "6.688e+06..6.689e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmmsg_gro-on_gso-off",
+            "value": 14867130.375,
+            "range": "1.486e+07..1.487e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmmsg_gro-on_gso-on",
+            "value": 1534169.5859375,
+            "range": "1.533e+06..1.535e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmsg_gro-off_gso-off",
+            "value": 16909716.125,
+            "range": "1.69e+07..1.692e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmsg_gro-off_gso-on",
+            "value": 8699378.875,
+            "range": "8.698e+06..8.7e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmsg_gro-on_gso-off",
+            "value": 16915919.75,
+            "range": "1.69e+07..1.693e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmsg_gro-on_gso-on",
+            "value": 1498625.4453125,
+            "range": "1.496e+06..1.501e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-udp_uring/udp_io_uring/recvmsg-multishot_gro-off_gso-off",
+            "value": 15239473.25,
+            "range": "1.522e+07..1.526e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-udp_uring/udp_io_uring/recvmsg-multishot_gro-off_gso-on",
+            "value": 6307782.1875,
+            "range": "6.298e+06..6.318e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-udp_uring/udp_io_uring/recvmsg-multishot_gro-on_gso-off",
+            "value": 15220643.5,
+            "range": "1.522e+07..1.522e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-udp_uring/udp_io_uring/recvmsg-multishot_gro-on_gso-on",
+            "value": 1655340.453125,
+            "range": "1.653e+06..1.658e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-echo_quic/echo_quic/udp/all-off",
+            "value": 7931282.75,
+            "range": "7.777e+06..8.085e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-echo_quic/echo_quic/udp/all-on",
+            "value": 3455497.875,
+            "range": "3.31e+06..3.601e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-echo_quic/echo_quic/udp/no-gro",
+            "value": 3904812.0625,
+            "range": "3.854e+06..3.955e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-echo_quic/echo_quic/udp/no-gso",
+            "value": 5699773.75,
+            "range": "5.57e+06..5.83e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-echo_quic/echo_quic/udp/oneshot",
+            "value": 3386734.75,
+            "range": "3.298e+06..3.475e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-session_lite/session_lite/all-off",
+            "value": 10710516.3125,
+            "range": "1.068e+07..1.074e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-session_lite/session_lite/all-on",
+            "value": 3013428.78125,
+            "range": "2.999e+06..3.028e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-session_lite/session_lite/no-gro",
+            "value": 4139410.0625,
+            "range": "4.132e+06..4.147e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-session_lite/session_lite/no-gso",
+            "value": 5475728,
+            "range": "5.469e+06..5.483e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-session_lite/session_lite/oneshot",
+            "value": 3005569.921875,
+            "range": "3.001e+06..3.01e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-1/1",
+            "value": 45426.093994140625,
+            "range": "4.54e+04..4.545e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-1/64",
+            "value": 3338064.71875,
+            "range": "3.33e+06..3.346e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-1/8",
+            "value": 378412.51171875,
+            "range": "3.774e+05..3.794e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-256/1",
+            "value": 46209.2939453125,
+            "range": "4.611e+04..4.631e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-256/64",
+            "value": 3339541.765625,
+            "range": "3.336e+06..3.343e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-256/8",
+            "value": 381013.0546875,
+            "range": "3.8e+05..3.821e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-4096/1",
+            "value": 48756.359375,
+            "range": "4.87e+04..4.881e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-4096/64",
+            "value": 3372961.1875,
+            "range": "3.366e+06..3.38e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-4096/8",
+            "value": 398691.6640625,
+            "range": "3.983e+05..3.991e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-timers/timers/rearm/1",
+            "value": 52.68172740936279,
+            "range": "52.68..52.69",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-timers/timers/rearm/1024",
+            "value": 72.24913501739502,
+            "range": "72.24..72.26",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-timers/timers/rearm/16384",
+            "value": 86.10467338562012,
+            "range": "86.08..86.13",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-timers/timers/rearm/64",
+            "value": 57.334465980529785,
+            "range": "57.33..57.34",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 66af72315bd333d09199ecd0efee699c9e9e23bd"
           }
         ]
       }
