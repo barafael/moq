@@ -140,6 +140,8 @@ jobs:
             release-go-ffi:
               - ".github/workflows/release-go-ffi.yml"
               - ".github/workflows/release-ffi.yml"
+              - ".github/workflows/release-shared-ffi.yml"
+              - "sh/gh/ffi*"
               - "sh/gh/release.sh"
               - "go/ffi/**"
               - "sh/go/package-ffi.sh"

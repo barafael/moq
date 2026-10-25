@@ -43,6 +43,7 @@ on:
       - release-brew
       - Release Dart
       - Release Dart FFI
+      - Release FFI
       - Release Go
       - Release Go FFI
       - Release JS
