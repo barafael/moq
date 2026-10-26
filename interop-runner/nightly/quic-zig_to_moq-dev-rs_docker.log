@@ -4,53 +4,42 @@ Running interop tests...
   Relay:  moq-interop-relay:local
   Client: ghcr.io/endel/quic-zig-moq-client:latest
   URL:    https://relay:4443
-time="2026-10-25T15:12:22Z" level=warning msg="The \"PORT\" variable is not set. Defaulting to a blank string."
-time="2026-10-25T15:12:22Z" level=warning msg="The \"PORT\" variable is not set. Defaulting to a blank string."
-time="2026-10-25T15:12:22Z" level=warning msg="The \"PORT\" variable is not set. Defaulting to a blank string."
-time="2026-10-25T15:12:22Z" level=warning msg="The \"HEX\" variable is not set. Defaulting to a blank string."
-time="2026-10-25T15:12:22Z" level=warning msg="The \"HEX\" variable is not set. Defaulting to a blank string."
+time="2026-10-26T15:11:49Z" level=warning msg="The \"PORT\" variable is not set. Defaulting to a blank string."
+time="2026-10-26T15:11:49Z" level=warning msg="The \"PORT\" variable is not set. Defaulting to a blank string."
+time="2026-10-26T15:11:49Z" level=warning msg="The \"PORT\" variable is not set. Defaulting to a blank string."
+time="2026-10-26T15:11:49Z" level=warning msg="The \"HEX\" variable is not set. Defaulting to a blank string."
+time="2026-10-26T15:11:49Z" level=warning msg="The \"HEX\" variable is not set. Defaulting to a blank string."
  Container runner-upstream-test-client-1  Recreate
  Container runner-upstream-test-client-1  Recreated
 Attaching to relay-1, test-client-1
-relay-1        | [2m2026-10-25T15:12:22.569572Z[0m [33m WARN[0m [2mmoq_sock::bind[0m[2m:[0m UDP receive buffer is smaller than requested; raise `net.core.rmem_max` or expect packet loss under load [3mwanted[0m[2m=[0m8388608 [3mgranted[0m[2m=[0m1048576
-relay-1        | [2m2026-10-25T15:12:22.569589Z[0m [33m WARN[0m [2mmoq_sock::bind[0m[2m:[0m UDP send buffer is smaller than requested; raise `net.core.wmem_max` or expect packet loss under load [3mwanted[0m[2m=[0m8388608 [3mgranted[0m[2m=[0m212992
-relay-1        | [2m2026-10-25T15:12:22.569751Z[0m [32m INFO[0m [2mmoq_relay::cluster[0m[2m:[0m cluster initialized [3mhop_id[0m[2m=[0m3064578885131556 [3mconfigured[0m[2m=[0mfalse
-relay-1        | [2m2026-10-25T15:12:22.569809Z[0m [32m INFO[0m [2mmoq_relay::relay[0m[2m:[0m listening [3maddr[0m[2m=[0m[::]:4443 [3mkind[0m[2m=[0m"quic"
-relay-1        | [2m2026-10-25T15:12:22.569921Z[0m [32m INFO[0m [2mmoq_relay::cluster[0m[2m:[0m no cluster peers configured; running standalone
+relay-1        | [2m2026-10-26T15:11:49.998299Z[0m [33m WARN[0m [2mmoq_sock::bind[0m[2m:[0m UDP receive buffer is smaller than requested; raise `net.core.rmem_max` or expect packet loss under load [3mwanted[0m[2m=[0m8388608 [3mgranted[0m[2m=[0m1048576
+relay-1        | [2m2026-10-26T15:11:49.998317Z[0m [33m WARN[0m [2mmoq_sock::bind[0m[2m:[0m UDP send buffer is smaller than requested; raise `net.core.wmem_max` or expect packet loss under load [3mwanted[0m[2m=[0m8388608 [3mgranted[0m[2m=[0m212992
+relay-1        | [2m2026-10-26T15:11:49.998479Z[0m [32m INFO[0m [2mmoq_relay::cluster[0m[2m:[0m cluster initialized [3mhop_id[0m[2m=[0m8915265137461585 [3mconfigured[0m[2m=[0mfalse
+relay-1        | [2m2026-10-26T15:11:49.998517Z[0m [32m INFO[0m [2mmoq_relay::relay[0m[2m:[0m listening [3maddr[0m[2m=[0m[::]:4443 [3mkind[0m[2m=[0m"quic"
+relay-1        | [2m2026-10-26T15:11:49.998608Z[0m [32m INFO[0m [2mmoq_relay::cluster[0m[2m:[0m no cluster peers configured; running standalone
 test-client-1  | TAP version 14
 test-client-1  | # moq-test-client v0.3.0
 test-client-1  | # Relay: https://relay:4443
 test-client-1  | # Draft: draft-18
 test-client-1  | 1..7
-relay-1        | [2m2026-10-25T15:12:28.242391Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m0 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:48748 [3msession[0m[2m=[0m"ad851431ad79cb60d468ce2971a7a3fc" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::cluster[0m[2m:[0m session accepted [3mtransport[0m[2m=[0mwebtransport [3mrequest.role[0m[2m=[0mNone [3mtier[0m[2m=[0m [3mroot[0m[2m=[0m [3mpublish[0m[2m=[0mSome(Patterns([Pattern("**")])) [3msubscribe[0m[2m=[0mSome(Patterns([Pattern("**")]))
+relay-1        | [2m2026-10-26T15:11:55.651622Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m0 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:37474 [3msession[0m[2m=[0m"45bee7342e1825df587b0a5050b13eb0" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::cluster[0m[2m:[0m session accepted [3mtransport[0m[2m=[0mwebtransport [3mrequest.role[0m[2m=[0mNone [3mtier[0m[2m=[0m [3mroot[0m[2m=[0m [3mpublish[0m[2m=[0mSome(Patterns([Pattern("**")])) [3msubscribe[0m[2m=[0mSome(Patterns([Pattern("**")]))
+relay-1        | [2m2026-10-26T15:11:55.651786Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m0 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:37474 [3msession[0m[2m=[0m"45bee7342e1825df587b0a5050b13eb0" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m negotiated [3mversion[0m[2m=[0mmoq-transport-18 [3mtransport[0m[2m=[0mwebtransport
 test-client-1  | ok 1 - setup-only
 test-client-1  |   ---
-relay-1        | [2m2026-10-25T15:12:28.242514Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m0 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:48748 [3msession[0m[2m=[0m"ad851431ad79cb60d468ce2971a7a3fc" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m negotiated [3mversion[0m[2m=[0mmoq-transport-18 [3mtransport[0m[2m=[0mwebtransport
-test-client-1  |   duration_ms: 67
+test-client-1  |   duration_ms: 43
 test-client-1  |   implementation_version: "quic-zig/0.3.0"
 test-client-1  |   sessions:
 test-client-1  |     client:
 test-client-1  |       moqt_version: "moqt-18"
 test-client-1  |       transport: "webtransport-h3"
 test-client-1  |   ...
-relay-1        | [2m2026-10-25T15:12:28.242952Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m0 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:48748 [3msession[0m[2m=[0m"ad851431ad79cb60d468ce2971a7a3fc" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_net::ietf::session[0m[2m:[0m session terminated [3merr[0m[2m=[0mtransport: connection error: closed by peer: 0
-relay-1        | [2m2026-10-25T15:12:28.243142Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m0 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:48748 [3msession[0m[2m=[0m"ad851431ad79cb60d468ce2971a7a3fc" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m connection closed [3mid[0m[2m=[0m0 [3merr[0m[2m=[0mtransport: connection error: closed by peer: 0
-relay-1        | [2m2026-10-25T15:12:28.245722Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m1 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:54125 [3msession[0m[2m=[0m"dc713fe95e6e8ffdc324fefc9f66d137" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::cluster[0m[2m:[0m session accepted [3mtransport[0m[2m=[0mwebtransport [3mrequest.role[0m[2m=[0mNone [3mtier[0m[2m=[0m [3mroot[0m[2m=[0m [3mpublish[0m[2m=[0mSome(Patterns([Pattern("**")])) [3msubscribe[0m[2m=[0mSome(Patterns([Pattern("**")]))
-relay-1        | [2m2026-10-25T15:12:28.245807Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m1 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:54125 [3msession[0m[2m=[0m"dc713fe95e6e8ffdc324fefc9f66d137" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m negotiated [3mversion[0m[2m=[0mmoq-transport-18 [3mtransport[0m[2m=[0mwebtransport
-relay-1        | [2m2026-10-25T15:12:28.246282Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m1 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:54125 [3msession[0m[2m=[0m"dc713fe95e6e8ffdc324fefc9f66d137" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_net::ietf::session[0m[2m:[0m session error [3merr[0m[2m=[0mno error
+relay-1        | [2m2026-10-26T15:11:55.652194Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m0 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:37474 [3msession[0m[2m=[0m"45bee7342e1825df587b0a5050b13eb0" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_net::ietf::session[0m[2m:[0m session terminated [3merr[0m[2m=[0mtransport: connection error: closed by peer: 0
+relay-1        | [2m2026-10-26T15:11:55.652350Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m0 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:37474 [3msession[0m[2m=[0m"45bee7342e1825df587b0a5050b13eb0" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m connection closed [3mid[0m[2m=[0m0 [3merr[0m[2m=[0mtransport: connection error: closed by peer: 0
+relay-1        | [2m2026-10-26T15:11:55.655877Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m1 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:38263 [3msession[0m[2m=[0m"08fefe61ce04d889ec76fdc682bf0f80" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::cluster[0m[2m:[0m session accepted [3mtransport[0m[2m=[0mwebtransport [3mrequest.role[0m[2m=[0mNone [3mtier[0m[2m=[0m [3mroot[0m[2m=[0m [3mpublish[0m[2m=[0mSome(Patterns([Pattern("**")])) [3msubscribe[0m[2m=[0mSome(Patterns([Pattern("**")]))
+relay-1        | [2m2026-10-26T15:11:55.655928Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m1 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:38263 [3msession[0m[2m=[0m"08fefe61ce04d889ec76fdc682bf0f80" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m negotiated [3mversion[0m[2m=[0mmoq-transport-18 [3mtransport[0m[2m=[0mwebtransport
+relay-1        | [2m2026-10-26T15:11:55.656376Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m1 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:38263 [3msession[0m[2m=[0m"08fefe61ce04d889ec76fdc682bf0f80" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_net::ietf::session[0m[2m:[0m session error [3merr[0m[2m=[0mno error
+relay-1        | [2m2026-10-26T15:11:55.656507Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m1 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:38263 [3msession[0m[2m=[0m"08fefe61ce04d889ec76fdc682bf0f80" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m connection closed [3mid[0m[2m=[0m1 [3merr[0m[2m=[0mcancelled
 test-client-1  | ok 2 - announce-only
-relay-1        | [2m2026-10-25T15:12:28.246415Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m1 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:54125 [3msession[0m[2m=[0m"dc713fe95e6e8ffdc324fefc9f66d137" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m connection closed [3mid[0m[2m=[0m1 [3merr[0m[2m=[0mcancelled
-test-client-1  |   ---
-test-client-1  |   duration_ms: 3
-test-client-1  |   implementation_version: "quic-zig/0.3.0"
-test-client-1  |   sessions:
-test-client-1  |     client:
-test-client-1  |       moqt_version: "moqt-18"
-test-client-1  |       transport: "webtransport-h3"
-test-client-1  |   ...
-relay-1        | [2m2026-10-25T15:12:28.250526Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m2 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:59510 [3msession[0m[2m=[0m"abc543e80706af9c34efd466fdfe8ff1" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::cluster[0m[2m:[0m session accepted [3mtransport[0m[2m=[0mwebtransport [3mrequest.role[0m[2m=[0mNone [3mtier[0m[2m=[0m [3mroot[0m[2m=[0m [3mpublish[0m[2m=[0mSome(Patterns([Pattern("**")])) [3msubscribe[0m[2m=[0mSome(Patterns([Pattern("**")]))
-relay-1        | [2m2026-10-25T15:12:28.250625Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m2 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:59510 [3msession[0m[2m=[0m"abc543e80706af9c34efd466fdfe8ff1" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m negotiated [3mversion[0m[2m=[0mmoq-transport-18 [3mtransport[0m[2m=[0mwebtransport
-test-client-1  | ok 3 - publish-namespace-done
 test-client-1  |   ---
 test-client-1  |   duration_ms: 4
 test-client-1  |   implementation_version: "quic-zig/0.3.0"
@@ -59,58 +48,69 @@ test-client-1  |     client:
 test-client-1  |       moqt_version: "moqt-18"
 test-client-1  |       transport: "webtransport-h3"
 test-client-1  |   ...
-relay-1        | [2m2026-10-25T15:12:28.251320Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m2 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:59510 [3msession[0m[2m=[0m"abc543e80706af9c34efd466fdfe8ff1" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_net::ietf::session[0m[2m:[0m session terminated [3merr[0m[2m=[0mtransport: connection error: closed by peer: 0
-relay-1        | [2m2026-10-25T15:12:28.251595Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m2 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:59510 [3msession[0m[2m=[0m"abc543e80706af9c34efd466fdfe8ff1" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m connection closed [3mid[0m[2m=[0m2 [3merr[0m[2m=[0mtransport: connection error: closed by peer: 0
-relay-1        | [2m2026-10-25T15:12:28.256009Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m3 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:47467 [3msession[0m[2m=[0m"b3950dd4980ca21002a4b4db1eb567c0" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::cluster[0m[2m:[0m session accepted [3mtransport[0m[2m=[0mwebtransport [3mrequest.role[0m[2m=[0mNone [3mtier[0m[2m=[0m [3mroot[0m[2m=[0m [3mpublish[0m[2m=[0mSome(Patterns([Pattern("**")])) [3msubscribe[0m[2m=[0mSome(Patterns([Pattern("**")]))
-relay-1        | [2m2026-10-25T15:12:28.256101Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m3 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:47467 [3msession[0m[2m=[0m"b3950dd4980ca21002a4b4db1eb567c0" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m negotiated [3mversion[0m[2m=[0mmoq-transport-18 [3mtransport[0m[2m=[0mwebtransport
+relay-1        | [2m2026-10-26T15:11:55.658679Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m2 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:57322 [3msession[0m[2m=[0m"d0316cebdf2f7a8662e3d6bf0219cfad" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::cluster[0m[2m:[0m session accepted [3mtransport[0m[2m=[0mwebtransport [3mrequest.role[0m[2m=[0mNone [3mtier[0m[2m=[0m [3mroot[0m[2m=[0m [3mpublish[0m[2m=[0mSome(Patterns([Pattern("**")])) [3msubscribe[0m[2m=[0mSome(Patterns([Pattern("**")]))
+relay-1        | [2m2026-10-26T15:11:55.658729Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m2 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:57322 [3msession[0m[2m=[0m"d0316cebdf2f7a8662e3d6bf0219cfad" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m negotiated [3mversion[0m[2m=[0mmoq-transport-18 [3mtransport[0m[2m=[0mwebtransport
+test-client-1  | ok 3 - publish-namespace-done
+test-client-1  |   ---
+test-client-1  |   duration_ms: 3
+test-client-1  |   implementation_version: "quic-zig/0.3.0"
+relay-1        | [2m2026-10-26T15:11:55.659216Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m2 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:57322 [3msession[0m[2m=[0m"d0316cebdf2f7a8662e3d6bf0219cfad" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_net::ietf::session[0m[2m:[0m session terminated [3merr[0m[2m=[0mtransport: connection error: closed by peer: 0
+relay-1        | [2m2026-10-26T15:11:55.659283Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m2 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:57322 [3msession[0m[2m=[0m"d0316cebdf2f7a8662e3d6bf0219cfad" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m connection closed [3mid[0m[2m=[0m2 [3merr[0m[2m=[0mtransport: connection error: closed by peer: 0
+test-client-1  |   sessions:
+test-client-1  |     client:
+test-client-1  |       moqt_version: "moqt-18"
+test-client-1  |       transport: "webtransport-h3"
+test-client-1  |   ...
+relay-1        | [2m2026-10-26T15:11:55.661444Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m3 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:56089 [3msession[0m[2m=[0m"c70a2e9569b5e1fd0ead8731bc61b2eb" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::cluster[0m[2m:[0m session accepted [3mtransport[0m[2m=[0mwebtransport [3mrequest.role[0m[2m=[0mNone [3mtier[0m[2m=[0m [3mroot[0m[2m=[0m [3mpublish[0m[2m=[0mSome(Patterns([Pattern("**")])) [3msubscribe[0m[2m=[0mSome(Patterns([Pattern("**")]))
+relay-1        | [2m2026-10-26T15:11:55.661493Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m3 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:56089 [3msession[0m[2m=[0m"c70a2e9569b5e1fd0ead8731bc61b2eb" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m negotiated [3mversion[0m[2m=[0mmoq-transport-18 [3mtransport[0m[2m=[0mwebtransport
 test-client-1  | ok 4 - subscribe-error
 test-client-1  |   ---
-relay-1        | [2m2026-10-25T15:12:28.256669Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m3 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:47467 [3msession[0m[2m=[0m"b3950dd4980ca21002a4b4db1eb567c0" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_net::ietf::session[0m[2m:[0m session error [3merr[0m[2m=[0mno error
+test-client-1  |   duration_ms: 2
+test-client-1  |   implementation_version: "quic-zig/0.3.0"
+test-client-1  |   sessions:
+test-client-1  |     client:
+test-client-1  |       moqt_version: "moqt-18"
+relay-1        | [2m2026-10-26T15:11:55.661886Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m3 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:56089 [3msession[0m[2m=[0m"c70a2e9569b5e1fd0ead8731bc61b2eb" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_net::ietf::session[0m[2m:[0m session error [3merr[0m[2m=[0mno error
+test-client-1  |       transport: "webtransport-h3"
+test-client-1  |   ...
+relay-1        | [2m2026-10-26T15:11:55.662032Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m3 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:56089 [3msession[0m[2m=[0m"c70a2e9569b5e1fd0ead8731bc61b2eb" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m connection closed [3mid[0m[2m=[0m3 [3merr[0m[2m=[0mcancelled
+relay-1        | [2m2026-10-26T15:11:55.664255Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m4 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:44348 [3msession[0m[2m=[0m"4c5b608791c06169d90ae652a00d18ce" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::cluster[0m[2m:[0m session accepted [3mtransport[0m[2m=[0mwebtransport [3mrequest.role[0m[2m=[0mNone [3mtier[0m[2m=[0m [3mroot[0m[2m=[0m [3mpublish[0m[2m=[0mSome(Patterns([Pattern("**")])) [3msubscribe[0m[2m=[0mSome(Patterns([Pattern("**")]))
+relay-1        | [2m2026-10-26T15:11:55.664304Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m4 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:44348 [3msession[0m[2m=[0m"4c5b608791c06169d90ae652a00d18ce" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m negotiated [3mversion[0m[2m=[0mmoq-transport-18 [3mtransport[0m[2m=[0mwebtransport
+test-client-1  | ok 5 - rendezvous-timeout
+test-client-1  |   ---
+test-client-1  |   duration_ms: 4
+test-client-1  |   implementation_version: "quic-zig/0.3.0"
+test-client-1  |   sessions:
+test-client-1  |     client:
+test-client-1  |       moqt_version: "moqt-18"
+test-client-1  |       transport: "webtransport-h3"
+test-client-1  |   ...
+relay-1        | [2m2026-10-26T15:11:55.665215Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m4 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:44348 [3msession[0m[2m=[0m"4c5b608791c06169d90ae652a00d18ce" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_net::ietf::session[0m[2m:[0m session error [3merr[0m[2m=[0mno error
+relay-1        | [2m2026-10-26T15:11:55.665369Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m4 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:44348 [3msession[0m[2m=[0m"4c5b608791c06169d90ae652a00d18ce" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m connection closed [3mid[0m[2m=[0m4 [3merr[0m[2m=[0mcancelled
+relay-1        | [2m2026-10-26T15:11:55.667580Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m5 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:35945 [3msession[0m[2m=[0m"c4486799d3ba96b1a4d0c19bba2843c7" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::cluster[0m[2m:[0m session accepted [3mtransport[0m[2m=[0mwebtransport [3mrequest.role[0m[2m=[0mNone [3mtier[0m[2m=[0m [3mroot[0m[2m=[0m [3mpublish[0m[2m=[0mSome(Patterns([Pattern("**")])) [3msubscribe[0m[2m=[0mSome(Patterns([Pattern("**")]))
+relay-1        | [2m2026-10-26T15:11:55.667618Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m5 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:35945 [3msession[0m[2m=[0m"c4486799d3ba96b1a4d0c19bba2843c7" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m negotiated [3mversion[0m[2m=[0mmoq-transport-18 [3mtransport[0m[2m=[0mwebtransport
+relay-1        | [2m2026-10-26T15:11:55.670134Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m6 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:36482 [3msession[0m[2m=[0m"954c8160f53562c25f32b9bc62b9e90f" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::cluster[0m[2m:[0m session accepted [3mtransport[0m[2m=[0mwebtransport [3mrequest.role[0m[2m=[0mNone [3mtier[0m[2m=[0m [3mroot[0m[2m=[0m [3mpublish[0m[2m=[0mSome(Patterns([Pattern("**")])) [3msubscribe[0m[2m=[0mSome(Patterns([Pattern("**")]))
+relay-1        | [2m2026-10-26T15:11:55.670175Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m6 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:36482 [3msession[0m[2m=[0m"954c8160f53562c25f32b9bc62b9e90f" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m negotiated [3mversion[0m[2m=[0mmoq-transport-18 [3mtransport[0m[2m=[0mwebtransport
+relay-1        | [2m2026-10-26T15:11:55.670838Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m5 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:35945 [3msession[0m[2m=[0m"c4486799d3ba96b1a4d0c19bba2843c7" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_net::ietf::session[0m[2m:[0m session error [3merr[0m[2m=[0mno error
+test-client-1  | ok 6 - announce-subscribe
+test-client-1  |   ---
 test-client-1  |   duration_ms: 5
 test-client-1  |   implementation_version: "quic-zig/0.3.0"
 test-client-1  |   sessions:
+relay-1        | [2m2026-10-26T15:11:55.671035Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m6 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:36482 [3msession[0m[2m=[0m"954c8160f53562c25f32b9bc62b9e90f" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_net::ietf::session[0m[2m:[0m session error [3merr[0m[2m=[0mno error
+relay-1        | [2m2026-10-26T15:11:55.671117Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m5 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:35945 [3msession[0m[2m=[0m"c4486799d3ba96b1a4d0c19bba2843c7" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m connection closed [3mid[0m[2m=[0m5 [3merr[0m[2m=[0mcancelled
+relay-1        | [2m2026-10-26T15:11:55.671172Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m6 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:36482 [3msession[0m[2m=[0m"954c8160f53562c25f32b9bc62b9e90f" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m connection closed [3mid[0m[2m=[0m6 [3merr[0m[2m=[0mcancelled
 test-client-1  |     client:
 test-client-1  |       moqt_version: "moqt-18"
 test-client-1  |       transport: "webtransport-h3"
 test-client-1  |   ...
-relay-1        | [2m2026-10-25T15:12:28.256866Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m3 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:47467 [3msession[0m[2m=[0m"b3950dd4980ca21002a4b4db1eb567c0" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m connection closed [3mid[0m[2m=[0m3 [3merr[0m[2m=[0mcancelled
-relay-1        | [2m2026-10-25T15:12:28.259551Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m4 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:57389 [3msession[0m[2m=[0m"fdc379139482312b8a16026fa26315f8" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::cluster[0m[2m:[0m session accepted [3mtransport[0m[2m=[0mwebtransport [3mrequest.role[0m[2m=[0mNone [3mtier[0m[2m=[0m [3mroot[0m[2m=[0m [3mpublish[0m[2m=[0mSome(Patterns([Pattern("**")])) [3msubscribe[0m[2m=[0mSome(Patterns([Pattern("**")]))
-relay-1        | [2m2026-10-25T15:12:28.259641Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m4 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:57389 [3msession[0m[2m=[0m"fdc379139482312b8a16026fa26315f8" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m negotiated [3mversion[0m[2m=[0mmoq-transport-18 [3mtransport[0m[2m=[0mwebtransport
-test-client-1  | ok 5 - rendezvous-timeout
+relay-1        | [2m2026-10-26T15:11:55.673313Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m7 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:36220 [3msession[0m[2m=[0m"e8a4de5a03f66f1a49fcf3d143ede6a7" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::cluster[0m[2m:[0m session accepted [3mtransport[0m[2m=[0mwebtransport [3mrequest.role[0m[2m=[0mNone [3mtier[0m[2m=[0m [3mroot[0m[2m=[0m [3mpublish[0m[2m=[0mSome(Patterns([Pattern("**")])) [3msubscribe[0m[2m=[0mSome(Patterns([Pattern("**")]))
+relay-1        | [2m2026-10-26T15:11:55.673363Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m7 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:36220 [3msession[0m[2m=[0m"e8a4de5a03f66f1a49fcf3d143ede6a7" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m negotiated [3mversion[0m[2m=[0mmoq-transport-18 [3mtransport[0m[2m=[0mwebtransport
+relay-1        | [2m2026-10-26T15:11:55.673725Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m7 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:36220 [3msession[0m[2m=[0m"e8a4de5a03f66f1a49fcf3d143ede6a7" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_net::ietf::session[0m[2m:[0m session error [3merr[0m[2m=[0mno error
+test-client-1  | ok 7 - subscribe-before-announce
+relay-1        | [2m2026-10-26T15:11:55.673792Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m7 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:36220 [3msession[0m[2m=[0m"e8a4de5a03f66f1a49fcf3d143ede6a7" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m connection closed [3mid[0m[2m=[0m7 [3merr[0m[2m=[0mcancelled
 test-client-1  |   ---
 test-client-1  |   duration_ms: 3
-test-client-1  |   implementation_version: "quic-zig/0.3.0"
-test-client-1  |   sessions:
-test-client-1  |     client:
-test-client-1  |       moqt_version: "moqt-18"
-test-client-1  |       transport: "webtransport-h3"
-test-client-1  |   ...
-relay-1        | [2m2026-10-25T15:12:28.260172Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m4 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:57389 [3msession[0m[2m=[0m"fdc379139482312b8a16026fa26315f8" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_net::ietf::session[0m[2m:[0m session error [3merr[0m[2m=[0mno error
-relay-1        | [2m2026-10-25T15:12:28.260286Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m4 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:57389 [3msession[0m[2m=[0m"fdc379139482312b8a16026fa26315f8" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m connection closed [3mid[0m[2m=[0m4 [3merr[0m[2m=[0mcancelled
-relay-1        | [2m2026-10-25T15:12:28.262932Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m5 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:40405 [3msession[0m[2m=[0m"ed93eff77edb5429cf4063213cbce6e6" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::cluster[0m[2m:[0m session accepted [3mtransport[0m[2m=[0mwebtransport [3mrequest.role[0m[2m=[0mNone [3mtier[0m[2m=[0m [3mroot[0m[2m=[0m [3mpublish[0m[2m=[0mSome(Patterns([Pattern("**")])) [3msubscribe[0m[2m=[0mSome(Patterns([Pattern("**")]))
-relay-1        | [2m2026-10-25T15:12:28.263014Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m5 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:40405 [3msession[0m[2m=[0m"ed93eff77edb5429cf4063213cbce6e6" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m negotiated [3mversion[0m[2m=[0mmoq-transport-18 [3mtransport[0m[2m=[0mwebtransport
-relay-1        | [2m2026-10-25T15:12:28.266662Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m6 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:53452 [3msession[0m[2m=[0m"23182df14d435ab60c3c7cf8d75f0d4e" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::cluster[0m[2m:[0m session accepted [3mtransport[0m[2m=[0mwebtransport [3mrequest.role[0m[2m=[0mNone [3mtier[0m[2m=[0m [3mroot[0m[2m=[0m [3mpublish[0m[2m=[0mSome(Patterns([Pattern("**")])) [3msubscribe[0m[2m=[0mSome(Patterns([Pattern("**")]))
-relay-1        | [2m2026-10-25T15:12:28.266743Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m6 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:53452 [3msession[0m[2m=[0m"23182df14d435ab60c3c7cf8d75f0d4e" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m negotiated [3mversion[0m[2m=[0mmoq-transport-18 [3mtransport[0m[2m=[0mwebtransport
-relay-1        | [2m2026-10-25T15:12:28.267603Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m5 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:40405 [3msession[0m[2m=[0m"ed93eff77edb5429cf4063213cbce6e6" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_net::ietf::session[0m[2m:[0m session error [3merr[0m[2m=[0mno error
-test-client-1  | ok 6 - announce-subscribe
-test-client-1  |   ---
-test-client-1  |   duration_ms: 7
-test-client-1  |   implementation_version: "quic-zig/0.3.0"
-test-client-1  |   sessions:
-test-client-1  |     client:
-test-client-1  |       moqt_version: "moqt-18"
-test-client-1  |       transport: "webtransport-h3"
-test-client-1  |   ...
-relay-1        | [2m2026-10-25T15:12:28.267863Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m5 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:40405 [3msession[0m[2m=[0m"ed93eff77edb5429cf4063213cbce6e6" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m connection closed [3mid[0m[2m=[0m5 [3merr[0m[2m=[0mcancelled
-relay-1        | [2m2026-10-25T15:12:28.268113Z[0m [33m WARN[0m [2mmoq_net::model::track[0m[2m:[0m track::Producer dropped without finish() or abort() [3mtrack[0m[2m=[0mtest-track
-relay-1        | [2m2026-10-25T15:12:28.268244Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m6 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:53452 [3msession[0m[2m=[0m"23182df14d435ab60c3c7cf8d75f0d4e" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_net::ietf::session[0m[2m:[0m session error [3merr[0m[2m=[0mno error
-relay-1        | [2m2026-10-25T15:12:28.268356Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m6 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:53452 [3msession[0m[2m=[0m"23182df14d435ab60c3c7cf8d75f0d4e" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m connection closed [3mid[0m[2m=[0m6 [3merr[0m[2m=[0mcancelled
-relay-1        | [2m2026-10-25T15:12:28.271340Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m7 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:52305 [3msession[0m[2m=[0m"c0ed41e4e8e0c25770258983b42f5d50" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::cluster[0m[2m:[0m session accepted [3mtransport[0m[2m=[0mwebtransport [3mrequest.role[0m[2m=[0mNone [3mtier[0m[2m=[0m [3mroot[0m[2m=[0m [3mpublish[0m[2m=[0mSome(Patterns([Pattern("**")])) [3msubscribe[0m[2m=[0mSome(Patterns([Pattern("**")]))
-relay-1        | [2m2026-10-25T15:12:28.271422Z[0m [32m INFO[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m7 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:52305 [3msession[0m[2m=[0m"c0ed41e4e8e0c25770258983b42f5d50" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m negotiated [3mversion[0m[2m=[0mmoq-transport-18 [3mtransport[0m[2m=[0mwebtransport
-relay-1        | [2m2026-10-25T15:12:28.272107Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m7 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:52305 [3msession[0m[2m=[0m"c0ed41e4e8e0c25770258983b42f5d50" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_net::ietf::session[0m[2m:[0m session error [3merr[0m[2m=[0mno error
-test-client-1  | ok 7 - subscribe-before-announce
-test-client-1  |   ---
-test-client-1  |   duration_ms: 4
 test-client-1  |   message: "rejected pending subscription (allowed)"
 test-client-1  |   implementation_version: "quic-zig/0.3.0"
 test-client-1  |   sessions:
@@ -118,7 +118,6 @@ test-client-1  |     client:
 test-client-1  |       moqt_version: "moqt-18"
 test-client-1  |       transport: "webtransport-h3"
 test-client-1  |   ...
-relay-1        | [2m2026-10-25T15:12:28.272208Z[0m [33m WARN[0m [1mconn[0m[1m{[0m[3mid[0m[2m=[0m7 [3mremote[0m[2m=[0m[::ffff:172.18.0.3]:52305 [3msession[0m[2m=[0m"c0ed41e4e8e0c25770258983b42f5d50" [3mimplementation[0m[2m=[0m"quic-zig/moq-test-client"[1m}[0m[2m:[0m [2mmoq_relay::connection[0m[2m:[0m connection closed [3mid[0m[2m=[0m7 [3merr[0m[2m=[0mcancelled
 [Ktest-client-1 exited with code 0
 Aborting on container exit...
  Container runner-upstream-test-client-1  Stopping
