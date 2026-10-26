@@ -22,3 +22,6 @@ quest/
 .claude/shared/
 .claude/skills/
 .agents/
+
+# API Extractor owns the layout of its generated reports.
+js/*/api/*.api.md

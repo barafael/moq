@@ -32,10 +32,11 @@ check:
 workers:
     ../sh/js/workers.sh
 
-# Auto-fix lint and formatting issues.
+# Auto-fix lint and formatting issues, then regenerate the committed API reports.
 fix:
     bun install
     bun biome check --write
+    MOQ_API_REPORT=update just build
 
 # Run all unit tests.
 test:
