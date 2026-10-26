@@ -6,6 +6,7 @@ import { copyFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
 import { publint } from "publint";
 import { formatMessage } from "publint/utils";
+import { checkReports } from "./api.ts";
 import { problems } from "./declarations.ts";
 
 console.log("✍️  Rewriting package.json...");
@@ -15,11 +16,12 @@ const pkg = JSON.parse(readFileSync("package.json", "utf8"));
 // JSR config can map them to the built (.js) entrypoints.
 const srcExports: Record<string, unknown> = structuredClone(pkg.exports ?? {});
 
-// Publish to JSR alongside npm for every package that publishes at all (has a
-// release script), unless it opts out with "jsr": false. The web-component
-// packages opt out: JSR forbids the HTMLElementTagNameMap global augmentation
-// every custom element needs. Captured before pkg.scripts/jsr are cleared below.
-const publishJsr = Boolean(pkg.scripts?.release) && pkg.jsr !== false;
+// Capture whether the package publishes before pkg.scripts is cleared below.
+const published = Boolean(pkg.scripts?.release);
+
+// Publish to JSR unless the package opts out. Web components opt out because
+// JSR forbids the HTMLElementTagNameMap global augmentation they need.
+const publishJsr = published && pkg.jsr !== false;
 
 function rewritePath(p: string, ext: string): string {
 	return p.replace(/^\.\/src/, ".").replace(/\.ts(x)?$/, `.${ext}`);
@@ -131,6 +133,11 @@ const unresolved = problems(resolve("dist"), declarations);
 if (unresolved.length > 0) {
 	for (const problem of unresolved) console.error(problem);
 	process.exit(1);
+}
+
+if (published) {
+	console.log("🔍 Checking API reports...");
+	checkReports(".");
 }
 
 console.log("📦 Package built successfully in dist/");
