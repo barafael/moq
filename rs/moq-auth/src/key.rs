@@ -770,7 +770,10 @@ mod tests {
 		// nextest gives this process-wide provider its own test process.
 		PROVIDER.install_default().unwrap();
 		let key = Key::generate(Algorithm::HS256, None).unwrap();
-		assert!(key.sign(&Claims::default()).is_err());
+		assert!(matches!(
+			key.sign(&Claims::default().with_subscribe(patterns(&["**"]))),
+			Err(crate::Error::Jwt(_))
+		));
 	}
 
 	fn patterns(texts: &[&str]) -> crate::Patterns {

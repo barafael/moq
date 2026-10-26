@@ -8,9 +8,11 @@ use jsonwebtoken::{Algorithm, DecodingKey, EncodingKey};
 use pkcs1::der::{Decode, Encode, asn1::UintRef};
 
 pub(crate) fn init() -> crate::Result<()> {
-	check_cpu()?;
 	// The first provider wins, including one installed by the embedding application.
-	let _ = PROVIDER.install_default();
+	static INSTALLED: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
+	if *INSTALLED.get_or_init(|| PROVIDER.install_default().is_ok()) {
+		check_cpu()?;
+	}
 	Ok(())
 }
 
@@ -42,17 +44,20 @@ pub(crate) fn fill(bytes: &mut [u8]) -> crate::Result<()> {
 }
 
 pub(crate) fn generate_rsa() -> crate::Result<Vec<u8>> {
+	check_cpu()?;
 	let key = rsa::SigningKey::generate(rsa::KeySize::Rsa2048)?;
 	// A two-prime 2048-bit PKCS#1 key fits within 2048 bytes.
 	Ok(key.to_pkcs1_der(&mut [0; 2048])?.to_vec())
 }
 
 pub(crate) fn generate_ed25519() -> crate::Result<(Vec<u8>, Vec<u8>)> {
+	check_cpu()?;
 	let key = eddsa::Ed25519SigningKey::generate()?;
 	Ok((key.as_seed().to_vec(), key.public_key().as_bytes().to_vec()))
 }
 
 pub(crate) fn ed25519_der(seed: &[u8], public: &[u8]) -> crate::Result<Vec<u8>> {
+	check_cpu()?;
 	let key = eddsa::Ed25519SigningKey::from_bytes(seed)?;
 	if key.public_key().as_bytes() != public {
 		return Err(crate::Error::Crypto(
