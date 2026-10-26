@@ -3,8 +3,11 @@
 ## Goal
 
 moq-relay's release builds compile no C: its crypto moves off aws-lc-rs onto
-graviola and RustCrypto, with no hand-rolled primitive, and aws-lc-rs stays
-where graviola does not run.
+graviola and RustCrypto, with no hand-rolled primitive. moq-auth is
+graviola-only, so moq-relay, moq-cli, and moq-room build only on x86_64 and
+aarch64 (decided by the maintainer on 2026-10-26: their release targets are
+all there, and the FFI and browser builds on other architectures do not use
+moq-auth).
 
 ## Plan
 

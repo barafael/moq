@@ -4,8 +4,8 @@
 
 moq-relay's release targets on x86_64 and aarch64 use graviola as their rustls
 provider, and their graph compiles no C: no aws-lc-sys, ring, `cc`, or `cmake`,
-checked with `cargo tree -i` for each release target triple. Every other target, and every other crate that uses
-aws-lc-rs today, keeps it.
+checked with `cargo tree -i` for each release target triple. Every other crate that uses
+aws-lc-rs today keeps it.
 
 ## Plan
 
@@ -15,8 +15,9 @@ recommendations, starting from moq's
 [`spike/pure-crypto`](https://github.com/moq-dev/moq/tree/spike/pure-crypto)
 branch:
 
-- graviola only supports x86_64 and aarch64, so it is the provider for
-  moq-relay's release targets there; aws-lc-rs stays the default elsewhere.
+- graviola only supports x86_64 and aarch64, where all of moq-relay's release
+  targets are; moq-auth's graviola-only JWT backend already limits moq-relay to
+  those architectures.
 - moq-tokio refuses `aws-lc-rs` and `graviola` enabled at once. With both on,
   aws-lc-rs won silently, which hid a graviola-only bug in the spike and would
   make a workspace build benchmark aws-lc. CI builds and tests moq-relay alone,

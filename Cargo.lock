@@ -5082,7 +5082,6 @@ name = "moq-auth"
 version = "0.2.1"
 dependencies = [
  "anyhow",
- "aws-lc-rs",
  "axum",
  "base64 0.23.1",
  "criterion",

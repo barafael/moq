@@ -18,6 +18,9 @@
 
 #![warn(missing_docs)]
 
+#[cfg(not(any(target_arch = "x86_64", target_arch = "aarch64")))]
+compile_error!("moq-auth supports only x86_64 and aarch64, the architectures its graviola cryptography runs on");
+
 mod algorithm;
 mod claims;
 mod crypto;

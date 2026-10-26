@@ -3,15 +3,6 @@ use moq_auth::{Algorithm, Claims, Key};
 use std::hint::black_box;
 
 fn jwt(c: &mut Criterion) {
-	match std::env::var("MOQ_AUTH_BENCH_PROVIDER") {
-		Ok(provider) if provider == "aws-lc" => {
-			jsonwebtoken::crypto::aws_lc::DEFAULT_PROVIDER
-				.install_default()
-				.unwrap();
-		}
-		Err(std::env::VarError::NotPresent) => (),
-		_ => panic!("MOQ_AUTH_BENCH_PROVIDER must be unset or aws-lc"),
-	}
 	let claims = Claims::default().with_subscribe(["**".parse().unwrap()]);
 	for algorithm in [
 		Algorithm::HS256,

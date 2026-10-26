@@ -37,17 +37,14 @@ tokio = { workspace = true, features = ["fs", "macros", "rt", "time", "sync"], o
 tracing = { workspace = true, optional = true }
 url = { workspace = true }
 
+# Gated so other architectures stop at moq-auth's own compile_error! rather than graviola's.
 [target.'cfg(any(target_arch = "x86_64", target_arch = "aarch64"))'.dependencies]
 graviola = { workspace = true }
 
-[target.'cfg(not(any(target_arch = "x86_64", target_arch = "aarch64")))'.dependencies]
-aws-lc-rs = { workspace = true }
-jsonwebtoken = { workspace = true, features = ["aws_lc_rs"] }
-
 [dev-dependencies]
 anyhow = { workspace = true }
-aws-lc-rs = { workspace = true }
 criterion = { workspace = true }
+# An independent implementation that the graviola provider is checked against.
 jsonwebtoken = { workspace = true, features = ["aws_lc_rs"] }
 moq-auth = { path = ".", features = ["client", "serve"] }
 moq-auth-published = { package = "moq-auth", version = "=0.2.1", default-features = false }
