@@ -9,12 +9,9 @@ all-features = true
 version = 2
 yanked = "deny"
 ignore = [
-    # rsa 0.9.x Marvin Attack (RSA private-key timing sidechannel). The
-    # `rsa` crate is a direct dep of moq-auth but is only used for keygen
-    # and PEM serialization of JWK components. JWT signing/verification
-    # itself runs through `jsonwebtoken` backed by `aws-lc-rs` (constant
-    # time), so the vulnerable code path is not exercised. Drop the ignore
-    # when rustcrypto/RSA publishes a constant-time fix.
+    # Published moq-auth/moq-token compatibility fixtures still use rsa for
+    # key generation and serialization, with aws-lc-rs signing their JWTs.
+    # Production moq-auth uses graviola and has no rsa dependency.
     "RUSTSEC-2023-0071",
 
     # paste is unmaintained (proc-macro, build-time only). Pulled by

@@ -3384,6 +3384,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "graviola"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e8596c4fa98466aae2fcf4c72a665bc0e021c0aaab1e47d82044d3dc3e309a76"
+dependencies = [
+ "cfg-if",
+ "getrandom 0.3.4",
+]
+
+[[package]]
 name = "group"
 version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5075,6 +5085,8 @@ dependencies = [
  "aws-lc-rs",
  "axum",
  "base64 0.23.1",
+ "criterion",
+ "graviola",
  "jsonwebtoken",
  "kio 0.6.2",
  "moq-auth 0.2.1",
@@ -5084,9 +5096,9 @@ dependencies = [
  "moq-token",
  "p256",
  "p384",
+ "pkcs1",
  "rand 0.10.3",
  "reqwest",
- "rsa",
  "rustls",
  "serde",
  "serde_json",

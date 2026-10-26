@@ -221,9 +221,18 @@ from_message! {
 	base64::DecodeError => Base64,
 	jsonwebtoken::errors::Error => Jwt,
 	p256::elliptic_curve::pkcs8::Error => Crypto,
+	p256::pkcs8::der::Error => Crypto,
 	p256::elliptic_curve::Error => Crypto,
-	rsa::Error => Crypto,
-	rsa::pkcs1::Error => Crypto,
+	pkcs1::der::Error => Crypto,
+}
+
+#[cfg(any(target_arch = "x86_64", target_arch = "aarch64"))]
+from_message! {
+	graviola::Error => Crypto,
+}
+
+#[cfg(any(test, not(any(target_arch = "x86_64", target_arch = "aarch64"))))]
+from_message! {
 	aws_lc_rs::error::Unspecified => Crypto,
 	aws_lc_rs::error::KeyRejected => Crypto,
 }

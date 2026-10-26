@@ -17,18 +17,17 @@ client = ["dep:reqwest", "dep:rustls", "dep:tokio", "moq-clock/runtime", "dep:tr
 serve = ["dep:axum", "dep:tokio", "dep:tracing", "tokio/net"]
 
 [dependencies]
-aws-lc-rs = { workspace = true }
 axum = { workspace = true, optional = true }
 base64 = { workspace = true }
-jsonwebtoken = { workspace = true, features = ["aws_lc_rs"] }
+jsonwebtoken = { workspace = true }
 kio = { workspace = true }
 moq-clock = { version = "0.11.0", path = "../moq-clock", default-features = false, features = ["serde"] }
 moq-pattern = { workspace = true, features = ["serde"] }
 p256 = "0.14.0"
 p384 = "0.14.0"
+pkcs1 = { workspace = true }
 rand = { workspace = true, optional = true }
 reqwest = { workspace = true, features = ["rustls", "json"], optional = true }
-rsa = "0.9.10"
 rustls = { version = "0.23", default-features = false, optional = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
@@ -38,8 +37,18 @@ tokio = { workspace = true, features = ["fs", "macros", "rt", "time", "sync"], o
 tracing = { workspace = true, optional = true }
 url = { workspace = true }
 
+[target.'cfg(any(target_arch = "x86_64", target_arch = "aarch64"))'.dependencies]
+graviola = { workspace = true }
+
+[target.'cfg(not(any(target_arch = "x86_64", target_arch = "aarch64")))'.dependencies]
+aws-lc-rs = { workspace = true }
+jsonwebtoken = { workspace = true, features = ["aws_lc_rs"] }
+
 [dev-dependencies]
 anyhow = { workspace = true }
+aws-lc-rs = { workspace = true }
+criterion = { workspace = true }
+jsonwebtoken = { workspace = true, features = ["aws_lc_rs"] }
 moq-auth = { path = ".", features = ["client", "serve"] }
 moq-auth-published = { package = "moq-auth", version = "=0.2.1", default-features = false }
 moq-clock = { path = "../moq-clock", features = ["sim"] }
@@ -47,6 +56,10 @@ moq-token = "0.7"
 tempfile = { workspace = true }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread", "test-util"] }
 wiremock = "0.6"
+
+[[bench]]
+name = "jwt"
+harness = false
 
 [lints]
 workspace = true

@@ -5,8 +5,7 @@ use base64::Engine;
 use jsonwebtoken::{DecodingKey, EncodingKey, Header};
 use p256::elliptic_curve::SecretKey;
 use p256::elliptic_curve::pkcs8::EncodePrivateKey;
-use rsa::BigUint;
-use rsa::pkcs1::EncodeRsaPrivateKey;
+use pkcs1::der::{Encode, asn1::UintRef};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use std::str::FromStr;
 use std::sync::OnceLock;
@@ -225,6 +224,7 @@ impl Jwk {
 	/// is discoverable from here, and `import`/`export` rather than `validate` because the
 	/// `validate` methods elsewhere in this crate check without converting.
 	pub fn import(self) -> crate::Result<Key> {
+		crate::crypto::init()?;
 		if let Some(scope) = &self.scope {
 			scope.validate()?;
 		}
@@ -523,11 +523,8 @@ impl Key {
 			} => {
 				let d = d.as_ref().ok_or(KeyError::MissingPrivateKey)?;
 
-				let key_pair =
-					aws_lc_rs::signature::Ed25519KeyPair::from_seed_and_public_key(d.as_slice(), x.as_slice())?;
-
 				match curve {
-					EllipticCurve::Ed25519 => EncodingKey::from_ed_der(key_pair.to_pkcs8()?.as_ref()),
+					EllipticCurve::Ed25519 => EncodingKey::from_ed_der(&crate::crypto::ed25519_der(d, x)?),
 					_ => return Err(KeyError::InvalidCurve("OKP").into()),
 				}
 			}
@@ -535,17 +532,23 @@ impl Key {
 				ref public,
 				ref private,
 			} => {
-				let n = BigUint::from_bytes_be(&public.n);
-				let e = BigUint::from_bytes_be(&public.e);
 				let private = private.as_ref().ok_or(KeyError::MissingPrivateKey)?;
-				let d = BigUint::from_bytes_be(&private.d);
-				let p = BigUint::from_bytes_be(&private.p);
-				let q = BigUint::from_bytes_be(&private.q);
-
-				let rsa = rsa::RsaPrivateKey::from_components(n, e, d, vec![p, q]);
-				let pem = rsa?.to_pkcs1_pem(rsa::pkcs1::LineEnding::LF);
-
-				EncodingKey::from_rsa_pem(pem?.as_bytes())?
+				if private.oth.is_some() {
+					return Err(crate::Error::Crypto("multi-prime RSA is unsupported".into()));
+				}
+				let der = pkcs1::RsaPrivateKey {
+					modulus: UintRef::new(&public.n)?,
+					public_exponent: UintRef::new(&public.e)?,
+					private_exponent: UintRef::new(&private.d)?,
+					prime1: UintRef::new(&private.p)?,
+					prime2: UintRef::new(&private.q)?,
+					exponent1: UintRef::new(&private.dp)?,
+					exponent2: UintRef::new(&private.dq)?,
+					coefficient: UintRef::new(&private.qi)?,
+					other_prime_infos: None,
+				}
+				.to_der()?;
+				EncodingKey::from_rsa_der(&der)
 			}
 		};
 
@@ -703,6 +706,72 @@ where
 #[cfg(test)]
 mod tests {
 	use super::*;
+
+	#[test]
+	fn crypto_providers_interoperate_and_reject_tampering() {
+		use jsonwebtoken::crypto::aws_lc::DEFAULT_PROVIDER;
+		let message = b"eyJhbGciOiJ0ZXN0In0.eyJzdWIiOiJhbGljZSJ9";
+		for algorithm in [
+			Algorithm::HS256,
+			Algorithm::HS384,
+			Algorithm::HS512,
+			Algorithm::ES256,
+			Algorithm::ES384,
+			Algorithm::EdDSA,
+			Algorithm::RS256,
+			Algorithm::RS384,
+			Algorithm::RS512,
+			Algorithm::PS256,
+			Algorithm::PS384,
+			Algorithm::PS512,
+		] {
+			let key = Key::generate(algorithm, None).unwrap();
+			let verifier = if matches!(algorithm, Algorithm::HS256 | Algorithm::HS384 | Algorithm::HS512) {
+				key.clone()
+			} else {
+				key.to_public().unwrap()
+			};
+			let algorithm = algorithm.into();
+			let encoding = key.to_encoding_key().unwrap();
+			let decoding = verifier.to_decoding_key().unwrap();
+			let aws_signer = (DEFAULT_PROVIDER.signer_factory)(&algorithm, encoding).unwrap();
+			let aws_verifier = (DEFAULT_PROVIDER.verifier_factory)(&algorithm, decoding).unwrap();
+			let ours = jsonwebtoken::crypto::sign(message, encoding, algorithm).unwrap();
+			let ours = base64::engine::general_purpose::URL_SAFE_NO_PAD.decode(&ours).unwrap();
+			aws_verifier.verify(message, &ours).unwrap();
+			let theirs = aws_signer.try_sign(message).unwrap();
+			let encoded = base64::engine::general_purpose::URL_SAFE_NO_PAD.encode(&theirs);
+			assert!(jsonwebtoken::crypto::verify(&encoded, message, decoding, algorithm).unwrap());
+			assert!(!jsonwebtoken::crypto::verify(&encoded, b"changed", decoding, algorithm).unwrap());
+			for length in [0, theirs.len() - 1, theirs.len() + 1] {
+				let mut damaged = theirs.clone();
+				damaged.resize(length, 0);
+				let encoded = base64::engine::general_purpose::URL_SAFE_NO_PAD.encode(&damaged);
+				assert!(!jsonwebtoken::crypto::verify(&encoded, message, decoding, algorithm).unwrap());
+			}
+			let mut padded = vec![0];
+			padded.extend_from_slice(&theirs);
+			let encoded = base64::engine::general_purpose::URL_SAFE_NO_PAD.encode(&padded);
+			assert!(!jsonwebtoken::crypto::verify(&encoded, message, decoding, algorithm).unwrap());
+			let mut damaged = theirs;
+			damaged[0] ^= 1;
+			let encoded = base64::engine::general_purpose::URL_SAFE_NO_PAD.encode(&damaged);
+			assert!(!jsonwebtoken::crypto::verify(&encoded, message, decoding, algorithm).unwrap());
+		}
+	}
+
+	#[test]
+	fn embedding_app_keeps_its_crypto_provider() {
+		static PROVIDER: jsonwebtoken::crypto::CryptoProvider = jsonwebtoken::crypto::CryptoProvider {
+			signer_factory: |_, _| Err(jsonwebtoken::errors::ErrorKind::InvalidAlgorithm.into()),
+			verifier_factory: |_, _| Err(jsonwebtoken::errors::ErrorKind::InvalidAlgorithm.into()),
+			key_utils: jsonwebtoken::crypto::KeyUtils::new_unimplemented(),
+		};
+		// nextest gives this process-wide provider its own test process.
+		PROVIDER.install_default().unwrap();
+		let key = Key::generate(Algorithm::HS256, None).unwrap();
+		assert!(key.sign(&Claims::default()).is_err());
+	}
 
 	fn patterns(texts: &[&str]) -> crate::Patterns {
 		texts.iter().map(|text| text.parse().unwrap()).collect()

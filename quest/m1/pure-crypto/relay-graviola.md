@@ -57,5 +57,4 @@ on its release targets. Wire: none.
 
 ## Required
 
-- [JWT on graviola](/quest/m1/pure-crypto/jwt-graviola.md) - moq-relay never ships the `rust_crypto` backend's `rsa` in between
 - [moq-quic's crypto is rustls](/quest/m1/quic-api/crypto.md) - the sealed crypto surface the QUIC adapter plugs into

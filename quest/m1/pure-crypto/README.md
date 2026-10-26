@@ -33,7 +33,6 @@ picks a random one, and jsonwebtoken 11 already takes a custom
 
 ## Required
 
-- [JWT on graviola](/quest/m1/pure-crypto/jwt-graviola.md) - moq-auth signs and verifies tokens through a graviola-based jsonwebtoken provider, with no `rsa` crate
 - [moq-relay on graviola](/quest/m1/pure-crypto/relay-graviola.md) - moq-relay's x86_64 and aarch64 release builds use graviola as their rustls provider and compile no C
 - [ACME on graviola](/quest/m1/pure-crypto/acme-upstream.md) - graviola builds turn ACME back on once rustls-acme gains a provider hook or instant-acme 0.9 is released
 - [rustls-graviola's QUIC keys](/quest/m1/pure-crypto/graviola-quic.md) - a rustls-graviola release ships QUIC keys, and moq-quic's adapter is deleted

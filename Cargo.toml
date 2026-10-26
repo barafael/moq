@@ -99,6 +99,7 @@ dispatch2 = "0.3.1"
 flate2 = { version = "1.1", default-features = false }
 futures = "0.3"
 getrandom = { version = "0.4", features = ["wasm_js"] }
+graviola = "0.4.1"
 h2 = "0.4"
 hang = { version = "0.21.11", path = "rs/hang" }
 hashlink = "0.12.2"
@@ -190,6 +191,7 @@ objc2-screen-capture-kit = "0.3.2"
 # local-filesystem stack; `fs` (and cloud backends) are opted in by the caller.
 object_store = { version = "0.14", default-features = false }
 percent-encoding = "2"
+pkcs1 = { version = "0.7.5", features = ["std"] }
 pollster = "1.0"
 # default-features off to skip the fork and timeout machinery; crates opt into what they use.
 proptest = { version = "1.12.0", default-features = false, features = ["std"] }

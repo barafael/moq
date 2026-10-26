@@ -119,6 +119,7 @@ case "$1" in
         ;;
     # Keep added coverage out of the rust-bench and rust-shared legs.
     rust-extra)
+        criterion auth --manifest-path rs/moq-auth/Cargo.toml --bench jwt
         # The allocation/window/play-buffer tables keep their stdout in the run;
         # only Criterion estimates enter the trend report.
         criterion extra --no-fail-fast -p moq-e2ee -p moq-json -p moq-archive -p moq-cli -p moq-mux -p moq-audio \

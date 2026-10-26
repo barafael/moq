@@ -150,6 +150,14 @@ tokens; a query carrying two `jwt` parameters is refused. HMAC, RSA, ECDSA, and 
 key can itself be **scoped** at generation (`--root`, `--publish`,
 `--subscribe`), after which it can never sign a broader token.
 
+Native JWT operations use Graviola on x86_64 and aarch64, and AWS-LC on
+other architectures. On x86_64, the CPU must expose AES, PCLMULQDQ, BMI1,
+ADX, AVX, and AVX2; on aarch64 it needs NEON, AES, PMULL, and SHA2.
+Key setup refuses a CPU without these capabilities, including a VM that hides
+them. Applications embedding `moq-auth` can install their own jsonwebtoken
+provider before loading keys. JWKs and tokens use the same formats as browser
+clients.
+
 ### In-band renewal
 
 On moq-lite-07-wip or moq-transport draft-17 and later with MoQ Auth negotiated,

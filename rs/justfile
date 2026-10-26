@@ -488,6 +488,11 @@ bench-playback:
 bench-rtmp *args:
     bash sh/local.sh cargo bench --locked -p moq-rtmp --bench chunk_interleaving -- "$@"
 
+# Sign and verify every JWT algorithm; MOQ_AUTH_BENCH_PROVIDER=aws-lc selects the reference backend.
+[positional-arguments]
+bench-jwt *args:
+    bash sh/local.sh cargo bench --locked --manifest-path rs/moq-auth/Cargo.toml --bench jwt -- "$@"
+
 # Refresh one credential across unrelated sessions and held token counts.
 [positional-arguments]
 bench-relay-auth *args:
