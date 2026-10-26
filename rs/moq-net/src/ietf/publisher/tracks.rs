@@ -1297,7 +1297,9 @@ impl Publisher {
 					self.run_fill(fill, &ranking, track.clone(), timescale, &streams).await;
 				}
 			};
-			let serving = self.run_subscription(stream, &mut serve, finished, goaways, fill, None);
+			// Prove Send before the auth race and listing task nest this future further.
+			let serving =
+				crate::util::sendable(self.run_subscription(stream, &mut serve, finished, goaways, fill, None));
 			// A track no longer listed ends its PUBLISH even while the track itself goes on,
 			// as when its broadcast's route is withdrawn.
 			crate::auth::until(serving, |waiter| {
