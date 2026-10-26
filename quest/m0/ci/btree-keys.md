@@ -3,9 +3,9 @@
 ## Goal
 
 moq-net instantiates BTreeMap/BTreeSet for fewer key and value types, which make
-up 21% of its library's 1.32M LLVM IR lines (about 30-40 instantiations at 7-9k
-lines each; the [m2 compile-time audit](/quest/m2/audit-compile-time.md) counts
-29.5% with its features). Record the library's and test target's CPU time and `cargo
+up 22.7% of its library's 1,360,948 LLVM IR lines at main 65ea670311 (the
+[m2 compile-time audit](/quest/m2/audit-compile-time.md) counts 29.5% with
+different features on an earlier tree). Record the library's and test target's CPU time and `cargo
 llvm-lines` before and after, and keep the change only if the CPU time drops
 beyond noise.
 
@@ -29,3 +29,16 @@ measured before adoption.
   a hot path without a benchmark.
 
 Public API: none.
+
+The [2026-10-26 experiment](/.github/btree-build-audit.md) inventories 38 concrete
+map key/value spellings and preserves an exact candidate patch plus eight raw
+samples. Sharing the expiry wall index's lossless u64 nanosecond key removes
+6,485 LLVM lines from both library and unit-test targets, but CPU ranges overlap
+and their median directions disagree on the shared host. The candidate was
+removed after measurement, so no production representation change is retained.
+
+Remaining decision: repeat that patch on a quiet host (recommended), try a
+larger local candidate with its own runtime benchmarks, or deprioritize the
+build-cost work. Do not infer a speedup from the IR count alone. Retain a
+candidate only after the CPU evidence distinguishes it from noise, then run
+its semantic/runtime checks and the selected local gates.
