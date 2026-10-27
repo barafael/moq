@@ -165,6 +165,12 @@ threshold or follow behavior changed. All 258 focused TS/jitter controls pass
 handle lifetime and the subscription aggregate before asynchronous propagation;
 those were fixture-observation mistakes, not evidence of a source deadline bug.
 
+The final trace/deadline source at [ec6c90b9a1](https://github.com/moq-dev/moq/commit/ec6c90b9a15df10e25b16ad0eba7ffc131c4bc0d)
+passes strict clean-head CI against the recorded base in 322 s: 4,154 selected
+Rust tests pass (61 skipped), with the selected feature, WebAssembly, JS, docs
+and tooling gates green. The private handoff trace filter is enabled only for
+the redundant-failover fixture; other CLI fixtures keep their original logging.
+
 ### Decisions needed
 
 The Plan's hard follow bound and its unconditional healthy-switch wording cannot

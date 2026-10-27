@@ -156,13 +156,15 @@ fn export_with(relay: &Relay, global: &[&str], flags: &[&str]) -> Export {
 
 /// [`export_with`] in `format`.
 fn export_as(relay: &Relay, global: &[&str], format: Format, flags: &[&str]) -> Export {
-	let mut child = moq(relay, global)
+	let mut command = moq(relay, global);
+	command.env("RUST_LOG", "warn,moq_mux::container::ts::follower=info");
+	spawn_export(command, format, flags)
+}
+
+fn spawn_export(mut command: tokio::process::Command, format: Format, flags: &[&str]) -> Export {
+	let mut child = command
 		.args(["export", format.name])
 		.args(flags)
-		.env(
-			"RUST_LOG",
-			"warn,moq_mux::container::ts::follower=info,moq_mux::container::ts::handoff=debug",
-		)
 		.stdout(Stdio::piped())
 		.stderr(Stdio::piped())
 		.spawn()
@@ -953,11 +955,12 @@ async fn redundant_failover(bufferbloat: bool) {
 	let mut first = redundant_import(&relay, &feed, &[]);
 	let mut exports: Vec<_> = (0..2)
 		.map(|_| {
-			export_with(
-				&subscribers,
-				&["--connect-version", LITE_07],
-				&["--stitch", "--follow", "10s", "--delay", "3s"],
-			)
+			let mut command = moq(&subscribers, &["--connect-version", LITE_07]);
+			command.env(
+				"RUST_LOG",
+				"warn,moq_mux::container::ts::follower=info,moq_mux::container::ts::handoff=debug",
+			);
+			spawn_export(command, TS, &["--stitch", "--follow", "10s", "--delay", "3s"])
 		})
 		.collect();
 	for export in &mut exports {
