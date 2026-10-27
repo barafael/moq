@@ -611,10 +611,28 @@ impl LiteSample {
 
 /// Feed a lite-07 announce stream through the stateful decoder, then check that our
 /// encoder's compression of what it resolved reads back as the same announcements.
+/// Every resolved path must also fit an uncompressed ANNOUNCE_START at that version.
 ///
 /// Returns whether anything resolved.
 pub fn announce_stream(data: &[u8]) -> bool {
 	let resolved = decode_announces(data, true);
+	let mut literal = Vec::new();
+	for announced in &resolved {
+		if let Announced::Start(suffix, hops) = announced {
+			literal.clear();
+			lite::AnnounceBroadcast::Active {
+				suffix: lite::PathRef::literal(suffix.clone()),
+				epoch: None,
+				hops: lite::HopsRef::literal(hops.clone()),
+				cost: Default::default(),
+			}
+			.encode(
+				&mut Encoder::new(&mut literal, lite::Version::Lite07.into()),
+				lite::Version::Lite07,
+			)
+			.expect("a resolved path fits a literal ANNOUNCE_START");
+		}
+	}
 	let echo = decode_announces(&encode_announces(&resolved, true), true);
 	assert_eq!(echo, resolved, "compression did not survive a round trip");
 	!resolved.is_empty()
@@ -1301,6 +1319,25 @@ pub fn seeds() -> Vec<Seed> {
 			data: encode_announces(&announced, true),
 		});
 	}
+	// A compressed join lands exactly on the UTF-8 byte limit, beside a full hop list.
+	let head = "a".repeat(Path::MAX_BYTES - "/é".len());
+	let hops = Hops::try_from(
+		(0..crate::origin::HopLimit::default().get())
+			.map(|n| hop((1 << 51) + n as u64))
+			.collect::<Vec<_>>(),
+	)
+	.expect("a full valid hop list");
+	seeds.push(Seed {
+		target: "announce",
+		kind: 0,
+		data: encode_announces(
+			&[
+				Announced::Start(Path::new(&head).unwrap(), hops.clone()),
+				Announced::Start(Path::new(&format!("{head}/é")).unwrap(), hops),
+			],
+			true,
+		),
+	});
 
 	// One of each length tag in both codecs, plus the all-ones forms that only the
 	// leading-ones codec accepts.

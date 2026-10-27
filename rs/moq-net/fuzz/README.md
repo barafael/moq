@@ -49,7 +49,7 @@ Beyond "does not panic":
   iteration order differs per instance (moq-lite SETUP, and draft-14/15, which unlike
   draft-16+ do not sort by key first).
 - A lite-07 announce stream our decoder accepts, recompressed by our encoder, resolves
-  to the same announcements.
+  to the same announcements, and every resolved path fits a literal ANNOUNCE\_START.
 - Setup Options a client accepts from its server, a server accepts from its client: only
   PATH and AUTHORITY are one-sided.
 - `Path::relative` inverts `Path::resolve`, and never produces a reference that walks

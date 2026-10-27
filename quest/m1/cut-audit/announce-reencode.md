@@ -31,7 +31,3 @@ them. On lite-06+ the encoder has already spent an announce id.
   asserts the sibling routes still arrive.
 
 Public API: none. Wire: none.
-
-## Related
-
-- [A compressed announce path never outgrows its literal form](/quest/m1/cut-audit/announce-path-bytes.md) - the receive-side bound
