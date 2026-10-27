@@ -83,7 +83,46 @@ performance confidence or speedup claim.
 The earlier candidate did not isolate the 805 ms boundary in transport logs;
 the deterministic controls establish a related nominal-acquisition/startup
 ownership failure, rather than claiming that exact transport trace as proven.
-The changed source still needs the documented real-surface and clean-head gates.
+The changed source at [d47aff597e](https://github.com/moq-dev/moq/commit/d47aff597ea023ea2128a741996cf8c8232ab5a1) still fails
+the real bufferbloat assertion: healthy program 1 paused **184.619362 ms**,
+against that reader's steady maximum **66.78136 ms + the unchanged 45 ms**.
+Healthy program 3 was 8.764922 ms; failed-leg program 2 was 996.872918 ms.
+The first viewer's assertion prevented collecting the second viewer's summary.
+The command was `just rs test -p moq-cli --test integration --run-ignored only
+-E 'test(=export::redundant_importers_switch_through_bufferbloat_on_lite_07)'
+--success-output immediate`. It failed after 45.731 s. No unchanged-source
+repeat or margin adjustment was made.
+
+Provenance: base [3c41865d73](https://github.com/moq-dev/moq/commit/3c41865d73b74caa0f74e315b70d9e51c5d44523), Rust 1.98.1
+(`48a229cea`, LLVM 22.1.8), x86_64 Linux 7.0.0-38-generic, 24 logical CPUs,
+warm builds after formatting and focused tests, shared-host load 9.74/3.94/3.40
+at the run's start (2026-10-27 09:28:02 UTC). Importer start diagnostics were
+09:28:27.927, 09:28:32.589, and 09:28:57.036 UTC. The retained full failing
+log's SHA-256 is `34d3d64e7dc74f6016172c6b3aa29f05a6e630f49b37a9f9a5012d9064bebcd2`.
+It contains aggregate gaps and importer phases only. Raw TS bytes, arrival
+offsets, and exporter stderr were test-local memory and were not persisted
+before the assertion panicked; there is no internal handoff trace to attribute
+the remaining hole to a clock, mux, transport, or scheduling cause.
+
+The same clean source head passed `just fix`, all 257 focused TS/jitter controls,
+and strict `just ci 3c41865d73b74caa0f74e315b70d9e51c5d44523` in 664 s
+(4,153 selected Rust tests passed, 61 skipped, plus selected feature, WebAssembly,
+JS, documentation, and tooling checks). All 36 existing jitter steering,
+acquisition, and handoff Criterion cases passed once via `just gh criterion
+-p moq-mux --bench jitter -- --test`; this is a smoke proof, not a CPU comparison.
+Static follow-up review found no actionable source issue and did not execute
+another runtime reproduction. None of these passes completes the failed Goal.
+
+Next capture: persist both viewers' TS bytes and arrival offsets plus per-program
+follow, prepare, commit, adopt, last-old and first-new timestamps before asserting.
+Isolate the failing boundary before changing scheduling or acquisition again;
+keep the impairment, fixed cadence margin, healthy assertion and failed-leg
+control. The extra bounded clock context preserves the proven backlog/startup/
+cancellation/EOF ownership cases, so it remains a reviewable draft checkpoint.
+The diagnostic capture is the next implementation step within this settled
+quest, without claiming a scheduler cause or relaxing the assertion. Product docs describe the
+implemented bounded behavior without promising the unproven no-hole outcome.
+
 No second full
 export, clock alignment, routing policy, startup policy, or arbitrary buffer
 budget is selected. The PR stays draft while this proof remains incomplete.

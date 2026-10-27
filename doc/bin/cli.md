@@ -485,10 +485,11 @@ arrives or the replacement goes, keeping the old publisher playing meanwhile,
 so even the default `--follow 0s` switches to a replacement that is still
 starting. After the catalog arrives, `--follow` bounds how long the old instance
 keeps feeding while the replacement acquires its clock and first usable media.
-The buffered old program drains before the marked switch. With a window covering
-acquisition, a healthy leg adds no output hole; after a failure the gap is what
-that leg did not deliver. Timestamps across epochs are not aligned. Without
-`--stitch` the export stays on the old publisher while it is up. Only lite-07 and moq-transport draft 17+ sessions carry epochs, so on the
+The buffered old program drains before the marked switch. This preserves the
+old backlog but does not guarantee uninterrupted output during acquisition.
+Timestamps across epochs are not aligned. Without `--stitch` the export stays
+on the old publisher while it is up. Only lite-07 and moq-transport draft 17+
+sessions carry epochs, so on the
 default version every return is a replacement. A failure other than the
 publisher leaving, such as a codec TS cannot carry, exits 1 at once. Only `ts`
 can mark a break, so the other formats refuse `--linger`, the released spelling
