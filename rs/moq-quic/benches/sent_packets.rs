@@ -7,7 +7,7 @@ use std::hint::black_box;
 use std::ops::{Bound, RangeBounds};
 
 use criterion::{Criterion, criterion_group, criterion_main};
-use moq_quic::fuzz::sent_packets;
+use moq_quic::fuzz::SentPackets;
 
 #[allow(
 	dead_code,
@@ -17,54 +17,12 @@ mod common;
 
 use common::ThreadCpu;
 
-/// The storage interface every design offers.
-trait Design: Default {
-	const NAME: &'static str;
-	fn insert(&mut self, pn: u64, size: u16, ack_eliciting: bool) -> bool;
-	fn remove(&mut self, pn: u64) -> bool;
-	fn get(&self, pn: u64) -> Option<u16>;
-	fn range(&self, range: impl RangeBounds<u64> + Clone) -> impl Iterator<Item = (u64, u16)> + '_;
-	fn has_in_flight(&self) -> bool;
-	fn drain(self) -> usize;
-}
-
-macro_rules! design {
-	($ty:ty, $name:literal) => {
-		impl Design for $ty {
-			const NAME: &'static str = $name;
-			fn insert(&mut self, pn: u64, size: u16, ack_eliciting: bool) -> bool {
-				<$ty>::insert(self, pn, size, ack_eliciting)
-			}
-			fn remove(&mut self, pn: u64) -> bool {
-				<$ty>::remove(self, pn)
-			}
-			fn get(&self, pn: u64) -> Option<u16> {
-				<$ty>::get(self, pn)
-			}
-			fn range(&self, range: impl RangeBounds<u64> + Clone) -> impl Iterator<Item = (u64, u16)> + '_ {
-				<$ty>::range(self, range)
-			}
-			fn has_in_flight(&self) -> bool {
-				<$ty>::has_in_flight(self)
-			}
-			fn drain(self) -> usize {
-				<$ty>::drain(self)
-			}
-		}
-	};
-}
-
-design!(sent_packets::BTree, "btree");
-design!(sent_packets::Chunked, "chunked");
-design!(sent_packets::Split, "split");
-design!(sent_packets::Capped, "capped");
-
 /// A packet that counts toward congestion control.
 const MTU: u16 = 1200;
 
 /// Acknowledges every tracked packet in `range` but `skip`, as ACK processing collects then
 /// removes them.
-fn ack<D: Design>(packets: &mut D, range: impl RangeBounds<u64> + Clone, skip: Option<u64>) {
+fn ack(packets: &mut SentPackets, range: impl RangeBounds<u64>, skip: Option<u64>) {
 	let acked: Vec<u64> = packets
 		.range(range)
 		.map(|(pn, _)| pn)
@@ -77,7 +35,7 @@ fn ack<D: Design>(packets: &mut D, range: impl RangeBounds<u64> + Clone, skip: O
 
 /// Declares lost every tracked packet at least `threshold` below `largest`, walking everything
 /// below `largest` as loss detection does.
-fn detect_loss<D: Design>(packets: &mut D, largest: u64, threshold: u64) {
+fn detect_loss(packets: &mut SentPackets, largest: u64, threshold: u64) {
 	let lost: Vec<u64> = packets
 		.range(0..largest)
 		.map(|(pn, _)| pn)
@@ -90,13 +48,13 @@ fn detect_loss<D: Design>(packets: &mut D, largest: u64, threshold: u64) {
 
 /// Steady state of a healthy 200 Mbps connection at about 100 ms RTT: each round sends a
 /// window, then the peer acknowledges all but the newest packet and one lost in the middle.
-fn typical_connection<D: Design>(c: &mut Criterion<ThreadCpu>) {
+fn typical_connection(c: &mut Criterion<ThreadCpu>) {
 	const WINDOW: u64 = 2048;
 	const ROUNDS: u64 = 128;
 
-	c.bench_function(&format!("sent_packets/typical_connection/{}", D::NAME), |b| {
+	c.bench_function("sent_packets/typical_connection", |b| {
 		b.iter(|| {
-			let mut packets = D::default();
+			let mut packets = SentPackets::default();
 			for round in 0..ROUNDS {
 				let base = round * WINDOW;
 				for offset in 0..WINDOW {
@@ -129,13 +87,13 @@ fn typical_connection<D: Design>(c: &mut Criterion<ThreadCpu>) {
 }
 
 /// The peer stops acknowledging while ACK-only packets keep going out behind a pinned flight.
-fn unacked_non_eliciting_tail<D: Design>(c: &mut Criterion<ThreadCpu>) {
+fn unacked_non_eliciting_tail(c: &mut Criterion<ThreadCpu>) {
 	const PINNED: u64 = 50;
 	const TAIL: u64 = 20_000;
 
-	c.bench_function(&format!("sent_packets/unacked_non_eliciting_tail/{}", D::NAME), |b| {
+	c.bench_function("sent_packets/unacked_non_eliciting_tail", |b| {
 		b.iter(|| {
-			let mut packets = D::default();
+			let mut packets = SentPackets::default();
 			for pn in 0..PINNED {
 				packets.insert(pn, MTU, true);
 			}
@@ -156,14 +114,14 @@ fn unacked_non_eliciting_tail<D: Design>(c: &mut Criterion<ThreadCpu>) {
 }
 
 /// The peer stops acknowledging, and each loss probe is ack-eliciting and never acknowledged.
-fn pto_probe_holes<D: Design>(c: &mut Criterion<ThreadCpu>) {
+fn pto_probe_holes(c: &mut Criterion<ThreadCpu>) {
 	const PINNED: u64 = 50;
 	const CYCLES: u64 = 8;
 	const TAIL_PER_CYCLE: u64 = 2_000;
 
-	c.bench_function(&format!("sent_packets/pto_probe_holes/{}", D::NAME), |b| {
+	c.bench_function("sent_packets/pto_probe_holes", |b| {
 		b.iter(|| {
-			let mut packets = D::default();
+			let mut packets = SentPackets::default();
 			for pn in 0..PINNED {
 				packets.insert(pn, MTU, true);
 			}
@@ -187,15 +145,15 @@ fn pto_probe_holes<D: Design>(c: &mut Criterion<ThreadCpu>) {
 
 /// A moq subscriber: mostly ACK-only packets, with an ack-eliciting one every 64 that draws the
 /// peer's ACK one round trip later. One ACK-only packet in 100 is lost.
-fn ack_only_receiver<D: Design>(c: &mut Criterion<ThreadCpu>) {
+fn ack_only_receiver(c: &mut Criterion<ThreadCpu>) {
 	const PACKETS: u64 = 65_536;
 	const ELICITING_EVERY: u64 = 64;
 	/// Packets sent in one round trip.
 	const RTT: u64 = 128;
 
-	c.bench_function(&format!("sent_packets/ack_only_receiver/{}", D::NAME), |b| {
+	c.bench_function("sent_packets/ack_only_receiver", |b| {
 		b.iter(|| {
-			let mut packets = D::default();
+			let mut packets = SentPackets::default();
 			let mut acked = 0;
 			for pn in 0..PACKETS {
 				let eliciting = pn % ELICITING_EVERY == 0;
@@ -223,15 +181,15 @@ fn ack_only_receiver<D: Design>(c: &mut Criterion<ThreadCpu>) {
 /// A bulk sender with a 16k-packet window, about 1.5 Gbps at 100 ms: each ACK covers two
 /// packets and repeats two older ranges, and two more go out. One packet in 1000 is lost, and
 /// one in 512 is ACK-only.
-fn bulk_sender<D: Design>(c: &mut Criterion<ThreadCpu>) {
+fn bulk_sender(c: &mut Criterion<ThreadCpu>) {
 	const WINDOW: u64 = 16_384;
 	const ACKS: u64 = 65_536;
 
-	c.bench_function(&format!("sent_packets/bulk_sender/{}", D::NAME), |b| {
+	c.bench_function("sent_packets/bulk_sender", |b| {
 		b.iter(|| {
-			let mut packets = D::default();
+			let mut packets = SentPackets::default();
 			let mut next = 0;
-			let mut send = |packets: &mut D| {
+			let mut send = |packets: &mut SentPackets| {
 				let eliciting = next % 512 != 511;
 				packets.insert(next, if eliciting { MTU } else { 0 }, eliciting);
 				next += 1;
@@ -259,19 +217,12 @@ fn bulk_sender<D: Design>(c: &mut Criterion<ThreadCpu>) {
 	});
 }
 
-fn designs<D: Design>(c: &mut Criterion<ThreadCpu>) {
-	typical_connection::<D>(c);
-	unacked_non_eliciting_tail::<D>(c);
-	pto_probe_holes::<D>(c);
-	ack_only_receiver::<D>(c);
-	bulk_sender::<D>(c);
-}
-
 fn benches(c: &mut Criterion<ThreadCpu>) {
-	designs::<sent_packets::BTree>(c);
-	designs::<sent_packets::Chunked>(c);
-	designs::<sent_packets::Split>(c);
-	designs::<sent_packets::Capped>(c);
+	typical_connection(c);
+	unacked_non_eliciting_tail(c);
+	pto_probe_holes(c);
+	ack_only_receiver(c);
+	bulk_sender(c);
 }
 
 criterion_group! {

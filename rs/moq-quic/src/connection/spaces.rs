@@ -1,6 +1,6 @@
 use std::{
 	cmp,
-	collections::{BTreeMap, VecDeque},
+	collections::VecDeque,
 	mem,
 	ops::{Index, IndexMut, Range},
 };
@@ -11,6 +11,7 @@ use tracing::trace;
 
 use super::assembler::Assembler;
 use super::sent_packets::SentPackets;
+use super::slots::Slots;
 use crate::{
 	Dir, Duration, Instant, SocketAddr, StreamId, TransportError, cid_queue::CidQueue, congestion,
 	connection::StreamsState, crypto::Keys, frame, packet::SpaceId, range_set::ArrayRangeSet, shared::IssuedCid,
@@ -37,7 +38,7 @@ pub(super) struct PacketSpace {
 	pub(super) sent_packets: SentPackets,
 	/// Packets that were deemed lost
 	// Older packets are regularly removed in `Connection::drain_lost_packets`.
-	pub(super) lost_packets: BTreeMap<u64, LostPacket>,
+	pub(super) lost_packets: Slots<LostPacket>,
 	/// Number of explicit congestion notification codepoints seen on incoming packets
 	pub(super) ecn_counters: frame::EcnCounts,
 	/// Recent ECN counters sent by the peer in ACK frames
@@ -81,7 +82,7 @@ impl PacketSpace {
 			largest_acked_packet: None,
 			largest_acked_packet_sent: now,
 			sent_packets: SentPackets::default(),
-			lost_packets: BTreeMap::new(),
+			lost_packets: Slots::default(),
 			ecn_counters: frame::EcnCounts::ZERO,
 			ecn_feedback: frame::EcnCounts::ZERO,
 

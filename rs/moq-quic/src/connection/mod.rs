@@ -70,10 +70,9 @@ pub(crate) mod qlog;
 
 mod send_buffer;
 
-mod ring;
 mod sent_packets;
 #[cfg(feature = "fuzz")]
-pub use sent_packets::bench as sent_packets_bench;
+pub use sent_packets::Bench as BenchSentPackets;
 mod slots;
 mod spaces;
 #[cfg(any(test, feature = "fuzz"))]
@@ -1575,19 +1574,20 @@ impl Connection {
 		if ack.largest >= self.spaces[space].next_packet_number {
 			return Err(TransportError::PROTOCOL_VIOLATION("unsent packet acked"));
 		}
-		let new_largest = {
+		// Whether the largest acknowledged packet is new, and whether we still know when it was
+		// sent. A forgotten ACK-only packet, one declared lost, or a skipped number has no send
+		// time, so it yields no RTT sample.
+		let (new_largest, largest_tracked) = {
 			let space = &mut self.spaces[space];
 			if space.largest_acked_packet.is_none_or(|pn| ack.largest > pn) {
 				space.largest_acked_packet = Some(ack.largest);
-				if let Some(info) = space.sent_packets.get(ack.largest) {
-					// This should always succeed, but a misbehaving peer might ACK a packet we
-					// haven't sent. At worst, that will result in us spuriously reducing the
-					// congestion window.
+				let info = space.sent_packets.get(ack.largest);
+				if let Some(info) = info {
 					space.largest_acked_packet_sent = info.time_sent;
 				}
-				true
+				(true, info.is_some())
 			} else {
-				false
+				(false, false)
 			}
 		};
 
@@ -1637,7 +1637,7 @@ impl Connection {
 			}
 		}
 
-		if new_largest && ack_eliciting_acked {
+		if largest_tracked && ack_eliciting_acked {
 			let ack_delay = if space != SpaceId::Data {
 				Duration::from_micros(0)
 			} else {
@@ -1703,11 +1703,10 @@ impl Connection {
 			let spurious_losses: Vec<u64> = lost_packets
 				.range(range.clone())
 				.map(|(pn, _info)| pn)
-				.copied()
 				.collect();
 
 			for pn in spurious_losses {
-				lost_packets.remove(&pn);
+				lost_packets.remove(pn);
 			}
 		}
 
@@ -1725,8 +1724,13 @@ impl Connection {
 	fn drain_lost_packets(&mut self, now: Instant, space: SpaceId) {
 		let two_pto = 2 * self.path.rtt.pto_base();
 
+		// Packets are sent, and so declared lost, in send-time order.
 		let lost_packets = &mut self.spaces[space].lost_packets;
-		lost_packets.retain(|_pn, info| now.saturating_duration_since(info.time_sent) <= two_pto);
+		while let Some((_, info)) = lost_packets.first()
+			&& now.saturating_duration_since(info.time_sent) > two_pto
+		{
+			lost_packets.pop_first();
+		}
 	}
 
 	/// Process a new ECN block from an in-order ACK
@@ -1949,7 +1953,7 @@ impl Connection {
 				{
 					let new_burst = packet
 						.checked_sub(1)
-						.is_none_or(|prev| !self.spaces[pn_space].lost_packets.contains_key(&prev));
+						.is_none_or(|prev| self.spaces[pn_space].lost_packets.get(prev).is_none());
 					lost.push(congestion::Lost {
 						sent: info.time_sent,
 						bytes: info.size,

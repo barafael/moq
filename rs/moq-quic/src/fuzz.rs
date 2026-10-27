@@ -10,7 +10,8 @@
 //! `fuzz/fuzz_targets/`. Compiled only under `cfg(test)` or the `fuzz` feature, so none
 //! of this is part of the published API. See `fuzz/README.md` for the workflow.
 //!
-//! [`Plaintext`] is the crypto the `connection` target and the benchmarks run on.
+//! [`Plaintext`] is the crypto the `connection` target and the benchmarks run on, and
+//! [`SentPackets`] is the sent-packet storage its benchmark drives.
 
 mod connection;
 mod plaintext;
@@ -33,9 +34,8 @@ use crate::{
 
 pub use connection::connection;
 pub use plaintext::Plaintext;
-/// `SentPackets` behind packets of a size and an ACK-eliciting flag, for the benches.
 #[cfg(feature = "fuzz")]
-pub use crate::connection::sent_packets_bench as sent_packets;
+pub use crate::connection::BenchSentPackets as SentPackets;
 
 /// One fuzz target body: it returns whether the input got past the first parse, which
 /// is what [`seeds`] is checked against.
