@@ -10986,7 +10986,7 @@ pub(super) mod test {
 
 	/// A source revising its PMT without end holds only its live routes: each revision ends a
 	/// decoded or verbatim route, refuses one for a lost PCR, or rewrites the program descriptors,
-	/// and none leaves its track's timeline or catalog entry behind.
+	/// and none leaves its track's HLS records or catalog entry behind.
 	#[test]
 	fn pmt_churn_keeps_flat_state() {
 		use crate::container::ts::psi::{Es, Pmt};
@@ -10995,7 +10995,9 @@ pub(super) mod test {
 		let mut broadcast = moq_net::broadcast::Info::new().produce();
 		let catalog = crate::catalog::Producer::new(
 			&mut broadcast,
-			crate::catalog::Config::default().with_catalog(crate::catalog::hang::Catalog::<Ext>::default()),
+			crate::catalog::Config::default()
+				.with_catalog(crate::catalog::hang::Catalog::<Ext>::default())
+				.with_hls(crate::hls::Config::default()),
 		)
 		.unwrap();
 		let mut import = super::Import::new(broadcast, catalog.reserve());
@@ -11023,8 +11025,7 @@ pub(super) mod test {
 		let state = |import: &super::Import<Ext>| {
 			let snapshot = catalog.snapshot();
 			(
-				catalog.timeline().len(),
-				snapshot.archive.map_or(0, |archive| archive.timelines.len()),
+				catalog.hls_tracks(),
 				snapshot.ext.mpegts.tracks.len(),
 				import.streams.len() + import.sections.len() + import.listed.len() + import.retired_stats.len(),
 			)
