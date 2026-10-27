@@ -1,6 +1,6 @@
 {
-  "generated": "2026-10-27T14:16:08Z",
-  "run_url": "https://github.com/moq-dev/moq/actions/runs/40517935865",
+  "generated": "2026-10-27T18:44:20Z",
+  "run_url": "https://github.com/moq-dev/moq/actions/runs/40561236468",
   "registry": "https://raw.githubusercontent.com/englishm/moq-interop-runner/main/implementations.json",
   "pairs": [
     "rust → rust",
@@ -914,7 +914,7 @@
           "status": "FAIL",
           "pub_version": "moq-transport-14",
           "sub_version": "moq-transport-16",
-          "reason": "SUBSCRIBE_OK for 0.avc3, only headless groups: subscribe error: id=4 broadcast=smoke-rust-5098-6541.hang track=0.avc3 error=publish done: status=0x0 reason=Write after stream complete or reset",
+          "reason": "SUBSCRIBE_OK for 0.avc3, only headless groups: subscribe error: id=4 broadcast=smoke-rust-4908-27212.hang track=0.avc3 error=publish done: status=0x0 reason=Write after stream complete or reset",
           "sub_log": "https_fb.mvfst.net_9448_moq-relay/rust-js-web.log",
           "pub_log": "https_fb.mvfst.net_9448_moq-relay/pub-rust.log"
         },
@@ -922,7 +922,7 @@
           "status": "FAIL",
           "pub_version": "moq-transport-14",
           "sub_version": "moq-transport-16",
-          "reason": "SUBSCRIBE_OK for 0.avc3, only headless groups: subscribe error: id=4 broadcast=smoke-rust-5098-6541.hang track=0.avc3 error=publish done: status=0x0 reason=Write after stream complete or reset",
+          "reason": "SUBSCRIBE_OK for 0.avc3, only headless groups: subscribe error: id=4 broadcast=smoke-rust-4908-27212.hang track=0.avc3 error=publish done: status=0x0 reason=Write after stream complete or reset",
           "sub_log": "https_fb.mvfst.net_9448_moq-relay/rust-js-bun.log",
           "pub_log": "https_fb.mvfst.net_9448_moq-relay/pub-rust.log"
         },
@@ -994,7 +994,7 @@
           "status": "FAIL",
           "pub_version": "",
           "sub_version": "",
-          "reason": "not connected: Failed to establish a connection to https://quichemoq.dev/: net::ERR_QUIC_PROTOCOL_ERROR.QUIC_NETWORK_IDLE_TIMEOUT (No recent network activity after 4001891us. Timeout:4s num_undecryptable_packets: 0 {}).",
+          "reason": "not connected: Failed to establish a connection to https://quichemoq.dev/: net::ERR_QUIC_PROTOCOL_ERROR.QUIC_NETWORK_IDLE_TIMEOUT (No recent network activity after 4001830us. Timeout:4s num_undecryptable_packets: 0 {}).",
           "sub_log": "https_quichemoq.dev_443/rust-js-web.log",
           "pub_log": "https_quichemoq.dev_443/pub-rust.log"
         },
@@ -1018,7 +1018,7 @@
           "status": "FAIL",
           "pub_version": "",
           "sub_version": "",
-          "reason": "not connected: Failed to establish a connection to https://quichemoq.dev/: net::ERR_QUIC_PROTOCOL_ERROR.QUIC_NETWORK_IDLE_TIMEOUT (No recent network activity after 4002554us. Timeout:4s num_undecryptable_packets: 0 {}).",
+          "reason": "not connected: Failed to establish a connection to https://quichemoq.dev/: net::ERR_QUIC_PROTOCOL_ERROR.QUIC_NETWORK_IDLE_TIMEOUT (No recent network activity after 4002622us. Timeout:4s num_undecryptable_packets: 0 {}).",
           "sub_log": "https_quichemoq.dev_443/js-web-js-web.log",
           "pub_log": "https_quichemoq.dev_443/pub-js-web.log"
         },

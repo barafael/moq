@@ -8,9 +8,9 @@
 [page] announced: broadcast=moqtail/ch02 active=true
 [page] announced: broadcast=moqtail/testsrc active=true
 [page] announced: broadcast=moqtail/ch03 active=true
-[page] announced: broadcast=smoke-js-web-5098-22779.hang active=true
-[page] subscribe start: id=2 broadcast=smoke-js-web-5098-22779.hang track=catalog.json
 [page] announced: broadcast=moqtail/ch00 active=true
-[page] subscribe written: id=2 broadcast=smoke-js-web-5098-22779.hang track=catalog.json
-[page] subscribe ok: id=2 broadcast=smoke-js-web-5098-22779.hang track=catalog.json
-decoded 0 frames from smoke-js-web-5098-22779.hang (vite)
+[page] announced: broadcast=smoke-js-web-4908-15789.hang active=true
+[page] subscribe start: id=2 broadcast=smoke-js-web-4908-15789.hang track=catalog.json
+[page] subscribe written: id=2 broadcast=smoke-js-web-4908-15789.hang track=catalog.json
+[page] subscribe ok: id=2 broadcast=smoke-js-web-4908-15789.hang track=catalog.json
+decoded 0 frames from smoke-js-web-4908-15789.hang (vite)
