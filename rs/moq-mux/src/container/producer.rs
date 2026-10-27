@@ -58,7 +58,7 @@ pub struct Producer<C: Container, R = ()> {
 	/// Set by [`Self::seek`] and consumed on the next group creation.
 	pending_sequence: Option<u64>,
 
-	/// Reports each written group into this rendition's HLS records, when the catalog enabled them.
+	/// Reports each written group into this rendition's HLS records, unless the catalog disabled them.
 	recorder: Option<crate::hls::Recorder>,
 
 	/// The furthest presentation point written, i.e. `max(timestamp + duration)`. Reported to

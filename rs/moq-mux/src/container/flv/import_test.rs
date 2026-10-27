@@ -89,9 +89,8 @@ fn synth_flv() -> Vec<u8> {
 
 /// A rendition must never be advertised when its media producer could not be built.
 ///
-/// Publishing the media producer is fallible (with HLS records enabled it mints the track's record
-/// track, which can collide), so publishing the catalog entry first would
-/// leave consumers a rendition that is announced but has no producer behind it and is therefore
+/// Publishing the media producer is fallible (it mints the track's HLS record track, which can
+/// collide), so publishing the catalog entry first would leave consumers a rendition that is announced but has no producer behind it and is therefore
 /// never served.
 #[tokio::test(start_paused = true)]
 async fn rendition_is_not_published_when_the_media_track_fails() {
@@ -110,8 +109,7 @@ async fn rendition_is_not_published_when_the_media_track_fails() {
 	};
 
 	let mut broadcast = moq_net::broadcast::Info::new().produce();
-	let config = crate::catalog::Config::default().with_hls(crate::hls::Config::default());
-	let catalog = crate::catalog::Producer::new(&mut broadcast, config).unwrap();
+	let catalog = crate::catalog::Producer::new(&mut broadcast, crate::catalog::Config::default()).unwrap();
 
 	// Squat the rendition's HLS record track, so enrolling it (and with it building its media
 	// producer) fails. The handle must stay alive: the broadcast tracks names weakly, so

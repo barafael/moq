@@ -1,11 +1,11 @@
-//! Opt-in HLS segment records: where each of a rendition's HLS segments starts.
+//! HLS segment records: where each of a rendition's HLS segments starts.
 //!
-//! Nothing here runs unless the application enables it with
-//! [`catalog::Config::with_hls`](crate::catalog::Config::with_hls). Then every video and audio
-//! rendition the catalog mints gets a track of [`hang::hls::Record`]s, one per segment, and its
-//! catalog entry gets an [`hls`](hang::catalog::Hls) field naming that track and the nominal
-//! segment duration. An edge renders HLS (or DASH) playlists from the records without subscribing
-//! to media.
+//! Every video and audio rendition a catalog mints gets a track of [`hang::hls::Record`]s, one per
+//! segment, and its catalog entry gets an [`hls`](hang::catalog::Hls) field naming that track and
+//! the nominal segment duration, unless the application disables them with
+//! [`catalog::Config::with_hls`](crate::catalog::Config::with_hls). An edge renders HLS (or DASH)
+//! playlists from the records without subscribing to media. A record track nobody subscribes to
+//! costs only the in-process bookkeeping.
 //!
 //! ## Segments
 //!
@@ -354,7 +354,7 @@ impl Iterator for Segmenter {
 }
 
 /// Publishes one track's records onto its HLS record track, for a publisher that segments
-/// itself; [`catalog::Config::with_hls`](crate::catalog::Config::with_hls) records them for you.
+/// itself; a [`catalog::Producer`](crate::catalog::Producer) records them for you.
 ///
 /// Records must be pushed in sequence order, starting at the window's next index.
 pub struct Producer {

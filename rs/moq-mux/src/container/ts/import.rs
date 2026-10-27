@@ -10977,9 +10977,7 @@ pub(super) mod test {
 		let mut broadcast = moq_net::broadcast::Info::new().produce();
 		let catalog = crate::catalog::Producer::new(
 			&mut broadcast,
-			crate::catalog::Config::default()
-				.with_catalog(crate::catalog::hang::Catalog::<Ext>::default())
-				.with_hls(crate::hls::Config::default()),
+			crate::catalog::Config::default().with_catalog(crate::catalog::hang::Catalog::<Ext>::default()),
 		)
 		.unwrap();
 		let mut import = super::Import::new(broadcast, catalog.reserve());

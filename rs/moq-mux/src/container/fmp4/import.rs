@@ -156,7 +156,7 @@ struct Passthrough<E: crate::catalog::hang::CatalogExt> {
 	/// The latest group's start, which the next group may not start below.
 	start: Option<Timestamp>,
 
-	// Reports this track's groups into its HLS records, when enabled. Passthrough writes groups by
+	// Reports this track's groups into its HLS records, unless disabled. Passthrough writes groups by
 	// hand (no `container::Producer`), so the recorder is fed directly rather than through
 	// `with_recorder`.
 	recorder: Option<crate::hls::Recorder>,
