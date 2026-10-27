@@ -9,7 +9,7 @@ pkg/
 result
 **/CHANGELOG.md
 
-# API Extractor reports, generated and checked by each package's build.
+# API reports, generated and checked by each package's build.
 js/*/api/*.api.md
 
 # IETF drafts are kramdown-rfc markdown, not CommonMark; linted by `just

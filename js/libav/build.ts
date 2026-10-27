@@ -60,4 +60,4 @@ if (Bun.which("nix")) {
 }
 
 // Its API is the hand-written index.d.ts, reported like every other package's.
-checkReports(dir);
+await checkReports(dir);

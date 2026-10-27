@@ -145,7 +145,7 @@ if (messages.length > 0) {
 
 if (published) {
 	console.log("🔍 Checking declarations and API reports...");
-	checkReports(".");
+	await checkReports(".");
 }
 
 console.log("📦 Package built successfully in dist/");

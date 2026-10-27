@@ -11,8 +11,11 @@ const drafts = syncDrafts();
 
 // The JS API reference under lib/js/api/, generated the same way from the
 // packages' TSDoc. TypeDoc runs in its own process, since it holds the whole
-// program in memory and needs its own TypeScript.
-execFileSync("bun", [fileURLToPath(new URL("./api/index.ts", import.meta.url))], { stdio: "inherit" });
+// program in memory and needs its own TypeScript. A build always regenerates
+// it; the dev server reuses the last one until a package changes.
+const generator = fileURLToPath(new URL("./api/index.ts", import.meta.url));
+const build = process.argv.slice(2).includes("build");
+execFileSync("bun", build ? [generator] : [generator, "--cached"], { stdio: "inherit" });
 const reference = (items: DefaultTheme.SidebarItem[], parent?: string): DefaultTheme.SidebarItem[] =>
 	items
 		// A package with several entrypoints lists its main one again under itself.

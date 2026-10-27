@@ -1,6 +1,6 @@
 // Renders the JS API reference from the TSDoc in every published `@moq/*` package's source:
 // one TypeDoc run over all of them, written as VitePress markdown with a sidebar.
-import { readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Application, type Reflection, type ReflectionGroup, ReflectionKind, type TypeDocOptions } from "typedoc";
@@ -141,12 +141,36 @@ if (import.meta.main) {
 			`${here}/package.json must declare exactly the published packages: missing [${missing}], extra [${extra}]`,
 		);
 	}
-	const started = performance.now();
-	await generate({
-		root,
-		packages: [...published.values()],
-		out: join(here, "../../lib/js/api"),
-		docs: join(here, "../.."),
-	});
-	console.log(`API reference: ${published.size} packages in ${((performance.now() - started) / 1000).toFixed(1)}s`);
+	const out = join(here, "../../lib/js/api");
+	// `--cached` reuses the last reference while no input has changed since, unless
+	// MOQ_API_REFERENCE=regenerate; the dev server passes it, a build never does.
+	const stamp = join(out, ".inputs");
+	const inputs = newest([...published.values(), here]);
+	const cached = process.argv.includes("--cached") && process.env.MOQ_API_REFERENCE !== "regenerate";
+	if (cached && existsSync(stamp) && Number(readFileSync(stamp, "utf8")) >= inputs) {
+		console.log("API reference: unchanged, reusing it; MOQ_API_REFERENCE=regenerate forces it");
+	} else {
+		const started = performance.now();
+		await generate({ root, packages: [...published.values()], out, docs: join(here, "../..") });
+		writeFileSync(stamp, String(inputs));
+		console.log(
+			`API reference: ${published.size} packages in ${((performance.now() - started) / 1000).toFixed(1)}s`,
+		);
+	}
+}
+
+// The newest modification time of any file or directory under `dirs`, which a deleted file
+// changes too, skipping installs and build output.
+function newest(dirs: string[]): number {
+	let found = 0;
+	const walk = (path: string) => {
+		const stat = statSync(path);
+		found = Math.max(found, stat.mtimeMs);
+		if (!stat.isDirectory()) return;
+		for (const entry of readdirSync(path)) {
+			if (!["node_modules", "dist", "result", ".vite", "jsr.json"].includes(entry)) walk(join(path, entry));
+		}
+	};
+	for (const dir of dirs) walk(dir);
+	return found;
 }
