@@ -108,7 +108,3 @@ See the [epic](/quest/m1/unbounded-groups/README.md) for the decisions.
 Public API: removes `MAX_GROUP_FRAMES`, and `MAX_CACHE_BYTES` stops capping
 groups. A reader that used to see `GroupTooLarge` now refills or sees
 `Evicted`. Wire: none beyond the amended frame offset rule.
-
-## Required
-
-- [Transport frame offsets](/quest/m1/transport-frame-offsets.md) - the lite draft lets a refill start at the missing frame without holding the frames below it
