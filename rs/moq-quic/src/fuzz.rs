@@ -33,6 +33,9 @@ use crate::{
 
 pub use connection::connection;
 pub use plaintext::Plaintext;
+/// `SentPackets` behind packets of a size and an ACK-eliciting flag, for the benches.
+#[cfg(feature = "fuzz")]
+pub use crate::connection::sent_packets_bench as sent_packets;
 
 /// One fuzz target body: it returns whether the input got past the first parse, which
 /// is what [`seeds`] is checked against.
