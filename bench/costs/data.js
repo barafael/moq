@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1793025822852,
+  "lastUpdate": 1793109776055,
   "repoUrl": "https://github.com/moq-dev/moq",
   "entries": {
     "MoQ nightly costs": [
@@ -117939,6 +117939,19454 @@ window.BENCHMARK_DATA = {
             "range": "57.4..57.45",
             "unit": "ns",
             "extra": "Mean nanoseconds per iteration; 8810d736518185eb813dc8758f8f95f31d50cc9e"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Luke Curley",
+            "username": "kixelated",
+            "email": "kixelated@gmail.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d",
+          "message": "feat(net)!: drop moq-transport drafts 14 through 17 (#6753)\n\nCo-authored-by: Claude Opus 5.5 <noreply@anthropic.com>",
+          "timestamp": "2026-10-27T12:02:14Z",
+          "url": "https://github.com/moq-dev/moq/commit/22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+        },
+        "date": 1793109775648,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "bench-js/js/arrivals/handles=1/backlog=0/ns_per_handle_write",
+            "value": 572,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/arrivals/handles=1/backlog=256/ns_per_handle_write",
+            "value": 212,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/arrivals/handles=1/backlog=4096/ns_per_handle_write",
+            "value": 365,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/arrivals/handles=4/backlog=0/ns_per_handle_write",
+            "value": 180,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/arrivals/handles=4/backlog=256/ns_per_handle_write",
+            "value": 153,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/arrivals/handles=4/backlog=4096/ns_per_handle_write",
+            "value": 165,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/arrivals/handles=16/backlog=0/ns_per_handle_write",
+            "value": 168,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/arrivals/handles=16/backlog=256/ns_per_handle_write",
+            "value": 105,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/arrivals/handles=16/backlog=4096/ns_per_handle_write",
+            "value": 114,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=1/frames=120/warmup=0ms/ns_per_callback",
+            "value": 311.6,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=1/frames=120/warmup=80ms/ns_per_callback",
+            "value": 225,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=1/frames=960/warmup=0ms/ns_per_callback",
+            "value": 121.6,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=1/frames=960/warmup=80ms/ns_per_callback",
+            "value": 99.3,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=1/frames=2880/warmup=0ms/ns_per_callback",
+            "value": 87.7,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=1/frames=2880/warmup=80ms/ns_per_callback",
+            "value": 72.7,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=16/frames=120/warmup=0ms/ns_per_callback",
+            "value": 43.5,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=16/frames=120/warmup=80ms/ns_per_callback",
+            "value": 39.3,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=16/frames=960/warmup=0ms/ns_per_callback",
+            "value": 35,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=16/frames=960/warmup=80ms/ns_per_callback",
+            "value": 32,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=16/frames=2880/warmup=0ms/ns_per_callback",
+            "value": 32.7,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=16/frames=2880/warmup=80ms/ns_per_callback",
+            "value": 45.4,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=64/frames=120/warmup=0ms/ns_per_callback",
+            "value": 35.9,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=64/frames=120/warmup=80ms/ns_per_callback",
+            "value": 41.9,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=64/frames=960/warmup=0ms/ns_per_callback",
+            "value": 49,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=64/frames=960/warmup=80ms/ns_per_callback",
+            "value": 50.5,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=64/frames=2880/warmup=0ms/ns_per_callback",
+            "value": 30.7,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/audio-warmup/decoders=64/frames=2880/warmup=80ms/ns_per_callback",
+            "value": 30.7,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=unscoped/routes=8/observers=1/update_us",
+            "value": 309.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=unscoped/routes=8/observers=8/update_us",
+            "value": 689.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=unscoped/routes=8/observers=32/update_us",
+            "value": 1885.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=unscoped/routes=32/observers=1/update_us",
+            "value": 200.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=unscoped/routes=32/observers=8/update_us",
+            "value": 1363.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=unscoped/routes=32/observers=32/update_us",
+            "value": 5805.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=unscoped/routes=128/observers=1/update_us",
+            "value": 732.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=unscoped/routes=128/observers=8/update_us",
+            "value": 6243.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=unscoped/routes=128/observers=32/update_us",
+            "value": 22527.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=distinct-scopes/routes=8/observers=1/update_us",
+            "value": 99.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=distinct-scopes/routes=8/observers=8/update_us",
+            "value": 397.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=distinct-scopes/routes=8/observers=32/update_us",
+            "value": 1456.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=distinct-scopes/routes=32/observers=1/update_us",
+            "value": 224.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=distinct-scopes/routes=32/observers=8/update_us",
+            "value": 1304.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=distinct-scopes/routes=32/observers=32/update_us",
+            "value": 4585.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=distinct-scopes/routes=128/observers=1/update_us",
+            "value": 606.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=distinct-scopes/routes=128/observers=8/update_us",
+            "value": 4311.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=distinct-scopes/routes=128/observers=32/update_us",
+            "value": 16398.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=producer-scopes/routes=8/observers=1/update_us",
+            "value": 52.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=producer-scopes/routes=8/observers=8/update_us",
+            "value": 409.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=producer-scopes/routes=8/observers=32/update_us",
+            "value": 1344.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=producer-scopes/routes=32/observers=1/update_us",
+            "value": 143.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=producer-scopes/routes=32/observers=8/update_us",
+            "value": 1100.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=producer-scopes/routes=32/observers=32/update_us",
+            "value": 4404,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=producer-scopes/routes=128/observers=1/update_us",
+            "value": 583.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=producer-scopes/routes=128/observers=8/update_us",
+            "value": 4207.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=producer-scopes/routes=128/observers=32/update_us",
+            "value": 16439.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=rooted-producers/routes=8/observers=1/update_us",
+            "value": 60.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=rooted-producers/routes=8/observers=8/update_us",
+            "value": 345.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=rooted-producers/routes=8/observers=32/update_us",
+            "value": 1345.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=rooted-producers/routes=32/observers=1/update_us",
+            "value": 189.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=rooted-producers/routes=32/observers=8/update_us",
+            "value": 1186.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=rooted-producers/routes=32/observers=32/update_us",
+            "value": 4673,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=rooted-producers/routes=128/observers=1/update_us",
+            "value": 671.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=rooted-producers/routes=128/observers=8/update_us",
+            "value": 4390.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=rooted-producers/routes=128/observers=32/update_us",
+            "value": 18930.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=8/observers=1/demand_update_us",
+            "value": 16.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=8/observers=8/demand_update_us",
+            "value": 9.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=8/observers=32/demand_update_us",
+            "value": 8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=32/observers=1/demand_update_us",
+            "value": 8.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=32/observers=8/demand_update_us",
+            "value": 6.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=32/observers=32/demand_update_us",
+            "value": 6.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=128/observers=1/demand_update_us",
+            "value": 10.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=128/observers=8/demand_update_us",
+            "value": 9.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=128/observers=32/demand_update_us",
+            "value": 12.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=8/listings=1/create_remove_and_read_us",
+            "value": 10.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=8/listings=8/create_remove_and_read_us",
+            "value": 20.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=8/listings=32/create_remove_and_read_us",
+            "value": 49.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=128/listings=1/create_remove_and_read_us",
+            "value": 8.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=128/listings=8/create_remove_and_read_us",
+            "value": 8.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=128/listings=32/create_remove_and_read_us",
+            "value": 34.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=1024/listings=1/create_remove_and_read_us",
+            "value": 7.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=1024/listings=8/create_remove_and_read_us",
+            "value": 11.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/tracks=1024/listings=32/create_remove_and_read_us",
+            "value": 20.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=unpinned/routes=8/readers=1/update_and_read_us",
+            "value": 132.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=unpinned/routes=8/readers=8/update_and_read_us",
+            "value": 46.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=unpinned/routes=8/readers=32/update_and_read_us",
+            "value": 48.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=unpinned/routes=32/readers=1/update_and_read_us",
+            "value": 25,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=unpinned/routes=32/readers=8/update_and_read_us",
+            "value": 92,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=unpinned/routes=32/readers=32/update_and_read_us",
+            "value": 48.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=unpinned/routes=128/readers=1/update_and_read_us",
+            "value": 24.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=unpinned/routes=128/readers=8/update_and_read_us",
+            "value": 33.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=unpinned/routes=128/readers=32/update_and_read_us",
+            "value": 46.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=pinned/routes=8/readers=1/update_and_read_us",
+            "value": 17.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=pinned/routes=8/readers=8/update_and_read_us",
+            "value": 12.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=pinned/routes=8/readers=32/update_and_read_us",
+            "value": 27.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=pinned/routes=32/readers=1/update_and_read_us",
+            "value": 11.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=pinned/routes=32/readers=8/update_and_read_us",
+            "value": 13.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=pinned/routes=32/readers=32/update_and_read_us",
+            "value": 24.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=pinned/routes=128/readers=1/update_and_read_us",
+            "value": 18.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=pinned/routes=128/readers=8/update_and_read_us",
+            "value": 29.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/request=pinned/routes=128/readers=32/update_and_read_us",
+            "value": 36.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/auth=fetch/patterns=8/fetches=1/grant_update_us",
+            "value": 6.78,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/auth=fetch/patterns=8/fetches=8/grant_update_us",
+            "value": 21.15,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/auth=fetch/patterns=8/fetches=32/grant_update_us",
+            "value": 73.29,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/auth=fetch/patterns=32/fetches=1/grant_update_us",
+            "value": 8.01,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/auth=fetch/patterns=32/fetches=8/grant_update_us",
+            "value": 66.54,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/auth=fetch/patterns=32/fetches=32/grant_update_us",
+            "value": 265.69,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/auth=fetch/patterns=128/fetches=1/grant_update_us",
+            "value": 35.64,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/auth=fetch/patterns=128/fetches=8/grant_update_us",
+            "value": 260.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/auth=fetch/patterns=128/fetches=32/grant_update_us",
+            "value": 1079.32,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/restart=restart/paths=8/readers=1/update_us",
+            "value": 463.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/restart=restart/paths=8/readers=8/update_us",
+            "value": 141.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/restart=restart/paths=8/readers=32/update_us",
+            "value": 175.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/restart=restart/paths=32/readers=1/update_us",
+            "value": 272.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/restart=restart/paths=32/readers=8/update_us",
+            "value": 239.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/restart=restart/paths=32/readers=32/update_us",
+            "value": 288.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/restart=restart/paths=128/readers=1/update_us",
+            "value": 749.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/restart=restart/paths=128/readers=8/update_us",
+            "value": 542.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/restart=restart/paths=128/readers=32/update_us",
+            "value": 610.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/subscriber=cache/announcements=8/consumers=8/update_and_consume_us",
+            "value": 4.11,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/subscriber=cache/announcements=8/consumers=32/update_and_consume_us",
+            "value": 2.98,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/subscriber=cache/announcements=8/consumers=128/update_and_consume_us",
+            "value": 8.58,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/subscriber=cache/announcements=32/consumers=8/update_and_consume_us",
+            "value": 1.75,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/subscriber=cache/announcements=32/consumers=32/update_and_consume_us",
+            "value": 1.39,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/subscriber=cache/announcements=32/consumers=128/update_and_consume_us",
+            "value": 2.05,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/subscriber=cache/announcements=128/consumers=8/update_and_consume_us",
+            "value": 1.29,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/subscriber=cache/announcements=128/consumers=32/update_and_consume_us",
+            "value": 1.13,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/subscriber=cache/announcements=128/consumers=128/update_and_consume_us",
+            "value": 1.88,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/alternation=alternation/announcements=8/consumers=1/duplicates=0/select_us",
+            "value": 5.07,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/alternation=alternation/announcements=8/consumers=8/duplicates=0/select_us",
+            "value": 20.48,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/alternation=alternation/announcements=8/consumers=32/duplicates=0/select_us",
+            "value": 82.06,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/alternation=alternation/announcements=32/consumers=1/duplicates=0/select_us",
+            "value": 2.76,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/alternation=alternation/announcements=32/consumers=8/duplicates=0/select_us",
+            "value": 18.22,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/alternation=alternation/announcements=32/consumers=32/duplicates=0/select_us",
+            "value": 86.64,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/alternation=alternation/announcements=128/consumers=1/duplicates=0/select_us",
+            "value": 2.56,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/alternation=alternation/announcements=128/consumers=8/duplicates=0/select_us",
+            "value": 17.68,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/alternation=alternation/announcements=128/consumers=32/duplicates=0/select_us",
+            "value": 66.36,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/blind=blind/announcements=8/consumers=1/stale=0/invalidate_us",
+            "value": 5.68,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/blind=blind/announcements=8/consumers=8/stale=0/invalidate_us",
+            "value": 18.42,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/blind=blind/announcements=8/consumers=32/stale=0/invalidate_us",
+            "value": 101.86,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/blind=blind/announcements=32/consumers=1/stale=0/invalidate_us",
+            "value": 2.25,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/blind=blind/announcements=32/consumers=8/stale=0/invalidate_us",
+            "value": 15.15,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/blind=blind/announcements=32/consumers=32/stale=0/invalidate_us",
+            "value": 61.27,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/blind=blind/announcements=128/consumers=1/stale=0/invalidate_us",
+            "value": 2.06,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/blind=blind/announcements=128/consumers=8/stale=0/invalidate_us",
+            "value": 14.44,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/blind=blind/announcements=128/consumers=32/stale=0/invalidate_us",
+            "value": 65.18,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/retirement=retirement/routes=8/consumers=1/refused=256/retire_us",
+            "value": 5.48,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/retirement=retirement/routes=8/consumers=8/refused=2048/retire_us",
+            "value": 26.41,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/retirement=retirement/routes=8/consumers=32/refused=8192/retire_us",
+            "value": 93.07,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/retirement=retirement/routes=32/consumers=1/refused=256/retire_us",
+            "value": 7.45,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/retirement=retirement/routes=32/consumers=8/refused=2048/retire_us",
+            "value": 24.17,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/retirement=retirement/routes=32/consumers=32/refused=8192/retire_us",
+            "value": 106.87,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/retirement=retirement/routes=128/consumers=1/refused=256/retire_us",
+            "value": 11.45,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/retirement=retirement/routes=128/consumers=8/refused=2048/retire_us",
+            "value": 32.76,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/retirement=retirement/routes=128/consumers=32/refused=8192/retire_us",
+            "value": 96.63,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=stalled-announce/routes=8/observers=1/update_us",
+            "value": 1104.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=stalled-announce/routes=8/observers=8/update_us",
+            "value": 132.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=stalled-announce/routes=8/observers=32/update_us",
+            "value": 244.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=stalled-announce/routes=32/observers=1/update_us",
+            "value": 64.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=stalled-announce/routes=32/observers=8/update_us",
+            "value": 270.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=stalled-announce/routes=32/observers=32/update_us",
+            "value": 874.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=stalled-announce/routes=128/observers=1/update_us",
+            "value": 205.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=stalled-announce/routes=128/observers=8/update_us",
+            "value": 829.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/broadcasts/scope=stalled-announce/routes=128/observers=32/update_us",
+            "value": 2794.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/catalog/tracks=1/viewers=1/catalog_publishes=2/subscribe_updates=2/unlimited_subscribe_updates=1000/elapsed_ms",
+            "value": 49.6,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/catalog/tracks=1/viewers=4/catalog_publishes=2/subscribe_updates=8/unlimited_subscribe_updates=4000/elapsed_ms",
+            "value": 35.1,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/catalog/tracks=1/viewers=16/catalog_publishes=2/subscribe_updates=32/unlimited_subscribe_updates=16000/elapsed_ms",
+            "value": 36.6,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/catalog/tracks=4/viewers=1/catalog_publishes=2/subscribe_updates=8/unlimited_subscribe_updates=4000/elapsed_ms",
+            "value": 49.3,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/catalog/tracks=4/viewers=4/catalog_publishes=2/subscribe_updates=32/unlimited_subscribe_updates=16000/elapsed_ms",
+            "value": 50.1,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/catalog/tracks=4/viewers=16/catalog_publishes=2/subscribe_updates=128/unlimited_subscribe_updates=64000/elapsed_ms",
+            "value": 51.5,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/catalog/tracks=16/viewers=1/catalog_publishes=2/subscribe_updates=32/unlimited_subscribe_updates=16000/elapsed_ms",
+            "value": 113.6,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/catalog/tracks=16/viewers=4/catalog_publishes=2/subscribe_updates=128/unlimited_subscribe_updates=64000/elapsed_ms",
+            "value": 113.8,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/catalog/tracks=16/viewers=16/catalog_publishes=2/subscribe_updates=512/unlimited_subscribe_updates=256000/elapsed_ms",
+            "value": 118.5,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=100/ready=1/arm_us",
+            "value": 160.49399999999991,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=100/ready=1/advance_us",
+            "value": 10.599999999999277,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=100/ready=1/cancel_us",
+            "value": 211.98599999999956,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=100/ready=10/arm_us",
+            "value": 92.46599999999994,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=100/ready=10/advance_us",
+            "value": 13.486999999999583,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=100/ready=10/cancel_us",
+            "value": 138.08699999999874,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=100/ready=100/arm_us",
+            "value": 73.7950000000005,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=100/ready=100/advance_us",
+            "value": 56.203999999999255,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=100/ready=100/cancel_us",
+            "value": 70.77100000000058,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=1000/ready=1/arm_us",
+            "value": 714.7380000000005,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=1000/ready=1/advance_us",
+            "value": 6.630999999998721,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=1000/ready=1/cancel_us",
+            "value": 1521.1180000000013,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=1000/ready=10/arm_us",
+            "value": 666.0929999999964,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=1000/ready=10/advance_us",
+            "value": 12.9750000000044,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=1000/ready=10/cancel_us",
+            "value": 1476.4160000000004,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=1000/ready=100/arm_us",
+            "value": 631.1990000000023,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=1000/ready=100/advance_us",
+            "value": 53.54900000000384,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=1000/ready=100/cancel_us",
+            "value": 1256.8059999999973,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=1000/ready=1000/arm_us",
+            "value": 607.55300000001,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=1000/ready=1000/advance_us",
+            "value": 346.5929999999986,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=1000/ready=1000/cancel_us",
+            "value": 652.237999999997,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=10000/ready=1/arm_us",
+            "value": 9253.582999999991,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=10000/ready=1/advance_us",
+            "value": 10.110999999994874,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=10000/ready=1/cancel_us",
+            "value": 19833.463999999993,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=10000/ready=10/arm_us",
+            "value": 8530.78099999999,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=10000/ready=10/advance_us",
+            "value": 24.806000000012318,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=10000/ready=10/cancel_us",
+            "value": 22000.85100000001,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=10000/ready=100/arm_us",
+            "value": 8086.579000000029,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=10000/ready=100/advance_us",
+            "value": 91.7060000000447,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=10000/ready=100/cancel_us",
+            "value": 21035.930000000008,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=10000/ready=1000/arm_us",
+            "value": 8962.370000000079,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=10000/ready=1000/advance_us",
+            "value": 757.2470000000067,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=individual/armed=10000/ready=1000/cancel_us",
+            "value": 21357.395999999993,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=100/ready=1/arm_us",
+            "value": 52.164999999945394,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=100/ready=1/advance_us",
+            "value": 0.7279999999809661,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=100/ready=1/cancel_us",
+            "value": 27.42200000000139,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=100/ready=10/arm_us",
+            "value": 51.853000000051,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=100/ready=10/advance_us",
+            "value": 3.224000000045635,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=100/ready=10/cancel_us",
+            "value": 24.597999999969034,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=100/ready=100/arm_us",
+            "value": 51.46100000001752,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=100/ready=100/advance_us",
+            "value": 23.806000000035965,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=100/ready=100/cancel_us",
+            "value": 1.4559999999619322,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=1000/ready=1/arm_us",
+            "value": 1779.916999999955,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=1000/ready=1/advance_us",
+            "value": 3.864000000021406,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=1000/ready=1/cancel_us",
+            "value": 367.19300000004296,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=1000/ready=10/arm_us",
+            "value": 1878.6699999999428,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=1000/ready=10/advance_us",
+            "value": 10.966999999936888,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=1000/ready=10/cancel_us",
+            "value": 388.8790000000881,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=1000/ready=100/arm_us",
+            "value": 1764.6929999999657,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=1000/ready=100/advance_us",
+            "value": 53.693000000066604,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=1000/ready=100/cancel_us",
+            "value": 325.4349999999704,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=1000/ready=1000/arm_us",
+            "value": 1829.729000000043,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=1000/ready=1000/advance_us",
+            "value": 369.1119999999728,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=1000/ready=1000/cancel_us",
+            "value": 8.735999999998967,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=10000/ready=1/arm_us",
+            "value": 301169.4400000001,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=10000/ready=1/advance_us",
+            "value": 17.558999999891967,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=10000/ready=1/cancel_us",
+            "value": 13118.30000000009,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=10000/ready=10/arm_us",
+            "value": 313831.74499999994,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=10000/ready=10/advance_us",
+            "value": 53.765000000112195,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=10000/ready=10/cancel_us",
+            "value": 13252.370999999584,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=10000/ready=100/arm_us",
+            "value": 300085.29200000066,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=10000/ready=100/advance_us",
+            "value": 355.040999999801,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=10000/ready=100/cancel_us",
+            "value": 12977.718999999524,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=10000/ready=1000/arm_us",
+            "value": 301408.95,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=10000/ready=1000/advance_us",
+            "value": 2687.1869999995397,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=jump/scope=shared/armed=10000/ready=1000/cancel_us",
+            "value": 10445.483999999851,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=100/ready=1/arm_us",
+            "value": 75.90700000037032,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=100/ready=1/advance_us",
+            "value": 45.70899999998801,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=100/ready=1/cancel_us",
+            "value": 141.53499999883934,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=100/ready=10/arm_us",
+            "value": 57.01199999930395,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=100/ready=10/advance_us",
+            "value": 132.1829999997135,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=100/ready=10/cancel_us",
+            "value": 124.87200000032317,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=100/ready=100/arm_us",
+            "value": 73.53200000034121,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=100/ready=100/advance_us",
+            "value": 686.7480000000796,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=100/ready=100/cancel_us",
+            "value": 68.61099999878206,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=1000/ready=1/arm_us",
+            "value": 835.9540000001289,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=1000/ready=1/advance_us",
+            "value": 67.61199999891687,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=1000/ready=1/cancel_us",
+            "value": 1497.2150000012334,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=1000/ready=10/arm_us",
+            "value": 587.2500000004948,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=1000/ready=10/advance_us",
+            "value": 124.84000000040396,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=1000/ready=10/cancel_us",
+            "value": 1467.7769999998418,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=1000/ready=100/arm_us",
+            "value": 605.1050000005489,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=1000/ready=100/advance_us",
+            "value": 755.2309999991849,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=1000/ready=100/cancel_us",
+            "value": 1398.6779999995633,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=1000/ready=1000/arm_us",
+            "value": 668.3410000005097,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=1000/ready=1000/advance_us",
+            "value": 6847.692999999708,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=1000/ready=1000/cancel_us",
+            "value": 718.9769999986311,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=10000/ready=1/arm_us",
+            "value": 13479.870999999548,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=10000/ready=1/advance_us",
+            "value": 101.51399999995192,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=10000/ready=1/cancel_us",
+            "value": 16639.83399999961,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=10000/ready=10/arm_us",
+            "value": 9237.929999999324,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=10000/ready=10/advance_us",
+            "value": 213.98600000065926,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=10000/ready=10/cancel_us",
+            "value": 20409.991000000446,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=10000/ready=100/arm_us",
+            "value": 11520.038000000568,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=10000/ready=100/advance_us",
+            "value": 913.0040000000008,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=10000/ready=100/cancel_us",
+            "value": 16204.238999998779,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=10000/ready=1000/arm_us",
+            "value": 8765.095999999176,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=10000/ready=1000/advance_us",
+            "value": 10351.521999999022,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=individual/armed=10000/ready=1000/cancel_us",
+            "value": 15591.758000000482,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=100/ready=1/arm_us",
+            "value": 70.85999999981141,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=100/ready=1/advance_us",
+            "value": 23.814000000129454,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=100/ready=1/cancel_us",
+            "value": 31.590000000505825,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=100/ready=10/arm_us",
+            "value": 73.52300000093237,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=100/ready=10/advance_us",
+            "value": 89.37100000002829,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=100/ready=10/cancel_us",
+            "value": 31.4699999998993,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=100/ready=100/arm_us",
+            "value": 72.50000000021828,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=100/ready=100/advance_us",
+            "value": 663.4850000009465,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=100/ready=100/cancel_us",
+            "value": 6.150999999590567,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=1000/ready=1/arm_us",
+            "value": 1811.6900000004534,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=1000/ready=1/advance_us",
+            "value": 38.55699999985518,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=1000/ready=1/cancel_us",
+            "value": 385.7189999998809,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=1000/ready=10/arm_us",
+            "value": 1738.6470000001282,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=1000/ready=10/advance_us",
+            "value": 117.45599999994738,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=1000/ready=10/cancel_us",
+            "value": 363.4089999995922,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=1000/ready=100/arm_us",
+            "value": 1746.2070000001404,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=1000/ready=100/advance_us",
+            "value": 736.63999999917,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=1000/ready=100/cancel_us",
+            "value": 337.8820000016276,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=1000/ready=1000/arm_us",
+            "value": 1772.3249999999098,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=1000/ready=1000/advance_us",
+            "value": 7166.447999999946,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=1000/ready=1000/cancel_us",
+            "value": 8.759000000281958,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=10000/ready=1/arm_us",
+            "value": 343367.2179999994,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=10000/ready=1/advance_us",
+            "value": 142.8219999997964,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=10000/ready=1/cancel_us",
+            "value": 13103.447999999844,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=10000/ready=10/arm_us",
+            "value": 281962.3700000011,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=10000/ready=10/advance_us",
+            "value": 633.2869999987452,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=10000/ready=10/cancel_us",
+            "value": 13021.770000001197,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=10000/ready=100/arm_us",
+            "value": 277784.20600000024,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=10000/ready=100/advance_us",
+            "value": 1590.754000000743,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=10000/ready=100/cancel_us",
+            "value": 12863.147999998546,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=10000/ready=1000/arm_us",
+            "value": 280152.48599999904,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=10000/ready=1000/advance_us",
+            "value": 10275.450000001001,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/clock/mode=advance/scope=shared/armed=10000/ready=1000/cancel_us",
+            "value": 10048.297000001185,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/cmaf/mdat_bytes=1024/declared=1/decoded=1/us_per_fragment",
+            "value": 21,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/cmaf/mdat_bytes=1024/declared=64/decoded=64/us_per_fragment",
+            "value": 37.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/cmaf/mdat_bytes=1024/declared=1024/decoded=1024/us_per_fragment",
+            "value": 161.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/cmaf/mdat_bytes=1024/declared=4294967295/decoded=0/us_per_fragment",
+            "value": 6.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/cmaf/mdat_bytes=65536/declared=1/decoded=1/us_per_fragment",
+            "value": 60.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/cmaf/mdat_bytes=65536/declared=64/decoded=64/us_per_fragment",
+            "value": 63.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/cmaf/mdat_bytes=65536/declared=1024/decoded=1024/us_per_fragment",
+            "value": 155,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/cmaf/mdat_bytes=65536/declared=4294967295/decoded=0/us_per_fragment",
+            "value": 5.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=1/readers=1/phase=publish/us",
+            "value": 2929.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=1/readers=1/phase=publish/size_bytes",
+            "value": 740,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=1/readers=1/phase=read/us",
+            "value": 1176.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=1/readers=1/phase=read/size_bytes",
+            "value": 71680,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=1/readers=4/phase=publish/us",
+            "value": 1466.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=1/readers=4/phase=publish/size_bytes",
+            "value": 740,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=1/readers=4/phase=read/us",
+            "value": 437.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=1/readers=4/phase=read/size_bytes",
+            "value": 71680,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=1/readers=16/phase=publish/us",
+            "value": 1313.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=1/readers=16/phase=publish/size_bytes",
+            "value": 740,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=1/readers=16/phase=read/us",
+            "value": 310.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=1/readers=16/phase=read/size_bytes",
+            "value": 71680,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=4/readers=1/phase=publish/us",
+            "value": 4303.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=4/readers=1/phase=publish/size_bytes",
+            "value": 2960,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=4/readers=1/phase=read/us",
+            "value": 950,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=4/readers=1/phase=read/size_bytes",
+            "value": 286720,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=4/readers=4/phase=publish/us",
+            "value": 3896.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=4/readers=4/phase=publish/size_bytes",
+            "value": 2960,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=4/readers=4/phase=read/us",
+            "value": 959.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=4/readers=4/phase=read/size_bytes",
+            "value": 286720,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=4/readers=16/phase=publish/us",
+            "value": 3242.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=4/readers=16/phase=publish/size_bytes",
+            "value": 2960,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=4/readers=16/phase=read/us",
+            "value": 1028.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=4/readers=16/phase=read/size_bytes",
+            "value": 286720,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=16/readers=1/phase=publish/us",
+            "value": 11579.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=16/readers=1/phase=publish/size_bytes",
+            "value": 11840,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=16/readers=1/phase=read/us",
+            "value": 2498.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=16/readers=1/phase=read/size_bytes",
+            "value": 1146880,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=16/readers=4/phase=publish/us",
+            "value": 10367.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=16/readers=4/phase=publish/size_bytes",
+            "value": 11840,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=16/readers=4/phase=read/us",
+            "value": 3270.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=16/readers=4/phase=read/size_bytes",
+            "value": 1146880,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=16/readers=16/phase=publish/us",
+            "value": 10384.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=16/readers=16/phase=publish/size_bytes",
+            "value": 11840,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=16/readers=16/phase=read/us",
+            "value": 3365.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/publishers=16/readers=16/phase=read/size_bytes",
+            "value": 1146880,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/tracks=1/queued=1/retained_bytes=30081/deliver_us",
+            "value": 422.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/tracks=1/queued=8/retained_bytes=79084/deliver_us",
+            "value": 278.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/tracks=1/queued=64/retained_bytes=164331/deliver_us",
+            "value": 267.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/tracks=16/queued=1/retained_bytes=306472/deliver_us",
+            "value": 302,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/tracks=16/queued=8/retained_bytes=419479/deliver_us",
+            "value": 311.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/tracks=16/queued=64/retained_bytes=661196/deliver_us",
+            "value": 295.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/tracks=64/queued=1/retained_bytes=973481/deliver_us",
+            "value": 265.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/tracks=64/queued=8/retained_bytes=1263078/deliver_us",
+            "value": 298.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/tracks=64/queued=64/retained_bytes=3517592/deliver_us",
+            "value": 293.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/compression/measurement=consumer_bundle/size_bytes",
+            "value": 129926,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/compression/measurement=consumer_bundle_gzip/size_bytes",
+            "value": 38482,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=0/retained=1/publishers=1/readers=1/ns_per_frame",
+            "value": 9352,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=1/retained=1/publishers=1/readers=1/ns_per_frame",
+            "value": 4900,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=2/retained=1/publishers=1/readers=1/ns_per_frame",
+            "value": 5203,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=0/retained=1/publishers=1/readers=8/ns_per_frame",
+            "value": 2783,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=1/retained=1/publishers=1/readers=8/ns_per_frame",
+            "value": 2561,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=2/retained=1/publishers=1/readers=8/ns_per_frame",
+            "value": 2937,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=0/retained=1/publishers=4/readers=1/ns_per_frame",
+            "value": 2682,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=1/retained=1/publishers=4/readers=1/ns_per_frame",
+            "value": 2553,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=2/retained=1/publishers=4/readers=1/ns_per_frame",
+            "value": 2932,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=0/retained=1/publishers=4/readers=8/ns_per_frame",
+            "value": 2473,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=1/retained=1/publishers=4/readers=8/ns_per_frame",
+            "value": 2701,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=2/retained=1/publishers=4/readers=8/ns_per_frame",
+            "value": 2747,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=0/retained=64/publishers=1/readers=1/ns_per_frame",
+            "value": 2657,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=1/retained=64/publishers=1/readers=1/ns_per_frame",
+            "value": 2829,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=2/retained=64/publishers=1/readers=1/ns_per_frame",
+            "value": 2854,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=0/retained=64/publishers=1/readers=8/ns_per_frame",
+            "value": 2425,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=1/retained=64/publishers=1/readers=8/ns_per_frame",
+            "value": 2702,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=2/retained=64/publishers=1/readers=8/ns_per_frame",
+            "value": 2736,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=0/retained=64/publishers=4/readers=1/ns_per_frame",
+            "value": 2315,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=1/retained=64/publishers=4/readers=1/ns_per_frame",
+            "value": 2686,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=2/retained=64/publishers=4/readers=1/ns_per_frame",
+            "value": 2726,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=0/retained=64/publishers=4/readers=8/ns_per_frame",
+            "value": 2636,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=1/retained=64/publishers=4/readers=8/ns_per_frame",
+            "value": 2771,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=2/retained=64/publishers=4/readers=8/ns_per_frame",
+            "value": 3157,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=0/retained=1024/publishers=1/readers=1/ns_per_frame",
+            "value": 3712,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=1/retained=1024/publishers=1/readers=1/ns_per_frame",
+            "value": 2829,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=2/retained=1024/publishers=1/readers=1/ns_per_frame",
+            "value": 2924,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=0/retained=1024/publishers=1/readers=8/ns_per_frame",
+            "value": 2884,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=1/retained=1024/publishers=1/readers=8/ns_per_frame",
+            "value": 2380,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=2/retained=1024/publishers=1/readers=8/ns_per_frame",
+            "value": 2739,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=0/retained=1024/publishers=4/readers=1/ns_per_frame",
+            "value": 3485,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=1/retained=1024/publishers=4/readers=1/ns_per_frame",
+            "value": 2463,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=2/retained=1024/publishers=4/readers=1/ns_per_frame",
+            "value": 2749,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=0/retained=1024/publishers=4/readers=8/ns_per_frame",
+            "value": 3462,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=1/retained=1024/publishers=4/readers=8/ns_per_frame",
+            "value": 2966,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/drift/time_mode=2/retained=1024/publishers=4/readers=8/ns_per_frame",
+            "value": 2902,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=160/depth=1/frames=1024/seal_us",
+            "value": 39.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=160/depth=1/frames=1024/open_us",
+            "value": 36.19,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=160/depth=8/frames=1024/seal_us",
+            "value": 36.83,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=160/depth=8/frames=1024/open_us",
+            "value": 36.86,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=160/depth=64/frames=1024/seal_us",
+            "value": 36.07,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=160/depth=64/frames=1024/open_us",
+            "value": 35.63,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=1160/depth=1/frames=1024/seal_us",
+            "value": 38.69,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=1160/depth=1/frames=1024/open_us",
+            "value": 37.15,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=1160/depth=8/frames=1024/seal_us",
+            "value": 37.74,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=1160/depth=8/frames=1024/open_us",
+            "value": 36.44,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=1160/depth=64/frames=1024/seal_us",
+            "value": 38.19,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=1160/depth=64/frames=1024/open_us",
+            "value": 36.73,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=16384/depth=1/frames=1024/seal_us",
+            "value": 57.78,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=16384/depth=1/frames=1024/open_us",
+            "value": 52.78,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=16384/depth=8/frames=1024/seal_us",
+            "value": 58.93,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=16384/depth=8/frames=1024/open_us",
+            "value": 50.78,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=16384/depth=64/frames=1024/seal_us",
+            "value": 59.07,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=16384/depth=64/frames=1024/open_us",
+            "value": 50.03,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=262144/depth=1/frames=128/seal_us",
+            "value": 204.42,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=262144/depth=1/frames=128/open_us",
+            "value": 199.47,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=262144/depth=8/frames=128/seal_us",
+            "value": 241.67,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=262144/depth=8/frames=128/open_us",
+            "value": 174.24,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=262144/depth=64/frames=128/seal_us",
+            "value": 281.35,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/e2ee/bytes=262144/depth=64/frames=128/open_us",
+            "value": 163.35,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/fills/groups=2/subscribers=1/fill_us",
+            "value": 1381.06,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/fills/groups=2/subscribers=8/fill_us",
+            "value": 2653.36,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/fills/groups=16/subscribers=1/fill_us",
+            "value": 1036.24,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/fills/groups=16/subscribers=8/fill_us",
+            "value": 5289.02,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/fills/groups=128/subscribers=1/fill_us",
+            "value": 4057.11,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/fills/groups=128/subscribers=8/fill_us",
+            "value": 24546.87,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/flate-decoder/case=retained/frames=64/payload_bytes=1/size_bytes",
+            "value": 64,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/flate-decoder/case=retained/frames=64/payload_bytes=1/ms",
+            "value": 4.993,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/flate-decoder/case=retained/frames=64/payload_bytes=1024/size_bytes",
+            "value": 65536,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/flate-decoder/case=retained/frames=64/payload_bytes=1024/ms",
+            "value": 3.834,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/flate-decoder/case=retained/frames=1024/payload_bytes=1/size_bytes",
+            "value": 1024,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/flate-decoder/case=retained/frames=1024/payload_bytes=1/ms",
+            "value": 33.287,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/flate-decoder/case=retained/frames=1024/payload_bytes=1024/size_bytes",
+            "value": 1048576,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/flate-decoder/case=retained/frames=1024/payload_bytes=1024/ms",
+            "value": 36.747,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/flate-decoder/case=overflow/frames=1/payload_bytes=33619968/size_bytes",
+            "value": 0,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/flate-decoder/case=overflow/frames=1/payload_bytes=33619968/ms",
+            "value": 61.383,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/flate-decoder/case=overflow/frames=1/payload_bytes=34603008/size_bytes",
+            "value": 0,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/flate-decoder/case=overflow/frames=1/payload_bytes=34603008/ms",
+            "value": 63.59,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/flate-decoder/case=overflow/frames=1/payload_bytes=41943040/size_bytes",
+            "value": 0,
+            "unit": "bytes"
+          },
+          {
+            "name": "bench-js/js/flate-decoder/case=overflow/frames=1/payload_bytes=41943040/ms",
+            "value": 59.814,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/forward/touched=covering/heads=1/routes=8/update_us",
+            "value": 321.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=covering/heads=1/routes=32/update_us",
+            "value": 402.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=covering/heads=1/routes=128/update_us",
+            "value": 864.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=covering/heads=4/routes=8/update_us",
+            "value": 211.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=covering/heads=4/routes=32/update_us",
+            "value": 283.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=covering/heads=4/routes=128/update_us",
+            "value": 728.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=covering/heads=16/routes=8/update_us",
+            "value": 157.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=covering/heads=16/routes=32/update_us",
+            "value": 288.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=covering/heads=16/routes=128/update_us",
+            "value": 837.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=single/heads=1/routes=8/update_us",
+            "value": 97.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=single/heads=1/routes=32/update_us",
+            "value": 266,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=single/heads=1/routes=128/update_us",
+            "value": 724.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=single/heads=4/routes=8/update_us",
+            "value": 81,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=single/heads=4/routes=32/update_us",
+            "value": 198.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=single/heads=4/routes=128/update_us",
+            "value": 687.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=single/heads=16/routes=8/update_us",
+            "value": 67.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=single/heads=16/routes=32/update_us",
+            "value": 201.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/touched=single/heads=16/routes=128/update_us",
+            "value": 635.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/watchers=8/sessions=1/watch_us",
+            "value": 88.43,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/watchers=8/sessions=8/watch_us",
+            "value": 165.47,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/watchers=8/sessions=32/watch_us",
+            "value": 373.08,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/watchers=128/sessions=1/watch_us",
+            "value": 66.29,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/watchers=128/sessions=8/watch_us",
+            "value": 155.81,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/watchers=128/sessions=32/watch_us",
+            "value": 475.27,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/watchers=2048/sessions=1/watch_us",
+            "value": 66.63,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/watchers=2048/sessions=8/watch_us",
+            "value": 176.44,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/forward/watchers=2048/sessions=32/watch_us",
+            "value": 545.67,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=16/chunk_bytes=24/frames_per_chunk=1.1/ns_per_frame",
+            "value": 4885,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=16/chunk_bytes=24/frames_per_chunk=1.1/first_frame_us",
+            "value": 10.94,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=16/chunk_bytes=1200/frames_per_chunk=50.0/ns_per_frame",
+            "value": 937,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=16/chunk_bytes=1200/frames_per_chunk=50.0/first_frame_us",
+            "value": 32.07,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=16/chunk_bytes=16384/frames_per_chunk=50.0/ns_per_frame",
+            "value": 884,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=16/chunk_bytes=16384/frames_per_chunk=50.0/first_frame_us",
+            "value": 33.27,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=16/chunk_bytes=65536/frames_per_chunk=50.0/ns_per_frame",
+            "value": 901,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=16/chunk_bytes=65536/frames_per_chunk=50.0/first_frame_us",
+            "value": 31.93,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=100/chunk_bytes=108/frames_per_chunk=1.0/ns_per_frame",
+            "value": 5833,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=100/chunk_bytes=108/frames_per_chunk=1.0/first_frame_us",
+            "value": 10.23,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=100/chunk_bytes=1200/frames_per_chunk=10.0/ns_per_frame",
+            "value": 1307,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=100/chunk_bytes=1200/frames_per_chunk=10.0/first_frame_us",
+            "value": 17.16,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=100/chunk_bytes=16384/frames_per_chunk=50.0/ns_per_frame",
+            "value": 893,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=100/chunk_bytes=16384/frames_per_chunk=50.0/first_frame_us",
+            "value": 33.76,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=100/chunk_bytes=65536/frames_per_chunk=50.0/ns_per_frame",
+            "value": 901,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=100/chunk_bytes=65536/frames_per_chunk=50.0/first_frame_us",
+            "value": 32.01,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=1000/chunk_bytes=1008/frames_per_chunk=1.0/ns_per_frame",
+            "value": 6624,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=1000/chunk_bytes=1008/frames_per_chunk=1.0/first_frame_us",
+            "value": 12.94,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=1000/chunk_bytes=1200/frames_per_chunk=1.2/ns_per_frame",
+            "value": 5888,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=1000/chunk_bytes=1200/frames_per_chunk=1.2/first_frame_us",
+            "value": 12.56,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=1000/chunk_bytes=16384/frames_per_chunk=12.5/ns_per_frame",
+            "value": 1535,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=1000/chunk_bytes=16384/frames_per_chunk=12.5/first_frame_us",
+            "value": 26.45,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=1000/chunk_bytes=65536/frames_per_chunk=50.0/ns_per_frame",
+            "value": 893,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=1000/chunk_bytes=65536/frames_per_chunk=50.0/first_frame_us",
+            "value": 34.28,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=16/chunk_bytes=65536/frames_per_chunk=3000.0/ns_per_frame",
+            "value": 977,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=lite/frame_bytes=16/chunk_bytes=65536/frames_per_chunk=3000.0/first_frame_us",
+            "value": 1928.83,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=16/chunk_bytes=24/frames_per_chunk=1.3/ns_per_frame",
+            "value": 7372,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=16/chunk_bytes=24/frames_per_chunk=1.3/first_frame_us",
+            "value": 50.22,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=16/chunk_bytes=1200/frames_per_chunk=50.0/ns_per_frame",
+            "value": 1478,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=16/chunk_bytes=1200/frames_per_chunk=50.0/first_frame_us",
+            "value": 56.56,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=16/chunk_bytes=16384/frames_per_chunk=50.0/ns_per_frame",
+            "value": 1346,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=16/chunk_bytes=16384/frames_per_chunk=50.0/first_frame_us",
+            "value": 47.55,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=16/chunk_bytes=65536/frames_per_chunk=50.0/ns_per_frame",
+            "value": 1170,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=16/chunk_bytes=65536/frames_per_chunk=50.0/first_frame_us",
+            "value": 40.29,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=100/chunk_bytes=108/frames_per_chunk=1.0/ns_per_frame",
+            "value": 7340,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=100/chunk_bytes=108/frames_per_chunk=1.0/first_frame_us",
+            "value": 23.95,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=100/chunk_bytes=1200/frames_per_chunk=10.0/ns_per_frame",
+            "value": 1473,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=100/chunk_bytes=1200/frames_per_chunk=10.0/first_frame_us",
+            "value": 19.71,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=100/chunk_bytes=16384/frames_per_chunk=50.0/ns_per_frame",
+            "value": 1171,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=100/chunk_bytes=16384/frames_per_chunk=50.0/first_frame_us",
+            "value": 38.78,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=100/chunk_bytes=65536/frames_per_chunk=50.0/ns_per_frame",
+            "value": 1095,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=100/chunk_bytes=65536/frames_per_chunk=50.0/first_frame_us",
+            "value": 40.26,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=1000/chunk_bytes=1008/frames_per_chunk=1.0/ns_per_frame",
+            "value": 8707,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=1000/chunk_bytes=1008/frames_per_chunk=1.0/first_frame_us",
+            "value": 26.43,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=1000/chunk_bytes=1200/frames_per_chunk=1.2/ns_per_frame",
+            "value": 7546,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=1000/chunk_bytes=1200/frames_per_chunk=1.2/first_frame_us",
+            "value": 25.17,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=1000/chunk_bytes=16384/frames_per_chunk=12.5/ns_per_frame",
+            "value": 1681,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=1000/chunk_bytes=16384/frames_per_chunk=12.5/first_frame_us",
+            "value": 33.12,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=1000/chunk_bytes=65536/frames_per_chunk=50.0/ns_per_frame",
+            "value": 951,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=1000/chunk_bytes=65536/frames_per_chunk=50.0/first_frame_us",
+            "value": 35.39,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=16/chunk_bytes=65536/frames_per_chunk=3000.0/ns_per_frame",
+            "value": 684,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/frames/protocol=ietf/frame_bytes=16/chunk_bytes=65536/frames_per_chunk=3000.0/first_frame_us",
+            "value": 1345.24,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/jitter/held=64/order=in/ns_per_frame",
+            "value": 169.4,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/jitter/held=64/order=reordered/ns_per_frame",
+            "value": 47.5,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/jitter/held=512/order=in/ns_per_frame",
+            "value": 129.8,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/jitter/held=512/order=reordered/ns_per_frame",
+            "value": 50,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/jitter/held=4096/order=in/ns_per_frame",
+            "value": 146.1,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/jitter/held=4096/order=reordered/ns_per_frame",
+            "value": 65.4,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/jitter/held=8192/order=in/ns_per_frame",
+            "value": 165.4,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/jitter/held=8192/order=reordered/ns_per_frame",
+            "value": 78.1,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=1/changed=1/compression=none/ms_per_update",
+            "value": 0.003776,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=1/changed=1/compression=deflate/ms_per_update",
+            "value": 0.095719,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=10/changed=1/compression=none/ms_per_update",
+            "value": 0.005463,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=10/changed=1/compression=deflate/ms_per_update",
+            "value": 0.063691,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=10/changed=10/compression=none/ms_per_update",
+            "value": 0.005952,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=10/changed=10/compression=deflate/ms_per_update",
+            "value": 0.075582,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=100/changed=1/compression=none/ms_per_update",
+            "value": 0.021866,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=100/changed=1/compression=deflate/ms_per_update",
+            "value": 0.06992,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=100/changed=10/compression=none/ms_per_update",
+            "value": 0.025788,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=100/changed=10/compression=deflate/ms_per_update",
+            "value": 0.090097,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=1000/changed=1/compression=none/ms_per_update",
+            "value": 0.672966,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=1000/changed=1/compression=deflate/ms_per_update",
+            "value": 0.759534,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=1000/changed=10/compression=none/ms_per_update",
+            "value": 0.692282,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-codec/keys=1000/changed=10/compression=deflate/ms_per_update",
+            "value": 0.785019,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/json-parse/frame=catalog/bytes=1026/json_parse_us",
+            "value": 2.29,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/json-parse/frame=catalog/bytes=1026/parse_us",
+            "value": 5.94,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/json-parse/frame=unicode-16/bytes=199/json_parse_us",
+            "value": 0.56,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/json-parse/frame=unicode-16/bytes=199/parse_us",
+            "value": 0.84,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/json-parse/frame=unicode-1024/bytes=12295/json_parse_us",
+            "value": 20.38,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/json-parse/frame=unicode-1024/bytes=12295/parse_us",
+            "value": 26.55,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/json-parse/frame=unicode-65536/bytes=786439/json_parse_us",
+            "value": 1051.76,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/json-parse/frame=unicode-65536/bytes=786439/parse_us",
+            "value": 1725.89,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/json-parse/frame=stats-10/bytes=1413/json_parse_us",
+            "value": 2.24,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/json-parse/frame=stats-10/bytes=1413/parse_us",
+            "value": 7.08,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/json-parse/frame=stats-100/bytes=14362/json_parse_us",
+            "value": 21.47,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/json-parse/frame=stats-100/bytes=14362/parse_us",
+            "value": 68.02,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/json-parse/frame=stats-1000/bytes=146993/json_parse_us",
+            "value": 342.99,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/json-parse/frame=stats-1000/bytes=146993/parse_us",
+            "value": 821.43,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/json-stream/records=64/payload_bytes=16/compression=none/ns_per_record",
+            "value": 4623.8,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/json-stream/records=64/payload_bytes=16/compression=deflate/ns_per_record",
+            "value": 64051.3,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/json-stream/records=64/payload_bytes=1024/compression=none/ns_per_record",
+            "value": 5593.9,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/json-stream/records=64/payload_bytes=1024/compression=deflate/ns_per_record",
+            "value": 39082.5,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/json-stream/records=1024/payload_bytes=16/compression=none/ns_per_record",
+            "value": 1180.4,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/json-stream/records=1024/payload_bytes=16/compression=deflate/ns_per_record",
+            "value": 29643.9,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/json-stream/records=1024/payload_bytes=1024/compression=none/ns_per_record",
+            "value": 2834.8,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/json-stream/records=1024/payload_bytes=1024/compression=deflate/ns_per_record",
+            "value": 23914,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/ledger/arrivals=2048/order=ascending/ns_per_arrival",
+            "value": 5056,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/ledger/arrivals=2048/order=descending/ns_per_arrival",
+            "value": 2310,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/ledger/arrivals=2048/order=shuffled/ns_per_arrival",
+            "value": 1521,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/ledger/arrivals=2048/order=rolling/ns_per_arrival",
+            "value": 2592,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/ledger/arrivals=8192/order=ascending/ns_per_arrival",
+            "value": 1553,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/ledger/arrivals=8192/order=descending/ns_per_arrival",
+            "value": 1250,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/ledger/arrivals=8192/order=shuffled/ns_per_arrival",
+            "value": 1829,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/ledger/arrivals=8192/order=rolling/ns_per_arrival",
+            "value": 1415,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/ledger/arrivals=32768/order=ascending/ns_per_arrival",
+            "value": 960,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/ledger/arrivals=32768/order=descending/ns_per_arrival",
+            "value": 1179,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/ledger/arrivals=32768/order=shuffled/ns_per_arrival",
+            "value": 1691,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/ledger/arrivals=32768/order=rolling/ns_per_arrival",
+            "value": 1400,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Video/version=ff0dad06/bytes=369/encode_ns",
+            "value": 66554,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Video/version=ff0dad06/bytes=369/decode_ns",
+            "value": 9269,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Video/version=ff0dad07/bytes=304/encode_ns",
+            "value": 65493,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Video/version=ff0dad07/bytes=304/decode_ns",
+            "value": 9570,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Audio/version=ff0dad06/bytes=297/encode_ns",
+            "value": 54969,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Audio/version=ff0dad06/bytes=297/decode_ns",
+            "value": 7537,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Audio/version=ff0dad07/bytes=248/encode_ns",
+            "value": 54573,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Audio/version=ff0dad07/bytes=248/decode_ns",
+            "value": 7819,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Group/version=ff0dad06/bytes=5/encode_ns",
+            "value": 5419,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Group/version=ff0dad06/bytes=5/decode_ns",
+            "value": 2073,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Group/version=ff0dad07/bytes=5/encode_ns",
+            "value": 5376,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Group/version=ff0dad07/bytes=5/decode_ns",
+            "value": 2001,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Subscribe/version=ff0dad06/bytes=26/encode_ns",
+            "value": 12926,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Subscribe/version=ff0dad06/bytes=26/decode_ns",
+            "value": 5976,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Subscribe/version=ff0dad07/bytes=27/encode_ns",
+            "value": 13613,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Subscribe/version=ff0dad07/bytes=27/decode_ns",
+            "value": 6087,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Datagram/version=ff0dad06/bytes=11/encode_ns",
+            "value": 2619,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Datagram/version=ff0dad06/bytes=11/decode_ns",
+            "value": 1729,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Datagram/version=ff0dad07/bytes=8/encode_ns",
+            "value": 2637,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Datagram/version=ff0dad07/bytes=8/decode_ns",
+            "value": 1706,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Setup/version=ff0dad06/bytes=15/encode_ns",
+            "value": 10103,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Setup/version=ff0dad06/bytes=15/decode_ns",
+            "value": 5558,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Setup/version=ff0dad07/bytes=15/encode_ns",
+            "value": 9696,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/lite-varint/sample=Setup/version=ff0dad07/bytes=15/decode_ns",
+            "value": 5342,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=eager/connections=1/readers=0/held_estimates=1/update_us",
+            "value": 14.49,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=eager/connections=1/readers=1/held_estimates=1/update_us",
+            "value": 14.31,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=eager/connections=1/readers=8/held_estimates=1/update_us",
+            "value": 28,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=eager/connections=1/readers=64/held_estimates=1/update_us",
+            "value": 121.16,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=eager/connections=32/readers=0/held_estimates=32/update_us",
+            "value": 11.62,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=eager/connections=32/readers=1/held_estimates=32/update_us",
+            "value": 13.67,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=eager/connections=32/readers=8/held_estimates=32/update_us",
+            "value": 26.54,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=eager/connections=32/readers=64/held_estimates=32/update_us",
+            "value": 119.79,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=eager/connections=256/readers=0/held_estimates=256/update_us",
+            "value": 10.86,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=eager/connections=256/readers=1/held_estimates=256/update_us",
+            "value": 12.75,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=eager/connections=256/readers=8/held_estimates=256/update_us",
+            "value": 24.63,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=eager/connections=256/readers=64/held_estimates=256/update_us",
+            "value": 136.41,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=observed/connections=1/readers=0/held_estimates=0/update_us",
+            "value": 3.42,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=observed/connections=1/readers=1/held_estimates=1/update_us",
+            "value": 12.52,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=observed/connections=1/readers=8/held_estimates=1/update_us",
+            "value": 29.15,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=observed/connections=1/readers=64/held_estimates=1/update_us",
+            "value": 154.84,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=observed/connections=32/readers=0/held_estimates=0/update_us",
+            "value": 2.98,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=observed/connections=32/readers=1/held_estimates=32/update_us",
+            "value": 10.67,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=observed/connections=32/readers=8/held_estimates=32/update_us",
+            "value": 25.83,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=observed/connections=32/readers=64/held_estimates=32/update_us",
+            "value": 172.94,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=observed/connections=256/readers=0/held_estimates=0/update_us",
+            "value": 2.43,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=observed/connections=256/readers=1/held_estimates=256/update_us",
+            "value": 10.94,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=observed/connections=256/readers=8/held_estimates=256/update_us",
+            "value": 26.13,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/observed/forwarding=observed/connections=256/readers=64/held_estimates=256/update_us",
+            "value": 170,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/p2p/streams=1/bytes_per_stream=1024/records=3/elapsed_ms",
+            "value": 4.492,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/p2p/streams=1/bytes_per_stream=16384/records=4/elapsed_ms",
+            "value": 0.786,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/p2p/streams=1/bytes_per_stream=262144/records=19/elapsed_ms",
+            "value": 2.802,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/p2p/streams=8/bytes_per_stream=1024/records=17/elapsed_ms",
+            "value": 2.058,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/p2p/streams=8/bytes_per_stream=16384/records=25/elapsed_ms",
+            "value": 2.569,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/p2p/streams=8/bytes_per_stream=262144/records=145/elapsed_ms",
+            "value": 12.161,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/p2p/streams=64/bytes_per_stream=1024/records=129/elapsed_ms",
+            "value": 6.889,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/p2p/streams=64/bytes_per_stream=16384/records=193/elapsed_ms",
+            "value": 8.65,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/p2p/streams=64/bytes_per_stream=262144/records=1154/elapsed_ms",
+            "value": 54.423,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/priority/subscriptions=1/streams=4/ns_per_change",
+            "value": 4348.3,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/priority/subscriptions=1/streams=16/ns_per_change",
+            "value": 6057,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/priority/subscriptions=1/streams=64/ns_per_change",
+            "value": 22333.8,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/priority/subscriptions=16/streams=4/ns_per_change",
+            "value": 340.5,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/priority/subscriptions=16/streams=16/ns_per_change",
+            "value": 2489.1,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/priority/subscriptions=16/streams=64/ns_per_change",
+            "value": 15448,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/priority/subscriptions=128/streams=4/ns_per_change",
+            "value": 232.2,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/priority/subscriptions=128/streams=16/ns_per_change",
+            "value": 1496.7,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/priority/subscriptions=128/streams=64/ns_per_change",
+            "value": 15503.1,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/qmux-record/record_bytes=1025/kind=stream/frames=1/us_per_record",
+            "value": 11.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/qmux-record/record_bytes=1024/kind=stream/frames=16/us_per_record",
+            "value": 33.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/qmux-record/record_bytes=1024/kind=stream/frames=256/us_per_record",
+            "value": 237.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/qmux-record/record_bytes=1024/kind=empty/frames=256/us_per_record",
+            "value": 193.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/qmux-record/record_bytes=1024/kind=max_data/frames=204/us_per_record",
+            "value": 87.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/qmux-record/record_bytes=16381/kind=stream/frames=1/us_per_record",
+            "value": 5.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/qmux-record/record_bytes=16384/kind=stream/frames=16/us_per_record",
+            "value": 21.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/qmux-record/record_bytes=16128/kind=stream/frames=256/us_per_record",
+            "value": 241.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/qmux-record/record_bytes=16380/kind=empty/frames=4095/us_per_record",
+            "value": 3758,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/qmux-record/record_bytes=16380/kind=max_data/frames=3276/us_per_record",
+            "value": 1085.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/reader/frame_bytes=16384/chunk_bytes=1200/chunks=14/ns_per_byte",
+            "value": 0.949,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/reader/frame_bytes=16384/chunk_bytes=16384/chunks=1/ns_per_byte",
+            "value": 0.071,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/reader/frame_bytes=16384/chunk_bytes=1048576/chunks=1/ns_per_byte",
+            "value": 0.066,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/reader/frame_bytes=262144/chunk_bytes=1200/chunks=219/ns_per_byte",
+            "value": 0.514,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/reader/frame_bytes=262144/chunk_bytes=16384/chunks=16/ns_per_byte",
+            "value": 0.176,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/reader/frame_bytes=262144/chunk_bytes=1048576/chunks=1/ns_per_byte",
+            "value": 0.004,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/reader/frame_bytes=1048576/chunk_bytes=1200/chunks=874/ns_per_byte",
+            "value": 0.478,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/reader/frame_bytes=1048576/chunk_bytes=16384/chunks=64/ns_per_byte",
+            "value": 0.222,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/reader/frame_bytes=1048576/chunk_bytes=1048576/chunks=1/ns_per_byte",
+            "value": 0.001,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1/tracks=1/joined=1/refresh_us",
+            "value": 437.85,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1/tracks=1/joined=8/refresh_us",
+            "value": 552.15,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1/tracks=1/joined=32/refresh_us",
+            "value": 684.84,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1/tracks=8/joined=1/refresh_us",
+            "value": 225.21,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1/tracks=8/joined=8/refresh_us",
+            "value": 288.77,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1/tracks=8/joined=32/refresh_us",
+            "value": 505.13,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1/tracks=32/joined=1/refresh_us",
+            "value": 144.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1/tracks=32/joined=8/refresh_us",
+            "value": 244.58,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1/tracks=32/joined=32/refresh_us",
+            "value": 647.17,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=64/tracks=1/joined=1/refresh_us",
+            "value": 277.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=64/tracks=1/joined=8/refresh_us",
+            "value": 1173.11,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=64/tracks=1/joined=32/refresh_us",
+            "value": 3728.35,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=64/tracks=8/joined=1/refresh_us",
+            "value": 285.62,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=64/tracks=8/joined=8/refresh_us",
+            "value": 1094.07,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=64/tracks=8/joined=32/refresh_us",
+            "value": 3553.58,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=64/tracks=32/joined=1/refresh_us",
+            "value": 292.67,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=64/tracks=32/joined=8/refresh_us",
+            "value": 1019.37,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=64/tracks=32/joined=32/refresh_us",
+            "value": 3823.25,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1024/tracks=1/joined=1/refresh_us",
+            "value": 12706.23,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1024/tracks=1/joined=8/refresh_us",
+            "value": 104440.86,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1024/tracks=1/joined=32/refresh_us",
+            "value": 407581.14,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1024/tracks=8/joined=1/refresh_us",
+            "value": 12987.23,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1024/tracks=8/joined=8/refresh_us",
+            "value": 101983.22,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1024/tracks=8/joined=32/refresh_us",
+            "value": 410569.58,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1024/tracks=32/joined=1/refresh_us",
+            "value": 13079.48,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1024/tracks=32/joined=8/refresh_us",
+            "value": 104212.49,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/refresh/retained=1024/tracks=32/joined=32/refresh_us",
+            "value": 405990.56,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=watched/routes=8/followers=1/update_us",
+            "value": 37.69,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=watched/routes=8/followers=8/update_us",
+            "value": 50.04,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=watched/routes=8/followers=32/update_us",
+            "value": 113.44,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=watched/routes=32/followers=1/update_us",
+            "value": 26.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=watched/routes=32/followers=8/update_us",
+            "value": 42.49,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=watched/routes=32/followers=32/update_us",
+            "value": 108.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=watched/routes=128/followers=1/update_us",
+            "value": 44.35,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=watched/routes=128/followers=8/update_us",
+            "value": 65.01,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=watched/routes=128/followers=32/update_us",
+            "value": 128.42,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=unrelated/routes=8/followers=1/update_us",
+            "value": 13.62,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=unrelated/routes=8/followers=8/update_us",
+            "value": 14.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=unrelated/routes=8/followers=32/update_us",
+            "value": 16.45,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=unrelated/routes=32/followers=1/update_us",
+            "value": 18.52,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=unrelated/routes=32/followers=8/update_us",
+            "value": 19.48,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=unrelated/routes=32/followers=32/update_us",
+            "value": 21.48,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=unrelated/routes=128/followers=1/update_us",
+            "value": 35.23,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=unrelated/routes=128/followers=8/update_us",
+            "value": 36.97,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/touched=unrelated/routes=128/followers=32/update_us",
+            "value": 36.74,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/unrelated=8/waiters=1/cancel_us",
+            "value": 16.57,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/unrelated=8/waiters=8/cancel_us",
+            "value": 91.08,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/unrelated=8/waiters=32/cancel_us",
+            "value": 152.13,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/unrelated=128/waiters=1/cancel_us",
+            "value": 6.94,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/unrelated=128/waiters=8/cancel_us",
+            "value": 39.45,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/unrelated=128/waiters=32/cancel_us",
+            "value": 105.63,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/unrelated=2048/waiters=1/cancel_us",
+            "value": 9.41,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/unrelated=2048/waiters=8/cancel_us",
+            "value": 65.32,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/unrelated=2048/waiters=32/cancel_us",
+            "value": 101.22,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/failovers=0/extra_routes=0/cancel_us",
+            "value": 2.79,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/failovers=0/extra_routes=128/cancel_us",
+            "value": 4.06,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/failovers=1/extra_routes=0/cancel_us",
+            "value": 3.08,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/failovers=1/extra_routes=128/cancel_us",
+            "value": 4.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/failovers=16/extra_routes=0/cancel_us",
+            "value": 3.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/failovers=16/extra_routes=128/cancel_us",
+            "value": 6.15,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/failovers=128/extra_routes=0/cancel_us",
+            "value": 19.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/failovers=128/extra_routes=128/cancel_us",
+            "value": 18.77,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-forward/paths=1024/waiters=1/active_ms",
+            "value": 3.12,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-forward/paths=1024/waiters=1/settled_ms",
+            "value": 4.56,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-forward/paths=1024/waiters=4/active_ms",
+            "value": 10.19,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-forward/paths=1024/waiters=4/settled_ms",
+            "value": 16.79,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-forward/paths=4096/waiters=1/active_ms",
+            "value": 15.48,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-forward/paths=4096/waiters=1/settled_ms",
+            "value": 22.59,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-forward/paths=4096/waiters=4/active_ms",
+            "value": 44.51,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-forward/paths=4096/waiters=4/settled_ms",
+            "value": 71.14,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-forward/paths=16384/waiters=1/active_ms",
+            "value": 71.66,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-forward/paths=16384/waiters=1/settled_ms",
+            "value": 104.91,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-forward/paths=16384/waiters=4/active_ms",
+            "value": 200.6,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-forward/paths=16384/waiters=4/settled_ms",
+            "value": 313.16,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-reverse/paths=1024/waiters=1/active_ms",
+            "value": 3.72,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-reverse/paths=1024/waiters=1/settled_ms",
+            "value": 5.3,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-reverse/paths=1024/waiters=4/active_ms",
+            "value": 11.51,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-reverse/paths=1024/waiters=4/settled_ms",
+            "value": 17.76,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-reverse/paths=4096/waiters=1/active_ms",
+            "value": 16.23,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-reverse/paths=4096/waiters=1/settled_ms",
+            "value": 21.45,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-reverse/paths=4096/waiters=4/active_ms",
+            "value": 48.14,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-reverse/paths=4096/waiters=4/settled_ms",
+            "value": 73.54,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-reverse/paths=16384/waiters=1/active_ms",
+            "value": 75.31,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-reverse/paths=16384/waiters=1/settled_ms",
+            "value": 100.74,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-reverse/paths=16384/waiters=4/active_ms",
+            "value": 187.67,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=cancel-reverse/paths=16384/waiters=4/settled_ms",
+            "value": 329.85,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=drain-local/paths=1024/waiters=1/active_ms",
+            "value": 3.1,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=drain-local/paths=1024/waiters=1/settled_ms",
+            "value": 3.11,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=drain-local/paths=1024/waiters=4/active_ms",
+            "value": 3.06,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=drain-local/paths=1024/waiters=4/settled_ms",
+            "value": 3.06,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=drain-local/paths=4096/waiters=1/active_ms",
+            "value": 11.95,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=drain-local/paths=4096/waiters=1/settled_ms",
+            "value": 11.95,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=drain-local/paths=4096/waiters=4/active_ms",
+            "value": 13.3,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=drain-local/paths=4096/waiters=4/settled_ms",
+            "value": 13.3,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=drain-local/paths=16384/waiters=1/active_ms",
+            "value": 56.88,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=drain-local/paths=16384/waiters=1/settled_ms",
+            "value": 56.89,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=drain-local/paths=16384/waiters=4/active_ms",
+            "value": 82.34,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/operation=drain-local/paths=16384/waiters=4/settled_ms",
+            "value": 82.35,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=1/cancelled=1/active_us",
+            "value": 10.43,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=1/cancelled=1/settled_us",
+            "value": 17.71,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=1/cancelled=64/active_us",
+            "value": 130.54,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=1/cancelled=64/settled_us",
+            "value": 271.97,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=1/cancelled=1024/active_us",
+            "value": 2158.21,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=1/cancelled=1024/settled_us",
+            "value": 3499.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=16/cancelled=1/active_us",
+            "value": 13.54,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=16/cancelled=1/settled_us",
+            "value": 22.69,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=16/cancelled=64/active_us",
+            "value": 119.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=16/cancelled=64/settled_us",
+            "value": 235.31,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=16/cancelled=1024/active_us",
+            "value": 2188.33,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=16/cancelled=1024/settled_us",
+            "value": 3949.84,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=128/cancelled=1/active_us",
+            "value": 19.71,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=128/cancelled=1/settled_us",
+            "value": 31.98,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=128/cancelled=64/active_us",
+            "value": 124,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=128/cancelled=64/settled_us",
+            "value": 240.37,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=128/cancelled=1024/active_us",
+            "value": 2130.33,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=false/routes=128/cancelled=1024/settled_us",
+            "value": 3516.63,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=1/cancelled=1/active_us",
+            "value": 4.95,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=1/cancelled=1/settled_us",
+            "value": 11.18,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=1/cancelled=64/active_us",
+            "value": 127.66,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=1/cancelled=64/settled_us",
+            "value": 222.26,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=1/cancelled=1024/active_us",
+            "value": 1904.92,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=1/cancelled=1024/settled_us",
+            "value": 3669.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=16/cancelled=1/active_us",
+            "value": 6.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=16/cancelled=1/settled_us",
+            "value": 14.86,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=16/cancelled=64/active_us",
+            "value": 128.83,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=16/cancelled=64/settled_us",
+            "value": 234.86,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=16/cancelled=1024/active_us",
+            "value": 2226.08,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=16/cancelled=1024/settled_us",
+            "value": 3582.41,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=128/cancelled=1/active_us",
+            "value": 10.46,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=128/cancelled=1/settled_us",
+            "value": 21.88,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=128/cancelled=64/active_us",
+            "value": 131.36,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=128/cancelled=64/settled_us",
+            "value": 223.12,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=128/cancelled=1024/active_us",
+            "value": 2752.98,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/survivor=true/routes=128/cancelled=1024/settled_us",
+            "value": 4445.37,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/namespace_update=namespace_update/draft=18/namespaces=1/subscribers=1/update_us",
+            "value": 607.46,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/namespace_update=namespace_update/draft=18/namespaces=1/subscribers=8/update_us",
+            "value": 1302.39,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/namespace_update=namespace_update/draft=18/namespaces=32/subscribers=1/update_us",
+            "value": 1469.41,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/namespace_update=namespace_update/draft=18/namespaces=32/subscribers=8/update_us",
+            "value": 8577.31,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/namespace_update=namespace_update/draft=18/namespaces=128/subscribers=1/update_us",
+            "value": 4045.84,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/namespace_update=namespace_update/draft=18/namespaces=128/subscribers=8/update_us",
+            "value": 30840.25,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/namespace_update=namespace_update/draft=21/namespaces=1/subscribers=1/update_us",
+            "value": 91.83,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/namespace_update=namespace_update/draft=21/namespaces=1/subscribers=8/update_us",
+            "value": 552.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/namespace_update=namespace_update/draft=21/namespaces=32/subscribers=1/update_us",
+            "value": 1025.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/namespace_update=namespace_update/draft=21/namespaces=32/subscribers=8/update_us",
+            "value": 8348.72,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/namespace_update=namespace_update/draft=21/namespaces=128/subscribers=1/update_us",
+            "value": 3858.72,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/requests/namespace_update=namespace_update/draft=21/namespaces=128/subscribers=8/update_us",
+            "value": 28747.89,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/swaps=0/direct_us",
+            "value": 3.91,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/swaps=0/front_us",
+            "value": 5.25,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/swaps=0/fork_us",
+            "value": 5.68,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/swaps=0/direct_us",
+            "value": 2.14,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/swaps=0/front_us",
+            "value": 3.82,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/swaps=0/fork_us",
+            "value": 3.13,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/swaps=0/direct_us",
+            "value": 1.89,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/swaps=0/front_us",
+            "value": 3.01,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/swaps=0/fork_us",
+            "value": 2.96,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/swaps=1/direct_us",
+            "value": 3.12,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/swaps=1/front_us",
+            "value": 5.53,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/swaps=1/fork_us",
+            "value": 5.41,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/swaps=1/direct_us",
+            "value": 1.94,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/swaps=1/front_us",
+            "value": 3.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/swaps=1/fork_us",
+            "value": 3.25,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/swaps=1/direct_us",
+            "value": 1.95,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/swaps=1/front_us",
+            "value": 3.19,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/swaps=1/fork_us",
+            "value": 3.36,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/swaps=16/direct_us",
+            "value": 3.07,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/swaps=16/front_us",
+            "value": 5.19,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/swaps=16/fork_us",
+            "value": 5.33,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/swaps=16/direct_us",
+            "value": 2.08,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/swaps=16/front_us",
+            "value": 4.25,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/swaps=16/fork_us",
+            "value": 3.66,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/swaps=16/direct_us",
+            "value": 1.83,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/swaps=16/front_us",
+            "value": 3.42,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/swaps=16/fork_us",
+            "value": 3.17,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/flaps=1/flap_us",
+            "value": 85.76,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/flaps=16/flap_us",
+            "value": 53.08,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/flaps=64/flap_us",
+            "value": 42.06,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/flaps=1/flap_us",
+            "value": 25.47,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/flaps=16/flap_us",
+            "value": 10.79,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/flaps=64/flap_us",
+            "value": 9.61,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/flaps=1/flap_us",
+            "value": 15.59,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/flaps=16/flap_us",
+            "value": 5.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/flaps=64/flap_us",
+            "value": 4.25,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/replayed_frames=0/readable_us",
+            "value": 8.72,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/replayed_frames=0/readable_us",
+            "value": 4.14,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/replayed_frames=0/readable_us",
+            "value": 2.84,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/replayed_frames=1/readable_us",
+            "value": 4.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/replayed_frames=1/readable_us",
+            "value": 2.93,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/replayed_frames=1/readable_us",
+            "value": 1.64,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/replayed_frames=64/readable_us",
+            "value": 4.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/replayed_frames=64/readable_us",
+            "value": 3.09,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/replayed_frames=64/readable_us",
+            "value": 2.99,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=1/replayed_frames=1024/readable_us",
+            "value": 83.27,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=4/replayed_frames=1024/readable_us",
+            "value": 54.22,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/readers=16/replayed_frames=1024/readable_us",
+            "value": 52.98,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/datagram_readers=1/retained=1/us_per_datagram",
+            "value": 0.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/datagram_readers=4/retained=1/us_per_datagram",
+            "value": 0.46,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/datagram_readers=16/retained=1/us_per_datagram",
+            "value": 0.39,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/datagram_readers=1/retained=64/us_per_datagram",
+            "value": 0.55,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/datagram_readers=4/retained=64/us_per_datagram",
+            "value": 0.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/datagram_readers=16/retained=64/us_per_datagram",
+            "value": 0.35,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/datagram_readers=1/retained=4096/us_per_datagram",
+            "value": 0.51,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/datagram_readers=4/retained=4096/us_per_datagram",
+            "value": 0.35,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/resume/datagram_readers=16/retained=4096/us_per_datagram",
+            "value": 0.32,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/signals/op=new-error/ns_per_op",
+            "value": 289,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/signals/op=create-close/ns_per_op",
+            "value": 2423,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/signals/op=create-get-close/ns_per_op",
+            "value": 2682,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/slow-group/groups=1/warnings=1/bytes=51/catchup_ms",
+            "value": 1.329,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/slow-group/groups=16/warnings=1/bytes=53/catchup_ms",
+            "value": 0.842,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/slow-group/groups=256/warnings=1/bytes=55/catchup_ms",
+            "value": 4.856,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/slow-group/groups=1024/warnings=1/bytes=57/catchup_ms",
+            "value": 24.17,
+            "unit": "ms"
+          },
+          {
+            "name": "bench-js/js/subscribe-drop/publishers=1/subscribers=1/groups=128/drop_us",
+            "value": 101.79,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-drop/publishers=1/subscribers=4/groups=128/drop_us",
+            "value": 56.44,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-drop/publishers=1/subscribers=16/groups=128/drop_us",
+            "value": 49.62,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-drop/publishers=4/subscribers=1/groups=128/drop_us",
+            "value": 36.38,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-drop/publishers=4/subscribers=4/groups=128/drop_us",
+            "value": 47.34,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-drop/publishers=4/subscribers=16/groups=128/drop_us",
+            "value": 49.71,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-drop/publishers=16/subscribers=1/groups=128/drop_us",
+            "value": 44.36,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-drop/publishers=16/subscribers=4/groups=128/drop_us",
+            "value": 50.27,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-drop/publishers=16/subscribers=16/groups=128/drop_us",
+            "value": 55.13,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-tracks/broadcasts=1/subscribers=1/track_added_us",
+            "value": 382.09,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-tracks/broadcasts=1/subscribers=4/track_added_us",
+            "value": 426.11,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-tracks/broadcasts=1/subscribers=16/track_added_us",
+            "value": 669.24,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-tracks/broadcasts=16/subscribers=1/track_added_us",
+            "value": 80.82,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-tracks/broadcasts=16/subscribers=4/track_added_us",
+            "value": 169.95,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-tracks/broadcasts=16/subscribers=16/track_added_us",
+            "value": 611.06,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-tracks/broadcasts=128/subscribers=1/track_added_us",
+            "value": 47.77,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-tracks/broadcasts=128/subscribers=4/track_added_us",
+            "value": 156.04,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/subscribe-tracks/broadcasts=128/subscribers=16/track_added_us",
+            "value": 527.84,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=1/held=0/operation=read/publish_us",
+            "value": 32.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=1/held=0/operation=read/end_us",
+            "value": 16.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=1/held=0/operation=read/idle_us",
+            "value": 52,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=1/held=0/operation=read/publish_us",
+            "value": 11.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=1/held=0/operation=read/end_us",
+            "value": 18.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=1/held=0/operation=read/idle_us",
+            "value": 102.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=1/held=0/operation=read/publish_us",
+            "value": 10,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=1/held=0/operation=read/end_us",
+            "value": 26,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=1/held=0/operation=read/idle_us",
+            "value": 360.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=1/held=0/operation=read/publish_us",
+            "value": 12.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=1/held=0/operation=read/end_us",
+            "value": 78.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=1/held=0/operation=read/idle_us",
+            "value": 1497.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=4/held=0/operation=read/publish_us",
+            "value": 27.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=4/held=0/operation=read/end_us",
+            "value": 17.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=4/held=0/operation=read/idle_us",
+            "value": 58.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=4/held=0/operation=read/publish_us",
+            "value": 24.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=4/held=0/operation=read/end_us",
+            "value": 20.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=4/held=0/operation=read/idle_us",
+            "value": 160.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=4/held=0/operation=read/publish_us",
+            "value": 23.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=4/held=0/operation=read/end_us",
+            "value": 32.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=4/held=0/operation=read/idle_us",
+            "value": 593.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=4/held=0/operation=read/publish_us",
+            "value": 23.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=4/held=0/operation=read/end_us",
+            "value": 134.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=4/held=0/operation=read/idle_us",
+            "value": 3401,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=16/held=0/operation=read/publish_us",
+            "value": 67.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=16/held=0/operation=read/end_us",
+            "value": 28.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=16/held=0/operation=read/idle_us",
+            "value": 102.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=16/held=0/operation=read/publish_us",
+            "value": 76.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=16/held=0/operation=read/end_us",
+            "value": 43.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=16/held=0/operation=read/idle_us",
+            "value": 455.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=16/held=0/operation=read/publish_us",
+            "value": 74.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=16/held=0/operation=read/end_us",
+            "value": 81.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=16/held=0/operation=read/idle_us",
+            "value": 2204.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=16/held=0/operation=read/publish_us",
+            "value": 62.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=16/held=0/operation=read/end_us",
+            "value": 306.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=16/held=0/operation=read/idle_us",
+            "value": 12684.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=1/held=16/operation=read/publish_us",
+            "value": 151.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=1/held=16/operation=read/end_us",
+            "value": 24.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=1/held=16/operation=read/idle_us",
+            "value": 157.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=1/held=16/operation=read/publish_us",
+            "value": 163.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=1/held=16/operation=read/end_us",
+            "value": 31.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=1/held=16/operation=read/idle_us",
+            "value": 227.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=1/held=16/operation=read/publish_us",
+            "value": 164.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=1/held=16/operation=read/end_us",
+            "value": 47.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=1/held=16/operation=read/idle_us",
+            "value": 524.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=1/held=16/operation=read/publish_us",
+            "value": 187.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=1/held=16/operation=read/end_us",
+            "value": 77.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=1/held=16/operation=read/idle_us",
+            "value": 1696.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=4/held=16/operation=read/publish_us",
+            "value": 920.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=4/held=16/operation=read/end_us",
+            "value": 28.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=4/held=16/operation=read/idle_us",
+            "value": 256.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=4/held=16/operation=read/publish_us",
+            "value": 885.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=4/held=16/operation=read/end_us",
+            "value": 32.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=4/held=16/operation=read/idle_us",
+            "value": 383.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=4/held=16/operation=read/publish_us",
+            "value": 782.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=4/held=16/operation=read/end_us",
+            "value": 56.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=4/held=16/operation=read/idle_us",
+            "value": 957.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=4/held=16/operation=read/publish_us",
+            "value": 738.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=4/held=16/operation=read/end_us",
+            "value": 168.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=4/held=16/operation=read/idle_us",
+            "value": 4446.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=16/held=16/operation=read/publish_us",
+            "value": 3478.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=16/held=16/operation=read/end_us",
+            "value": 47.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=16/held=16/operation=read/idle_us",
+            "value": 645.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=16/held=16/operation=read/publish_us",
+            "value": 3391.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=16/held=16/operation=read/end_us",
+            "value": 70.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=16/held=16/operation=read/idle_us",
+            "value": 1193.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=16/held=16/operation=read/publish_us",
+            "value": 3137.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=16/held=16/operation=read/end_us",
+            "value": 129.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=16/held=16/operation=read/idle_us",
+            "value": 3179.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=16/held=16/operation=read/publish_us",
+            "value": 2961.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=16/held=16/operation=read/end_us",
+            "value": 382.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=16/held=16/operation=read/idle_us",
+            "value": 14583.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=1/held=16/operation=open/publish_us",
+            "value": 102.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=1/held=16/operation=open/end_us",
+            "value": 26.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=1/held=16/operation=open/idle_us",
+            "value": 166.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=1/held=16/operation=open/publish_us",
+            "value": 125.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=1/held=16/operation=open/end_us",
+            "value": 34.3,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=1/held=16/operation=open/idle_us",
+            "value": 232.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=1/held=16/operation=open/publish_us",
+            "value": 127,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=1/held=16/operation=open/end_us",
+            "value": 57.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=1/held=16/operation=open/idle_us",
+            "value": 551.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=1/held=16/operation=open/publish_us",
+            "value": 100.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=1/held=16/operation=open/end_us",
+            "value": 149.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=1/held=16/operation=open/idle_us",
+            "value": 2116,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=4/held=16/operation=open/publish_us",
+            "value": 512.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=4/held=16/operation=open/end_us",
+            "value": 36.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=4/held=16/operation=open/idle_us",
+            "value": 262.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=4/held=16/operation=open/publish_us",
+            "value": 476.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=4/held=16/operation=open/end_us",
+            "value": 46.7,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=4/held=16/operation=open/idle_us",
+            "value": 416.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=4/held=16/operation=open/publish_us",
+            "value": 483.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=4/held=16/operation=open/end_us",
+            "value": 85.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=4/held=16/operation=open/idle_us",
+            "value": 1118.1,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=4/held=16/operation=open/publish_us",
+            "value": 443.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=4/held=16/operation=open/end_us",
+            "value": 223.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=4/held=16/operation=open/idle_us",
+            "value": 4746,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=16/held=16/operation=open/publish_us",
+            "value": 1925.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=16/held=16/operation=open/end_us",
+            "value": 78.2,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=25/subscribers=16/held=16/operation=open/idle_us",
+            "value": 662.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=16/held=16/operation=open/publish_us",
+            "value": 2019.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=16/held=16/operation=open/end_us",
+            "value": 99,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=100/subscribers=16/held=16/operation=open/idle_us",
+            "value": 1154.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=16/held=16/operation=open/publish_us",
+            "value": 1880.5,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=16/held=16/operation=open/end_us",
+            "value": 187.9,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=400/subscribers=16/held=16/operation=open/idle_us",
+            "value": 3615.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=16/held=16/operation=open/publish_us",
+            "value": 1896.6,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=16/held=16/operation=open/end_us",
+            "value": 490.8,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/track/retained=1500/subscribers=16/held=16/operation=open/idle_us",
+            "value": 15123.4,
+            "unit": "us"
+          },
+          {
+            "name": "bench-js/js/varint/format=quic/value=1-byte/op=encode/ns_per_op",
+            "value": 49,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=quic/value=1-byte/op=decode/ns_per_op",
+            "value": 5.7,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=quic/value=1-byte/op=decode-varint/ns_per_op",
+            "value": 7.9,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=quic/value=2-byte/op=encode/ns_per_op",
+            "value": 49.3,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=quic/value=2-byte/op=decode/ns_per_op",
+            "value": 8.2,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=quic/value=2-byte/op=decode-varint/ns_per_op",
+            "value": 8.4,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=quic/value=4-byte/op=encode/ns_per_op",
+            "value": 53.3,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=quic/value=4-byte/op=decode/ns_per_op",
+            "value": 7.9,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=quic/value=4-byte/op=decode-varint/ns_per_op",
+            "value": 8.7,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=quic/value=8-byte/op=encode/ns_per_op",
+            "value": 49.9,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=quic/value=8-byte/op=decode/ns_per_op",
+            "value": 17.3,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=quic/value=8-byte/op=decode-varint/ns_per_op",
+            "value": 11.2,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=leading-ones/value=1-byte/op=encode/ns_per_op",
+            "value": 50.2,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=leading-ones/value=1-byte/op=decode/ns_per_op",
+            "value": 5.8,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=leading-ones/value=1-byte/op=decode-varint/ns_per_op",
+            "value": 11.8,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=leading-ones/value=2-byte/op=encode/ns_per_op",
+            "value": 50.5,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=leading-ones/value=2-byte/op=decode/ns_per_op",
+            "value": 9,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=leading-ones/value=2-byte/op=decode-varint/ns_per_op",
+            "value": 13.2,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=leading-ones/value=4-byte/op=encode/ns_per_op",
+            "value": 54.4,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=leading-ones/value=4-byte/op=decode/ns_per_op",
+            "value": 9.2,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=leading-ones/value=4-byte/op=decode-varint/ns_per_op",
+            "value": 13.6,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=leading-ones/value=8-byte/op=encode/ns_per_op",
+            "value": 59.6,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=leading-ones/value=8-byte/op=decode/ns_per_op",
+            "value": 21.7,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-js/js/varint/format=leading-ones/value=8-byte/op=decode-varint/ns_per_op",
+            "value": 16.1,
+            "unit": "ns"
+          },
+          {
+            "name": "bench-rust/rust/net/server_admission/workers=1/0",
+            "value": 59.564260959625244,
+            "range": "59.56..59.57",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/server_admission/workers=1/4096",
+            "value": 38.65024495124817,
+            "range": "38.62..38.68",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/server_admission/workers=1/64",
+            "value": 38.723811864852905,
+            "range": "38.71..38.74",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/server_admission/workers=16/0",
+            "value": 4032.277374267578,
+            "range": "4022..4042",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/server_admission/workers=16/4096",
+            "value": 3475.1126708984375,
+            "range": "3452..3498",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/server_admission/workers=16/64",
+            "value": 3480.411895751953,
+            "range": "3479..3481",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/server_admission/workers=4/0",
+            "value": 1024.2043075561523,
+            "range": "1015..1033",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/server_admission/workers=4/4096",
+            "value": 821.1334838867188,
+            "range": "816.4..825.8",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/server_admission/workers=4/64",
+            "value": 819.0420608520508,
+            "range": "801.2..836.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_health/churn_lite06/100",
+            "value": 120.76823043823242,
+            "range": "120.8..120.8",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_health/churn_lite06/1000",
+            "value": 124.30768775939941,
+            "range": "123.8..124.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_health/churn_lite06/10000",
+            "value": 123.40074348449707,
+            "range": "123.3..123.5",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_health/churn_lite07/100",
+            "value": 1086.7100524902344,
+            "range": "1079..1094",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_health/churn_lite07/1000",
+            "value": 1320.234375,
+            "range": "1319..1322",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_health/churn_lite07/10000",
+            "value": 1552.1435546875,
+            "range": "1549..1555",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_health/decode_lite06/10000x1000",
+            "value": 3918058.9375,
+            "range": "3.908e+06..3.928e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_health/decode_lite06/1000x0",
+            "value": 316668.916015625,
+            "range": "3.166e+05..3.167e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_health/decode_lite06/1000x1000",
+            "value": 634420.78125,
+            "range": "6.329e+05..6.359e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_health/decode_lite06/100x0",
+            "value": 31264.42041015625,
+            "range": "3.121e+04..3.132e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_health/decode_lite07/10000x1000",
+            "value": 5438031.34375,
+            "range": "5.425e+06..5.451e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_health/decode_lite07/1000x0",
+            "value": 455152.53125,
+            "range": "4.547e+05..4.556e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_health/decode_lite07/1000x1000",
+            "value": 909188.578125,
+            "range": "9.085e+05..9.098e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_health/decode_lite07/100x0",
+            "value": 44083.767578125,
+            "range": "4.408e+04..4.409e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_replay/indexed/1024r_1u",
+            "value": 109636.98828125,
+            "range": "1.096e+05..1.097e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_replay/indexed/1024r_32u",
+            "value": 2522521,
+            "range": "2.515e+06..2.53e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_replay/indexed/1024r_8u",
+            "value": 633631.70703125,
+            "range": "6.324e+05..6.348e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_replay/indexed/1r_1u",
+            "value": 149.03898429870605,
+            "range": "149..149.1",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_replay/indexed/1r_32u",
+            "value": 2280.4754333496094,
+            "range": "2280..2281",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_replay/indexed/1r_8u",
+            "value": 683.0276107788086,
+            "range": "683..683.1",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_replay/indexed/64r_1u",
+            "value": 7158.552429199219,
+            "range": "7152..7165",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_replay/indexed/64r_32u",
+            "value": 136476.51171875,
+            "range": "1.361e+05..1.369e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_replay/indexed/64r_8u",
+            "value": 35688.458251953125,
+            "range": "3.567e+04..3.57e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_replay/scan/1024r_1u",
+            "value": 1410498.3515625,
+            "range": "1.41e+06..1.411e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_replay/scan/1024r_32u",
+            "value": 152636683.75,
+            "range": "1.526e+08..1.527e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_replay/scan/1024r_8u",
+            "value": 35580521,
+            "range": "3.555e+07..3.561e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_replay/scan/1r_1u",
+            "value": 59.95721912384033,
+            "range": "59.94..59.97",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_replay/scan/1r_32u",
+            "value": 448.51172256469727,
+            "range": "448.3..448.8",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_replay/scan/1r_8u",
+            "value": 165.73547172546387,
+            "range": "165.6..165.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_replay/scan/64r_1u",
+            "value": 6291.81591796875,
+            "range": "6286..6297",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_replay/scan/64r_32u",
+            "value": 510656.70703125,
+            "range": "5.104e+05..5.109e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_replay/scan/64r_8u",
+            "value": 120327.5732421875,
+            "range": "1.203e+05..1.204e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_unique/churn_lite06/100",
+            "value": 72.31663370132446,
+            "range": "72.3..72.33",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_unique/churn_lite06/1000",
+            "value": 74.12308359146118,
+            "range": "74.09..74.15",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_unique/churn_lite06/10000",
+            "value": 74.25949382781982,
+            "range": "74.22..74.3",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_unique/churn_lite07/100",
+            "value": 536.8708457946777,
+            "range": "531.2..542.6",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_unique/churn_lite07/1000",
+            "value": 615.7218360900879,
+            "range": "611.1..620.3",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_unique/churn_lite07/10000",
+            "value": 693.623046875,
+            "range": "689.4..697.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_unique/decode_lite06/10000x1000",
+            "value": 2520839.703125,
+            "range": "2.515e+06..2.526e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_unique/decode_lite06/1000x0",
+            "value": 223142.265625,
+            "range": "2.231e+05..2.232e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_unique/decode_lite06/1000x1000",
+            "value": 444978.92578125,
+            "range": "4.448e+05..4.451e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_unique/decode_lite06/100x0",
+            "value": 22164.171875,
+            "range": "2.216e+04..2.217e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_unique/decode_lite07/10000x1000",
+            "value": 2636249.46875,
+            "range": "2.63e+06..2.642e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_unique/decode_lite07/1000x0",
+            "value": 232352.931640625,
+            "range": "2.323e+05..2.324e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_unique/decode_lite07/1000x1000",
+            "value": 460477.2890625,
+            "range": "4.603e+05..4.606e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/announce_unique/decode_lite07/100x0",
+            "value": 23186.567260742188,
+            "range": "2.317e+04..2.32e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/moq-lite-07-wip/1/1",
+            "value": 25683.447265625,
+            "range": "2.566e+04..2.571e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/moq-lite-07-wip/1/128",
+            "value": 4818009.9375,
+            "range": "4.812e+06..4.824e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/moq-lite-07-wip/1/16",
+            "value": 197987.708984375,
+            "range": "1.976e+05..1.984e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/moq-lite-07-wip/16/1",
+            "value": 609316.80078125,
+            "range": "6.091e+05..6.096e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/moq-lite-07-wip/16/128",
+            "value": 94908255.625,
+            "range": "9.177e+07..9.805e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/moq-lite-07-wip/16/16",
+            "value": 4274071.25,
+            "range": "4.267e+06..4.281e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/moq-lite-07-wip/64/1",
+            "value": 2545746.3125,
+            "range": "2.528e+06..2.563e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/moq-lite-07-wip/64/128",
+            "value": 359044183,
+            "range": "3.59e+08..3.59e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/moq-lite-07-wip/64/16",
+            "value": 18503199.75,
+            "range": "1.823e+07..1.878e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/moq-transport-22/1/1",
+            "value": 33129.23779296875,
+            "range": "3.312e+04..3.314e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/moq-transport-22/1/128",
+            "value": 5274695.84375,
+            "range": "5.245e+06..5.304e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/moq-transport-22/1/16",
+            "value": 247018.849609375,
+            "range": "2.465e+05..2.475e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/moq-transport-22/16/1",
+            "value": 926182.0703125,
+            "range": "9.143e+05..9.38e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/moq-transport-22/16/128",
+            "value": 109264206.5,
+            "range": "1.079e+08..1.106e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/moq-transport-22/16/16",
+            "value": 5381303.65625,
+            "range": "5.372e+06..5.39e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/moq-transport-22/64/1",
+            "value": 3655585.3125,
+            "range": "3.629e+06..3.682e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/moq-transport-22/64/128",
+            "value": 420073821,
+            "range": "4.201e+08..4.201e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/moq-transport-22/64/16",
+            "value": 25406299.5,
+            "range": "2.521e+07..2.561e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/renewal/1/1",
+            "value": 14761.251098632812,
+            "range": "1.473e+04..1.479e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/renewal/1/128",
+            "value": 1537536.234375,
+            "range": "1.536e+06..1.539e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/renewal/1/16",
+            "value": 147216.9453125,
+            "range": "1.472e+05..1.473e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/renewal/16/1",
+            "value": 156437.8828125,
+            "range": "1.543e+05..1.586e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/renewal/16/128",
+            "value": 14583651.25,
+            "range": "1.452e+07..1.465e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/renewal/16/16",
+            "value": 1489672.25,
+            "range": "1.483e+06..1.496e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/renewal/64/1",
+            "value": 742782.5,
+            "range": "7.082e+05..7.774e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/renewal/64/128",
+            "value": 58683495,
+            "range": "5.868e+07..5.868e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/renewal/64/16",
+            "value": 7800681.25,
+            "range": "7.77e+06..7.831e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/renewal_one/1/1",
+            "value": 15690.5,
+            "range": "1.545e+04..1.593e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/renewal_one/1/128",
+            "value": 15514.759765625,
+            "range": "1.542e+04..1.561e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/renewal_one/1/16",
+            "value": 14836.543090820312,
+            "range": "1.483e+04..1.484e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/renewal_one/16/1",
+            "value": 151664.375,
+            "range": "1.497e+05..1.536e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/renewal_one/16/128",
+            "value": 230349.5625,
+            "range": "2.225e+05..2.382e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/renewal_one/16/16",
+            "value": 169469.796875,
+            "range": "1.688e+05..1.702e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/renewal_one/64/1",
+            "value": 746999.453125,
+            "range": "7.151e+05..7.789e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/renewal_one/64/128",
+            "value": 1146332,
+            "range": "1.146e+06..1.146e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/renewal_one/64/16",
+            "value": 1044186.5,
+            "range": "1.033e+06..1.056e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/waiting/moq-lite-07-wip/1/1",
+            "value": 52776.36279296875,
+            "range": "5.259e+04..5.297e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/waiting/moq-lite-07-wip/1/128",
+            "value": 2858017.953125,
+            "range": "2.85e+06..2.866e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/waiting/moq-lite-07-wip/1/16",
+            "value": 354913.546875,
+            "range": "3.531e+05..3.567e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/waiting/moq-lite-07-wip/128/1",
+            "value": 1564971.984375,
+            "range": "1.564e+06..1.566e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/waiting/moq-lite-07-wip/128/128",
+            "value": 4376196.84375,
+            "range": "4.359e+06..4.393e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/waiting/moq-lite-07-wip/128/16",
+            "value": 1902314.15625,
+            "range": "1.896e+06..1.909e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/waiting/moq-lite-07-wip/16/1",
+            "value": 179112.091796875,
+            "range": "1.789e+05..1.793e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/waiting/moq-lite-07-wip/16/128",
+            "value": 2953309.03125,
+            "range": "2.94e+06..2.967e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/waiting/moq-lite-07-wip/16/16",
+            "value": 494256.30859375,
+            "range": "4.931e+05..4.954e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/waiting/moq-transport-22/1/1",
+            "value": 68739.654296875,
+            "range": "6.832e+04..6.916e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/waiting/moq-transport-22/1/128",
+            "value": 3266938.25,
+            "range": "3.259e+06..3.275e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/waiting/moq-transport-22/1/16",
+            "value": 415050.95703125,
+            "range": "4.142e+05..4.159e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/waiting/moq-transport-22/128/1",
+            "value": 2107148.65625,
+            "range": "2.104e+06..2.11e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/waiting/moq-transport-22/128/128",
+            "value": 5295493.78125,
+            "range": "5.28e+06..5.31e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/waiting/moq-transport-22/128/16",
+            "value": 2478304.5,
+            "range": "2.472e+06..2.485e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/waiting/moq-transport-22/16/1",
+            "value": 255711.326171875,
+            "range": "2.537e+05..2.577e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/waiting/moq-transport-22/16/128",
+            "value": 3410993.9375,
+            "range": "3.405e+06..3.417e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/auth/waiting/moq-transport-22/16/16",
+            "value": 628468.80078125,
+            "range": "6.236e+05..6.333e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/bandwidth/update/1",
+            "value": 94.43683862686157,
+            "range": "94.43..94.45",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/bandwidth/update/10",
+            "value": 95.79506587982178,
+            "range": "95.77..95.82",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/bandwidth/update/1000",
+            "value": 98.0980224609375,
+            "range": "97.6..98.59",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/bandwidth/update/10000",
+            "value": 616,
+            "range": "616..616",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/codec_messages/decode/ietf",
+            "value": 134.26794242858887,
+            "range": "134.2..134.3",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/codec_messages/decode/lite",
+            "value": 126.56154918670654,
+            "range": "126.5..126.7",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/codec_messages/encode/ietf",
+            "value": 103.752272605896,
+            "range": "103.7..103.8",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/codec_messages/encode/lite",
+            "value": 80.45918130874634,
+            "range": "80.43..80.49",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/codec_varint/decode/leading_ones",
+            "value": 1118.127212524414,
+            "range": "1117..1120",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/codec_varint/decode/quic",
+            "value": 962.649658203125,
+            "range": "961.5..963.8",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/codec_varint/encode/leading_ones",
+            "value": 1876.458984375,
+            "range": "1876..1877",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/codec_varint/encode/quic",
+            "value": 1890.1793670654297,
+            "range": "1890..1891",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/budget/size=16384/streams=1",
+            "value": 3467.743865966797,
+            "range": "3466..3470",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/budget/size=16384/streams=16",
+            "value": 40135.92822265625,
+            "range": "4.01e+04..4.018e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/budget/size=16384/streams=64",
+            "value": 208992.55859375,
+            "range": "2.083e+05..2.097e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/budget/size=2097152/streams=1",
+            "value": 277115.228515625,
+            "range": "2.756e+05..2.787e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/budget/size=2097152/streams=16",
+            "value": 4848714.53125,
+            "range": "4.82e+06..4.877e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/budget/size=2097152/streams=64",
+            "value": 30838841.75,
+            "range": "3.026e+07..3.142e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/budget/size=262144/streams=1",
+            "value": 26440.43896484375,
+            "range": "2.634e+04..2.654e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/budget/size=262144/streams=16",
+            "value": 630884.4921875,
+            "range": "6.292e+05..6.325e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/budget/size=262144/streams=64",
+            "value": 2451128.109375,
+            "range": "2.435e+06..2.467e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/grow/size=16384/streams=1",
+            "value": 4496.13134765625,
+            "range": "4493..4499",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/grow/size=16384/streams=16",
+            "value": 59466.17529296875,
+            "range": "5.943e+04..5.951e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/grow/size=16384/streams=64",
+            "value": 314408.7734375,
+            "range": "3.119e+05..3.169e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/grow/size=2097152/streams=1",
+            "value": 444850.41796875,
+            "range": "4.436e+05..4.461e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/grow/size=2097152/streams=16",
+            "value": 6835528.4375,
+            "range": "6.812e+06..6.859e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/grow/size=2097152/streams=64",
+            "value": 32234292.75,
+            "range": "3.201e+07..3.245e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/grow/size=262144/streams=1",
+            "value": 41003.616455078125,
+            "range": "4.08e+04..4.121e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/grow/size=262144/streams=16",
+            "value": 860266.5625,
+            "range": "8.526e+05..8.679e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/grow/size=262144/streams=64",
+            "value": 3595082.25,
+            "range": "3.546e+06..3.644e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/upfront/size=16384/streams=1",
+            "value": 3399.041778564453,
+            "range": "3398..3400",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/upfront/size=16384/streams=16",
+            "value": 40250.21728515625,
+            "range": "4.023e+04..4.027e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/upfront/size=16384/streams=64",
+            "value": 206665.986328125,
+            "range": "2.059e+05..2.075e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/upfront/size=2097152/streams=1",
+            "value": 290752.216796875,
+            "range": "2.891e+05..2.924e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/upfront/size=2097152/streams=16",
+            "value": 4814558.71875,
+            "range": "4.8e+06..4.829e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/upfront/size=2097152/streams=64",
+            "value": 28224972,
+            "range": "2.79e+07..2.855e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/upfront/size=262144/streams=1",
+            "value": 26080.65966796875,
+            "range": "2.598e+04..2.618e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/upfront/size=262144/streams=16",
+            "value": 617851.515625,
+            "range": "6.164e+05..6.193e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv/upfront/size=262144/streams=64",
+            "value": 2344801.03125,
+            "range": "2.341e+06..2.349e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv_large/budget/size=16777216/streams=1",
+            "value": 2293224.578125,
+            "range": "2.246e+06..2.341e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv_large/budget/size=16777216/streams=4",
+            "value": 10372713.75,
+            "range": "1.036e+07..1.039e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv_large/budget/size=33554432/streams=1",
+            "value": 5138957.1875,
+            "range": "5.107e+06..5.171e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv_large/budget/size=33554432/streams=4",
+            "value": 21705439.625,
+            "range": "2.128e+07..2.213e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv_large/budget/size=4194304/streams=1",
+            "value": 576485.80078125,
+            "range": "5.65e+05..5.88e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv_large/budget/size=4194304/streams=4",
+            "value": 2316061.015625,
+            "range": "2.291e+06..2.341e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv_large/grow/size=16777216/streams=1",
+            "value": 3231985.4375,
+            "range": "3.229e+06..3.235e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv_large/grow/size=16777216/streams=4",
+            "value": 14022206.625,
+            "range": "1.389e+07..1.415e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv_large/grow/size=33554432/streams=1",
+            "value": 7492019.6875,
+            "range": "7.45e+06..7.534e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv_large/grow/size=33554432/streams=4",
+            "value": 28284152.625,
+            "range": "2.808e+07..2.849e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv_large/grow/size=4194304/streams=1",
+            "value": 818349.421875,
+            "range": "8.103e+05..8.264e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv_large/grow/size=4194304/streams=4",
+            "value": 3514750.90625,
+            "range": "3.513e+06..3.517e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv_large/upfront/size=16777216/streams=1",
+            "value": 2251920.578125,
+            "range": "2.22e+06..2.284e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv_large/upfront/size=16777216/streams=4",
+            "value": 10747227.9375,
+            "range": "1.075e+07..1.075e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv_large/upfront/size=33554432/streams=1",
+            "value": 5366408.25,
+            "range": "5.354e+06..5.379e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv_large/upfront/size=33554432/streams=4",
+            "value": 21257663.75,
+            "range": "2.115e+07..2.136e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv_large/upfront/size=4194304/streams=1",
+            "value": 559713.171875,
+            "range": "5.547e+05..5.648e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/frame_recv_large/upfront/size=4194304/streams=4",
+            "value": 2433824.296875,
+            "range": "2.43e+06..2.438e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_contended/burst_1/threads_1/1024",
+            "value": 99902.2421875,
+            "range": "9.934e+04..1.005e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_contended/burst_1/threads_1/16",
+            "value": 2650.9163208007812,
+            "range": "2617..2685",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_contended/burst_1/threads_1/256",
+            "value": 25874.584716796875,
+            "range": "2.586e+04..2.589e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_contended/burst_1/threads_16/1024",
+            "value": 200817.30908203125,
+            "range": "1.981e+05..2.035e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_contended/burst_1/threads_16/16",
+            "value": 54506.46337890625,
+            "range": "5.445e+04..5.456e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_contended/burst_1/threads_16/256",
+            "value": 92562.5849609375,
+            "range": "9.222e+04..9.29e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_contended/burst_1/threads_4/1024",
+            "value": 145001.78515625,
+            "range": "1.426e+05..1.474e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_contended/burst_1/threads_4/16",
+            "value": 15324.743286132812,
+            "range": "1.512e+04..1.553e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_contended/burst_1/threads_4/256",
+            "value": 47490.93798828125,
+            "range": "4.626e+04..4.872e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_contended/burst_8/threads_1/1024",
+            "value": 367530.36328125,
+            "range": "3.672e+05..3.678e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_contended/burst_8/threads_1/16",
+            "value": 8924.243682861328,
+            "range": "8780..9068",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_contended/burst_8/threads_1/256",
+            "value": 93240.77001953125,
+            "range": "9.313e+04..9.335e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_contended/burst_8/threads_16/1024",
+            "value": 533323.0390625,
+            "range": "5.288e+05..5.379e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_contended/burst_8/threads_16/16",
+            "value": 67829.99829101562,
+            "range": "6.762e+04..6.804e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_contended/burst_8/threads_16/256",
+            "value": 152172.44140625,
+            "range": "1.509e+05..1.534e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_contended/burst_8/threads_4/1024",
+            "value": 510832.953125,
+            "range": "5.069e+05..5.148e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_contended/burst_8/threads_4/16",
+            "value": 21100.983642578125,
+            "range": "2.109e+04..2.111e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_contended/burst_8/threads_4/256",
+            "value": 136453.896484375,
+            "range": "1.357e+05..1.372e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_inflate/groups1/1",
+            "value": 14827.7275390625,
+            "range": "1.482e+04..1.483e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_inflate/groups1/64",
+            "value": 192174.515625,
+            "range": "1.919e+05..1.925e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_inflate/groups1/8",
+            "value": 34732.65234375,
+            "range": "3.466e+04..3.48e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_inflate/groups16/1",
+            "value": 234088.5234375,
+            "range": "2.34e+05..2.342e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_inflate/groups16/64",
+            "value": 3080840.40625,
+            "range": "3.079e+06..3.083e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_inflate/groups16/8",
+            "value": 550901.84375,
+            "range": "5.507e+05..5.511e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/batch128/2048",
+            "value": 70215.1484375,
+            "range": "7.009e+04..7.034e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/batch128/4",
+            "value": 1584.9745483398438,
+            "range": "1485..1685",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/batch128/5",
+            "value": 1288.3145751953125,
+            "range": "1254..1322",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/batch128/512",
+            "value": 18439.646484375,
+            "range": "1.839e+04..1.849e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/batch128/8192",
+            "value": 286513.671875,
+            "range": "2.825e+05..2.906e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/batch32/2048",
+            "value": 70844.03125,
+            "range": "7.058e+04..7.111e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/batch32/4",
+            "value": 747.8894653320312,
+            "range": "713.2..782.5",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/batch32/5",
+            "value": 653.8906860351562,
+            "range": "649.9..657.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/batch32/512",
+            "value": 18054.478515625,
+            "range": "1.802e+04..1.809e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/batch32/8192",
+            "value": 290657.0703125,
+            "range": "2.876e+05..2.938e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/batch4/2048",
+            "value": 87424.48828125,
+            "range": "8.663e+04..8.821e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/batch4/4",
+            "value": 459.18017578125,
+            "range": "452.3..466.1",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/batch4/5",
+            "value": 559.3369140625,
+            "range": "553.6..565",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/batch4/512",
+            "value": 21822.9091796875,
+            "range": "2.174e+04..2.19e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/batch4/8192",
+            "value": 364781.65625,
+            "range": "3.564e+05..3.732e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/batch8/2048",
+            "value": 82088.75,
+            "range": "8.132e+04..8.286e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/batch8/4",
+            "value": 538.5,
+            "range": "532.6..544.4",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/batch8/5",
+            "value": 583.6329345703125,
+            "range": "579..588.3",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/batch8/512",
+            "value": 20421.373046875,
+            "range": "2.037e+04..2.047e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/batch8/8192",
+            "value": 334612.890625,
+            "range": "3.333e+05..3.359e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/single/2048",
+            "value": 85247.32421875,
+            "range": "8.457e+04..8.593e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/single/4",
+            "value": 388.27337646484375,
+            "range": "379.8..396.7",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/single/5",
+            "value": 426.01153564453125,
+            "range": "419.3..432.7",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/single/512",
+            "value": 21106.1474609375,
+            "range": "2.107e+04..2.114e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_read_frames/single/8192",
+            "value": 346065.140625,
+            "range": "3.422e+05..3.499e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_relay_frames/plain/4/1",
+            "value": 248.85879135131836,
+            "range": "248.7..249",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_relay_frames/plain/4/64",
+            "value": 15726.260009765625,
+            "range": "1.57e+04..1.575e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_relay_frames/plain/4/8",
+            "value": 1962.4955139160156,
+            "range": "1959..1966",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_relay_frames/plain/512/1",
+            "value": 14576.896728515625,
+            "range": "1.458e+04..1.458e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_relay_frames/plain/512/64",
+            "value": 931215.546875,
+            "range": "9.306e+05..9.319e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_relay_frames/plain/512/8",
+            "value": 116230.8125,
+            "range": "1.162e+05..1.163e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_relay_frames/plain/8192/1",
+            "value": 234744.03515625,
+            "range": "2.341e+05..2.354e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_relay_frames/plain/8192/64",
+            "value": 14962746.25,
+            "range": "1.496e+07..1.497e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_relay_frames/plain/8192/8",
+            "value": 1865638.40625,
+            "range": "1.865e+06..1.866e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_relay_frames/properties/4/1",
+            "value": 281.1686477661133,
+            "range": "280..282.4",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_relay_frames/properties/4/64",
+            "value": 17824.956298828125,
+            "range": "1.782e+04..1.783e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_relay_frames/properties/4/8",
+            "value": 2218.5211791992188,
+            "range": "2216..2221",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_relay_frames/properties/512/1",
+            "value": 17807.109008789062,
+            "range": "1.781e+04..1.781e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_relay_frames/properties/512/64",
+            "value": 1137148.875,
+            "range": "1.137e+06..1.138e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_relay_frames/properties/512/8",
+            "value": 142319.529296875,
+            "range": "1.423e+05..1.423e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_relay_frames/properties/8192/1",
+            "value": 316690.248046875,
+            "range": "3.16e+05..3.174e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_relay_frames/properties/8192/64",
+            "value": 20540344.5,
+            "range": "2.053e+07..2.055e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_relay_frames/properties/8192/8",
+            "value": 2563353.5,
+            "range": "2.563e+06..2.564e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_roundtrip/2048",
+            "value": 376785.09375,
+            "range": "3.75e+05..3.785e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_roundtrip/4",
+            "value": 1782.7779541015625,
+            "range": "1775..1790",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_roundtrip/5",
+            "value": 1973.0963745117188,
+            "range": "1959..1987",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_roundtrip/512",
+            "value": 94645.7373046875,
+            "range": "9.452e+04..9.478e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_roundtrip/8192",
+            "value": 1509445.8359375,
+            "range": "1.509e+06..1.51e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_write_frames/batch32/2048",
+            "value": 103340.099609375,
+            "range": "1.031e+05..1.036e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_write_frames/batch32/4",
+            "value": 1125.4782104492188,
+            "range": "1124..1127",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_write_frames/batch32/5",
+            "value": 1184.35693359375,
+            "range": "1176..1192",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_write_frames/batch32/512",
+            "value": 27046.13134765625,
+            "range": "2.683e+04..2.726e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_write_frames/batch32/8192",
+            "value": 407577.8203125,
+            "range": "4.075e+05..4.077e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_write_frames/single/2048",
+            "value": 293610.634765625,
+            "range": "2.935e+05..2.937e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_write_frames/single/4",
+            "value": 1285.076904296875,
+            "range": "1277..1293",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_write_frames/single/5",
+            "value": 1437.20361328125,
+            "range": "1433..1442",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_write_frames/single/512",
+            "value": 74530.52392578125,
+            "range": "7.415e+04..7.492e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/group_write_frames/single/8192",
+            "value": 1171804.0703125,
+            "range": "1.17e+06..1.174e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_recv_groups/arrival/4096",
+            "value": 4968191.125,
+            "range": "4.963e+06..4.974e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_recv_groups/arrival/512",
+            "value": 609014.234375,
+            "range": "6.083e+05..6.097e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_recv_groups/arrival/64",
+            "value": 73305.041015625,
+            "range": "7.321e+04..7.34e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_recv_groups/caught_up/4096",
+            "value": 440785.875,
+            "range": "4.377e+05..4.439e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_recv_groups/caught_up/512",
+            "value": 406634.828125,
+            "range": "4.065e+05..4.068e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_recv_groups/caught_up/64",
+            "value": 385205.67578125,
+            "range": "3.842e+05..3.862e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_recv_groups/sequence/4096",
+            "value": 6188234.75,
+            "range": "6.18e+06..6.196e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_recv_groups/sequence/512",
+            "value": 760024.015625,
+            "range": "7.58e+05..7.62e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_recv_groups/sequence/64",
+            "value": 91667.330078125,
+            "range": "9.121e+04..9.212e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_stamp_groups/append/4096",
+            "value": 1627.044921875,
+            "range": "1627..1627",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_stamp_groups/append/512",
+            "value": 1522.8097229003906,
+            "range": "1521..1525",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_stamp_groups/append/64",
+            "value": 1358.9648742675781,
+            "range": "1359..1359",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_stamp_groups/append_waiting/4096",
+            "value": 1687.08642578125,
+            "range": "1678..1696",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_stamp_groups/append_waiting/512",
+            "value": 1576.9009399414062,
+            "range": "1575..1579",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_stamp_groups/append_waiting/64",
+            "value": 1411.5438232421875,
+            "range": "1410..1413",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_stamp_groups/sparse/4096",
+            "value": 611.0552368164062,
+            "range": "607.6..614.5",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_stamp_groups/sparse/512",
+            "value": 555.3932647705078,
+            "range": "553.6..557.2",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_stamp_groups/sparse/64",
+            "value": 420.7678985595703,
+            "range": "420.7..420.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/interests/covered/1000w_1000s",
+            "value": 15344,
+            "range": "1.534e+04..1.534e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/interests/covered/1000w_10s",
+            "value": 1594.828125,
+            "range": "1582..1608",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/interests/covered/10w_1000s",
+            "value": 1536.2109375,
+            "range": "1502..1570",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/interests/covered/10w_10s",
+            "value": 1340.5055770874023,
+            "range": "1339..1342",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/interests/uncovered/1000w_1000s",
+            "value": 2025823,
+            "range": "2.026e+06..2.026e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/interests/uncovered/1000w_10s",
+            "value": 13270.3125,
+            "range": "1.32e+04..1.334e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/interests/uncovered/10w_1000s",
+            "value": 1644144.375,
+            "range": "1.602e+06..1.686e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/interests/uncovered/10w_10s",
+            "value": 12024.36767578125,
+            "range": "1.201e+04..1.204e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/memory/streams=128/size=1048576",
+            "value": 8098142.25,
+            "range": "8.072e+06..8.125e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/memory/streams=128/size=16384",
+            "value": 4329648.21875,
+            "range": "4.304e+06..4.356e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/memory/streams=128/size=64",
+            "value": 4401066.9375,
+            "range": "4.371e+06..4.431e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/memory/streams=16/size=1048576",
+            "value": 882430.4140625,
+            "range": "8.794e+05..8.855e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/memory/streams=16/size=16384",
+            "value": 506699.91015625,
+            "range": "5.038e+05..5.096e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/memory/streams=16/size=4194304",
+            "value": 881198.4296875,
+            "range": "8.791e+05..8.833e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/memory/streams=16/size=64",
+            "value": 491219.30859375,
+            "range": "4.896e+05..4.928e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/memory/streams=1/size=1048576",
+            "value": 62357.96142578125,
+            "range": "6.23e+04..6.241e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/memory/streams=1/size=16384",
+            "value": 32054.203369140625,
+            "range": "3.205e+04..3.205e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/memory/streams=1/size=4194304",
+            "value": 62229.6376953125,
+            "range": "6.215e+04..6.231e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/memory/streams=1/size=64",
+            "value": 31491.81689453125,
+            "range": "3.148e+04..3.15e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/announce/1000p_1000s",
+            "value": 6894814,
+            "range": "6.895e+06..6.895e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/announce/1000p_100s",
+            "value": 595283,
+            "range": "5.953e+05..5.953e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/announce/100p_10s",
+            "value": 20760.570556640625,
+            "range": "2.062e+04..2.09e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/announce_duplicate/1d_1s",
+            "value": 4965.111480712891,
+            "range": "4959..4971",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/announce_duplicate/240d_240s",
+            "value": 914235.9609375,
+            "range": "9.135e+05..9.15e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/announce_duplicate/240d_60s",
+            "value": 182141.2890625,
+            "range": "1.804e+05..1.839e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/announce_duplicate/30d_1s",
+            "value": 6093.3896484375,
+            "range": "6093..6094",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/announce_duplicate/30d_30s",
+            "value": 85745.25146484375,
+            "range": "8.561e+04..8.588e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/announce_duplicate/60d_60s",
+            "value": 173248.275390625,
+            "range": "1.732e+05..1.733e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/announce_fleet/1p_8n_4c",
+            "value": 9499.357177734375,
+            "range": "9473..9525",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/announce_fleet/4p_30n_30c",
+            "value": 15305.11474609375,
+            "range": "1.53e+04..1.531e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/announce_fleet/8p_30n_60c",
+            "value": 15460.60400390625,
+            "range": "1.542e+04..1.55e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/announce_fronts/10000f",
+            "value": 15214.375,
+            "range": "1.186e+04..1.856e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/announce_fronts/1000f",
+            "value": 3078.1544189453125,
+            "range": "3078..3078",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/announce_fronts/100f",
+            "value": 3024.1517028808594,
+            "range": "3016..3032",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/announce_mounted/1000p_1000s",
+            "value": 8120794,
+            "range": "8.121e+06..8.121e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/announce_mounted/1000p_100s",
+            "value": 641692,
+            "range": "6.417e+05..6.417e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/announce_mounted/100p_10s",
+            "value": 23932.264892578125,
+            "range": "2.381e+04..2.406e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/copy_walk/128t_1c",
+            "value": 597846.4375,
+            "range": "5.967e+05..5.989e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/copy_walk/1t_1c",
+            "value": 6498.13818359375,
+            "range": "6484..6512",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/copy_walk/1t_32c",
+            "value": 10961.42578125,
+            "range": "1.082e+04..1.111e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/copy_walk/32t_1c",
+            "value": 133169.83203125,
+            "range": "1.328e+05..1.335e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/copy_walk/32t_8c",
+            "value": 149844.28125,
+            "range": "1.489e+05..1.508e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/copy_walk/64t_16c",
+            "value": 369592.5625,
+            "range": "3.636e+05..3.756e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/copy_walk/64t_1c",
+            "value": 293698.046875,
+            "range": "2.922e+05..2.952e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/copy_walk/8t_32c",
+            "value": 48085.5625,
+            "range": "4.763e+04..4.855e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/handoff/1000p",
+            "value": 20242.25830078125,
+            "range": "2.014e+04..2.035e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/handoff/1p",
+            "value": 19855.7431640625,
+            "range": "1.979e+04..1.992e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/narrow/1000r_1000s",
+            "value": 5819507.25,
+            "range": "5.721e+06..5.918e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/narrow/1000r_100s",
+            "value": 568467.75,
+            "range": "5.613e+05..5.757e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/narrow/1000r_10s",
+            "value": 175058.125,
+            "range": "1.745e+05..1.756e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/narrow/100r_10s",
+            "value": 104138.0625,
+            "range": "1.036e+05..1.047e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/narrow_delivery/narrowed/1000r_1000s",
+            "value": 46937976,
+            "range": "4.694e+07..4.694e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/narrow_delivery/narrowed/1000r_100s",
+            "value": 3369527.75,
+            "range": "3.308e+06..3.431e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/narrow_delivery/narrowed/1000r_10s",
+            "value": 289434.1875,
+            "range": "2.881e+05..2.908e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/narrow_delivery/narrowed/100r_10s",
+            "value": 292588.0234375,
+            "range": "2.903e+05..2.949e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/narrow_delivery/never/1000r_1000s",
+            "value": 45864215,
+            "range": "4.586e+07..4.586e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/narrow_delivery/never/1000r_100s",
+            "value": 3187650.5,
+            "range": "3.172e+06..3.203e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/narrow_delivery/never/1000r_10s",
+            "value": 273267.9375,
+            "range": "2.723e+05..2.742e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/narrow_delivery/never/100r_10s",
+            "value": 288792.875,
+            "range": "2.872e+05..2.904e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/parked/100t_100r",
+            "value": 8293272,
+            "range": "7.947e+06..8.639e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/parked/100t_1r",
+            "value": 64989.27001953125,
+            "range": "6.324e+04..6.674e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/parked/1t_100r",
+            "value": 40036.713623046875,
+            "range": "3.935e+04..4.073e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/parked/1t_1r",
+            "value": 348.23388671875,
+            "range": "347.5..348.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/passthrough/100r_1g",
+            "value": 248622.33984375,
+            "range": "2.477e+05..2.495e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/passthrough/100r_64g",
+            "value": 16066738.75,
+            "range": "1.605e+07..1.608e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/passthrough/1r_1g",
+            "value": 4167.014495849609,
+            "range": "4126..4208",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/passthrough/1r_64g",
+            "value": 272596.205078125,
+            "range": "2.708e+05..2.744e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/pending_churn/1000routes_100readers",
+            "value": 292880,
+            "range": "2.929e+05..2.929e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/pending_churn/1000routes_1readers",
+            "value": 3593.712646484375,
+            "range": "3561..3627",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/pending_churn/10routes_100readers",
+            "value": 129719.3759765625,
+            "range": "1.296e+05..1.299e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/pending_churn/10routes_1readers",
+            "value": 3561.9523010253906,
+            "range": "3552..3572",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/pool_churn/256m_10000p",
+            "value": 385282508,
+            "range": "3.853e+08..3.853e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/pool_churn/256m_1000p",
+            "value": 37671847.5,
+            "range": "3.765e+07..3.769e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/pool_churn/256m_100p",
+            "value": 3489196.71875,
+            "range": "3.487e+06..3.492e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/pool_churn/32m_10000p",
+            "value": 85346055,
+            "range": "8.535e+07..8.535e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/pool_churn/32m_1000p",
+            "value": 7084292.875,
+            "range": "7.022e+06..7.146e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/pool_churn/32m_100p",
+            "value": 659671.078125,
+            "range": "6.583e+05..6.611e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/pool_churn/4m_10000p",
+            "value": 40488864,
+            "range": "4.046e+07..4.052e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/pool_churn/4m_1000p",
+            "value": 2781715.46875,
+            "range": "2.771e+06..2.793e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/pool_churn/4m_100p",
+            "value": 244206.03515625,
+            "range": "2.439e+05..2.445e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/pool_cursors/10000p_1000c",
+            "value": 118185558,
+            "range": "1.182e+08..1.182e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/pool_cursors/10000p_100c",
+            "value": 86030678,
+            "range": "8.603e+07..8.603e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/pool_cursors/10000p_1c",
+            "value": 86094936,
+            "range": "8.609e+07..8.609e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/pool_cursors/1000p_1000c",
+            "value": 11393978.375,
+            "range": "1.101e+07..1.177e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/pool_cursors/1000p_100c",
+            "value": 7666463.375,
+            "range": "7.557e+06..7.776e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/pool_cursors/1000p_1c",
+            "value": 7114602.625,
+            "range": "7.088e+06..7.141e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/pool_cursors/100p_1000c",
+            "value": 2601526.375,
+            "range": "2.566e+06..2.637e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/pool_cursors/100p_100c",
+            "value": 868519.046875,
+            "range": "8.649e+05..8.721e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/pool_cursors/100p_1c",
+            "value": 668511.9609375,
+            "range": "6.682e+05..6.689e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/relay/100t_1r",
+            "value": 740899.4765625,
+            "range": "7.348e+05..7.47e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/relay/10t_100r",
+            "value": 2988004.375,
+            "range": "2.959e+06..3.017e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/relay/1t_100r",
+            "value": 278590.341796875,
+            "range": "2.785e+05..2.787e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/relay/1t_1r",
+            "value": 6855.972106933594,
+            "range": "6803..6909",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/reprice_duplicate/1d_1s_cost2",
+            "value": 3139.0358276367188,
+            "range": "3133..3145",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/reprice_duplicate/1d_1s_cost4611686018427387902",
+            "value": 3123.959686279297,
+            "range": "3109..3139",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/reprice_duplicate/240d_240s_cost2",
+            "value": 586320.84375,
+            "range": "5.858e+05..5.868e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/reprice_duplicate/240d_240s_cost4611686018427387902",
+            "value": 589954.671875,
+            "range": "5.868e+05..5.931e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/reprice_duplicate/240d_60s_cost2",
+            "value": 127126.4375,
+            "range": "1.27e+05..1.272e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/reprice_duplicate/240d_60s_cost4611686018427387902",
+            "value": 127956.416015625,
+            "range": "1.275e+05..1.284e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/reprice_duplicate/30d_1s_cost2",
+            "value": 5143.003662109375,
+            "range": "5139..5147",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/reprice_duplicate/30d_1s_cost4611686018427387902",
+            "value": 5146.444427490234,
+            "range": "5133..5160",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/reprice_duplicate/30d_30s_cost2",
+            "value": 57311.36279296875,
+            "range": "5.729e+04..5.733e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/reprice_duplicate/30d_30s_cost4611686018427387902",
+            "value": 56944.71826171875,
+            "range": "5.692e+04..5.697e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/reprice_duplicate/60d_60s_cost2",
+            "value": 114080.8486328125,
+            "range": "1.141e+05..1.141e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/reprice_duplicate/60d_60s_cost4611686018427387902",
+            "value": 113814.47265625,
+            "range": "1.137e+05..1.14e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/request/local/100",
+            "value": 1333.4017486572266,
+            "range": "1332..1335",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/request/local/1000",
+            "value": 1335.0491485595703,
+            "range": "1335..1336",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/request/unroutable/100",
+            "value": 246.28300285339355,
+            "range": "246.3..246.3",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/request/unroutable/1000",
+            "value": 244.4509449005127,
+            "range": "244.4..244.5",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/arrival/1r_1024g_2c",
+            "value": 5291118.25,
+            "range": "5.275e+06..5.308e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/arrival/1r_1g_1c",
+            "value": 3740.91796875,
+            "range": "3687..3795",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/arrival/1r_1g_2c",
+            "value": 6717.29345703125,
+            "range": "6717..6718",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/arrival/1r_64g_1c",
+            "value": 120023.529296875,
+            "range": "1.195e+05..1.205e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/arrival/1r_64g_2c",
+            "value": 314696.28125,
+            "range": "3.145e+05..3.148e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/arrival/1r_64g_32c",
+            "value": 5709892.1875,
+            "range": "5.705e+06..5.715e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/arrival/1r_64g_8c",
+            "value": 1341571.75,
+            "range": "1.338e+06..1.345e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/arrival/256r_64g_2c",
+            "value": 79534898.25,
+            "range": "7.947e+07..7.96e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/arrival/256r_64g_8c",
+            "value": 347339576,
+            "range": "3.473e+08..3.473e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/arrival/32r_1024g_2c",
+            "value": 173031716,
+            "range": "1.73e+08..1.73e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/arrival/32r_64g_1c",
+            "value": 3728863.59375,
+            "range": "3.726e+06..3.731e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/arrival/32r_64g_2c",
+            "value": 9863430.625,
+            "range": "9.853e+06..9.874e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/arrival/32r_64g_32c",
+            "value": 189128874,
+            "range": "1.891e+08..1.891e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/arrival/32r_64g_8c",
+            "value": 43462591.5,
+            "range": "4.336e+07..4.356e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/arrival/8r_1024g_2c",
+            "value": 43359535,
+            "range": "4.329e+07..4.343e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/arrival/8r_1g_2c",
+            "value": 46850.01171875,
+            "range": "4.657e+04..4.713e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/arrival/8r_64g_2c",
+            "value": 2474175.90625,
+            "range": "2.468e+06..2.48e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/arrival_waiting/1r_64g_2c",
+            "value": 317079.24609375,
+            "range": "3.17e+05..3.172e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/arrival_waiting/1r_64g_32c",
+            "value": 5218337.25,
+            "range": "5.212e+06..5.225e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/arrival_waiting/1r_64g_8c",
+            "value": 1260805.53125,
+            "range": "1.256e+06..1.265e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/sequence/1r_1024g_2c",
+            "value": 2390971.3125,
+            "range": "2.388e+06..2.394e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/sequence/1r_1g_1c",
+            "value": 4012.738525390625,
+            "range": "4005..4021",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/sequence/1r_1g_2c",
+            "value": 6766.935546875,
+            "range": "6752..6782",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/sequence/1r_64g_1c",
+            "value": 141697.908203125,
+            "range": "1.414e+05..1.42e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/sequence/1r_64g_2c",
+            "value": 152205.50390625,
+            "range": "1.52e+05..1.525e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/sequence/1r_64g_32c",
+            "value": 470788.84375,
+            "range": "4.698e+05..4.718e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/sequence/1r_64g_8c",
+            "value": 212260.109375,
+            "range": "2.114e+05..2.132e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/sequence/256r_64g_2c",
+            "value": 37926795,
+            "range": "3.79e+07..3.795e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/sequence/256r_64g_8c",
+            "value": 52846076,
+            "range": "5.28e+07..5.289e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/sequence/32r_1024g_2c",
+            "value": 76911520.75,
+            "range": "7.676e+07..7.707e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/sequence/32r_64g_1c",
+            "value": 4420254.125,
+            "range": "4.417e+06..4.424e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/sequence/32r_64g_2c",
+            "value": 4673440.53125,
+            "range": "4.671e+06..4.676e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/sequence/32r_64g_32c",
+            "value": 15716162,
+            "range": "1.569e+07..1.575e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/sequence/32r_64g_8c",
+            "value": 6498451.625,
+            "range": "6.486e+06..6.511e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/sequence/8r_1024g_2c",
+            "value": 19146899.125,
+            "range": "1.914e+07..1.915e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/sequence/8r_1g_2c",
+            "value": 47481.001953125,
+            "range": "4.745e+04..4.752e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/sequence/8r_64g_2c",
+            "value": 1175504.8125,
+            "range": "1.174e+06..1.177e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/sequence_waiting/1r_64g_2c",
+            "value": 246698.30859375,
+            "range": "2.451e+05..2.483e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/sequence_waiting/1r_64g_32c",
+            "value": 2926985.1875,
+            "range": "2.92e+06..2.934e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/resume_overlap/sequence_waiting/1r_64g_8c",
+            "value": 760723.515625,
+            "range": "7.604e+05..7.61e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/retire/10000f",
+            "value": 37001.5,
+            "range": "2.636e+04..4.764e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/retire/1000f",
+            "value": 5468.8095703125,
+            "range": "5422..5516",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/retire/100f",
+            "value": 5066.759460449219,
+            "range": "5044..5089",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/route_churn/10000b_100s",
+            "value": 135348,
+            "range": "1.353e+05..1.353e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/route_churn/10000b_1s",
+            "value": 5741.1875,
+            "range": "4618..6864",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/route_churn/10000b_20s",
+            "value": 49801,
+            "range": "4.98e+04..4.98e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/route_churn/1000b_100s",
+            "value": 111020,
+            "range": "1.11e+05..1.11e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/route_churn/1000b_1s",
+            "value": 1877.51806640625,
+            "range": "1876..1879",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/route_churn/1000b_20s",
+            "value": 11766.9375,
+            "range": "9887..1.365e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/serve_idle/3000r",
+            "value": 104014.62109375,
+            "range": "1.035e+05..1.046e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/serve_idle/300r",
+            "value": 8411.757568359375,
+            "range": "8411..8413",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/serve_idle/30r",
+            "value": 887.4189758300781,
+            "range": "887.3..887.5",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/subscribe/1000p_1000s",
+            "value": 3803238,
+            "range": "3.803e+06..3.803e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/subscribe/1000p_100s",
+            "value": 3436642,
+            "range": "3.437e+06..3.437e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/subscribe/100p_10s",
+            "value": 174709.296875,
+            "range": "1.729e+05..1.765e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/unroutable_churn/covering/0r_1c_shared",
+            "value": 509.71833419799805,
+            "range": "509.3..510.2",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/unroutable_churn/covering/0r_32c_shared",
+            "value": 16239.6025390625,
+            "range": "1.621e+04..1.627e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/unroutable_churn/covering/1r_1c_shared",
+            "value": 5715.9769287109375,
+            "range": "5715..5716",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/unroutable_churn/covering/1r_32c_shared",
+            "value": 182637.26953125,
+            "range": "1.825e+05..1.828e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/unroutable_churn/covering/256r_1c_distinct",
+            "value": 1799598.4375,
+            "range": "1.795e+06..1.805e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/unroutable_churn/covering/256r_1c_shared",
+            "value": 364948.29296875,
+            "range": "3.635e+05..3.664e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/unroutable_churn/covering/256r_32c_distinct",
+            "value": 58754143.5,
+            "range": "5.872e+07..5.879e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/unroutable_churn/covering/256r_32c_shared",
+            "value": 11732710.625,
+            "range": "1.171e+07..1.175e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/unroutable_churn/covering/32r_1c_distinct",
+            "value": 186433.064453125,
+            "range": "1.863e+05..1.866e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/unroutable_churn/covering/32r_1c_shared",
+            "value": 45059.757568359375,
+            "range": "4.504e+04..4.508e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/unroutable_churn/covering/32r_32c_distinct",
+            "value": 5968924.71875,
+            "range": "5.965e+06..5.973e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/unroutable_churn/covering/32r_32c_shared",
+            "value": 1440219.8984375,
+            "range": "1.438e+06..1.442e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/unroutable_churn/unrelated/0r_1c_shared",
+            "value": 532.6335563659668,
+            "range": "531.7..533.5",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/unroutable_churn/unrelated/0r_32c_shared",
+            "value": 17023.407836914062,
+            "range": "1.7e+04..1.705e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/unroutable_churn/unrelated/1r_1c_shared",
+            "value": 727.2635307312012,
+            "range": "714.9..739.6",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/unroutable_churn/unrelated/1r_32c_shared",
+            "value": 23013.506103515625,
+            "range": "2.299e+04..2.304e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/unroutable_churn/unrelated/256r_1c_distinct",
+            "value": 730.7044677734375,
+            "range": "727.8..733.6",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/unroutable_churn/unrelated/256r_1c_shared",
+            "value": 719.9641418457031,
+            "range": "717..723",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/unroutable_churn/unrelated/256r_32c_distinct",
+            "value": 23408.611572265625,
+            "range": "2.34e+04..2.341e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/unroutable_churn/unrelated/256r_32c_shared",
+            "value": 22988.0830078125,
+            "range": "2.292e+04..2.305e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/unroutable_churn/unrelated/32r_1c_distinct",
+            "value": 720.7212371826172,
+            "range": "720.3..721.2",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/unroutable_churn/unrelated/32r_1c_shared",
+            "value": 721.5674896240234,
+            "range": "721..722.1",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/unroutable_churn/unrelated/32r_32c_distinct",
+            "value": 23136.3818359375,
+            "range": "2.307e+04..2.32e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/unroutable_churn/unrelated/32r_32c_shared",
+            "value": 22958.729858398438,
+            "range": "2.294e+04..2.298e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/withdraw/10000p_1s",
+            "value": 28504262.25,
+            "range": "2.79e+07..2.911e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/withdraw/1000p_10s",
+            "value": 14391705.25,
+            "range": "1.432e+07..1.446e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/withdraw/1000p_1s",
+            "value": 2106249.65625,
+            "range": "2.102e+06..2.111e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/withdraw/100p_1s",
+            "value": 187924.734375,
+            "range": "1.874e+05..1.885e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/withdraw_wave/10000b_100s",
+            "value": 6130728477,
+            "range": "6.131e+09..6.131e+09",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/withdraw_wave/10000b_1s",
+            "value": 62198015.75,
+            "range": "6.213e+07..6.227e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/withdraw_wave/10000b_20s",
+            "value": 882523167,
+            "range": "8.825e+08..8.825e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/withdraw_wave/1000b_100s",
+            "value": 458810186,
+            "range": "4.588e+08..4.588e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/withdraw_wave/1000b_1s",
+            "value": 4560903.75,
+            "range": "4.521e+06..4.601e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/withdraw_wave/1000b_20s",
+            "value": 76644986.5,
+            "range": "7.658e+07..7.671e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/priority_queue_insert_front/255",
+            "value": 2220.6064453125,
+            "range": "2057..2384",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/priority_queue_insert_front/64",
+            "value": 1134.6932373046875,
+            "range": "1122..1147",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/priority_queue_insert_front/8",
+            "value": 234.3509521484375,
+            "range": "232.6..236.1",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/priority_queue_remove_overflow/1024",
+            "value": 252.7578125,
+            "range": "237.6..267.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/priority_queue_remove_overflow/256",
+            "value": 126.015625,
+            "range": "125.1..126.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/priority_queue_remove_overflow/4096",
+            "value": 349.1328125,
+            "range": "340.5..357.8",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/refresh/join/1000x/1",
+            "value": 494.0876007080078,
+            "range": "492.8..495.4",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/refresh/join/1000x/10",
+            "value": 492.7289733886719,
+            "range": "492.6..492.8",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/refresh/join/1000x/100",
+            "value": 488.734375,
+            "range": "484.9..492.6",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/refresh/join/100x/1",
+            "value": 492.1911926269531,
+            "range": "490.9..493.5",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/refresh/join/100x/10",
+            "value": 504.1066131591797,
+            "range": "503..505.2",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/refresh/join/100x/100",
+            "value": 497.8225402832031,
+            "range": "497.4..498.2",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/refresh/join/1x/1",
+            "value": 481.9976348876953,
+            "range": "480.4..483.6",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/refresh/join/1x/10",
+            "value": 506.7427062988281,
+            "range": "505.8..507.7",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/refresh/join/1x/100",
+            "value": 505.21209716796875,
+            "range": "504.6..505.8",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/retirement/route-only/128x1",
+            "value": 3023.974853515625,
+            "range": "3012..3036",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/retirement/route-only/128x32",
+            "value": 3709.0751953125,
+            "range": "3608..3810",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/retirement/route-only/128x8",
+            "value": 3201.529541015625,
+            "range": "3162..3241",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/retirement/route-only/32x1",
+            "value": 2929.33984375,
+            "range": "2919..2940",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/retirement/route-only/32x32",
+            "value": 2385.9619140625,
+            "range": "2334..2438",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/retirement/route-only/32x8",
+            "value": 2155.7060546875,
+            "range": "2140..2172",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/retirement/route-only/8x1",
+            "value": 1765.9053955078125,
+            "range": "1720..1811",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/retirement/route-only/8x32",
+            "value": 2470.346435546875,
+            "range": "2418..2523",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/retirement/route-only/8x8",
+            "value": 2136.89599609375,
+            "range": "2115..2159",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/retirement/selection/128x1",
+            "value": 2974.68359375,
+            "range": "2901..3049",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/retirement/selection/128x32",
+            "value": 19878.28515625,
+            "range": "1.981e+04..1.995e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/retirement/selection/128x8",
+            "value": 6867.39453125,
+            "range": "6750..6985",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/retirement/selection/32x1",
+            "value": 3753.917236328125,
+            "range": "3725..3783",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/retirement/selection/32x32",
+            "value": 19377.220703125,
+            "range": "1.925e+04..1.951e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/retirement/selection/32x8",
+            "value": 6500.9130859375,
+            "range": "6383..6619",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/retirement/selection/8x1",
+            "value": 3774.6212768554688,
+            "range": "3671..3878",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/retirement/selection/8x32",
+            "value": 19437.255859375,
+            "range": "1.942e+04..1.946e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/retirement/selection/8x8",
+            "value": 6492.744140625,
+            "range": "6489..6497",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_alice-bob/groups",
+            "value": 6046665.40625,
+            "range": "6.046e+06..6.047e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_alice-bob/queue",
+            "value": 86102572.25,
+            "range": "8.603e+07..8.618e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_alice-bob/scalar",
+            "value": 5440362.34375,
+            "range": "5.437e+06..5.444e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_alice-bob/scalar-seq",
+            "value": 4359242.5625,
+            "range": "4.354e+06..4.364e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_crowd/groups",
+            "value": 20265783.875,
+            "range": "2.012e+07..2.041e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_crowd/queue",
+            "value": 125151140.5,
+            "range": "1.25e+08..1.253e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_crowd/scalar",
+            "value": 21333920.375,
+            "range": "2.116e+07..2.15e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_crowd/scalar-seq",
+            "value": 18929789.75,
+            "range": "1.891e+07..1.895e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_datagram_evict_groups/groups_1/1",
+            "value": 89.15286254882812,
+            "range": "89.14..89.16",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_datagram_evict_groups/groups_1/16",
+            "value": 151.9355878829956,
+            "range": "151.9..152",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_datagram_evict_groups/groups_1/256",
+            "value": 187.6487340927124,
+            "range": "187.6..187.7",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_datagram_evict_groups/groups_16/1",
+            "value": 145.3926830291748,
+            "range": "145.4..145.4",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_datagram_evict_groups/groups_16/16",
+            "value": 211.86947631835938,
+            "range": "211.8..211.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_datagram_evict_groups/groups_16/256",
+            "value": 254.29722595214844,
+            "range": "254.2..254.4",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_datagram_evict_groups/groups_256/1",
+            "value": 187.53026008605957,
+            "range": "187.5..187.6",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_datagram_evict_groups/groups_256/16",
+            "value": 276.1479797363281,
+            "range": "275.8..276.5",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_datagram_evict_groups/groups_256/256",
+            "value": 582.3671588897705,
+            "range": "556.6..608.2",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_datagram_evict_groups/groups_4096/1",
+            "value": 233.71414375305176,
+            "range": "233.5..233.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_datagram_evict_groups/groups_4096/16",
+            "value": 312.7952423095703,
+            "range": "311.9..313.7",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_datagram_send/groups_1/1",
+            "value": 142.18855953216553,
+            "range": "142.1..142.2",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_datagram_send/groups_1/16",
+            "value": 126.71678256988525,
+            "range": "126.7..126.7",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_datagram_send/groups_1/256",
+            "value": 165.28280353546143,
+            "range": "165.2..165.3",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_datagram_send/groups_16/1",
+            "value": 129.88977813720703,
+            "range": "129.9..129.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_datagram_send/groups_16/16",
+            "value": 179.26111793518066,
+            "range": "179.2..179.3",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_datagram_send/groups_16/256",
+            "value": 228.77433967590332,
+            "range": "228.7..228.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_datagram_send/groups_256/1",
+            "value": 151.76580619812012,
+            "range": "151.7..151.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_datagram_send/groups_256/16",
+            "value": 265.14430046081543,
+            "range": "264.8..265.5",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_datagram_send/groups_256/256",
+            "value": 409.06365966796875,
+            "range": "407.8..410.3",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_datagram_send/groups_4096/1",
+            "value": 188.493803024292,
+            "range": "188.1..188.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_datagram_send/groups_4096/16",
+            "value": 322.4263916015625,
+            "range": "321.6..323.2",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_fanout_churn/subs_1/1",
+            "value": 40.59115123748779,
+            "range": "40.58..40.6",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_fanout_churn/subs_1/16",
+            "value": 56.020708084106445,
+            "range": "55.95..56.1",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_fanout_churn/subs_1/256",
+            "value": 111.81362724304199,
+            "range": "111.8..111.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_fanout_churn/subs_16/1",
+            "value": 40.23865842819214,
+            "range": "40.23..40.25",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_fanout_churn/subs_16/16",
+            "value": 55.95689821243286,
+            "range": "55.95..55.97",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_fanout_churn/subs_16/256",
+            "value": 110.45915412902832,
+            "range": "110.4..110.5",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_fanout_churn/subs_256/1",
+            "value": 40.403414487838745,
+            "range": "40.4..40.41",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_fanout_churn/subs_256/16",
+            "value": 55.95233964920044,
+            "range": "55.92..55.98",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_fanout_churn/subs_256/256",
+            "value": 110.41555786132812,
+            "range": "110.4..110.5",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_fanout_churn/subs_4096/1",
+            "value": 40.02184557914734,
+            "range": "40.02..40.03",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_fanout_churn/subs_4096/16",
+            "value": 56.134169578552246,
+            "range": "56.12..56.14",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_fanout_frame/subs_1/1",
+            "value": 43.96886491775513,
+            "range": "43.88..44.06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_fanout_frame/subs_1/16",
+            "value": 51.89138841629028,
+            "range": "51.87..51.91",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_fanout_frame/subs_1/256",
+            "value": 65.20249557495117,
+            "range": "65.15..65.26",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_fanout_frame/subs_16/1",
+            "value": 44.75074529647827,
+            "range": "44.74..44.76",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_fanout_frame/subs_16/16",
+            "value": 53.52500677108765,
+            "range": "53.52..53.53",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_fanout_frame/subs_16/256",
+            "value": 70.02148914337158,
+            "range": "69.97..70.08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_fanout_frame/subs_256/1",
+            "value": 48.87019968032837,
+            "range": "48.86..48.88",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_fanout_frame/subs_256/16",
+            "value": 63.606762409210205,
+            "range": "63.58..63.63",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_fanout_frame/subs_256/256",
+            "value": 88.06746006011963,
+            "range": "87.91..88.23",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_fanout_frame/subs_4096/1",
+            "value": 50.30851459503174,
+            "range": "50.3..50.32",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_fanout_frame/subs_4096/16",
+            "value": 75.09738969802856,
+            "range": "75.05..75.14",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_sparse/groups",
+            "value": 5773730.6875,
+            "range": "5.766e+06..5.781e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_sparse/queue",
+            "value": 50390504.5,
+            "range": "4.998e+07..5.08e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_sparse/scalar",
+            "value": 5217725.46875,
+            "range": "5.216e+06..5.219e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_sparse/scalar-seq",
+            "value": 5153809.59375,
+            "range": "5.153e+06..5.155e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_wrap/groups",
+            "value": 5776136.03125,
+            "range": "5.771e+06..5.782e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_wrap/queue",
+            "value": 49805174.75,
+            "range": "4.97e+07..4.991e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_wrap/scalar",
+            "value": 5208843.75,
+            "range": "5.207e+06..5.211e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/schedule_wrap/scalar-seq",
+            "value": 5269831.40625,
+            "range": "5.269e+06..5.271e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_churn_held/moq-lite-06/sessions=16/held=1",
+            "value": 148005.1875,
+            "range": "1.474e+05..1.486e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_churn_held/moq-lite-06/sessions=16/held=1024",
+            "value": 706974,
+            "range": "7.07e+05..7.07e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_churn_held/moq-lite-06/sessions=16/held=64",
+            "value": 117865.197265625,
+            "range": "1.16e+05..1.197e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_churn_held/moq-lite-06/sessions=1/held=1",
+            "value": 233151,
+            "range": "2.332e+05..2.332e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_churn_held/moq-lite-06/sessions=1/held=1024",
+            "value": 112606.5625,
+            "range": "1.116e+05..1.136e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_churn_held/moq-lite-06/sessions=1/held=64",
+            "value": 104178.6337890625,
+            "range": "1.04e+05..1.043e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_churn_held/moq-lite-06/sessions=4/held=1",
+            "value": 108987.810546875,
+            "range": "1.086e+05..1.094e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_churn_held/moq-lite-06/sessions=4/held=1024",
+            "value": 696726,
+            "range": "6.967e+05..6.967e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_churn_held/moq-lite-06/sessions=4/held=64",
+            "value": 113730.91015625,
+            "range": "1.132e+05..1.143e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_churn_held/moq-transport-22/sessions=16/held=1",
+            "value": 227097.125,
+            "range": "2.256e+05..2.286e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_churn_held/moq-transport-22/sessions=16/held=1024",
+            "value": 420781,
+            "range": "4.208e+05..4.208e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_churn_held/moq-transport-22/sessions=16/held=64",
+            "value": 210775.078125,
+            "range": "2.102e+05..2.114e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_churn_held/moq-transport-22/sessions=1/held=1",
+            "value": 186725.28125,
+            "range": "1.859e+05..1.876e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_churn_held/moq-transport-22/sessions=1/held=1024",
+            "value": 212525.75,
+            "range": "2.072e+05..2.178e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_churn_held/moq-transport-22/sessions=1/held=64",
+            "value": 194073.333984375,
+            "range": "1.938e+05..1.944e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_churn_held/moq-transport-22/sessions=4/held=1",
+            "value": 200762.234375,
+            "range": "2.004e+05..2.012e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_churn_held/moq-transport-22/sessions=4/held=1024",
+            "value": 381172,
+            "range": "3.812e+05..3.812e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_churn_held/moq-transport-22/sessions=4/held=64",
+            "value": 209313.66796875,
+            "range": "2.085e+05..2.102e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_churn_sessions/moq-lite-06/sessions=128/held=16",
+            "value": 163597.125,
+            "range": "1.634e+05..1.638e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_churn_sessions/moq-lite-06/sessions=16/held=16",
+            "value": 117980.697265625,
+            "range": "1.179e+05..1.18e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_churn_sessions/moq-lite-06/sessions=1/held=16",
+            "value": 104118.080078125,
+            "range": "1.036e+05..1.046e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_churn_sessions/moq-transport-22/sessions=128/held=16",
+            "value": 234878.375,
+            "range": "2.346e+05..2.352e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_churn_sessions/moq-transport-22/sessions=16/held=16",
+            "value": 209876.9765625,
+            "range": "2.098e+05..2.1e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_churn_sessions/moq-transport-22/sessions=1/held=16",
+            "value": 194689.234375,
+            "range": "1.941e+05..1.953e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_projects/moq-lite-06/relays=5/projects=16/tracks=24/total=1536",
+            "value": 126619013,
+            "range": "1.266e+08..1.266e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_projects/moq-lite-06/relays=5/projects=1/tracks=24/total=96",
+            "value": 5288764.1875,
+            "range": "5.146e+06..5.432e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_projects/moq-lite-06/relays=5/projects=4/tracks=24/total=384",
+            "value": 26535290,
+            "range": "2.619e+07..2.688e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_projects/moq-transport-22/relays=5/projects=16/tracks=24/total=1536",
+            "value": 115534184,
+            "range": "1.155e+08..1.155e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_projects/moq-transport-22/relays=5/projects=1/tracks=24/total=96",
+            "value": 4932677.25,
+            "range": "4.811e+06..5.054e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_projects/moq-transport-22/relays=5/projects=4/tracks=24/total=384",
+            "value": 24715042.25,
+            "range": "2.407e+07..2.536e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_relays/moq-lite-06/relays=17/projects=2/tracks=24/total=768",
+            "value": 52711888,
+            "range": "5.271e+07..5.271e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_relays/moq-lite-06/relays=2/projects=32/tracks=24/total=768",
+            "value": 58069840,
+            "range": "5.807e+07..5.807e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_relays/moq-lite-06/relays=33/projects=1/tracks=24/total=768",
+            "value": 56803360,
+            "range": "5.68e+07..5.68e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_relays/moq-lite-06/relays=35/projects=5/tracks=24/total=4080",
+            "value": 334380518,
+            "range": "3.344e+08..3.344e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_relays/moq-lite-06/relays=3/projects=16/tracks=24/total=768",
+            "value": 59810470,
+            "range": "5.981e+07..5.981e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_relays/moq-lite-06/relays=5/projects=8/tracks=24/total=768",
+            "value": 56486350,
+            "range": "5.649e+07..5.649e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_relays/moq-lite-06/relays=9/projects=4/tracks=24/total=768",
+            "value": 59233020,
+            "range": "5.923e+07..5.923e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_relays/moq-transport-22/relays=17/projects=2/tracks=24/total=768",
+            "value": 55966280,
+            "range": "5.597e+07..5.597e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_relays/moq-transport-22/relays=2/projects=32/tracks=24/total=768",
+            "value": 58197492,
+            "range": "5.82e+07..5.82e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_relays/moq-transport-22/relays=33/projects=1/tracks=24/total=768",
+            "value": 51902777,
+            "range": "5.19e+07..5.19e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_relays/moq-transport-22/relays=35/projects=5/tracks=24/total=4080",
+            "value": 311257984,
+            "range": "3.113e+08..3.113e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_relays/moq-transport-22/relays=3/projects=16/tracks=24/total=768",
+            "value": 57609722,
+            "range": "5.761e+07..5.761e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_relays/moq-transport-22/relays=5/projects=8/tracks=24/total=768",
+            "value": 55102956,
+            "range": "5.51e+07..5.51e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_relays/moq-transport-22/relays=9/projects=4/tracks=24/total=768",
+            "value": 51104536,
+            "range": "5.11e+07..5.11e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_tracks/moq-lite-06/relays=5/projects=4/tracks=24/total=384",
+            "value": 25698903.625,
+            "range": "2.565e+07..2.575e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_tracks/moq-lite-06/relays=5/projects=4/tracks=6/total=96",
+            "value": 5312764.375,
+            "range": "5.196e+06..5.429e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_tracks/moq-lite-06/relays=5/projects=4/tracks=96/total=1536",
+            "value": 123704714,
+            "range": "1.237e+08..1.237e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_tracks/moq-transport-22/relays=5/projects=4/tracks=24/total=384",
+            "value": 24765852.75,
+            "range": "2.474e+07..2.479e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_tracks/moq-transport-22/relays=5/projects=4/tracks=6/total=96",
+            "value": 4871555.75,
+            "range": "4.763e+06..4.98e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_dash_tracks/moq-transport-22/relays=5/projects=4/tracks=96/total=1536",
+            "value": 110439661,
+            "range": "1.104e+08..1.104e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_broadcasts/moq-lite-06/relays=1/publishers=1/broadcasts=16/viewers=16/watch=1/frame=64",
+            "value": 1325218.125,
+            "range": "1.314e+06..1.336e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_broadcasts/moq-lite-06/relays=1/publishers=1/broadcasts=256/viewers=16/watch=1/frame=64",
+            "value": 1286328.5625,
+            "range": "1.272e+06..1.301e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_broadcasts/moq-lite-06/relays=1/publishers=1/broadcasts=4096/viewers=16/watch=1/frame=64",
+            "value": 1188013,
+            "range": "1.188e+06..1.188e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_broadcasts/moq-lite-07-wip/relays=1/publishers=1/broadcasts=16/viewers=16/watch=1/frame=64",
+            "value": 1275351,
+            "range": "1.275e+06..1.275e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_broadcasts/moq-lite-07-wip/relays=1/publishers=1/broadcasts=256/viewers=16/watch=1/frame=64",
+            "value": 1344657.203125,
+            "range": "1.327e+06..1.362e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_broadcasts/moq-lite-07-wip/relays=1/publishers=1/broadcasts=4096/viewers=16/watch=1/frame=64",
+            "value": 1302033,
+            "range": "1.302e+06..1.302e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_broadcasts/moq-transport-22/relays=1/publishers=1/broadcasts=16/viewers=16/watch=1/frame=64",
+            "value": 1508511,
+            "range": "1.509e+06..1.509e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_broadcasts/moq-transport-22/relays=1/publishers=1/broadcasts=256/viewers=16/watch=1/frame=64",
+            "value": 1431225.09375,
+            "range": "1.425e+06..1.438e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_broadcasts/moq-transport-22/relays=1/publishers=1/broadcasts=4096/viewers=16/watch=1/frame=64",
+            "value": 1681324,
+            "range": "1.681e+06..1.681e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_burst/moq-lite-06/relays=1/publishers=1/broadcasts=16/viewers=1/watch=1/frame=64",
+            "value": 77139.43017578125,
+            "range": "7.684e+04..7.743e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_burst/moq-lite-06/relays=1/publishers=1/broadcasts=16/viewers=1/watch=1/frame=64/burst=8",
+            "value": 426637.02734375,
+            "range": "4.236e+05..4.296e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_burst/moq-lite-06/relays=1/publishers=1/broadcasts=16/viewers=1/watch=1/frame=64/burst=64",
+            "value": 4080614.4375,
+            "range": "4.079e+06..4.083e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_burst/moq-lite-06/relays=1/publishers=1/broadcasts=16/viewers=1/watch=8/frame=64",
+            "value": 592647.828125,
+            "range": "5.922e+05..5.931e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_burst/moq-lite-06/relays=1/publishers=1/broadcasts=16/viewers=1/watch=8/frame=64/burst=8",
+            "value": 3374752.15625,
+            "range": "3.36e+06..3.389e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_burst/moq-lite-06/relays=1/publishers=1/broadcasts=16/viewers=1/watch=16/frame=64/burst=16",
+            "value": 14001394,
+            "range": "1.392e+07..1.408e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_burst/moq-lite-06/relays=1/publishers=1/broadcasts=16/viewers=1/watch=16/frame=64/burst=64",
+            "value": 67616613,
+            "range": "6.762e+07..6.762e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_burst/moq-lite-07-wip/relays=1/publishers=1/broadcasts=16/viewers=1/watch=1/frame=64",
+            "value": 82913.7080078125,
+            "range": "8.22e+04..8.362e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_burst/moq-lite-07-wip/relays=1/publishers=1/broadcasts=16/viewers=1/watch=1/frame=64/burst=8",
+            "value": 448823.68359375,
+            "range": "4.444e+05..4.533e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_burst/moq-lite-07-wip/relays=1/publishers=1/broadcasts=16/viewers=1/watch=1/frame=64/burst=64",
+            "value": 4346823.15625,
+            "range": "4.321e+06..4.373e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_burst/moq-lite-07-wip/relays=1/publishers=1/broadcasts=16/viewers=1/watch=8/frame=64",
+            "value": 616770.81640625,
+            "range": "6.096e+05..6.24e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_burst/moq-lite-07-wip/relays=1/publishers=1/broadcasts=16/viewers=1/watch=8/frame=64/burst=8",
+            "value": 3559829.625,
+            "range": "3.557e+06..3.563e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_burst/moq-lite-07-wip/relays=1/publishers=1/broadcasts=16/viewers=1/watch=16/frame=64/burst=16",
+            "value": 14790752,
+            "range": "1.479e+07..1.479e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_burst/moq-lite-07-wip/relays=1/publishers=1/broadcasts=16/viewers=1/watch=16/frame=64/burst=64",
+            "value": 70072058,
+            "range": "7.007e+07..7.007e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_burst/moq-transport-22/relays=1/publishers=1/broadcasts=16/viewers=1/watch=1/frame=64",
+            "value": 82097.177734375,
+            "range": "8.173e+04..8.246e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_burst/moq-transport-22/relays=1/publishers=1/broadcasts=16/viewers=1/watch=1/frame=64/burst=8",
+            "value": 474229.38671875,
+            "range": "4.687e+05..4.798e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_burst/moq-transport-22/relays=1/publishers=1/broadcasts=16/viewers=1/watch=1/frame=64/burst=64",
+            "value": 3498590.84375,
+            "range": "3.488e+06..3.509e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_burst/moq-transport-22/relays=1/publishers=1/broadcasts=16/viewers=1/watch=8/frame=64",
+            "value": 594129.5703125,
+            "range": "5.896e+05..5.987e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_burst/moq-transport-22/relays=1/publishers=1/broadcasts=16/viewers=1/watch=8/frame=64/burst=8",
+            "value": 3617640.375,
+            "range": "3.597e+06..3.638e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_burst/moq-transport-22/relays=1/publishers=1/broadcasts=16/viewers=1/watch=16/frame=64/burst=16",
+            "value": 15147102.75,
+            "range": "1.507e+07..1.523e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_burst/moq-transport-22/relays=1/publishers=1/broadcasts=16/viewers=1/watch=16/frame=64/burst=64",
+            "value": 77890899,
+            "range": "7.789e+07..7.789e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_compression/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=1024",
+            "value": 1840376.1328125,
+            "range": "1.794e+06..1.886e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_compression/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=1024",
+            "value": 109175.98046875,
+            "range": "1.089e+05..1.094e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_compression/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=1024",
+            "value": 785838.9765625,
+            "range": "7.78e+05..7.936e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_compression/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=1024",
+            "value": 119551.99609375,
+            "range": "1.173e+05..1.218e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_compression/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=1024",
+            "value": 1758929.5,
+            "range": "1.733e+06..1.785e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_compression/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=1024",
+            "value": 116183.4833984375,
+            "range": "1.145e+05..1.179e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_compression/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=1024",
+            "value": 868102.734375,
+            "range": "8.633e+05..8.73e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_compression/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=1024",
+            "value": 115864.7587890625,
+            "range": "1.141e+05..1.177e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_compression/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=1024",
+            "value": 1802556.671875,
+            "range": "1.786e+06..1.819e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_compression/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=1024",
+            "value": 120043.025390625,
+            "range": "1.185e+05..1.216e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_compression/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=1024",
+            "value": 877617.8828125,
+            "range": "8.735e+05..8.817e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_compression/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=1024",
+            "value": 122179.8642578125,
+            "range": "1.204e+05..1.24e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-lite-06/watch=16/burst=16/credit=1",
+            "value": 29935598.75,
+            "range": "2.975e+07..3.012e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-lite-06/watch=16/burst=1/credit=1",
+            "value": 1532412.78125,
+            "range": "1.505e+06..1.56e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-lite-06/watch=16/burst=64/credit=1",
+            "value": 128538363,
+            "range": "1.285e+08..1.285e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-lite-06/watch=1/burst=16/credit=1",
+            "value": 1006906.2890625,
+            "range": "9.983e+05..1.015e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-lite-06/watch=1/burst=1/credit=1",
+            "value": 78075.3896484375,
+            "range": "7.769e+04..7.846e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-lite-06/watch=1/burst=64/credit=1",
+            "value": 4560328.25,
+            "range": "4.552e+06..4.568e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-lite-06/watch=64/burst=16/credit=1",
+            "value": 305829285,
+            "range": "3.058e+08..3.058e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-lite-06/watch=64/burst=1/credit=1",
+            "value": 11451486.5,
+            "range": "1.13e+07..1.16e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-lite-06/watch=64/burst=64/credit=1",
+            "value": 1424724087,
+            "range": "1.425e+09..1.425e+09",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-lite-07-wip/watch=16/burst=16/credit=1",
+            "value": 32261480,
+            "range": "3.226e+07..3.226e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-lite-07-wip/watch=16/burst=1/credit=1",
+            "value": 1558215.59375,
+            "range": "1.518e+06..1.599e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-lite-07-wip/watch=16/burst=64/credit=1",
+            "value": 144512015,
+            "range": "1.445e+08..1.445e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-lite-07-wip/watch=1/burst=16/credit=1",
+            "value": 1080585.65625,
+            "range": "1.077e+06..1.084e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-lite-07-wip/watch=1/burst=1/credit=1",
+            "value": 75621.625,
+            "range": "7.48e+04..7.645e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-lite-07-wip/watch=1/burst=64/credit=1",
+            "value": 4816377.125,
+            "range": "4.804e+06..4.829e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-lite-07-wip/watch=64/burst=16/credit=1",
+            "value": 330851697,
+            "range": "3.309e+08..3.309e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-lite-07-wip/watch=64/burst=1/credit=1",
+            "value": 12259589.75,
+            "range": "1.223e+07..1.229e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-lite-07-wip/watch=64/burst=64/credit=1",
+            "value": 1544937919,
+            "range": "1.545e+09..1.545e+09",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-transport-22/watch=16/burst=16/credit=1",
+            "value": 28855481,
+            "range": "2.882e+07..2.889e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-transport-22/watch=16/burst=1/credit=1",
+            "value": 1417109.1875,
+            "range": "1.386e+06..1.448e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-transport-22/watch=16/burst=64/credit=1",
+            "value": 125190140,
+            "range": "1.252e+08..1.252e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-transport-22/watch=1/burst=16/credit=1",
+            "value": 990691.8359375,
+            "range": "9.894e+05..9.92e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-transport-22/watch=1/burst=1/credit=1",
+            "value": 69935.39453125,
+            "range": "6.97e+04..7.017e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-transport-22/watch=1/burst=64/credit=1",
+            "value": 3878428.875,
+            "range": "3.873e+06..3.884e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-transport-22/watch=64/burst=16/credit=1",
+            "value": 322926140,
+            "range": "3.229e+08..3.229e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-transport-22/watch=64/burst=1/credit=1",
+            "value": 10556231.5,
+            "range": "1.032e+07..1.079e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_credit/moq-transport-22/watch=64/burst=64/credit=1",
+            "value": 1428202861,
+            "range": "1.428e+09..1.428e+09",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_frames/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 1015944.9453125,
+            "range": "1.014e+06..1.017e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_frames/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/frames=256/fetch",
+            "value": 7098606.5625,
+            "range": "7.08e+06..7.117e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_frames/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 86331.572265625,
+            "range": "8.633e+04..8.634e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_frames/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/frames=256/fetch",
+            "value": 811364.8515625,
+            "range": "8.092e+05..8.135e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_frames/moq-lite-06/relays=1/publishers=4/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 1379340.40625,
+            "range": "1.361e+06..1.398e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_frames/moq-lite-06/relays=1/publishers=4/broadcasts=1/viewers=16/watch=1/frame=64/frames=256/fetch",
+            "value": 8544908.25,
+            "range": "8.51e+06..8.58e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_frames/moq-lite-06/relays=1/publishers=4/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 84032.8896484375,
+            "range": "8.305e+04..8.501e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_frames/moq-lite-06/relays=1/publishers=4/broadcasts=1/viewers=1/watch=1/frame=64/frames=256/fetch",
+            "value": 821429.8359375,
+            "range": "8.211e+05..8.218e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_frames/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 1103877.421875,
+            "range": "1.103e+06..1.105e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_frames/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/frames=256/fetch",
+            "value": 6946297.1875,
+            "range": "6.941e+06..6.952e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_frames/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 93731.38232421875,
+            "range": "9.358e+04..9.388e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_frames/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/frames=256/fetch",
+            "value": 805598.9609375,
+            "range": "8.031e+05..8.081e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_frames/moq-lite-07-wip/relays=1/publishers=4/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 1428704.265625,
+            "range": "1.428e+06..1.43e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_frames/moq-lite-07-wip/relays=1/publishers=4/broadcasts=1/viewers=16/watch=1/frame=64/frames=256/fetch",
+            "value": 8315365.25,
+            "range": "8.292e+06..8.339e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_frames/moq-lite-07-wip/relays=1/publishers=4/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 93373.80517578125,
+            "range": "9.331e+04..9.344e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_frames/moq-lite-07-wip/relays=1/publishers=4/broadcasts=1/viewers=1/watch=1/frame=64/frames=256/fetch",
+            "value": 804065.3984375,
+            "range": "8.038e+05..8.044e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_frames/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 1752807.0625,
+            "range": "1.752e+06..1.754e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_frames/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/frames=256/fetch",
+            "value": 11474282.5,
+            "range": "1.145e+07..1.149e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_frames/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 223870.80078125,
+            "range": "2.234e+05..2.243e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_frames/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/frames=256/fetch",
+            "value": 1414015.390625,
+            "range": "1.408e+06..1.421e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_frames/moq-transport-22/relays=1/publishers=4/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 2293495.546875,
+            "range": "2.292e+06..2.295e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_frames/moq-transport-22/relays=1/publishers=4/broadcasts=1/viewers=16/watch=1/frame=64/frames=256/fetch",
+            "value": 13835410,
+            "range": "1.38e+07..1.387e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_frames/moq-transport-22/relays=1/publishers=4/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 227810.43359375,
+            "range": "2.258e+05..2.298e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_frames/moq-transport-22/relays=1/publishers=4/broadcasts=1/viewers=1/watch=1/frame=64/frames=256/fetch",
+            "value": 1394431.0703125,
+            "range": "1.39e+06..1.399e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_range/moq-lite-06/publishers=16/viewers=16/burst=16/fetch",
+            "value": 28595438.5,
+            "range": "2.842e+07..2.877e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_range/moq-lite-06/publishers=16/viewers=16/burst=2/fetch",
+            "value": 4070024.5,
+            "range": "4.068e+06..4.072e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_range/moq-lite-06/publishers=16/viewers=1/burst=16/fetch",
+            "value": 1167009.484375,
+            "range": "1.16e+06..1.174e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_range/moq-lite-06/publishers=16/viewers=1/burst=2/fetch",
+            "value": 161194.712890625,
+            "range": "1.611e+05..1.613e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_range/moq-lite-06/publishers=1/viewers=16/burst=16/fetch",
+            "value": 8724798,
+            "range": "8.716e+06..8.734e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_range/moq-lite-06/publishers=1/viewers=16/burst=2/fetch",
+            "value": 1573655.875,
+            "range": "1.571e+06..1.577e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_range/moq-lite-06/publishers=1/viewers=1/burst=16/fetch",
+            "value": 1152505.1875,
+            "range": "1.152e+06..1.153e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_range/moq-lite-06/publishers=1/viewers=1/burst=2/fetch",
+            "value": 158748.3115234375,
+            "range": "1.584e+05..1.59e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_range/moq-lite-07-wip/publishers=16/viewers=16/burst=16/fetch",
+            "value": 30391400.25,
+            "range": "3.036e+07..3.042e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_range/moq-lite-07-wip/publishers=16/viewers=16/burst=2/fetch",
+            "value": 4485324.1875,
+            "range": "4.475e+06..4.495e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_range/moq-lite-07-wip/publishers=16/viewers=1/burst=16/fetch",
+            "value": 1274278.875,
+            "range": "1.266e+06..1.282e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_range/moq-lite-07-wip/publishers=16/viewers=1/burst=2/fetch",
+            "value": 175705.8525390625,
+            "range": "1.756e+05..1.758e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_range/moq-lite-07-wip/publishers=1/viewers=16/burst=16/fetch",
+            "value": 9380796.375,
+            "range": "9.312e+06..9.449e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_range/moq-lite-07-wip/publishers=1/viewers=16/burst=2/fetch",
+            "value": 1700380.65625,
+            "range": "1.692e+06..1.709e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_range/moq-lite-07-wip/publishers=1/viewers=1/burst=16/fetch",
+            "value": 1277014.7890625,
+            "range": "1.277e+06..1.277e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_range/moq-lite-07-wip/publishers=1/viewers=1/burst=2/fetch",
+            "value": 179242.9365234375,
+            "range": "1.788e+05..1.797e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_range/moq-transport-22/publishers=16/viewers=16/burst=16/fetch",
+            "value": 12086306.5,
+            "range": "1.201e+07..1.217e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_range/moq-transport-22/publishers=16/viewers=16/burst=2/fetch",
+            "value": 4698264.6875,
+            "range": "4.686e+06..4.71e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_range/moq-transport-22/publishers=16/viewers=1/burst=16/fetch",
+            "value": 819828.515625,
+            "range": "8.177e+05..8.219e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_range/moq-transport-22/publishers=16/viewers=1/burst=2/fetch",
+            "value": 292535.724609375,
+            "range": "2.924e+05..2.926e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_range/moq-transport-22/publishers=1/viewers=16/burst=16/fetch",
+            "value": 6409899.125,
+            "range": "6.382e+06..6.437e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_range/moq-transport-22/publishers=1/viewers=16/burst=2/fetch",
+            "value": 2378559.875,
+            "range": "2.371e+06..2.386e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_range/moq-transport-22/publishers=1/viewers=1/burst=16/fetch",
+            "value": 826091.171875,
+            "range": "8.244e+05..8.278e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_fetch_range/moq-transport-22/publishers=1/viewers=1/burst=2/fetch",
+            "value": 280299.509765625,
+            "range": "2.749e+05..2.857e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_frame/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1462410.28125,
+            "range": "1.453e+06..1.472e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_frame/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=1024",
+            "value": 1453640.890625,
+            "range": "1.452e+06..1.455e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_frame/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=16384",
+            "value": 1549559.90625,
+            "range": "1.54e+06..1.56e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_frame/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1552473.4375,
+            "range": "1.548e+06..1.557e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_frame/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=1024",
+            "value": 1550929.984375,
+            "range": "1.551e+06..1.551e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_frame/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=16384",
+            "value": 1626356.25,
+            "range": "1.618e+06..1.634e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_frame/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1516561.609375,
+            "range": "1.516e+06..1.518e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_frame/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=1024",
+            "value": 1560534.671875,
+            "range": "1.552e+06..1.569e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_frame/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=16384",
+            "value": 1671878.390625,
+            "range": "1.661e+06..1.683e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/window=64",
+            "value": 2927968.03125,
+            "range": "2.928e+06..2.928e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/window=64/fetch",
+            "value": 2953321.84375,
+            "range": "2.95e+06..2.957e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1454893.453125,
+            "range": "1.454e+06..1.456e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 2368976.96875,
+            "range": "2.365e+06..2.373e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/window=64",
+            "value": 145820.9599609375,
+            "range": "1.432e+05..1.485e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/window=64/fetch",
+            "value": 123018.6962890625,
+            "range": "1.222e+05..1.238e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64",
+            "value": 73688.4248046875,
+            "range": "7.367e+04..7.371e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 86386.64208984375,
+            "range": "8.578e+04..8.699e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/window=64",
+            "value": 7699444,
+            "range": "7.688e+06..7.711e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/window=64/fetch",
+            "value": 6938193,
+            "range": "6.889e+06..6.987e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 3487681.1875,
+            "range": "3.442e+06..3.533e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/fetch",
+            "value": 5069493.25,
+            "range": "5.06e+06..5.079e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/window=64",
+            "value": 1610393,
+            "range": "1.609e+06..1.612e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/window=64/fetch",
+            "value": 1379961.796875,
+            "range": "1.374e+06..1.386e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 749254.7890625,
+            "range": "7.482e+05..7.503e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 1004897.6796875,
+            "range": "1.003e+06..1.007e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/window=64",
+            "value": 144729.3134765625,
+            "range": "1.41e+05..1.485e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/window=64/fetch",
+            "value": 119079.2119140625,
+            "range": "1.166e+05..1.216e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64",
+            "value": 77489.2041015625,
+            "range": "7.738e+04..7.76e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 84559.6865234375,
+            "range": "8.408e+04..8.504e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/window=64",
+            "value": 6337506.3125,
+            "range": "6.326e+06..6.349e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/window=64/fetch",
+            "value": 5143997.8125,
+            "range": "5.109e+06..5.179e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 2772169.3125,
+            "range": "2.758e+06..2.786e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/fetch",
+            "value": 3739079.0625,
+            "range": "3.715e+06..3.763e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/window=64",
+            "value": 3337341.40625,
+            "range": "3.337e+06..3.338e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/window=64/fetch",
+            "value": 3353671.40625,
+            "range": "3.352e+06..3.355e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1491324.546875,
+            "range": "1.48e+06..1.502e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 2460055,
+            "range": "2.45e+06..2.47e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/window=64",
+            "value": 165109.9599609375,
+            "range": "1.622e+05..1.68e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/window=64/fetch",
+            "value": 133665.939453125,
+            "range": "1.306e+05..1.368e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64",
+            "value": 80173.3603515625,
+            "range": "7.996e+04..8.039e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 94258.07275390625,
+            "range": "9.386e+04..9.466e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/window=64",
+            "value": 8599757.75,
+            "range": "8.584e+06..8.616e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/window=64/fetch",
+            "value": 7885835,
+            "range": "7.855e+06..7.916e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 3639540.6875,
+            "range": "3.608e+06..3.671e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/fetch",
+            "value": 5671432.375,
+            "range": "5.67e+06..5.673e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/window=64",
+            "value": 1837609.03125,
+            "range": "1.831e+06..1.844e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/window=64/fetch",
+            "value": 1544249.796875,
+            "range": "1.538e+06..1.551e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 789293.96875,
+            "range": "7.873e+05..7.912e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 1106680.1796875,
+            "range": "1.104e+06..1.109e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/window=64",
+            "value": 161883.4453125,
+            "range": "1.591e+05..1.647e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/window=64/fetch",
+            "value": 133557.0419921875,
+            "range": "1.305e+05..1.366e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64",
+            "value": 80755.45556640625,
+            "range": "8.059e+04..8.092e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 94431.5078125,
+            "range": "9.438e+04..9.449e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/window=64",
+            "value": 6934612.75,
+            "range": "6.904e+06..6.965e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/window=64/fetch",
+            "value": 5850765.5625,
+            "range": "5.832e+06..5.87e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 2978316.375,
+            "range": "2.977e+06..2.98e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/fetch",
+            "value": 4008221.1875,
+            "range": "4.007e+06..4.009e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/window=64",
+            "value": 2881354.40625,
+            "range": "2.863e+06..2.9e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/window=64/fetch",
+            "value": 4663743.1875,
+            "range": "4.64e+06..4.688e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1544243.96875,
+            "range": "1.538e+06..1.55e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 3838888.625,
+            "range": "3.839e+06..3.839e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/window=64",
+            "value": 129438.498046875,
+            "range": "1.261e+05..1.328e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/window=64/fetch",
+            "value": 270004.65234375,
+            "range": "2.692e+05..2.708e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64",
+            "value": 75204.85302734375,
+            "range": "7.515e+04..7.526e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 225022.8671875,
+            "range": "2.24e+05..2.261e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/window=64",
+            "value": 7408936,
+            "range": "7.323e+06..7.495e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/window=64/fetch",
+            "value": 10495180.5,
+            "range": "1.045e+07..1.054e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 3708967.875,
+            "range": "3.635e+06..3.783e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/fetch",
+            "value": 9809768.5,
+            "range": "9.742e+06..9.878e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/window=64",
+            "value": 1612860.8125,
+            "range": "1.61e+06..1.616e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/window=64/fetch",
+            "value": 2093156.09375,
+            "range": "2.091e+06..2.095e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 804109.1875,
+            "range": "8.01e+05..8.072e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 1761340.203125,
+            "range": "1.757e+06..1.766e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/window=64",
+            "value": 133275.4384765625,
+            "range": "1.302e+05..1.363e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/window=64/fetch",
+            "value": 263857.662109375,
+            "range": "2.616e+05..2.661e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64",
+            "value": 76871.6484375,
+            "range": "7.651e+04..7.723e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 225144.41796875,
+            "range": "2.233e+05..2.27e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/window=64",
+            "value": 6171429.5,
+            "range": "6.132e+06..6.211e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/window=64/fetch",
+            "value": 8148598.625,
+            "range": "8.132e+06..8.165e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 3018552.9375,
+            "range": "2.984e+06..3.053e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_group_cost/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/fetch",
+            "value": 6836356.375,
+            "range": "6.802e+06..6.87e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_paced/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/paced",
+            "value": 916738.765625,
+            "range": "9.158e+05..9.177e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_paced/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/paced",
+            "value": 42044.183349609375,
+            "range": "4.131e+04..4.277e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_paced/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=256/watch=1/frame=64/paced",
+            "value": 11390258,
+            "range": "7.309e+06..1.547e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_paced/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/paced",
+            "value": 1011384.53125,
+            "range": "1.006e+06..1.017e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_paced/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/paced",
+            "value": 46935.6689453125,
+            "range": "4.666e+04..4.721e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_paced/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=256/watch=1/frame=64/paced",
+            "value": 17514644,
+            "range": "1.751e+07..1.751e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_paced/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/paced",
+            "value": 917867.375,
+            "range": "9.144e+05..9.214e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_paced/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/paced",
+            "value": 38602.7158203125,
+            "range": "3.853e+04..3.868e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_paced/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=256/watch=1/frame=64/paced",
+            "value": 17516475,
+            "range": "1.752e+07..1.752e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_publishers/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1451828.4375,
+            "range": "1.452e+06..1.452e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_publishers/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 733522.25,
+            "range": "7.324e+05..7.346e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_publishers/moq-lite-06/relays=1/publishers=256/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1433229.6875,
+            "range": "1.432e+06..1.434e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_publishers/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1522031.609375,
+            "range": "1.518e+06..1.526e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_publishers/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 805423.4296875,
+            "range": "8.048e+05..8.06e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_publishers/moq-lite-07-wip/relays=1/publishers=256/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1515509.375,
+            "range": "1.51e+06..1.521e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_publishers/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1540243.40625,
+            "range": "1.536e+06..1.545e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_publishers/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 805431.25,
+            "range": "7.997e+05..8.111e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_publishers/moq-transport-22/relays=1/publishers=256/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1563219.5,
+            "range": "1.523e+06..1.604e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_relays/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 3516204,
+            "range": "3.475e+06..3.557e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_relays/moq-lite-06/relays=2/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 3978272.6875,
+            "range": "3.919e+06..4.038e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_relays/moq-lite-06/relays=4/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 4006156.125,
+            "range": "3.999e+06..4.013e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_relays/moq-lite-06/relays=8/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 7575773,
+            "range": "7.531e+06..7.62e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_relays/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 3764516.875,
+            "range": "3.7e+06..3.829e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_relays/moq-lite-07-wip/relays=2/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 4687605.25,
+            "range": "4.594e+06..4.781e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_relays/moq-lite-07-wip/relays=4/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 4343356,
+            "range": "4.26e+06..4.426e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_relays/moq-lite-07-wip/relays=8/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 4548317.5,
+            "range": "4.532e+06..4.565e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_relays/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 3935474.25,
+            "range": "3.898e+06..3.972e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_relays/moq-transport-22/relays=2/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 4400824.875,
+            "range": "4.363e+06..4.439e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_relays/moq-transport-22/relays=4/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 4173343.25,
+            "range": "4.066e+06..4.281e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_relays/moq-transport-22/relays=8/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 4482545.75,
+            "range": "4.48e+06..4.485e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_scale/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1458897.8125,
+            "range": "1.43e+06..1.487e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_scale/moq-lite-06/relays=1/publishers=256/broadcasts=1/viewers=256/watch=1/frame=64",
+            "value": 38385047,
+            "range": "3.839e+07..3.839e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_scale/moq-lite-06/relays=1/publishers=64/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 6434044.75,
+            "range": "6.324e+06..6.544e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_scale/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1724014,
+            "range": "1.724e+06..1.724e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_scale/moq-lite-07-wip/relays=1/publishers=256/broadcasts=1/viewers=256/watch=1/frame=64",
+            "value": 39961786,
+            "range": "3.996e+07..3.996e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_scale/moq-lite-07-wip/relays=1/publishers=64/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 6865743.25,
+            "range": "6.679e+06..7.052e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_scale/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1674028,
+            "range": "1.674e+06..1.674e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_scale/moq-transport-22/relays=1/publishers=256/broadcasts=1/viewers=256/watch=1/frame=64",
+            "value": 45103626,
+            "range": "4.51e+07..4.51e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_scale/moq-transport-22/relays=1/publishers=64/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 7871942.5,
+            "range": "7.756e+06..7.988e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_viewers/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1414056.3125,
+            "range": "1.413e+06..1.415e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_viewers/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64",
+            "value": 75980.6962890625,
+            "range": "7.524e+04..7.672e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_viewers/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=256/watch=1/frame=64",
+            "value": 19614013,
+            "range": "1.961e+07..1.961e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_viewers/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1517305.265625,
+            "range": "1.508e+06..1.526e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_viewers/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64",
+            "value": 81835.41845703125,
+            "range": "8.127e+04..8.24e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_viewers/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=256/watch=1/frame=64",
+            "value": 19661126,
+            "range": "1.966e+07..1.966e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_viewers/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1549851.578125,
+            "range": "1.544e+06..1.555e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_viewers/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64",
+            "value": 74381.92578125,
+            "range": "7.43e+04..7.447e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_viewers/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=256/watch=1/frame=64",
+            "value": 22284433,
+            "range": "2.228e+07..2.228e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_watch/moq-lite-06/relays=1/publishers=1/broadcasts=256/viewers=16/watch=1/frame=64",
+            "value": 1280714.90625,
+            "range": "1.258e+06..1.304e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_watch/moq-lite-06/relays=1/publishers=1/broadcasts=256/viewers=16/watch=16/frame=64",
+            "value": 23754762,
+            "range": "2.375e+07..2.375e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_watch/moq-lite-06/relays=1/publishers=1/broadcasts=256/viewers=16/watch=256/frame=64",
+            "value": 223055787,
+            "range": "2.231e+08..2.231e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_watch/moq-lite-07-wip/relays=1/publishers=1/broadcasts=256/viewers=16/watch=1/frame=64",
+            "value": 1304488,
+            "range": "1.304e+06..1.304e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_watch/moq-lite-07-wip/relays=1/publishers=1/broadcasts=256/viewers=16/watch=16/frame=64",
+            "value": 24483752,
+            "range": "2.448e+07..2.448e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_watch/moq-lite-07-wip/relays=1/publishers=1/broadcasts=256/viewers=16/watch=256/frame=64",
+            "value": 233587041,
+            "range": "2.336e+08..2.336e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_watch/moq-transport-22/relays=1/publishers=1/broadcasts=256/viewers=16/watch=1/frame=64",
+            "value": 1356922,
+            "range": "1.357e+06..1.357e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_watch/moq-transport-22/relays=1/publishers=1/broadcasts=256/viewers=16/watch=16/frame=64",
+            "value": 23658695,
+            "range": "2.366e+07..2.366e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_delivery_watch/moq-transport-22/relays=1/publishers=1/broadcasts=256/viewers=16/watch=256/frame=64",
+            "value": 237699713,
+            "range": "2.377e+08..2.377e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_idle/moq-lite-06/sessions=1024/consumers=0",
+            "value": 843.1406555175781,
+            "range": "841.8..844.5",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_idle/moq-lite-06/sessions=1024/consumers=1",
+            "value": 846943.75390625,
+            "range": "7.917e+05..9.022e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_idle/moq-lite-06/sessions=1024/consumers=8",
+            "value": 1035357.9453125,
+            "range": "1.008e+06..1.063e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_idle/moq-lite-06/sessions=1/consumers=0",
+            "value": 844.1863250732422,
+            "range": "844.1..844.3",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_idle/moq-lite-06/sessions=1/consumers=1",
+            "value": 1250.9584655761719,
+            "range": "1251..1251",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_idle/moq-lite-06/sessions=1/consumers=8",
+            "value": 1250.389793395996,
+            "range": "1250..1251",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_idle/moq-lite-06/sessions=64/consumers=0",
+            "value": 843.2118759155273,
+            "range": "843.1..843.3",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_idle/moq-lite-06/sessions=64/consumers=1",
+            "value": 38348.889892578125,
+            "range": "3.833e+04..3.836e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_idle/moq-lite-06/sessions=64/consumers=8",
+            "value": 39925.886474609375,
+            "range": "3.983e+04..4.003e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_idle/moq-transport-22/sessions=1024/consumers=0",
+            "value": 845.2197265625,
+            "range": "844..846.4",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_idle/moq-transport-22/sessions=1024/consumers=1",
+            "value": 53763498.75,
+            "range": "4.514e+07..6.239e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_idle/moq-transport-22/sessions=1024/consumers=8",
+            "value": 47465510.5,
+            "range": "4.134e+07..5.359e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_idle/moq-transport-22/sessions=1/consumers=0",
+            "value": 842.0544357299805,
+            "range": "842..842.1",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_idle/moq-transport-22/sessions=1/consumers=1",
+            "value": 27721.98291015625,
+            "range": "2.772e+04..2.773e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_idle/moq-transport-22/sessions=1/consumers=8",
+            "value": 27867.571533203125,
+            "range": "2.786e+04..2.788e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_idle/moq-transport-22/sessions=64/consumers=0",
+            "value": 844.3691940307617,
+            "range": "843.7..845",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_idle/moq-transport-22/sessions=64/consumers=1",
+            "value": 2495414.828125,
+            "range": "2.478e+06..2.513e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_idle/moq-transport-22/sessions=64/consumers=8",
+            "value": 2487054.609375,
+            "range": "2.474e+06..2.5e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-lite-06/relays=1/publishers=1/broadcasts=1024/viewers=16/watch=1/frame=64",
+            "value": 6856539.0625,
+            "range": "6.803e+06..6.91e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 369517.8046875,
+            "range": "3.675e+05..3.716e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-lite-06/relays=1/publishers=1/broadcasts=64/viewers=16/watch=1/frame=64",
+            "value": 842867.6640625,
+            "range": "8.387e+05..8.471e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-lite-06/relays=2/publishers=1/broadcasts=1024/viewers=16/watch=1/frame=64",
+            "value": 6821526.375,
+            "range": "6.774e+06..6.869e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-lite-06/relays=2/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 467020.16796875,
+            "range": "4.643e+05..4.697e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-lite-06/relays=2/publishers=1/broadcasts=64/viewers=16/watch=1/frame=64",
+            "value": 983522.546875,
+            "range": "9.717e+05..9.953e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-lite-06/relays=8/publishers=1/broadcasts=1024/viewers=16/watch=1/frame=64",
+            "value": 469601896,
+            "range": "4.696e+08..4.696e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-lite-06/relays=8/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 465853.78125,
+            "range": "4.638e+05..4.679e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-lite-06/relays=8/publishers=1/broadcasts=64/viewers=16/watch=1/frame=64",
+            "value": 1043504.71875,
+            "range": "1.034e+06..1.053e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1024/viewers=16/watch=1/frame=64",
+            "value": 7497693.5,
+            "range": "7.419e+06..7.576e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 25901445,
+            "range": "2.59e+07..2.59e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-lite-07-wip/relays=1/publishers=1/broadcasts=64/viewers=16/watch=1/frame=64",
+            "value": 941312.5078125,
+            "range": "9.316e+05..9.51e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-lite-07-wip/relays=2/publishers=1/broadcasts=1024/viewers=16/watch=1/frame=64",
+            "value": 7758918,
+            "range": "7.636e+06..7.882e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-lite-07-wip/relays=2/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 502776.35546875,
+            "range": "5.001e+05..5.055e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-lite-07-wip/relays=2/publishers=1/broadcasts=64/viewers=16/watch=1/frame=64",
+            "value": 1104722.203125,
+            "range": "1.093e+06..1.117e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-lite-07-wip/relays=8/publishers=1/broadcasts=1024/viewers=16/watch=1/frame=64",
+            "value": 594808283,
+            "range": "5.948e+08..5.948e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-lite-07-wip/relays=8/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 515474.0546875,
+            "range": "5.129e+05..5.18e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-lite-07-wip/relays=8/publishers=1/broadcasts=64/viewers=16/watch=1/frame=64",
+            "value": 1099430.03125,
+            "range": "1.092e+06..1.107e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-transport-22/relays=1/publishers=1/broadcasts=1024/viewers=16/watch=1/frame=64",
+            "value": 9605711,
+            "range": "9.457e+06..9.755e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 118973561,
+            "range": "1.19e+08..1.19e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-transport-22/relays=1/publishers=1/broadcasts=64/viewers=16/watch=1/frame=64",
+            "value": 1223420.390625,
+            "range": "1.223e+06..1.224e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-transport-22/relays=2/publishers=1/broadcasts=1024/viewers=16/watch=1/frame=64",
+            "value": 9725019,
+            "range": "9.576e+06..9.874e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-transport-22/relays=2/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 721922.109375,
+            "range": "7.171e+05..7.268e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-transport-22/relays=2/publishers=1/broadcasts=64/viewers=16/watch=1/frame=64",
+            "value": 1405008.15625,
+            "range": "1.405e+06..1.405e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-transport-22/relays=8/publishers=1/broadcasts=1024/viewers=16/watch=1/frame=64",
+            "value": 748250155,
+            "range": "7.483e+08..7.483e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-transport-22/relays=8/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 717074.6796875,
+            "range": "7.119e+05..7.223e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_broadcasts/moq-transport-22/relays=8/publishers=1/broadcasts=64/viewers=16/watch=1/frame=64",
+            "value": 1426405,
+            "range": "1.425e+06..1.427e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_relays/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 493844.64453125,
+            "range": "4.921e+05..4.956e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_relays/moq-lite-06/relays=2/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 587148.203125,
+            "range": "5.824e+05..5.919e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_relays/moq-lite-06/relays=8/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 572551.171875,
+            "range": "5.692e+05..5.759e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_relays/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 555913.2890625,
+            "range": "5.503e+05..5.615e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_relays/moq-lite-07-wip/relays=2/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 658704.5703125,
+            "range": "6.542e+05..6.632e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_relays/moq-lite-07-wip/relays=8/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 651012.0390625,
+            "range": "6.462e+05..6.559e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_relays/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 737921.6875,
+            "range": "7.346e+05..7.413e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_relays/moq-transport-22/relays=2/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 870800.03125,
+            "range": "8.684e+05..8.732e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_relays/moq-transport-22/relays=8/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 864263.953125,
+            "range": "8.609e+05..8.676e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 363422.55859375,
+            "range": "3.63e+05..3.639e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/history=64",
+            "value": 384961.72265625,
+            "range": "3.823e+05..3.877e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/history=1024",
+            "value": 387497.86328125,
+            "range": "3.865e+05..3.885e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-lite-06/relays=1/publishers=32/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 613819.109375,
+            "range": "6.092e+05..6.185e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-lite-06/relays=1/publishers=32/broadcasts=1/viewers=16/watch=1/frame=64/history=64",
+            "value": 618441.7109375,
+            "range": "6.158e+05..6.211e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-lite-06/relays=1/publishers=32/broadcasts=1/viewers=16/watch=1/frame=64/history=1024",
+            "value": 889183.5,
+            "range": "8.719e+05..9.064e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-lite-06/relays=1/publishers=8/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 427374.984375,
+            "range": "4.266e+05..4.282e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-lite-06/relays=1/publishers=8/broadcasts=1/viewers=16/watch=1/frame=64/history=64",
+            "value": 435874.734375,
+            "range": "4.327e+05..4.391e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-lite-06/relays=1/publishers=8/broadcasts=1/viewers=16/watch=1/frame=64/history=1024",
+            "value": 435511.625,
+            "range": "4.354e+05..4.357e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 417297.55859375,
+            "range": "4.149e+05..4.197e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/history=64",
+            "value": 425401.90625,
+            "range": "4.234e+05..4.274e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/history=1024",
+            "value": 426344.26171875,
+            "range": "4.236e+05..4.291e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-lite-07-wip/relays=1/publishers=32/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 711628.59375,
+            "range": "7.017e+05..7.215e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-lite-07-wip/relays=1/publishers=32/broadcasts=1/viewers=16/watch=1/frame=64/history=64",
+            "value": 704713.61328125,
+            "range": "7.022e+05..7.073e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-lite-07-wip/relays=1/publishers=32/broadcasts=1/viewers=16/watch=1/frame=64/history=1024",
+            "value": 939046.5,
+            "range": "9.182e+05..9.599e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-lite-07-wip/relays=1/publishers=8/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 479590.46484375,
+            "range": "4.776e+05..4.816e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-lite-07-wip/relays=1/publishers=8/broadcasts=1/viewers=16/watch=1/frame=64/history=64",
+            "value": 479400.9140625,
+            "range": "4.792e+05..4.796e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-lite-07-wip/relays=1/publishers=8/broadcasts=1/viewers=16/watch=1/frame=64/history=1024",
+            "value": 489258.984375,
+            "range": "4.873e+05..4.912e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 567285.2578125,
+            "range": "5.649e+05..5.697e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/history=64",
+            "value": 589557.96875,
+            "range": "5.849e+05..5.942e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/history=1024",
+            "value": 586089.75,
+            "range": "5.83e+05..5.892e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-transport-22/relays=1/publishers=32/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 912563.796875,
+            "range": "9.073e+05..9.178e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-transport-22/relays=1/publishers=32/broadcasts=1/viewers=16/watch=1/frame=64/history=64",
+            "value": 913595,
+            "range": "9.126e+05..9.146e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-transport-22/relays=1/publishers=32/broadcasts=1/viewers=16/watch=1/frame=64/history=1024",
+            "value": 913386.5,
+            "range": "9.023e+05..9.245e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-transport-22/relays=1/publishers=8/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 645943.0859375,
+            "range": "6.452e+05..6.467e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-transport-22/relays=1/publishers=8/broadcasts=1/viewers=16/watch=1/frame=64/history=64",
+            "value": 661336.0234375,
+            "range": "6.548e+05..6.679e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_join_stale/moq-transport-22/relays=1/publishers=8/broadcasts=1/viewers=16/watch=1/frame=64/history=1024",
+            "value": 650434.6640625,
+            "range": "6.453e+05..6.556e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_range_updates/groups_16/1",
+            "value": 562002.5625,
+            "range": "5.537e+05..5.703e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_range_updates/groups_16/16",
+            "value": 5938641.375,
+            "range": "5.92e+06..5.957e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_range_updates/groups_2/1",
+            "value": 179893.42578125,
+            "range": "1.794e+05..1.804e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_range_updates/groups_2/16",
+            "value": 1815890.53125,
+            "range": "1.81e+06..1.822e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_withdrawal/16r_1b",
+            "value": 3252304.375,
+            "range": "3.233e+06..3.271e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_withdrawal/16r_32b",
+            "value": 70202900.5,
+            "range": "6.942e+07..7.098e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_withdrawal/4r_1b",
+            "value": 104729.03125,
+            "range": "1.039e+05..1.055e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_withdrawal/4r_32b",
+            "value": 1728943.84375,
+            "range": "1.725e+06..1.733e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_withdrawal/8r_1b",
+            "value": 670536.9375,
+            "range": "6.655e+05..6.756e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/session_withdrawal/8r_32b",
+            "value": 10341579,
+            "range": "1.023e+07..1.046e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/report/1000x1",
+            "value": 85007.0849609375,
+            "range": "8.466e+04..8.535e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/report/1000x10",
+            "value": 781694.99609375,
+            "range": "7.806e+05..7.828e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/report/100x1",
+            "value": 4785.734100341797,
+            "range": "4785..4786",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/report/100x10",
+            "value": 44907.406494140625,
+            "range": "4.435e+04..4.546e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/request/1000x1",
+            "value": 358.5653476715088,
+            "range": "352.8..364.4",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/request/1000x10",
+            "value": 388.6841974258423,
+            "range": "384.5..392.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/request/100x1",
+            "value": 347.2031192779541,
+            "range": "341..353.4",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/request/100x10",
+            "value": 363.6844825744629,
+            "range": "354.7..372.7",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/request/1x1",
+            "value": 355.2397222518921,
+            "range": "327.2..383.2",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/request/1x10",
+            "value": 331.234619140625,
+            "range": "323.9..338.6",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/retag/100x1",
+            "value": 422.41712951660156,
+            "range": "422.3..422.5",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/retag/100x100",
+            "value": 44052.0654296875,
+            "range": "4.405e+04..4.405e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/retag/100x10000",
+            "value": 4833818.5625,
+            "range": "4.831e+06..4.837e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/retag/1x1",
+            "value": 425.0179443359375,
+            "range": "424.9..425.1",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/retag/1x100",
+            "value": 44313.1767578125,
+            "range": "4.425e+04..4.438e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/retag/1x10000",
+            "value": 5036521.125,
+            "range": "5.034e+06..5.039e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/session-report/1000x10/connections=0",
+            "value": 178234.23046875,
+            "range": "1.779e+05..1.786e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/session-report/1000x10/connections=1",
+            "value": 631291.31640625,
+            "range": "6.306e+05..6.32e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/session-report/1000x10/connections=4",
+            "value": 1905172.71875,
+            "range": "1.905e+06..1.905e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/session-report/1000x1/connections=0",
+            "value": 66278.44775390625,
+            "range": "6.612e+04..6.644e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/session-report/1000x1/connections=1",
+            "value": 123959.39453125,
+            "range": "1.238e+05..1.241e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/session-report/1000x1/connections=4",
+            "value": 257091.416015625,
+            "range": "2.567e+05..2.575e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/session-report/100x10/connections=0",
+            "value": 7075.975891113281,
+            "range": "7072..7080",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/session-report/100x10/connections=1",
+            "value": 50889.05517578125,
+            "range": "5.079e+04..5.099e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/session-report/100x10/connections=4",
+            "value": 180889.2978515625,
+            "range": "1.804e+05..1.813e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/session-report/100x1/connections=0",
+            "value": 3959.8492126464844,
+            "range": "3959..3961",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/session-report/100x1/connections=1",
+            "value": 8546.028442382812,
+            "range": "8539..8553",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/session-report/100x1/connections=4",
+            "value": 21201.181640625,
+            "range": "2.12e+04..2.12e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/session-report/1x10/connections=0",
+            "value": 105.91615009307861,
+            "range": "105.8..106",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/session-report/1x10/connections=1",
+            "value": 523.4327812194824,
+            "range": "523.3..523.5",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/session-report/1x10/connections=4",
+            "value": 1786.4954986572266,
+            "range": "1786..1787",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/session-report/1x1/connections=0",
+            "value": 81.28606605529785,
+            "range": "81.21..81.36",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/session-report/1x1/connections=1",
+            "value": 122.44605350494385,
+            "range": "122.4..122.5",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/session-report/1x1/connections=4",
+            "value": 250.40407180786133,
+            "range": "250.3..250.5",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/write/path-bytes",
+            "value": 4.165720820426941,
+            "range": "4.165..4.166",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/stats/write/session-bytes",
+            "value": 8.242406606674194,
+            "range": "8.233..8.251",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/synced/land/1000st_1000c",
+            "value": 875.5322875976562,
+            "range": "858..893.1",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/synced/land/1000st_10c",
+            "value": 860.8479232788086,
+            "range": "860.8..860.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/synced/land/10st_1000c",
+            "value": 859.2063446044922,
+            "range": "857.5..860.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/synced/land/10st_10c",
+            "value": 856.3116455078125,
+            "range": "856.1..856.6",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/synced/register/1000st_1000c",
+            "value": 1334.0407409667969,
+            "range": "1331..1337",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/synced/register/1000st_10c",
+            "value": 1315.8124084472656,
+            "range": "1314..1317",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/synced/register/10st_1000c",
+            "value": 1332.1105346679688,
+            "range": "1331..1333",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/synced/register/10st_10c",
+            "value": 1310.050765991211,
+            "range": "1310..1311",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_pending_tail/repoll/1024x1",
+            "value": 965.021484375,
+            "range": "960.9..969.1",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_pending_tail/repoll/1024x1024",
+            "value": 4393,
+            "range": "4393..4393",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_pending_tail/repoll/1024x32",
+            "value": 2996,
+            "range": "2312..3680",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_pending_tail/repoll/1x1",
+            "value": 949.5843963623047,
+            "range": "948.4..950.8",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_pending_tail/repoll/1x1024",
+            "value": 963.7026214599609,
+            "range": "958.5..968.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_pending_tail/repoll/1x32",
+            "value": 954.4005355834961,
+            "range": "948.2..960.6",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_pending_tail/repoll/32x1",
+            "value": 953.5759887695312,
+            "range": "950.6..956.5",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_pending_tail/repoll/32x1024",
+            "value": 3204,
+            "range": "2472..3936",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_pending_tail/repoll/32x32",
+            "value": 956.3522033691406,
+            "range": "949.7..963",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_aborted_scan/1",
+            "value": 2303.5624389648438,
+            "range": "2303..2304",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_aborted_scan/512",
+            "value": 11775.972900390625,
+            "range": "1.176e+04..1.18e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_aborted_scan/64",
+            "value": 3107.7669067382812,
+            "range": "3107..3109",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_aborted_scan/8",
+            "value": 2413.7782592773438,
+            "range": "2402..2426",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_budget_widening/1r/1024c/1",
+            "value": 5589.96875,
+            "range": "5491..5689",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_budget_widening/1r/1024c/16",
+            "value": 37896.40625,
+            "range": "3.783e+04..3.796e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_budget_widening/1r/1024c/256",
+            "value": 513866.34375,
+            "range": "5.125e+05..5.152e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_budget_widening/1r/16384c/1",
+            "value": 11155,
+            "range": "1.079e+04..1.152e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_budget_widening/1r/16384c/16",
+            "value": 57139.25,
+            "range": "5.609e+04..5.818e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_budget_widening/1r/16384c/256",
+            "value": 657044.25,
+            "range": "6.551e+05..6.59e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_budget_widening/1r/64c/1",
+            "value": 1665.458984375,
+            "range": "1662..1669",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_budget_widening/1r/64c/16",
+            "value": 23645.4921875,
+            "range": "2.361e+04..2.368e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_budget_widening/64r/1024c/1",
+            "value": 5824.65625,
+            "range": "5748..5902",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_budget_widening/64r/1024c/16",
+            "value": 36007.78125,
+            "range": "3.579e+04..3.623e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_budget_widening/64r/1024c/256",
+            "value": 514382.1875,
+            "range": "5.141e+05..5.147e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_budget_widening/64r/16384c/1",
+            "value": 11902.5,
+            "range": "1.172e+04..1.208e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_budget_widening/64r/16384c/16",
+            "value": 54931.75,
+            "range": "5.433e+04..5.553e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_budget_widening/64r/16384c/256",
+            "value": 653996.25,
+            "range": "6.529e+05..6.551e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_budget_widening/64r/64c/1",
+            "value": 1805.69921875,
+            "range": "1779..1832",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_budget_widening/64r/64c/16",
+            "value": 23894.99609375,
+            "range": "2.384e+04..2.395e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_pressure/plain/16t/1",
+            "value": 447.3690528869629,
+            "range": "447.4..447.4",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_pressure/plain/16t/64",
+            "value": 441.5675582885742,
+            "range": "441.4..441.7",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_pressure/plain/16t/8",
+            "value": 446.88371658325195,
+            "range": "446.9..446.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_pressure/plain/1t/1",
+            "value": 375.442419052124,
+            "range": "375.3..375.6",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_pressure/plain/1t/64",
+            "value": 375.8696937561035,
+            "range": "375.7..376",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_pressure/plain/1t/8",
+            "value": 374.7010154724121,
+            "range": "374.6..374.8",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_pressure/plain/64t/1",
+            "value": 454.5374565124512,
+            "range": "454.4..454.7",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_pressure/plain/64t/64",
+            "value": 448.0917625427246,
+            "range": "448..448.2",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_pressure/plain/64t/8",
+            "value": 450.74790954589844,
+            "range": "450.2..451.3",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_pressure/zeros/16t/1",
+            "value": 21986.373657226562,
+            "range": "2.198e+04..2.2e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_pressure/zeros/16t/64",
+            "value": 21982.074584960938,
+            "range": "2.197e+04..2.199e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_pressure/zeros/16t/8",
+            "value": 21971.4423828125,
+            "range": "2.197e+04..2.198e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_pressure/zeros/1t/1",
+            "value": 21925.48095703125,
+            "range": "2.192e+04..2.193e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_pressure/zeros/1t/64",
+            "value": 21931.364013671875,
+            "range": "2.192e+04..2.194e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_pressure/zeros/1t/8",
+            "value": 21959.912841796875,
+            "range": "2.194e+04..2.198e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_pressure/zeros/64t/1",
+            "value": 22235.479858398438,
+            "range": "2.223e+04..2.225e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_pressure/zeros/64t/64",
+            "value": 22184.038940429688,
+            "range": "2.218e+04..2.219e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_pressure/zeros/64t/8",
+            "value": 22169.43310546875,
+            "range": "2.217e+04..2.217e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_subscriber_join/0d/1",
+            "value": 1302.0693664550781,
+            "range": "1162..1442",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_subscriber_join/0d/64",
+            "value": 42690.134765625,
+            "range": "4.22e+04..4.318e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_subscriber_join/0d/8",
+            "value": 5732.5966796875,
+            "range": "5640..5825",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_subscriber_join/1d/1",
+            "value": 1311.802261352539,
+            "range": "1135..1489",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_subscriber_join/1d/64",
+            "value": 43912.84716796875,
+            "range": "4.332e+04..4.451e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_subscriber_join/1d/8",
+            "value": 6561.672607421875,
+            "range": "5979..7144",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_subscriber_join/64d/1",
+            "value": 1558.8518676757812,
+            "range": "1352..1766",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_subscriber_join/64d/64",
+            "value": 54281.490234375,
+            "range": "5.424e+04..5.433e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_subscriber_join/64d/8",
+            "value": 7482.522705078125,
+            "range": "7437..7528",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_subscriber_join/8d/1",
+            "value": 992.9432983398438,
+            "range": "980.8..1005",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_subscriber_join/8d/64",
+            "value": 55769.016845703125,
+            "range": "5.208e+04..5.946e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_datagram_subscriber_join/8d/8",
+            "value": 7040.269226074219,
+            "range": "6358..7723",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/fresh/1/4096",
+            "value": 4711162.625,
+            "range": "4.702e+06..4.72e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/fresh/1/512",
+            "value": 573284.140625,
+            "range": "5.732e+05..5.734e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/fresh/1/64",
+            "value": 68860.6005859375,
+            "range": "6.882e+04..6.891e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/fresh/64/4096",
+            "value": 300591977,
+            "range": "3.006e+08..3.006e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/fresh/64/512",
+            "value": 35998238.75,
+            "range": "3.589e+07..3.611e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/fresh/64/64",
+            "value": 4379874.28125,
+            "range": "4.379e+06..4.381e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/fresh/8/4096",
+            "value": 37703043.5,
+            "range": "3.763e+07..3.778e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/fresh/8/512",
+            "value": 4501029.9375,
+            "range": "4.498e+06..4.504e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/fresh/8/64",
+            "value": 548145.25,
+            "range": "5.478e+05..5.485e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/retired/1/4096",
+            "value": 2446924.3125,
+            "range": "2.446e+06..2.448e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/retired/1/512",
+            "value": 295299.375,
+            "range": "2.931e+05..2.975e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/retired/1/64",
+            "value": 34650.892578125,
+            "range": "3.462e+04..3.468e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/retired/64/4096",
+            "value": 153940434.25,
+            "range": "1.538e+08..1.541e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/retired/64/512",
+            "value": 18075914.875,
+            "range": "1.807e+07..1.808e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/retired/64/64",
+            "value": 2215015.4375,
+            "range": "2.206e+06..2.225e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/retired/8/4096",
+            "value": 19368288.25,
+            "range": "1.93e+07..1.944e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/retired/8/512",
+            "value": 2277265.953125,
+            "range": "2.271e+06..2.283e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/retired/8/64",
+            "value": 275508.478515625,
+            "range": "2.753e+05..2.757e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/stale/1/4096",
+            "value": 4725279.8125,
+            "range": "4.721e+06..4.73e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/stale/1/512",
+            "value": 574932.2578125,
+            "range": "5.747e+05..5.751e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/stale/1/64",
+            "value": 70161.650390625,
+            "range": "7.013e+04..7.019e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/stale/64/4096",
+            "value": 301860537,
+            "range": "3.019e+08..3.019e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/stale/64/512",
+            "value": 36074451,
+            "range": "3.604e+07..3.611e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/stale/64/64",
+            "value": 4463706.28125,
+            "range": "4.461e+06..4.466e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/stale/8/4096",
+            "value": 37727519.25,
+            "range": "3.761e+07..3.785e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/stale/8/512",
+            "value": 4513495.375,
+            "range": "4.499e+06..4.528e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_empty_run/stale/8/64",
+            "value": 558044.05078125,
+            "range": "5.575e+05..5.586e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fanout_frame/1",
+            "value": 199.79585075378418,
+            "range": "199.8..199.8",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fanout_frame/512",
+            "value": 219.43667602539062,
+            "range": "219.1..219.8",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fanout_frame/64",
+            "value": 201.64359664916992,
+            "range": "201.2..202.1",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fanout_frame/8",
+            "value": 200.12702560424805,
+            "range": "200..200.2",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fanout_group/1",
+            "value": 3512.295623779297,
+            "range": "3511..3514",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fanout_group/512",
+            "value": 790301.984375,
+            "range": "7.866e+05..7.94e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fanout_group/64",
+            "value": 97093.1708984375,
+            "range": "9.709e+04..9.71e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fanout_group/8",
+            "value": 13794.485107421875,
+            "range": "1.379e+04..1.38e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fetch_budgets/history_0/1",
+            "value": 298.6392822265625,
+            "range": "297.1..300.1",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fetch_budgets/history_0/64",
+            "value": 3716.36572265625,
+            "range": "3714..3718",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fetch_budgets/history_1024/1",
+            "value": 295.3125,
+            "range": "294.2..296.4",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fetch_budgets/history_1024/64",
+            "value": 3737.28125,
+            "range": "3733..3741",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fetch_budgets/history_16384/1",
+            "value": 447,
+            "range": "446..448",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fetch_budgets/history_16384/64",
+            "value": 3859.8125,
+            "range": "3823..3896",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fetch_expiry/history_1/1",
+            "value": 342.4499282836914,
+            "range": "340.9..344",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fetch_expiry/history_1/512",
+            "value": 177593.4580078125,
+            "range": "1.768e+05..1.784e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fetch_expiry/history_1/64",
+            "value": 22146.1923828125,
+            "range": "2.213e+04..2.216e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fetch_expiry/history_1/8",
+            "value": 2754.512725830078,
+            "range": "2752..2757",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fetch_expiry/history_32/1",
+            "value": 361.84665298461914,
+            "range": "361..362.7",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fetch_expiry/history_32/512",
+            "value": 186489.349609375,
+            "range": "1.863e+05..1.866e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fetch_expiry/history_32/64",
+            "value": 23197.521850585938,
+            "range": "2.319e+04..2.32e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fetch_expiry/history_32/8",
+            "value": 2896.9034271240234,
+            "range": "2889..2905",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fetch_expiry/history_512/1",
+            "value": 395.9970703125,
+            "range": "395..397",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fetch_expiry/history_512/512",
+            "value": 204029.712890625,
+            "range": "2.036e+05..2.044e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fetch_expiry/history_512/64",
+            "value": 25411.581787109375,
+            "range": "2.541e+04..2.542e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fetch_expiry/history_512/8",
+            "value": 3160.315643310547,
+            "range": "3159..3162",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fetch_park/1",
+            "value": 1139.7887878417969,
+            "range": "1140..1140",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fetch_park/1024",
+            "value": 1191.164451599121,
+            "range": "1191..1192",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fetch_park/64",
+            "value": 1158.5316009521484,
+            "range": "1158..1159",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fill/1r/1",
+            "value": 7087.46533203125,
+            "range": "7081..7094",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fill/1r/1024",
+            "value": 9810095,
+            "range": "9.8e+06..9.821e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fill/1r/64",
+            "value": 380720.7890625,
+            "range": "3.807e+05..3.807e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fill/64r/1",
+            "value": 370049.7265625,
+            "range": "3.696e+05..3.705e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fill/64r/1024",
+            "value": 471697250,
+            "range": "4.717e+08..4.717e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fill/64r/64",
+            "value": 17925693,
+            "range": "1.789e+07..1.796e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fill/8r/1",
+            "value": 46882.9931640625,
+            "range": "4.686e+04..4.691e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fill/8r/1024",
+            "value": 60759734,
+            "range": "6.069e+07..6.083e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_fill/8r/64",
+            "value": 2356452.484375,
+            "range": "2.35e+06..2.362e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_gap_flush/16",
+            "value": 9340.5966796875,
+            "range": "9327..9354",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_gap_flush/256",
+            "value": 136262.625,
+            "range": "1.357e+05..1.368e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_gap_flush/4096",
+            "value": 2913572,
+            "range": "2.914e+06..2.914e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_gap_flush/512",
+            "value": 305062,
+            "range": "3.046e+05..3.055e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_gap_flush/64",
+            "value": 27253.46875,
+            "range": "2.723e+04..2.728e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_gc/advancing/1",
+            "value": 28.396092176437378,
+            "range": "28.2..28.59",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_gc/advancing/1024",
+            "value": 28.648269653320312,
+            "range": "28.52..28.77",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_gc/advancing/16384",
+            "value": 656,
+            "range": "440..872",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_gc/advancing/64",
+            "value": 28.40064024925232,
+            "range": "28.22..28.58",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_gc/idle/1",
+            "value": 27.044905424118042,
+            "range": "26.98..27.11",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_gc/idle/1024",
+            "value": 27.11742401123047,
+            "range": "27.07..27.17",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_gc/idle/16384",
+            "value": 240,
+            "range": "168..312",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_gc/idle/64",
+            "value": 26.914225339889526,
+            "range": "26.83..27",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_gc/sweep/1",
+            "value": 156.7627296447754,
+            "range": "156.7..156.8",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_gc/sweep/1024",
+            "value": 127434.041015625,
+            "range": "1.27e+05..1.278e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_gc/sweep/16384",
+            "value": 2597253.5,
+            "range": "2.589e+06..2.606e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_gc/sweep/64",
+            "value": 6454.3961181640625,
+            "range": "6443..6465",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_parallel_write/1",
+            "value": 1922.407241821289,
+            "range": "1917..1928",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_parallel_write/2",
+            "value": 1681.9688568115234,
+            "range": "1669..1695",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_parallel_write/4",
+            "value": 1070.4371337890625,
+            "range": "1049..1091",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_parallel_write/8",
+            "value": 1096.4366073608398,
+            "range": "1088..1105",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_parked_read/512",
+            "value": 1774.1159973144531,
+            "range": "1757..1791",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_parked_read/64",
+            "value": 1789.7546844482422,
+            "range": "1766..1813",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_parked_read/8",
+            "value": 1773.3140869140625,
+            "range": "1769..1778",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_demand/10000r/1",
+            "value": 1510.2265625,
+            "range": "1492..1528",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_demand/10000r/100",
+            "value": 2066.6875,
+            "range": "2048..2085",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_demand/10000r/1000",
+            "value": 2232.84375,
+            "range": "2215..2251",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_demand/10000r/10000",
+            "value": 2204.1015625,
+            "range": "2175..2233",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_demand/1000r/1",
+            "value": 1543.0541076660156,
+            "range": "1531..1555",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_demand/1000r/100",
+            "value": 1764.7145614624023,
+            "range": "1697..1833",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_demand/1000r/1000",
+            "value": 2162.25203704834,
+            "range": "2136..2188",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_demand/100r/1",
+            "value": 1537.0484161376953,
+            "range": "1533..1541",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_demand/100r/100",
+            "value": 2118.071090698242,
+            "range": "2116..2120",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_demand/1r/1",
+            "value": 1484.4820175170898,
+            "range": "1484..1485",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_filling/span_1/1",
+            "value": 5402.72705078125,
+            "range": "5403..5403",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_filling/span_1/16",
+            "value": 124283.0078125,
+            "range": "1.241e+05..1.245e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_filling/span_1/256",
+            "value": 43077766.25,
+            "range": "4.304e+07..4.312e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_filling/span_64/1",
+            "value": 229044.923828125,
+            "range": "2.289e+05..2.292e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_filling/span_64/16",
+            "value": 22214908.375,
+            "range": "2.22e+07..2.223e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_filling/span_64/256",
+            "value": 13837306460,
+            "range": "1.384e+10..1.384e+10",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_filling/span_8/1",
+            "value": 25055.369384765625,
+            "range": "2.502e+04..2.509e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_filling/span_8/16",
+            "value": 999387.6328125,
+            "range": "9.97e+05..1.002e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_filling/span_8/256",
+            "value": 450054559,
+            "range": "4.501e+08..4.501e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_serving/span_1/1",
+            "value": 1914.1333923339844,
+            "range": "1911..1917",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_serving/span_1/16",
+            "value": 26099.9599609375,
+            "range": "2.61e+04..2.61e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_serving/span_1/256",
+            "value": 563492.515625,
+            "range": "5.614e+05..5.656e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_serving/span_64/1",
+            "value": 58662.859375,
+            "range": "5.863e+04..5.869e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_serving/span_64/16",
+            "value": 1227304.7109375,
+            "range": "1.227e+06..1.228e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_serving/span_64/256",
+            "value": 22271393.5,
+            "range": "2.226e+07..2.228e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_serving/span_8/1",
+            "value": 8035.940246582031,
+            "range": "8027..8045",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_serving/span_8/16",
+            "value": 151088.8173828125,
+            "range": "1.51e+05..1.512e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_serving/span_8/256",
+            "value": 2875249.59375,
+            "range": "2.872e+06..2.878e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_widening/1024r/1024",
+            "value": 32569,
+            "range": "3.257e+04..3.257e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_widening/1024r/16384",
+            "value": 39401,
+            "range": "3.94e+04..3.94e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_widening/1024r/64",
+            "value": 10811.484375,
+            "range": "1.078e+04..1.084e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_widening/1r/1024",
+            "value": 10154.854614257812,
+            "range": "1.007e+04..1.024e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_widening/1r/16384",
+            "value": 13066.6875,
+            "range": "1.213e+04..1.401e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_widening/1r/64",
+            "value": 9882.823669433594,
+            "range": "9870..9896",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_widening/64r/1024",
+            "value": 10569.640625,
+            "range": "1.038e+04..1.076e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_widening/64r/16384",
+            "value": 45586,
+            "range": "4.559e+04..4.559e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_range_widening/64r/64",
+            "value": 9952.345458984375,
+            "range": "9932..9973",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_sparse_expire/16",
+            "value": 91919.9111328125,
+            "range": "5.917e+04..1.247e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_sparse_expire/256",
+            "value": 125493.84375,
+            "range": "1.246e+05..1.264e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_sparse_expire/4096",
+            "value": 2501655,
+            "range": "2.502e+06..2.502e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_sparse_read/timed/16",
+            "value": 16939.947143554688,
+            "range": "1.682e+04..1.706e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_sparse_read/timed/256",
+            "value": 240808.375,
+            "range": "2.407e+05..2.409e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_sparse_read/timed/4096",
+            "value": 4946970,
+            "range": "4.947e+06..4.947e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_sparse_read/untimed/16",
+            "value": 15905.430419921875,
+            "range": "1.584e+04..1.597e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_sparse_read/untimed/256",
+            "value": 239144.171875,
+            "range": "2.387e+05..2.396e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_sparse_read/untimed/4096",
+            "value": 4940506,
+            "range": "4.941e+06..4.941e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_churn/steady_1/1",
+            "value": 700.7695617675781,
+            "range": "700.5..701.1",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_churn/steady_1/64",
+            "value": 45095.84130859375,
+            "range": "4.476e+04..4.543e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_churn/steady_1/8",
+            "value": 5634.143890380859,
+            "range": "5588..5680",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_churn/steady_100/1",
+            "value": 701.0043983459473,
+            "range": "699.4..702.6",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_churn/steady_100/64",
+            "value": 44840.1962890625,
+            "range": "4.479e+04..4.489e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_churn/steady_100/8",
+            "value": 5616.5263671875,
+            "range": "5609..5624",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_churn/steady_1000/1",
+            "value": 700.877067565918,
+            "range": "700.4..701.4",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_churn/steady_1000/64",
+            "value": 44960.05810546875,
+            "range": "4.494e+04..4.498e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_churn/steady_1000/8",
+            "value": 5618.6341552734375,
+            "range": "5582..5655",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_churn/steady_10000/1",
+            "value": 735.08203125,
+            "range": "717.8..752.4",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_churn/steady_10000/64",
+            "value": 45269.8515625,
+            "range": "4.51e+04..4.544e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_churn/steady_10000/8",
+            "value": 5788.24609375,
+            "range": "5658..5918",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_churn_after_peak/0",
+            "value": 352947.390625,
+            "range": "3.528e+05..3.531e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_churn_after_peak/1024",
+            "value": 353351.64453125,
+            "range": "3.526e+05..3.541e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_churn_after_peak/16384",
+            "value": 353922.34375,
+            "range": "3.536e+05..3.542e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_join/1",
+            "value": 448.3388214111328,
+            "range": "447.9..448.7",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_join/100",
+            "value": 444.21349334716797,
+            "range": "443.6..444.8",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_join/1000",
+            "value": 445.73939514160156,
+            "range": "444.8..446.6",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_join/10000",
+            "value": 454.3125,
+            "range": "453.1..455.5",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_preferences/extreme_leave/1",
+            "value": 514.8308792114258,
+            "range": "512.5..517.2",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_preferences/extreme_leave/100",
+            "value": 603.4066848754883,
+            "range": "601.2..605.7",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_preferences/extreme_leave/1000",
+            "value": 611.5890502929688,
+            "range": "605.4..617.8",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_preferences/extreme_leave/10000",
+            "value": 750.64453125,
+            "range": "707.1..794.1",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_preferences/update/1/1",
+            "value": 1300.2644958496094,
+            "range": "1291..1310",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_preferences/update/1/64",
+            "value": 83082.83642578125,
+            "range": "8.278e+04..8.338e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_preferences/update/1/8",
+            "value": 10455.662475585938,
+            "range": "1.044e+04..1.048e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_preferences/update/100/1",
+            "value": 1858.118881225586,
+            "range": "1845..1872",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_preferences/update/100/64",
+            "value": 116565.1591796875,
+            "range": "1.155e+05..1.176e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_preferences/update/100/8",
+            "value": 14241.063354492188,
+            "range": "1.421e+04..1.427e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_preferences/update/1000/1",
+            "value": 1808.3723754882812,
+            "range": "1740..1877",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_preferences/update/1000/64",
+            "value": 111272.876953125,
+            "range": "1.082e+05..1.143e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_preferences/update/1000/8",
+            "value": 15327.861389160156,
+            "range": "1.499e+04..1.566e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_preferences/update/10000/1",
+            "value": 1902.03125,
+            "range": "1793..2012",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_preferences/update/10000/64",
+            "value": 119659.5,
+            "range": "1.196e+05..1.198e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscriber_preferences/update/10000/8",
+            "value": 14351,
+            "range": "1.398e+04..1.472e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscription_ranges/span_1/1",
+            "value": 40.822580099105835,
+            "range": "40.81..40.83",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscription_ranges/span_1/16",
+            "value": 49.77861738204956,
+            "range": "49.75..49.81",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscription_ranges/span_1/256",
+            "value": 232.66044425964355,
+            "range": "230.7..234.6",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscription_ranges/span_1/4096",
+            "value": 3204.6756591796875,
+            "range": "3204..3205",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscription_ranges/span_4096/1",
+            "value": 41.40360355377197,
+            "range": "41.37..41.44",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscription_ranges/span_4096/16",
+            "value": 49.2449746131897,
+            "range": "49.13..49.36",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscription_ranges/span_4096/256",
+            "value": 241.07648086547852,
+            "range": "240.7..241.4",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscription_ranges/span_4096/4096",
+            "value": 3223.105682373047,
+            "range": "3221..3226",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscription_ranges/span_64/1",
+            "value": 40.264466762542725,
+            "range": "40.25..40.28",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscription_ranges/span_64/16",
+            "value": 48.39189386367798,
+            "range": "48.37..48.42",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscription_ranges/span_64/256",
+            "value": 230.7618865966797,
+            "range": "229.6..231.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_subscription_ranges/span_64/4096",
+            "value": 3181.8312072753906,
+            "range": "3179..3185",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_time_end/1r/4096",
+            "value": 20680987.75,
+            "range": "2.064e+07..2.072e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_time_end/1r/512",
+            "value": 2434593.359375,
+            "range": "2.434e+06..2.436e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_time_end/1r/64",
+            "value": 280655.318359375,
+            "range": "2.805e+05..2.808e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_time_end/64r/4096",
+            "value": 814245394,
+            "range": "8.142e+08..8.142e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_time_end/64r/512",
+            "value": 98065192.5,
+            "range": "9.798e+07..9.815e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_time_end/64r/64",
+            "value": 11803895.0625,
+            "range": "1.179e+07..1.181e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_time_end/8r/4096",
+            "value": 108102968.25,
+            "range": "1.081e+08..1.081e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_time_end/8r/512",
+            "value": 12940814.0625,
+            "range": "1.294e+07..1.294e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_time_end/8r/64",
+            "value": 1567923.109375,
+            "range": "1.567e+06..1.569e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_wall/due/10000x1",
+            "value": 7086897.25,
+            "range": "6.898e+06..7.276e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_wall/due/1024x1",
+            "value": 699133.8125,
+            "range": "6.5e+05..7.482e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_wall/due/1x1",
+            "value": 438.61865234375,
+            "range": "438.4..438.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_wall/due/64x1",
+            "value": 18282.890625,
+            "range": "1.818e+04..1.838e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_wall/idle/10000x1",
+            "value": 736,
+            "range": "504..968",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_wall/idle/10000x32",
+            "value": 968,
+            "range": "968..968",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_wall/idle/1024x1",
+            "value": 78.361328125,
+            "range": "77.72..79",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_wall/idle/1024x32",
+            "value": 463,
+            "range": "318..608",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_wall/idle/1x1",
+            "value": 71.82659339904785,
+            "range": "71.76..71.89",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_wall/idle/1x1024",
+            "value": 71.99254894256592,
+            "range": "71.89..72.09",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_wall/idle/1x32",
+            "value": 71.97323894500732,
+            "range": "71.96..71.99",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_wall/idle/64x1",
+            "value": 71.972403049469,
+            "range": "71.97..71.98",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_wall/idle/64x1024",
+            "value": 742,
+            "range": "636..848",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_wall/idle/64x32",
+            "value": 71.61661148071289,
+            "range": "71.57..71.66",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_wall/repoll/10000x1",
+            "value": 2090.25,
+            "range": "1476..2704",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_wall/repoll/10000x32",
+            "value": 3136,
+            "range": "3136..3136",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_wall/repoll/1024x1",
+            "value": 291.25390625,
+            "range": "286.1..296.4",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_wall/repoll/1024x32",
+            "value": 1355,
+            "range": "930..1780",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_wall/repoll/1x1",
+            "value": 270.4441204071045,
+            "range": "270.4..270.5",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_wall/repoll/1x1024",
+            "value": 285.7706604003906,
+            "range": "285.6..285.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_wall/repoll/1x32",
+            "value": 275.3410358428955,
+            "range": "275.2..275.4",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_wall/repoll/64x1",
+            "value": 272.1061611175537,
+            "range": "272.1..272.1",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_wall/repoll/64x1024",
+            "value": 2596,
+            "range": "2056..3136",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/track_wall/repoll/64x32",
+            "value": 275.6990280151367,
+            "range": "275.4..276",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/tracks/change/100l_1000t_1b",
+            "value": 71988.5625,
+            "range": "7.121e+04..7.277e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/tracks/change/100l_10t_1b",
+            "value": 65006.6328125,
+            "range": "6.5e+04..6.502e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/tracks/change/10l_10t_1000b",
+            "value": 12030.4375,
+            "range": "1.071e+04..1.335e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/tracks/change/10l_10t_1b",
+            "value": 8720.519653320312,
+            "range": "8701..8740",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/tracks/change/1l_1000t_1b",
+            "value": 4167.580383300781,
+            "range": "4160..4175",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/tracks/change/1l_10t_1b",
+            "value": 3838.412872314453,
+            "range": "3838..3839",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/tracks/list/100l_1000t_1b",
+            "value": 152680.34375,
+            "range": "1.527e+05..1.527e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/tracks/list/100l_10t_1b",
+            "value": 1454.254898071289,
+            "range": "1439..1469",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/tracks/list/10l_10t_1000b",
+            "value": 2219.1875,
+            "range": "1946..2492",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/tracks/list/10l_10t_1b",
+            "value": 1443.6742935180664,
+            "range": "1439..1448",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/tracks/list/1l_1000t_1b",
+            "value": 147374.794921875,
+            "range": "1.468e+05..1.48e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/tracks/list/1l_10t_1b",
+            "value": 1444.3905715942383,
+            "range": "1443..1446",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/lite_varint/decode/Audio/moq-lite-06",
+            "value": 89.06260347366333,
+            "range": "89.04..89.08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/lite_varint/decode/Audio/moq-lite-07-wip",
+            "value": 106.89131259918213,
+            "range": "106.8..106.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/lite_varint/decode/Datagram/moq-lite-06",
+            "value": 16.05241286754608,
+            "range": "16.05..16.05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/lite_varint/decode/Datagram/moq-lite-07-wip",
+            "value": 17.19986653327942,
+            "range": "17.2..17.2",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/lite_varint/decode/Group/moq-lite-06",
+            "value": 7.5627447962760925,
+            "range": "7.562..7.564",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/lite_varint/decode/Group/moq-lite-07-wip",
+            "value": 8.259105741977692,
+            "range": "8.258..8.26",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/lite_varint/decode/Setup/moq-lite-06",
+            "value": 74.17355060577393,
+            "range": "74.15..74.2",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/lite_varint/decode/Setup/moq-lite-07-wip",
+            "value": 77.43640899658203,
+            "range": "77.42..77.45",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/lite_varint/decode/Subscribe/moq-lite-06",
+            "value": 95.76237773895264,
+            "range": "95.76..95.76",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/lite_varint/decode/Subscribe/moq-lite-07-wip",
+            "value": 109.40516662597656,
+            "range": "109.1..109.7",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/lite_varint/decode/Video/moq-lite-06",
+            "value": 107.87894535064697,
+            "range": "107.4..108.3",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/lite_varint/decode/Video/moq-lite-07-wip",
+            "value": 128.54213905334473,
+            "range": "128.5..128.6",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/lite_varint/encode/Audio/moq-lite-06",
+            "value": 370.75672912597656,
+            "range": "369.2..372.3",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/lite_varint/encode/Audio/moq-lite-07-wip",
+            "value": 363.54178047180176,
+            "range": "363.2..363.8",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/lite_varint/encode/Datagram/moq-lite-06",
+            "value": 28.97754955291748,
+            "range": "28.97..28.99",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/lite_varint/encode/Datagram/moq-lite-07-wip",
+            "value": 24.09037756919861,
+            "range": "24.03..24.15",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/lite_varint/encode/Group/moq-lite-06",
+            "value": 19.169341802597046,
+            "range": "19.17..19.17",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/lite_varint/encode/Group/moq-lite-07-wip",
+            "value": 19.105929017066956,
+            "range": "19.1..19.11",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/lite_varint/encode/Setup/moq-lite-06",
+            "value": 187.74144172668457,
+            "range": "187.6..187.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/lite_varint/encode/Setup/moq-lite-07-wip",
+            "value": 171.51541900634766,
+            "range": "171.4..171.7",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/lite_varint/encode/Subscribe/moq-lite-06",
+            "value": 163.97511768341064,
+            "range": "163.9..164.1",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/lite_varint/encode/Subscribe/moq-lite-07-wip",
+            "value": 169.55379486083984,
+            "range": "169.5..169.6",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/lite_varint/encode/Video/moq-lite-06",
+            "value": 452.33504486083984,
+            "range": "452..452.6",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/lite_varint/encode/Video/moq-lite-07-wip",
+            "value": 485.21360778808594,
+            "range": "483.4..487",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/viewer_churn/10000v_100b",
+            "value": 11644,
+            "range": "8336..1.495e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/viewer_churn/1000v_100b",
+            "value": 2044.6015625,
+            "range": "1994..2095",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/viewer_churn/1000v_1b",
+            "value": 2007.4375,
+            "range": "1983..2032",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/viewer_churn/100v_1b",
+            "value": 1903.0743560791016,
+            "range": "1899..1907",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/viewer_join/10000v_100b",
+            "value": 77196.25,
+            "range": "5.435e+04..1e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/viewer_join/1000v_100b",
+            "value": 8287.3671875,
+            "range": "8130..8445",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/viewer_join/1000v_1b",
+            "value": 6723.4326171875,
+            "range": "6689..6758",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net/origin/viewer_join/100v_1b",
+            "value": 6659.185119628906,
+            "range": "6650..6668",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/window=64",
+            "value": 2967527.75,
+            "range": "2.967e+06..2.968e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/window=64/fetch",
+            "value": 3010261.25,
+            "range": "2.995e+06..3.026e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1456368.75,
+            "range": "1.453e+06..1.46e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 2404366.5,
+            "range": "2.392e+06..2.417e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/window=64",
+            "value": 144266.984375,
+            "range": "1.411e+05..1.474e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/window=64/fetch",
+            "value": 129054.7734375,
+            "range": "1.275e+05..1.306e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64",
+            "value": 76501.43359375,
+            "range": "7.626e+04..7.674e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 89416.90625,
+            "range": "8.899e+04..8.984e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/window=64",
+            "value": 7879544,
+            "range": "7.835e+06..7.924e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/window=64/fetch",
+            "value": 7481926,
+            "range": "7.37e+06..7.594e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 3539143,
+            "range": "3.536e+06..3.542e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/fetch",
+            "value": 5398341,
+            "range": "5.36e+06..5.436e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/window=64",
+            "value": 1729915,
+            "range": "1.729e+06..1.731e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/window=64/fetch",
+            "value": 1433148,
+            "range": "1.424e+06..1.442e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 778683.1875,
+            "range": "7.733e+05..7.841e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 1075112.125,
+            "range": "1.067e+06..1.083e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/window=64",
+            "value": 147438.8125,
+            "range": "1.448e+05..1.501e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/window=64/fetch",
+            "value": 128788.27734375,
+            "range": "1.278e+05..1.297e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64",
+            "value": 78529.9765625,
+            "range": "7.806e+04..7.9e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 88453.51953125,
+            "range": "8.766e+04..8.925e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/window=64",
+            "value": 6629245,
+            "range": "6.521e+06..6.737e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/window=64/fetch",
+            "value": 5272272,
+            "range": "5.266e+06..5.278e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 2820657,
+            "range": "2.806e+06..2.835e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/fetch",
+            "value": 3734343.75,
+            "range": "3.706e+06..3.763e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/window=64",
+            "value": 3354363.75,
+            "range": "3.354e+06..3.355e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/window=64/fetch",
+            "value": 3397709.75,
+            "range": "3.397e+06..3.398e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1540662.875,
+            "range": "1.536e+06..1.545e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 2551945.75,
+            "range": "2.547e+06..2.557e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/window=64",
+            "value": 161975.3359375,
+            "range": "1.587e+05..1.653e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/window=64/fetch",
+            "value": 139854.9453125,
+            "range": "1.362e+05..1.435e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64",
+            "value": 82078.3984375,
+            "range": "8.195e+04..8.221e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 98424.37109375,
+            "range": "9.809e+04..9.875e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/window=64",
+            "value": 8846650,
+            "range": "8.736e+06..8.958e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/window=64/fetch",
+            "value": 8262216,
+            "range": "8.182e+06..8.342e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 3751319,
+            "range": "3.731e+06..3.771e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/fetch",
+            "value": 5632867,
+            "range": "5.632e+06..5.634e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/window=64",
+            "value": 1841331.625,
+            "range": "1.836e+06..1.847e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/window=64/fetch",
+            "value": 1560265,
+            "range": "1.553e+06..1.568e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 778139.625,
+            "range": "7.775e+05..7.787e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 1129691.625,
+            "range": "1.127e+06..1.132e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/window=64",
+            "value": 163527.0078125,
+            "range": "1.6e+05..1.671e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/window=64/fetch",
+            "value": 138752.703125,
+            "range": "1.351e+05..1.424e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64",
+            "value": 85350.59375,
+            "range": "8.339e+04..8.731e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 95186.81640625,
+            "range": "9.504e+04..9.533e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/window=64",
+            "value": 7185307,
+            "range": "7.147e+06..7.224e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/window=64/fetch",
+            "value": 6232029,
+            "range": "6.178e+06..6.286e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 3001073.25,
+            "range": "2.998e+06..3.004e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/fetch",
+            "value": 4198302.5,
+            "range": "4.155e+06..4.242e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/window=64",
+            "value": 2918272,
+            "range": "2.913e+06..2.924e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/window=64/fetch",
+            "value": 4729053.5,
+            "range": "4.728e+06..4.73e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1510608.875,
+            "range": "1.506e+06..1.515e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 3977264,
+            "range": "3.968e+06..3.986e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/window=64",
+            "value": 136452.015625,
+            "range": "1.362e+05..1.367e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/window=64/fetch",
+            "value": 269954.125,
+            "range": "2.687e+05..2.712e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64",
+            "value": 81824.11328125,
+            "range": "8.18e+04..8.185e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 225097.03125,
+            "range": "2.242e+05..2.259e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/window=64",
+            "value": 7953198,
+            "range": "7.883e+06..8.023e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/window=64/fetch",
+            "value": 11198400,
+            "range": "1.11e+07..1.13e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 3994022,
+            "range": "3.915e+06..4.073e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/fetch",
+            "value": 13150020,
+            "range": "1.283e+07..1.347e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/window=64",
+            "value": 1587493.875,
+            "range": "1.578e+06..1.597e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/window=64/fetch",
+            "value": 2174926.125,
+            "range": "2.163e+06..2.187e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 815404.25,
+            "range": "8.15e+05..8.158e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 1821075.875,
+            "range": "1.817e+06..1.825e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/window=64",
+            "value": 134456.1953125,
+            "range": "1.313e+05..1.377e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/window=64/fetch",
+            "value": 268086.328125,
+            "range": "2.653e+05..2.709e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64",
+            "value": 82122.93359375,
+            "range": "8.159e+04..8.266e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 228394.578125,
+            "range": "2.283e+05..2.285e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/window=64",
+            "value": 6399291,
+            "range": "6.387e+06..6.412e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/window=64/fetch",
+            "value": 8397206,
+            "range": "8.292e+06..8.502e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 3089973,
+            "range": "3.075e+06..3.105e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/net-cpu/session_delivery_group_cost_cpu/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/fetch",
+            "value": 6919471,
+            "range": "6.795e+06..7.044e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/channel_create_parallel/workers",
+            "value": 379976.095703125,
+            "range": "3.789e+05..3.81e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/channel_notify_cycle/1",
+            "value": 71.23996543884277,
+            "range": "71.16..71.32",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/channel_notify_cycle/128",
+            "value": 5896.506744384766,
+            "range": "5892..5901",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/channel_notify_cycle/8",
+            "value": 395.3504104614258,
+            "range": "394.9..395.8",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/channel_write_abandoned/0",
+            "value": 21.938746690750122,
+            "range": "21.93..21.95",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/channel_write_abandoned/128",
+            "value": 21.657207250595093,
+            "range": "21.65..21.66",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/channel_write_abandoned/4096",
+            "value": 21.750316619873047,
+            "range": "21.7..21.8",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_log/threads_1/1",
+            "value": 1051.0069580078125,
+            "range": "980.3..1122",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_log/threads_1/16",
+            "value": 4522.250671386719,
+            "range": "4402..4643",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_log/threads_1/256",
+            "value": 42732.35888671875,
+            "range": "4.237e+04..4.309e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_log/threads_1/4096",
+            "value": 607632.27734375,
+            "range": "6.071e+05..6.082e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_log/threads_16/16",
+            "value": 53617.091552734375,
+            "range": "5.339e+04..5.385e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_log/threads_16/256",
+            "value": 98284.13037109375,
+            "range": "9.683e+04..9.974e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_log/threads_16/4096",
+            "value": 1357110.7109375,
+            "range": "1.349e+06..1.365e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_log/threads_4/16",
+            "value": 16698.46240234375,
+            "range": "1.66e+04..1.68e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_log/threads_4/256",
+            "value": 77409.95947265625,
+            "range": "7.738e+04..7.744e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_log/threads_4/4096",
+            "value": 1052860.3984375,
+            "range": "1.051e+06..1.054e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_log_lockfree/threads_1/1",
+            "value": 909.6422882080078,
+            "range": "886..933.3",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_log_lockfree/threads_1/16",
+            "value": 4688.806930541992,
+            "range": "4579..4798",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_log_lockfree/threads_1/256",
+            "value": 44254.28564453125,
+            "range": "4.365e+04..4.486e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_log_lockfree/threads_1/4096",
+            "value": 601176.4140625,
+            "range": "5.995e+05..6.028e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_log_lockfree/threads_16/16",
+            "value": 52896.8173828125,
+            "range": "5.278e+04..5.301e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_log_lockfree/threads_16/256",
+            "value": 108057.501953125,
+            "range": "1.063e+05..1.099e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_log_lockfree/threads_16/4096",
+            "value": 1407596.625,
+            "range": "1.368e+06..1.447e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_log_lockfree/threads_4/16",
+            "value": 16560.503173828125,
+            "range": "1.643e+04..1.669e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_log_lockfree/threads_4/256",
+            "value": 87030.025390625,
+            "range": "8.653e+04..8.753e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_log_lockfree/threads_4/4096",
+            "value": 1148013.5546875,
+            "range": "1.144e+06..1.152e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_notify/threads_1/1",
+            "value": 713.2882995605469,
+            "range": "705.2..721.4",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_notify/threads_1/16",
+            "value": 3773.453353881836,
+            "range": "3626..3921",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_notify/threads_1/256",
+            "value": 39790.558349609375,
+            "range": "3.925e+04..4.033e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_notify/threads_1/4096",
+            "value": 568840.2734375,
+            "range": "5.684e+05..5.693e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_notify/threads_16/16",
+            "value": 54830.704345703125,
+            "range": "5.242e+04..5.724e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_notify/threads_16/256",
+            "value": 86786.435546875,
+            "range": "8.559e+04..8.798e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_notify/threads_16/4096",
+            "value": 1128532.9921875,
+            "range": "1.126e+06..1.131e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_notify/threads_4/16",
+            "value": 14344.5810546875,
+            "range": "1.43e+04..1.439e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_notify/threads_4/256",
+            "value": 69092.93896484375,
+            "range": "6.861e+04..6.957e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_notify/threads_4/4096",
+            "value": 1008889.765625,
+            "range": "1e+06..1.017e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_repoll/threads_1/1",
+            "value": 13.110161542892456,
+            "range": "13.1..13.12",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_repoll/threads_1/16",
+            "value": 194.4595489501953,
+            "range": "194.4..194.5",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_repoll/threads_1/256",
+            "value": 3073.558868408203,
+            "range": "3072..3075",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_repoll/threads_1/4096",
+            "value": 49558.1796875,
+            "range": "4.949e+04..4.963e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_repoll/threads_16/16",
+            "value": 906.4831237792969,
+            "range": "896.2..916.8",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_repoll/threads_16/256",
+            "value": 14814.437133789062,
+            "range": "1.472e+04..1.491e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_repoll/threads_16/4096",
+            "value": 256789.7890625,
+            "range": "2.553e+05..2.583e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_repoll/threads_4/16",
+            "value": 836.8132362365723,
+            "range": "836..837.6",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_repoll/threads_4/256",
+            "value": 13193.600219726562,
+            "range": "1.207e+04..1.431e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/contended_repoll/threads_4/4096",
+            "value": 189474.9912109375,
+            "range": "1.671e+05..2.118e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/spawn_drain_1000/futures_unordered",
+            "value": 118425.43359375,
+            "range": "1.182e+05..1.186e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/spawn_drain_1000/kio_tasks",
+            "value": 120189.154296875,
+            "range": "1.202e+05..1.202e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/spawn_drain_1000_hot/futures_unordered",
+            "value": 117951.822265625,
+            "range": "1.178e+05..1.181e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/spawn_drain_1000_hot/kio_tasks",
+            "value": 38031.83544921875,
+            "range": "3.802e+04..3.804e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/wake_16_of_1000/futures_unordered",
+            "value": 1697.373779296875,
+            "range": "1696..1699",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/wake_16_of_1000/kio_tasks",
+            "value": 1104.2422637939453,
+            "range": "1103..1105",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/wake_16_of_1000/kio_tasks_batch",
+            "value": 1108.8452453613281,
+            "range": "1109..1109",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_cancel",
+            "value": 56.35424852371216,
+            "range": "56.35..56.36",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_fanout_cycle/128",
+            "value": 3310.311004638672,
+            "range": "3308..3313",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_fanout_cycle/32",
+            "value": 883.4185028076172,
+            "range": "883.1..883.7",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_fanout_cycle/512",
+            "value": 12730.930053710938,
+            "range": "1.273e+04..1.273e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_fanout_cycle/8",
+            "value": 203.2543239593506,
+            "range": "202.9..203.6",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_fanout_cycle_parked/128",
+            "value": 3699.070526123047,
+            "range": "3696..3702",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_fanout_cycle_parked/32",
+            "value": 1007.5485076904297,
+            "range": "1006..1009",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_fanout_cycle_parked/512",
+            "value": 14498.509033203125,
+            "range": "1.449e+04..1.451e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_fanout_cycle_parked/8",
+            "value": 229.60685348510742,
+            "range": "228.9..230.3",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_park_cycle/1",
+            "value": 31.146103382110596,
+            "range": "31.14..31.16",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_park_cycle/16",
+            "value": 352.44330406188965,
+            "range": "352.3..352.6",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_park_cycle/2",
+            "value": 32.95556449890137,
+            "range": "32.91..33",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_park_cycle/4",
+            "value": 37.04827046394348,
+            "range": "37.01..37.08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_park_cycle/8",
+            "value": 47.750446796417236,
+            "range": "47.73..47.77",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_register_dead/1",
+            "value": 56.559749603271484,
+            "range": "56.38..56.74",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_register_dead/2",
+            "value": 55.82084274291992,
+            "range": "55.72..55.93",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_register_dead/32",
+            "value": 59.39324951171875,
+            "range": "58.3..60.49",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_register_dead/8",
+            "value": 58.89960861206055,
+            "range": "57.55..60.25",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_register_first",
+            "value": 49.53209209442139,
+            "range": "49.49..49.58",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_register_live/1",
+            "value": 64.88810539245605,
+            "range": "64.83..64.95",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_register_live/2",
+            "value": 65.9275016784668,
+            "range": "65.68..66.17",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_register_live/32",
+            "value": 203.38189697265625,
+            "range": "198.7..208.1",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_register_live/8",
+            "value": 114.71981811523438,
+            "range": "113.5..115.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_reregister/1",
+            "value": 3.8123246133327484,
+            "range": "3.81..3.814",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_reregister/2",
+            "value": 3.8106501698493958,
+            "range": "3.809..3.812",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_reregister/32",
+            "value": 3.8092232048511505,
+            "range": "3.808..3.81",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/kio/waiter_reregister/8",
+            "value": 3.8109174966812134,
+            "range": "3.808..3.813",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/gst/moqsink/eos/renditions=1/1",
+            "value": 2327.4825439453125,
+            "range": "2327..2328",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/gst/moqsink/eos/renditions=1/64",
+            "value": 149121.6572265625,
+            "range": "1.49e+05..1.492e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/gst/moqsink/eos/renditions=1/8",
+            "value": 18627.00537109375,
+            "range": "1.863e+04..1.863e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/gst/moqsink/eos/renditions=16/1",
+            "value": 3049.220489501953,
+            "range": "3049..3050",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/gst/moqsink/eos/renditions=16/64",
+            "value": 207216.873046875,
+            "range": "2.072e+05..2.072e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/gst/moqsink/eos/renditions=16/8",
+            "value": 25218.74609375,
+            "range": "2.521e+04..2.522e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/gst/moqsink/eos/renditions=64/1",
+            "value": 4854.87646484375,
+            "range": "4853..4857",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/gst/moqsink/eos/renditions=64/64",
+            "value": 354264.6484375,
+            "range": "3.542e+05..3.543e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust/rust/gst/moqsink/eos/renditions=64/8",
+            "value": 39355.853759765625,
+            "range": "3.935e+04..3.936e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/producer/10 groups/1",
+            "value": 44986.515625,
+            "range": "4.497e+04..4.501e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/producer/10 groups/10",
+            "value": 458310.06640625,
+            "range": "4.577e+05..4.589e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/producer/10 groups/100",
+            "value": 4831345.75,
+            "range": "4.819e+06..4.844e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/producer/100 groups/1",
+            "value": 407205.296875,
+            "range": "4.063e+05..4.082e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/producer/100 groups/10",
+            "value": 4220943.6875,
+            "range": "4.206e+06..4.236e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/producer/100 groups/100",
+            "value": 44872501.25,
+            "range": "4.481e+07..4.493e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/bus_mix/44100hz/1",
+            "value": 9243.052062988281,
+            "range": "9238..9248",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/bus_mix/44100hz/16",
+            "value": 138109.13671875,
+            "range": "1.377e+05..1.385e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/bus_mix/44100hz/4",
+            "value": 34449.130859375,
+            "range": "3.445e+04..3.445e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/bus_mix/48000hz/1",
+            "value": 2885.75537109375,
+            "range": "2886..2886",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/bus_mix/48000hz/16",
+            "value": 36084.192626953125,
+            "range": "3.606e+04..3.611e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/bus_mix/48000hz/4",
+            "value": 9103.745361328125,
+            "range": "9100..9108",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/protect/datagram_opus160",
+            "value": 453.4361228942871,
+            "range": "453.4..453.5",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/protect/grouped_1k",
+            "value": 2254.243408203125,
+            "range": "2233..2275",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/baseline/from_slice/big_static",
+            "value": 86097.1875,
+            "range": "8.606e+04..8.613e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/baseline/from_slice/telemetry",
+            "value": 4996.868713378906,
+            "range": "4996..4998",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/baseline/to_value/big_static",
+            "value": 59685.27197265625,
+            "range": "5.968e+04..5.969e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/baseline/to_value/telemetry",
+            "value": 3367.630340576172,
+            "range": "3364..3371",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/consumer/merge/big_static",
+            "value": 31559.3779296875,
+            "range": "3.152e+04..3.16e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/consumer/merge/telemetry",
+            "value": 6196.1990966796875,
+            "range": "6135..6258",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/consumer/snapshot/big_static",
+            "value": 92645.3271484375,
+            "range": "9.25e+04..9.279e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/consumer/snapshot/telemetry",
+            "value": 6259.3773193359375,
+            "range": "6214..6304",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_patch/json_patch/big_static",
+            "value": 30488.3935546875,
+            "range": "3.038e+04..3.059e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_patch/json_patch/telemetry",
+            "value": 2898.319305419922,
+            "range": "2887..2910",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_patch/merge_owned/big_static",
+            "value": 31013.91015625,
+            "range": "3.081e+04..3.121e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_patch/merge_owned/telemetry",
+            "value": 3683.6969604492188,
+            "range": "3673..3694",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/deflate/big_static",
+            "value": 4188.04052734375,
+            "range": "4085..4291",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/deflate/telemetry",
+            "value": 10958.862060546875,
+            "range": "9202..1.272e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/encode_patch/big_static",
+            "value": 20711.970336914062,
+            "range": "2.07e+04..2.072e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/encode_patch/telemetry",
+            "value": 5038.029937744141,
+            "range": "5035..5041",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/inflate/big_static",
+            "value": 531.9935913085938,
+            "range": "486.9..577.1",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/inflate/telemetry",
+            "value": 1346.0282592773438,
+            "range": "1293..1400",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/marshal/full/big_static",
+            "value": 11952.385437011719,
+            "range": "1.195e+04..1.195e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/marshal/full/telemetry",
+            "value": 1126.7965393066406,
+            "range": "1126..1127",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/marshal/patch/big_static",
+            "value": 74.65689516067505,
+            "range": "74.57..74.75",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/marshal/patch/telemetry",
+            "value": 537.9894599914551,
+            "range": "537.8..538.1",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/producer/merge/big_static",
+            "value": 27752.41162109375,
+            "range": "2.775e+04..2.775e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/producer/merge/telemetry",
+            "value": 18170.891845703125,
+            "range": "1.706e+04..1.928e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/producer/snapshot/big_static",
+            "value": 26722.95458984375,
+            "range": "2.639e+04..2.706e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/producer/snapshot/telemetry",
+            "value": 17388.543212890625,
+            "range": "1.602e+04..1.876e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/snapshot_budget/bounded/100",
+            "value": 4562.8330078125,
+            "range": "4549..4577",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/snapshot_budget/bounded/1000",
+            "value": 49125.50634765625,
+            "range": "4.894e+04..4.932e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/snapshot_budget/bounded/10000",
+            "value": 531949.0390625,
+            "range": "5.315e+05..5.324e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/snapshot_budget/unbounded/100",
+            "value": 138.5806713104248,
+            "range": "138.5..138.6",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/snapshot_budget/unbounded/1000",
+            "value": 142.4526834487915,
+            "range": "142.3..142.6",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/snapshot_budget/unbounded/10000",
+            "value": 147.352294921875,
+            "range": "147.1..147.7",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json/1%/100",
+            "value": 44364.8603515625,
+            "range": "4.432e+04..4.441e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json/1%/1000",
+            "value": 452699.5390625,
+            "range": "4.526e+05..4.528e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json/1%/10000",
+            "value": 4841321.4375,
+            "range": "4.836e+06..4.846e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json/1%/20000",
+            "value": 9822590.1875,
+            "range": "9.795e+06..9.85e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json/10%/100",
+            "value": 44388.20458984375,
+            "range": "4.438e+04..4.44e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json/10%/1000",
+            "value": 453043.171875,
+            "range": "4.528e+05..4.533e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json/10%/10000",
+            "value": 4832425.28125,
+            "range": "4.826e+06..4.839e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json/10%/20000",
+            "value": 9810730.9375,
+            "range": "9.764e+06..9.857e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json/100%/100",
+            "value": 44468.279541015625,
+            "range": "4.447e+04..4.447e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json/100%/1000",
+            "value": 455835.23828125,
+            "range": "4.553e+05..4.564e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json/100%/10000",
+            "value": 4862007.3125,
+            "range": "4.859e+06..4.865e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json/100%/20000",
+            "value": 9926903.6875,
+            "range": "9.913e+06..9.941e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json.z/1%/100",
+            "value": 54429.36572265625,
+            "range": "5.421e+04..5.465e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json.z/1%/1000",
+            "value": 498548.3046875,
+            "range": "4.975e+05..4.996e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json.z/1%/10000",
+            "value": 5128333.5625,
+            "range": "5.105e+06..5.151e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json.z/1%/20000",
+            "value": 10633088.8125,
+            "range": "1.06e+07..1.066e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json.z/10%/100",
+            "value": 71175.998046875,
+            "range": "7.106e+04..7.129e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json.z/10%/1000",
+            "value": 690733.47265625,
+            "range": "6.897e+05..6.917e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json.z/10%/10000",
+            "value": 7396233.3125,
+            "range": "7.362e+06..7.43e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json.z/10%/20000",
+            "value": 14825678.3125,
+            "range": "1.476e+07..1.489e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json.z/100%/100",
+            "value": 219865.3046875,
+            "range": "2.169e+05..2.228e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json.z/100%/1000",
+            "value": 2412474.21875,
+            "range": "2.411e+06..2.413e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json.z/100%/10000",
+            "value": 27920930,
+            "range": "2.786e+07..2.798e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/table/json.z/100%/20000",
+            "value": 55355355.5625,
+            "range": "5.528e+07..5.543e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/backward/4096B/1000",
+            "value": 37663.0126953125,
+            "range": "3.762e+04..3.771e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/backward/4096B/10000",
+            "value": 467223.7265625,
+            "range": "4.667e+05..4.677e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/backward/4096B/100000",
+            "value": 5799398.71875,
+            "range": "5.788e+06..5.811e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/backward/64B/1000",
+            "value": 37706.236328125,
+            "range": "3.77e+04..3.771e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/backward/64B/10000",
+            "value": 451449.83984375,
+            "range": "4.513e+05..4.516e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/backward/64B/100000",
+            "value": 5671206.1875,
+            "range": "5.666e+06..5.676e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/flat/4096B/1000",
+            "value": 41167.5634765625,
+            "range": "4.117e+04..4.117e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/flat/4096B/10000",
+            "value": 565071.88671875,
+            "range": "5.628e+05..5.673e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/flat/4096B/100000",
+            "value": 6046623.53125,
+            "range": "6.023e+06..6.07e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/flat/64B/1000",
+            "value": 41263.990478515625,
+            "range": "4.125e+04..4.128e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/flat/64B/10000",
+            "value": 565145.7265625,
+            "range": "5.641e+05..5.662e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/flat/64B/100000",
+            "value": 6037386.40625,
+            "range": "6.033e+06..6.041e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/pyramid/4096B/1000",
+            "value": 41650.861572265625,
+            "range": "4.165e+04..4.166e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/pyramid/4096B/10000",
+            "value": 496803.484375,
+            "range": "4.968e+05..4.969e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/pyramid/4096B/100000",
+            "value": 6156277.71875,
+            "range": "6.155e+06..6.157e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/pyramid/64B/1000",
+            "value": 42015.52685546875,
+            "range": "4.2e+04..4.203e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/pyramid/64B/10000",
+            "value": 502347.8984375,
+            "range": "5.022e+05..5.025e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_drain/pyramid/64B/100000",
+            "value": 6023050.3125,
+            "range": "6.015e+06..6.031e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_read/backward/1000",
+            "value": 35468.08642578125,
+            "range": "3.546e+04..3.547e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_read/backward/10000",
+            "value": 431086.25,
+            "range": "4.31e+05..4.311e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_read/backward/100000",
+            "value": 4429158.6875,
+            "range": "4.426e+06..4.432e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_read/flat/1000",
+            "value": 38474.43359375,
+            "range": "3.845e+04..3.85e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_read/flat/10000",
+            "value": 423524.94140625,
+            "range": "4.234e+05..4.236e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_read/flat/100000",
+            "value": 4280216.28125,
+            "range": "4.28e+06..4.28e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_read/pyramid/1000",
+            "value": 31278.318115234375,
+            "range": "3.128e+04..3.128e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_read/pyramid/10000",
+            "value": 310109.50390625,
+            "range": "3.098e+05..3.104e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/decode_clock_read/pyramid/100000",
+            "value": 3105947.140625,
+            "range": "3.104e+06..3.108e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_acquisition/1/16",
+            "value": 1749.2890167236328,
+            "range": "1745..1754",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_acquisition/1/256",
+            "value": 12146.793579101562,
+            "range": "1.214e+04..1.215e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_acquisition/1/64",
+            "value": 4073.1096801757812,
+            "range": "4072..4074",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_acquisition/16/16",
+            "value": 20402.618041992188,
+            "range": "2.04e+04..2.041e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_acquisition/16/256",
+            "value": 231249.115234375,
+            "range": "2.312e+05..2.313e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_acquisition/16/64",
+            "value": 65570.66943359375,
+            "range": "6.556e+04..6.559e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_acquisition/4/16",
+            "value": 4973.920745849609,
+            "range": "4972..4976",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_acquisition/4/256",
+            "value": 48045.126220703125,
+            "range": "4.804e+04..4.805e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_acquisition/4/64",
+            "value": 14204.7314453125,
+            "range": "1.42e+04..1.421e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_acquisition/64/16",
+            "value": 94184.93798828125,
+            "range": "9.418e+04..9.419e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_acquisition/64/256",
+            "value": 1139305.140625,
+            "range": "1.139e+06..1.14e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_acquisition/64/64",
+            "value": 315956.458984375,
+            "range": "3.157e+05..3.162e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_steering/1/10",
+            "value": 13638.385375976562,
+            "range": "1.363e+04..1.365e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_steering/1/100",
+            "value": 141539.0068359375,
+            "range": "1.415e+05..1.416e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_steering/1/300",
+            "value": 503288.5546875,
+            "range": "5.027e+05..5.039e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_steering/16/10",
+            "value": 94057.74267578125,
+            "range": "9.405e+04..9.407e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_steering/16/100",
+            "value": 1450339.2578125,
+            "range": "1.45e+06..1.45e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_steering/16/300",
+            "value": 7465549.375,
+            "range": "7.46e+06..7.471e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_steering/4/10",
+            "value": 26124.17919921875,
+            "range": "2.612e+04..2.612e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_steering/4/100",
+            "value": 379561.859375,
+            "range": "3.794e+05..3.797e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_steering/4/300",
+            "value": 1908906.5,
+            "range": "1.908e+06..1.91e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_steering/64/10",
+            "value": 571300.81640625,
+            "range": "5.711e+05..5.715e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_steering/64/100",
+            "value": 7656507.1875,
+            "range": "7.649e+06..7.664e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/jitter_steering/64/300",
+            "value": 35724383.75,
+            "range": "3.566e+07..3.579e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/h264-split-pps/distinct/1",
+            "value": 490.64623641967773,
+            "range": "490.5..490.8",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/h264-split-pps/distinct/16",
+            "value": 2373.676528930664,
+            "range": "2367..2381",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/h264-split-pps/distinct/256",
+            "value": 34964.73046875,
+            "range": "3.496e+04..3.497e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/h264-split-pps/distinct/4096",
+            "value": 646563.11328125,
+            "range": "6.462e+05..6.469e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/h264-split-pps/repeated/1",
+            "value": 507.62131118774414,
+            "range": "507.3..507.9",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/h264-split-pps/repeated/16",
+            "value": 1798.061538696289,
+            "range": "1798..1798",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/h264-split-pps/repeated/256",
+            "value": 17806.312744140625,
+            "range": "1.78e+04..1.781e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/h264-split-pps/repeated/4096",
+            "value": 262752.763671875,
+            "range": "2.626e+05..2.629e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/1/1mbps",
+            "value": 335962.76171875,
+            "range": "3.353e+05..3.366e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/1/4mbps",
+            "value": 950269.625,
+            "range": "9.475e+05..9.53e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/1+1000/1mbps",
+            "value": 814866.15625,
+            "range": "8.134e+05..8.164e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/1+1000/4mbps",
+            "value": 1409470.53125,
+            "range": "1.406e+06..1.413e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/1-null16/1mbps",
+            "value": 362033.11328125,
+            "range": "3.596e+05..3.645e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/1-null256/1mbps",
+            "value": 535031.5,
+            "range": "5.34e+05..5.36e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/1-stray16/1mbps",
+            "value": 377937.0859375,
+            "range": "3.774e+05..3.785e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/1-stray256/1mbps",
+            "value": 930341.140625,
+            "range": "9.258e+05..9.349e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/16/1mbps",
+            "value": 5264370.4375,
+            "range": "5.23e+06..5.298e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/16/4mbps",
+            "value": 15680309.5,
+            "range": "1.567e+07..1.569e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/16+1000/1mbps",
+            "value": 6877028.875,
+            "range": "6.839e+06..6.915e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/16+1000/4mbps",
+            "value": 17775031.375,
+            "range": "1.772e+07..1.783e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/16-null16/1mbps",
+            "value": 5239972.25,
+            "range": "5.216e+06..5.264e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/16-null256/1mbps",
+            "value": 5426239.5625,
+            "range": "5.405e+06..5.447e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/16-stray16/1mbps",
+            "value": 5340747.625,
+            "range": "5.341e+06..5.341e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/16-stray256/1mbps",
+            "value": 6090808.0625,
+            "range": "6.08e+06..6.102e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/4/1mbps",
+            "value": 1231417.5625,
+            "range": "1.224e+06..1.239e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/4/4mbps",
+            "value": 3566471,
+            "range": "3.561e+06..3.572e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/4+1000/1mbps",
+            "value": 1926613.890625,
+            "range": "1.92e+06..1.933e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/4+1000/4mbps",
+            "value": 4500103.125,
+            "range": "4.488e+06..4.512e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/4-null16/1mbps",
+            "value": 1222356.8125,
+            "range": "1.222e+06..1.223e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/4-null256/1mbps",
+            "value": 1412775.125,
+            "range": "1.407e+06..1.419e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/4-stray16/1mbps",
+            "value": 1258943.703125,
+            "range": "1.257e+06..1.261e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_programs/4-stray256/1mbps",
+            "value": 1845655.90625,
+            "range": "1.838e+06..1.854e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_video/1048576/1024",
+            "value": 2316388.171875,
+            "range": "2.308e+06..2.325e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_video/1048576/64",
+            "value": 8514659.75,
+            "range": "8.493e+06..8.536e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_video/1048576/65000",
+            "value": 1724962.640625,
+            "range": "1.72e+06..1.73e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_video/4096/1024",
+            "value": 260640.49609375,
+            "range": "2.582e+05..2.631e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_video/4096/64",
+            "value": 282806.90625,
+            "range": "2.807e+05..2.85e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_video/4096/65000",
+            "value": 262043.275390625,
+            "range": "2.616e+05..2.625e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_video/65536/1024",
+            "value": 388119.0078125,
+            "range": "3.791e+05..3.972e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_video/65536/64",
+            "value": 814548.3671875,
+            "range": "8.029e+05..8.262e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-extra/rust/extra/ts_video/65536/65000",
+            "value": 341945.140625,
+            "range": "3.339e+05..3.5e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_churn_held/moq-lite-06/sessions=16/held=1",
+            "value": 165332.25,
+            "range": "1.633e+05..1.673e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_churn_held/moq-lite-06/sessions=16/held=1024",
+            "value": 778999,
+            "range": "7.79e+05..7.79e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_churn_held/moq-lite-06/sessions=16/held=64",
+            "value": 135229.08984375,
+            "range": "1.352e+05..1.352e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_churn_held/moq-lite-06/sessions=1/held=1",
+            "value": 284577,
+            "range": "2.846e+05..2.846e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_churn_held/moq-lite-06/sessions=1/held=1024",
+            "value": 140013,
+            "range": "1.375e+05..1.426e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_churn_held/moq-lite-06/sessions=1/held=64",
+            "value": 113218.1015625,
+            "range": "1.127e+05..1.137e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_churn_held/moq-lite-06/sessions=4/held=1",
+            "value": 119592.02734375,
+            "range": "1.191e+05..1.201e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_churn_held/moq-lite-06/sessions=4/held=1024",
+            "value": 725149,
+            "range": "7.251e+05..7.251e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_churn_held/moq-lite-06/sessions=4/held=64",
+            "value": 125889.7470703125,
+            "range": "1.256e+05..1.262e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_churn_held/moq-transport-22/sessions=16/held=1",
+            "value": 252939.8125,
+            "range": "2.511e+05..2.547e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_churn_held/moq-transport-22/sessions=16/held=1024",
+            "value": 511639,
+            "range": "5.116e+05..5.116e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_churn_held/moq-transport-22/sessions=16/held=64",
+            "value": 263569.75,
+            "range": "2.603e+05..2.669e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_churn_held/moq-transport-22/sessions=1/held=1",
+            "value": 218821.87890625,
+            "range": "2.184e+05..2.192e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_churn_held/moq-transport-22/sessions=1/held=1024",
+            "value": 383603,
+            "range": "3.836e+05..3.836e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_churn_held/moq-transport-22/sessions=1/held=64",
+            "value": 219472.537109375,
+            "range": "2.192e+05..2.198e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_churn_held/moq-transport-22/sessions=4/held=1",
+            "value": 238999.359375,
+            "range": "2.388e+05..2.392e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_churn_held/moq-transport-22/sessions=4/held=1024",
+            "value": 442124,
+            "range": "4.421e+05..4.421e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_churn_held/moq-transport-22/sessions=4/held=64",
+            "value": 239022.927734375,
+            "range": "2.387e+05..2.393e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_churn_sessions/moq-lite-06/sessions=128/held=16",
+            "value": 182714.375,
+            "range": "1.825e+05..1.829e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_churn_sessions/moq-lite-06/sessions=16/held=16",
+            "value": 126476.8740234375,
+            "range": "1.264e+05..1.265e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_churn_sessions/moq-lite-06/sessions=1/held=16",
+            "value": 116881.640625,
+            "range": "1.16e+05..1.177e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_churn_sessions/moq-transport-22/sessions=128/held=16",
+            "value": 363411,
+            "range": "3.634e+05..3.634e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_churn_sessions/moq-transport-22/sessions=16/held=16",
+            "value": 242887.025390625,
+            "range": "2.417e+05..2.441e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_churn_sessions/moq-transport-22/sessions=1/held=16",
+            "value": 222048.33203125,
+            "range": "2.211e+05..2.23e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_projects/moq-lite-06/relays=5/projects=16/tracks=24/total=1536",
+            "value": 134506270,
+            "range": "1.345e+08..1.345e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_projects/moq-lite-06/relays=5/projects=1/tracks=24/total=96",
+            "value": 6279653.53125,
+            "range": "6.228e+06..6.331e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_projects/moq-lite-06/relays=5/projects=4/tracks=24/total=384",
+            "value": 32181863.5,
+            "range": "3.155e+07..3.282e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_projects/moq-transport-22/relays=5/projects=16/tracks=24/total=1536",
+            "value": 124261079,
+            "range": "1.243e+08..1.243e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_projects/moq-transport-22/relays=5/projects=1/tracks=24/total=96",
+            "value": 6003209.25,
+            "range": "5.681e+06..6.325e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_projects/moq-transport-22/relays=5/projects=4/tracks=24/total=384",
+            "value": 29862737.25,
+            "range": "2.861e+07..3.112e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_relays/moq-lite-06/relays=17/projects=2/tracks=24/total=768",
+            "value": 71048402,
+            "range": "7.105e+07..7.105e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_relays/moq-lite-06/relays=2/projects=32/tracks=24/total=768",
+            "value": 65298620,
+            "range": "6.53e+07..6.53e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_relays/moq-lite-06/relays=33/projects=1/tracks=24/total=768",
+            "value": 66800111,
+            "range": "6.68e+07..6.68e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_relays/moq-lite-06/relays=35/projects=5/tracks=24/total=4080",
+            "value": 373086672,
+            "range": "3.731e+08..3.731e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_relays/moq-lite-06/relays=3/projects=16/tracks=24/total=768",
+            "value": 65573724,
+            "range": "6.557e+07..6.557e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_relays/moq-lite-06/relays=5/projects=8/tracks=24/total=768",
+            "value": 68455927,
+            "range": "6.846e+07..6.846e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_relays/moq-lite-06/relays=9/projects=4/tracks=24/total=768",
+            "value": 70652358,
+            "range": "7.065e+07..7.065e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_relays/moq-transport-22/relays=17/projects=2/tracks=24/total=768",
+            "value": 80374015,
+            "range": "8.037e+07..8.037e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_relays/moq-transport-22/relays=2/projects=32/tracks=24/total=768",
+            "value": 64283719,
+            "range": "6.428e+07..6.428e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_relays/moq-transport-22/relays=33/projects=1/tracks=24/total=768",
+            "value": 425192786,
+            "range": "4.252e+08..4.252e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_relays/moq-transport-22/relays=35/projects=5/tracks=24/total=4080",
+            "value": 338253091,
+            "range": "3.383e+08..3.383e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_relays/moq-transport-22/relays=3/projects=16/tracks=24/total=768",
+            "value": 64061217,
+            "range": "6.406e+07..6.406e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_relays/moq-transport-22/relays=5/projects=8/tracks=24/total=768",
+            "value": 64244086,
+            "range": "6.424e+07..6.424e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_relays/moq-transport-22/relays=9/projects=4/tracks=24/total=768",
+            "value": 65850608,
+            "range": "6.585e+07..6.585e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_tracks/moq-lite-06/relays=5/projects=4/tracks=24/total=384",
+            "value": 31142047.75,
+            "range": "3.106e+07..3.122e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_tracks/moq-lite-06/relays=5/projects=4/tracks=6/total=96",
+            "value": 5821008.875,
+            "range": "5.669e+06..5.973e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_tracks/moq-lite-06/relays=5/projects=4/tracks=96/total=1536",
+            "value": 133254717,
+            "range": "1.333e+08..1.333e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_tracks/moq-transport-22/relays=5/projects=4/tracks=24/total=384",
+            "value": 30494050.5,
+            "range": "2.949e+07..3.15e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_tracks/moq-transport-22/relays=5/projects=4/tracks=6/total=96",
+            "value": 5807899.875,
+            "range": "5.758e+06..5.857e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_dash_tracks/moq-transport-22/relays=5/projects=4/tracks=96/total=1536",
+            "value": 125332497,
+            "range": "1.253e+08..1.253e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_broadcasts/moq-lite-06/relays=1/publishers=1/broadcasts=16/viewers=16/watch=1/frame=64",
+            "value": 1348063.65625,
+            "range": "1.325e+06..1.371e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_broadcasts/moq-lite-06/relays=1/publishers=1/broadcasts=256/viewers=16/watch=1/frame=64",
+            "value": 1321296.21875,
+            "range": "1.298e+06..1.344e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_broadcasts/moq-lite-06/relays=1/publishers=1/broadcasts=4096/viewers=16/watch=1/frame=64",
+            "value": 1273733,
+            "range": "1.274e+06..1.274e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_broadcasts/moq-lite-07-wip/relays=1/publishers=1/broadcasts=16/viewers=16/watch=1/frame=64",
+            "value": 1383056,
+            "range": "1.383e+06..1.383e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_broadcasts/moq-lite-07-wip/relays=1/publishers=1/broadcasts=256/viewers=16/watch=1/frame=64",
+            "value": 1391733.75,
+            "range": "1.389e+06..1.394e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_broadcasts/moq-lite-07-wip/relays=1/publishers=1/broadcasts=4096/viewers=16/watch=1/frame=64",
+            "value": 1319615,
+            "range": "1.32e+06..1.32e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_broadcasts/moq-transport-22/relays=1/publishers=1/broadcasts=16/viewers=16/watch=1/frame=64",
+            "value": 1399897,
+            "range": "1.4e+06..1.4e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_broadcasts/moq-transport-22/relays=1/publishers=1/broadcasts=256/viewers=16/watch=1/frame=64",
+            "value": 1398820.03125,
+            "range": "1.386e+06..1.412e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_broadcasts/moq-transport-22/relays=1/publishers=1/broadcasts=4096/viewers=16/watch=1/frame=64",
+            "value": 1463050,
+            "range": "1.463e+06..1.463e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_burst/moq-lite-06/relays=1/publishers=1/broadcasts=16/viewers=1/watch=1/frame=64",
+            "value": 80965.38623046875,
+            "range": "8.079e+04..8.114e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_burst/moq-lite-06/relays=1/publishers=1/broadcasts=16/viewers=1/watch=1/frame=64/burst=8",
+            "value": 446531.921875,
+            "range": "4.458e+05..4.473e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_burst/moq-lite-06/relays=1/publishers=1/broadcasts=16/viewers=1/watch=1/frame=64/burst=64",
+            "value": 4005510.0625,
+            "range": "3.983e+06..4.028e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_burst/moq-lite-06/relays=1/publishers=1/broadcasts=16/viewers=1/watch=8/frame=64",
+            "value": 633090.390625,
+            "range": "6.325e+05..6.337e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_burst/moq-lite-06/relays=1/publishers=1/broadcasts=16/viewers=1/watch=8/frame=64/burst=8",
+            "value": 3382964.6875,
+            "range": "3.382e+06..3.384e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_burst/moq-lite-06/relays=1/publishers=1/broadcasts=16/viewers=1/watch=16/frame=64/burst=16",
+            "value": 13342376.25,
+            "range": "1.325e+07..1.343e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_burst/moq-lite-06/relays=1/publishers=1/broadcasts=16/viewers=1/watch=16/frame=64/burst=64",
+            "value": 61314879,
+            "range": "6.131e+07..6.131e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_burst/moq-lite-07-wip/relays=1/publishers=1/broadcasts=16/viewers=1/watch=1/frame=64",
+            "value": 87538.4833984375,
+            "range": "8.689e+04..8.819e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_burst/moq-lite-07-wip/relays=1/publishers=1/broadcasts=16/viewers=1/watch=1/frame=64/burst=8",
+            "value": 470367.30078125,
+            "range": "4.702e+05..4.705e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_burst/moq-lite-07-wip/relays=1/publishers=1/broadcasts=16/viewers=1/watch=1/frame=64/burst=64",
+            "value": 4245833.90625,
+            "range": "4.245e+06..4.246e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_burst/moq-lite-07-wip/relays=1/publishers=1/broadcasts=16/viewers=1/watch=8/frame=64",
+            "value": 645175.6875,
+            "range": "6.449e+05..6.454e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_burst/moq-lite-07-wip/relays=1/publishers=1/broadcasts=16/viewers=1/watch=8/frame=64/burst=8",
+            "value": 3509357.4375,
+            "range": "3.496e+06..3.522e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_burst/moq-lite-07-wip/relays=1/publishers=1/broadcasts=16/viewers=1/watch=16/frame=64/burst=16",
+            "value": 13820132,
+            "range": "1.379e+07..1.385e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_burst/moq-lite-07-wip/relays=1/publishers=1/broadcasts=16/viewers=1/watch=16/frame=64/burst=64",
+            "value": 64187098,
+            "range": "6.419e+07..6.419e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_burst/moq-transport-22/relays=1/publishers=1/broadcasts=16/viewers=1/watch=1/frame=64",
+            "value": 91636.66064453125,
+            "range": "9.122e+04..9.205e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_burst/moq-transport-22/relays=1/publishers=1/broadcasts=16/viewers=1/watch=1/frame=64/burst=8",
+            "value": 510585.00390625,
+            "range": "5.096e+05..5.115e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_burst/moq-transport-22/relays=1/publishers=1/broadcasts=16/viewers=1/watch=1/frame=64/burst=64",
+            "value": 3563108.03125,
+            "range": "3.552e+06..3.574e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_burst/moq-transport-22/relays=1/publishers=1/broadcasts=16/viewers=1/watch=8/frame=64",
+            "value": 656888.82421875,
+            "range": "6.564e+05..6.574e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_burst/moq-transport-22/relays=1/publishers=1/broadcasts=16/viewers=1/watch=8/frame=64/burst=8",
+            "value": 3543304.5625,
+            "range": "3.536e+06..3.551e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_burst/moq-transport-22/relays=1/publishers=1/broadcasts=16/viewers=1/watch=16/frame=64/burst=16",
+            "value": 14293271.75,
+            "range": "1.401e+07..1.458e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_burst/moq-transport-22/relays=1/publishers=1/broadcasts=16/viewers=1/watch=16/frame=64/burst=64",
+            "value": 62761897,
+            "range": "6.276e+07..6.276e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_compression/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=1024",
+            "value": 2042724.859375,
+            "range": "1.992e+06..2.094e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_compression/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=1024",
+            "value": 227199.494140625,
+            "range": "2.258e+05..2.286e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_compression/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=1024",
+            "value": 839447.96875,
+            "range": "8.306e+05..8.483e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_compression/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=1024",
+            "value": 111906.865234375,
+            "range": "1.113e+05..1.125e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_compression/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=1024",
+            "value": 1935300.828125,
+            "range": "1.911e+06..1.96e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_compression/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=1024",
+            "value": 132844.111328125,
+            "range": "1.321e+05..1.336e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_compression/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=1024",
+            "value": 898841.5390625,
+            "range": "8.971e+05..9.006e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_compression/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=1024",
+            "value": 130843.0126953125,
+            "range": "1.302e+05..1.315e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_compression/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=1024",
+            "value": 2086833.0859375,
+            "range": "2.068e+06..2.105e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_compression/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=1024",
+            "value": 141539.96875,
+            "range": "1.402e+05..1.429e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_compression/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=1024",
+            "value": 941074.9296875,
+            "range": "9.342e+05..9.479e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_compression/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=1024",
+            "value": 140357.595703125,
+            "range": "1.395e+05..1.413e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-lite-06/watch=16/burst=16/credit=1",
+            "value": 29953860,
+            "range": "2.985e+07..3.005e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-lite-06/watch=16/burst=1/credit=1",
+            "value": 1665085.46875,
+            "range": "1.662e+06..1.668e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-lite-06/watch=16/burst=64/credit=1",
+            "value": 132774174,
+            "range": "1.328e+08..1.328e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-lite-06/watch=1/burst=16/credit=1",
+            "value": 1028403.8125,
+            "range": "1.016e+06..1.041e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-lite-06/watch=1/burst=1/credit=1",
+            "value": 81924.1005859375,
+            "range": "8.179e+04..8.205e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-lite-06/watch=1/burst=64/credit=1",
+            "value": 4486824.1875,
+            "range": "4.476e+06..4.498e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-lite-06/watch=64/burst=16/credit=1",
+            "value": 311375001,
+            "range": "3.114e+08..3.114e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-lite-06/watch=64/burst=1/credit=1",
+            "value": 12008617.25,
+            "range": "1.198e+07..1.204e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-lite-06/watch=64/burst=64/credit=1",
+            "value": 1461078591,
+            "range": "1.461e+09..1.461e+09",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-lite-07-wip/watch=16/burst=16/credit=1",
+            "value": 32961632,
+            "range": "3.296e+07..3.296e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-lite-07-wip/watch=16/burst=1/credit=1",
+            "value": 1665300.96875,
+            "range": "1.628e+06..1.703e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-lite-07-wip/watch=16/burst=64/credit=1",
+            "value": 147509683,
+            "range": "1.475e+08..1.475e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-lite-07-wip/watch=1/burst=16/credit=1",
+            "value": 1114808.90625,
+            "range": "1.106e+06..1.124e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-lite-07-wip/watch=1/burst=1/credit=1",
+            "value": 84905.6953125,
+            "range": "8.472e+04..8.509e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-lite-07-wip/watch=1/burst=64/credit=1",
+            "value": 4877703.8125,
+            "range": "4.783e+06..4.972e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-lite-07-wip/watch=64/burst=16/credit=1",
+            "value": 344495155,
+            "range": "3.445e+08..3.445e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-lite-07-wip/watch=64/burst=1/credit=1",
+            "value": 12512847,
+            "range": "1.228e+07..1.275e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-lite-07-wip/watch=64/burst=64/credit=1",
+            "value": 1611568259,
+            "range": "1.612e+09..1.612e+09",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-transport-22/watch=16/burst=16/credit=1",
+            "value": 31209066.25,
+            "range": "3.12e+07..3.121e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-transport-22/watch=16/burst=1/credit=1",
+            "value": 1624711.28125,
+            "range": "1.614e+06..1.635e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-transport-22/watch=16/burst=64/credit=1",
+            "value": 130038007,
+            "range": "1.3e+08..1.3e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-transport-22/watch=1/burst=16/credit=1",
+            "value": 1061552.0390625,
+            "range": "1.054e+06..1.069e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-transport-22/watch=1/burst=1/credit=1",
+            "value": 89421.61328125,
+            "range": "8.926e+04..8.958e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-transport-22/watch=1/burst=64/credit=1",
+            "value": 4095317.90625,
+            "range": "4.074e+06..4.117e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-transport-22/watch=64/burst=16/credit=1",
+            "value": 350750252,
+            "range": "3.508e+08..3.508e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-transport-22/watch=64/burst=1/credit=1",
+            "value": 11090123.5,
+            "range": "1.108e+07..1.11e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_credit/moq-transport-22/watch=64/burst=64/credit=1",
+            "value": 1520870400,
+            "range": "1.521e+09..1.521e+09",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_frames/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 1082985.640625,
+            "range": "1.077e+06..1.089e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_frames/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/frames=256/fetch",
+            "value": 7279999.875,
+            "range": "7.251e+06..7.309e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_frames/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 91663.1201171875,
+            "range": "9.155e+04..9.178e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_frames/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/frames=256/fetch",
+            "value": 835710.4140625,
+            "range": "8.354e+05..8.36e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_frames/moq-lite-06/relays=1/publishers=4/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 1425981.765625,
+            "range": "1.424e+06..1.428e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_frames/moq-lite-06/relays=1/publishers=4/broadcasts=1/viewers=16/watch=1/frame=64/frames=256/fetch",
+            "value": 8751171,
+            "range": "8.726e+06..8.777e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_frames/moq-lite-06/relays=1/publishers=4/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 94948.580078125,
+            "range": "9.469e+04..9.52e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_frames/moq-lite-06/relays=1/publishers=4/broadcasts=1/viewers=1/watch=1/frame=64/frames=256/fetch",
+            "value": 846253.125,
+            "range": "8.449e+05..8.476e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_frames/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 1206842.078125,
+            "range": "1.205e+06..1.208e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_frames/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/frames=256/fetch",
+            "value": 7141450.5,
+            "range": "7.131e+06..7.152e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_frames/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 103708.9755859375,
+            "range": "1.036e+05..1.038e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_frames/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/frames=256/fetch",
+            "value": 838793.921875,
+            "range": "8.372e+05..8.404e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_frames/moq-lite-07-wip/relays=1/publishers=4/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 1583991.125,
+            "range": "1.574e+06..1.594e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_frames/moq-lite-07-wip/relays=1/publishers=4/broadcasts=1/viewers=16/watch=1/frame=64/frames=256/fetch",
+            "value": 8782812,
+            "range": "8.73e+06..8.836e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_frames/moq-lite-07-wip/relays=1/publishers=4/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 106820.70263671875,
+            "range": "1.068e+05..1.069e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_frames/moq-lite-07-wip/relays=1/publishers=4/broadcasts=1/viewers=1/watch=1/frame=64/frames=256/fetch",
+            "value": 837032.1015625,
+            "range": "8.357e+05..8.383e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_frames/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 2026088.203125,
+            "range": "2.025e+06..2.027e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_frames/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/frames=256/fetch",
+            "value": 12154760.25,
+            "range": "1.207e+07..1.224e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_frames/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 266904.857421875,
+            "range": "2.647e+05..2.691e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_frames/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/frames=256/fetch",
+            "value": 1474398.421875,
+            "range": "1.462e+06..1.487e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_frames/moq-transport-22/relays=1/publishers=4/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 2636525.59375,
+            "range": "2.636e+06..2.637e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_frames/moq-transport-22/relays=1/publishers=4/broadcasts=1/viewers=16/watch=1/frame=64/frames=256/fetch",
+            "value": 14663426.5,
+            "range": "1.462e+07..1.471e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_frames/moq-transport-22/relays=1/publishers=4/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 265707.47265625,
+            "range": "2.635e+05..2.68e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_frames/moq-transport-22/relays=1/publishers=4/broadcasts=1/viewers=1/watch=1/frame=64/frames=256/fetch",
+            "value": 1489470.59375,
+            "range": "1.483e+06..1.496e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_range/moq-lite-06/publishers=16/viewers=16/burst=16/fetch",
+            "value": 32416953.75,
+            "range": "3.226e+07..3.257e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_range/moq-lite-06/publishers=16/viewers=16/burst=2/fetch",
+            "value": 4887221.8125,
+            "range": "4.886e+06..4.889e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_range/moq-lite-06/publishers=16/viewers=1/burst=16/fetch",
+            "value": 1316425.453125,
+            "range": "1.299e+06..1.334e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_range/moq-lite-06/publishers=16/viewers=1/burst=2/fetch",
+            "value": 180268.794921875,
+            "range": "1.799e+05..1.806e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_range/moq-lite-06/publishers=1/viewers=16/burst=16/fetch",
+            "value": 9441379.5,
+            "range": "9.39e+06..9.493e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_range/moq-lite-06/publishers=1/viewers=16/burst=2/fetch",
+            "value": 1696482.171875,
+            "range": "1.695e+06..1.698e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_range/moq-lite-06/publishers=1/viewers=1/burst=16/fetch",
+            "value": 1285220.8046875,
+            "range": "1.266e+06..1.304e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_range/moq-lite-06/publishers=1/viewers=1/burst=2/fetch",
+            "value": 181322.1005859375,
+            "range": "1.808e+05..1.818e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_range/moq-lite-07-wip/publishers=16/viewers=16/burst=16/fetch",
+            "value": 34354032,
+            "range": "3.435e+07..3.435e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_range/moq-lite-07-wip/publishers=16/viewers=16/burst=2/fetch",
+            "value": 4940024.5,
+            "range": "4.922e+06..4.958e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_range/moq-lite-07-wip/publishers=16/viewers=1/burst=16/fetch",
+            "value": 1461894.2890625,
+            "range": "1.441e+06..1.482e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_range/moq-lite-07-wip/publishers=16/viewers=1/burst=2/fetch",
+            "value": 200023.8173828125,
+            "range": "1.998e+05..2.003e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_range/moq-lite-07-wip/publishers=1/viewers=16/burst=16/fetch",
+            "value": 10454673.5,
+            "range": "1.039e+07..1.052e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_range/moq-lite-07-wip/publishers=1/viewers=16/burst=2/fetch",
+            "value": 1886196.078125,
+            "range": "1.875e+06..1.897e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_range/moq-lite-07-wip/publishers=1/viewers=1/burst=16/fetch",
+            "value": 1409113.25,
+            "range": "1.391e+06..1.427e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_range/moq-lite-07-wip/publishers=1/viewers=1/burst=2/fetch",
+            "value": 203337.9892578125,
+            "range": "2.026e+05..2.04e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_range/moq-transport-22/publishers=16/viewers=16/burst=16/fetch",
+            "value": 13866934.25,
+            "range": "1.384e+07..1.389e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_range/moq-transport-22/publishers=16/viewers=16/burst=2/fetch",
+            "value": 5307716.125,
+            "range": "5.276e+06..5.34e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_range/moq-transport-22/publishers=16/viewers=1/burst=16/fetch",
+            "value": 905329.265625,
+            "range": "8.966e+05..9.141e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_range/moq-transport-22/publishers=16/viewers=1/burst=2/fetch",
+            "value": 325721.109375,
+            "range": "3.225e+05..3.289e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_range/moq-transport-22/publishers=1/viewers=16/burst=16/fetch",
+            "value": 6940413.3125,
+            "range": "6.933e+06..6.948e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_range/moq-transport-22/publishers=1/viewers=16/burst=2/fetch",
+            "value": 2785764.125,
+            "range": "2.784e+06..2.787e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_range/moq-transport-22/publishers=1/viewers=1/burst=16/fetch",
+            "value": 908088.7734375,
+            "range": "8.991e+05..9.171e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_fetch_range/moq-transport-22/publishers=1/viewers=1/burst=2/fetch",
+            "value": 324522.4375,
+            "range": "3.222e+05..3.269e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_frame/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1491449.0625,
+            "range": "1.48e+06..1.502e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_frame/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=1024",
+            "value": 1559040.53125,
+            "range": "1.551e+06..1.567e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_frame/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=16384",
+            "value": 1611417.4375,
+            "range": "1.608e+06..1.615e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_frame/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1666276.25,
+            "range": "1.654e+06..1.679e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_frame/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=1024",
+            "value": 1654309.15625,
+            "range": "1.643e+06..1.666e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_frame/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=16384",
+            "value": 1724008.453125,
+            "range": "1.716e+06..1.732e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_frame/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1682871.140625,
+            "range": "1.679e+06..1.687e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_frame/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=1024",
+            "value": 1708121.546875,
+            "range": "1.698e+06..1.719e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_frame/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=16384",
+            "value": 1759435.734375,
+            "range": "1.749e+06..1.77e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/window=64",
+            "value": 3239517.4375,
+            "range": "3.222e+06..3.258e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/window=64/fetch",
+            "value": 3316142.125,
+            "range": "3.297e+06..3.335e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1579232.34375,
+            "range": "1.569e+06..1.589e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 2568823.65625,
+            "range": "2.558e+06..2.58e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/window=64",
+            "value": 155967.349609375,
+            "range": "1.524e+05..1.595e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/window=64/fetch",
+            "value": 140271.55517578125,
+            "range": "1.401e+05..1.404e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64",
+            "value": 84682.30322265625,
+            "range": "8.429e+04..8.507e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 96118.1923828125,
+            "range": "9.573e+04..9.65e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/window=64",
+            "value": 8538326.25,
+            "range": "8.528e+06..8.548e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/window=64/fetch",
+            "value": 8535402.5,
+            "range": "8.515e+06..8.555e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 3845776.5,
+            "range": "3.786e+06..3.905e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/fetch",
+            "value": 6687438.25,
+            "range": "6.683e+06..6.692e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/window=64",
+            "value": 1770667.875,
+            "range": "1.766e+06..1.775e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/window=64/fetch",
+            "value": 1513725.71875,
+            "range": "1.504e+06..1.524e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 793103.6640625,
+            "range": "7.931e+05..7.931e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 1101615.96875,
+            "range": "1.096e+06..1.108e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/window=64",
+            "value": 156624.833984375,
+            "range": "1.527e+05..1.606e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/window=64/fetch",
+            "value": 139860.04833984375,
+            "range": "1.398e+05..1.399e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64",
+            "value": 79937.29541015625,
+            "range": "7.9e+04..8.088e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 94640.173828125,
+            "range": "9.45e+04..9.478e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/window=64",
+            "value": 7536830.75,
+            "range": "7.387e+06..7.687e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/window=64/fetch",
+            "value": 6520339.3125,
+            "range": "6.406e+06..6.634e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 3066687.6875,
+            "range": "3.052e+06..3.081e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/fetch",
+            "value": 4370954.5,
+            "range": "4.279e+06..4.463e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/window=64",
+            "value": 3609889.65625,
+            "range": "3.601e+06..3.619e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/window=64/fetch",
+            "value": 3689064.25,
+            "range": "3.667e+06..3.711e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1669292.59375,
+            "range": "1.656e+06..1.683e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 2909538.15625,
+            "range": "2.909e+06..2.911e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/window=64",
+            "value": 170128.767578125,
+            "range": "1.672e+05..1.731e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/window=64/fetch",
+            "value": 152128.0673828125,
+            "range": "1.496e+05..1.547e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64",
+            "value": 90744.7529296875,
+            "range": "9.06e+04..9.089e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 107050.970703125,
+            "range": "1.063e+05..1.078e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/window=64",
+            "value": 9419907.25,
+            "range": "9.267e+06..9.573e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/window=64/fetch",
+            "value": 8927882.75,
+            "range": "8.912e+06..8.944e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 3911718.625,
+            "range": "3.858e+06..3.965e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/fetch",
+            "value": 6484423,
+            "range": "6.434e+06..6.535e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/window=64",
+            "value": 1947061.421875,
+            "range": "1.945e+06..1.949e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/window=64/fetch",
+            "value": 1716740.453125,
+            "range": "1.715e+06..1.718e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 855638.9921875,
+            "range": "8.551e+05..8.562e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 1226758.0390625,
+            "range": "1.226e+06..1.228e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/window=64",
+            "value": 171520.736328125,
+            "range": "1.712e+05..1.718e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/window=64/fetch",
+            "value": 159486.02197265625,
+            "range": "1.593e+05..1.596e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64",
+            "value": 88567.53564453125,
+            "range": "8.837e+04..8.876e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 105642.4853515625,
+            "range": "1.055e+05..1.057e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/window=64",
+            "value": 7688204.125,
+            "range": "7.587e+06..7.79e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/window=64/fetch",
+            "value": 6589291.875,
+            "range": "6.568e+06..6.611e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 3148927.875,
+            "range": "3.147e+06..3.15e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/fetch",
+            "value": 4433069.5625,
+            "range": "4.43e+06..4.436e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/window=64",
+            "value": 3197084.375,
+            "range": "3.184e+06..3.21e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/window=64/fetch",
+            "value": 5303605,
+            "range": "5.282e+06..5.325e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1688821.921875,
+            "range": "1.687e+06..1.691e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 4609068.6875,
+            "range": "4.599e+06..4.619e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/window=64",
+            "value": 154901.1435546875,
+            "range": "1.522e+05..1.576e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/window=64/fetch",
+            "value": 317382.798828125,
+            "range": "3.162e+05..3.185e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64",
+            "value": 93997.0146484375,
+            "range": "9.387e+04..9.412e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 275479.4921875,
+            "range": "2.736e+05..2.773e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/window=64",
+            "value": 8798105.25,
+            "range": "8.73e+06..8.866e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/window=64/fetch",
+            "value": 13509044,
+            "range": "1.349e+07..1.352e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 4100843,
+            "range": "4.029e+06..4.173e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64/fetch",
+            "value": 11788460.25,
+            "range": "1.164e+07..1.194e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/window=64",
+            "value": 1810581.96875,
+            "range": "1.803e+06..1.818e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/window=64/fetch",
+            "value": 2446781.75,
+            "range": "2.424e+06..2.47e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 879204.6640625,
+            "range": "8.792e+05..8.793e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/fetch",
+            "value": 2051403.75,
+            "range": "2.043e+06..2.059e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/window=64",
+            "value": 153598.2109375,
+            "range": "1.534e+05..1.538e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/window=64/fetch",
+            "value": 311814.642578125,
+            "range": "3.111e+05..3.125e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64",
+            "value": 93498.2880859375,
+            "range": "9.301e+04..9.399e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=1/watch=1/frame=64/fetch",
+            "value": 253290.40625,
+            "range": "2.529e+05..2.537e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/window=64",
+            "value": 7148637.75,
+            "range": "7.066e+06..7.232e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/window=64/fetch",
+            "value": 9310734.25,
+            "range": "9.184e+06..9.438e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 3219409.375,
+            "range": "3.172e+06..3.267e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_group_cost/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=64/watch=1/frame=64/fetch",
+            "value": 8546168,
+            "range": "8.435e+06..8.657e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_paced/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/paced",
+            "value": 962569.5078125,
+            "range": "9.609e+05..9.642e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_paced/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/paced",
+            "value": 44585.197998046875,
+            "range": "4.425e+04..4.492e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_paced/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=256/watch=1/frame=64/paced",
+            "value": 10216768.5,
+            "range": "6.464e+06..1.397e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_paced/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/paced",
+            "value": 1113578.5625,
+            "range": "1.111e+06..1.117e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_paced/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/paced",
+            "value": 50101.8916015625,
+            "range": "5.004e+04..5.017e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_paced/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=256/watch=1/frame=64/paced",
+            "value": 15068112,
+            "range": "1.507e+07..1.507e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_paced/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64/paced",
+            "value": 1021593.78125,
+            "range": "1.017e+06..1.026e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_paced/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64/paced",
+            "value": 42772.5263671875,
+            "range": "4.205e+04..4.349e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_paced/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=256/watch=1/frame=64/paced",
+            "value": 13821124,
+            "range": "1.382e+07..1.382e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_publishers/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1543232.625,
+            "range": "1.534e+06..1.553e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_publishers/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 777529.65625,
+            "range": "7.758e+05..7.793e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_publishers/moq-lite-06/relays=1/publishers=256/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1534050.6875,
+            "range": "1.508e+06..1.56e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_publishers/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1624606.546875,
+            "range": "1.623e+06..1.626e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_publishers/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 858779.125,
+            "range": "8.588e+05..8.588e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_publishers/moq-lite-07-wip/relays=1/publishers=256/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1594991,
+            "range": "1.585e+06..1.605e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_publishers/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1651408.640625,
+            "range": "1.648e+06..1.655e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_publishers/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 889511.390625,
+            "range": "8.872e+05..8.918e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_publishers/moq-transport-22/relays=1/publishers=256/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1669764.3125,
+            "range": "1.649e+06..1.691e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_relays/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 3735589,
+            "range": "3.722e+06..3.749e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_relays/moq-lite-06/relays=2/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 4277445.625,
+            "range": "4.249e+06..4.306e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_relays/moq-lite-06/relays=4/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 4359406.125,
+            "range": "4.29e+06..4.429e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_relays/moq-lite-06/relays=8/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 4530418.25,
+            "range": "4.502e+06..4.559e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_relays/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 3992787.25,
+            "range": "3.973e+06..4.013e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_relays/moq-lite-07-wip/relays=2/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 4532124.0625,
+            "range": "4.47e+06..4.595e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_relays/moq-lite-07-wip/relays=4/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 4642029.25,
+            "range": "4.538e+06..4.746e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_relays/moq-lite-07-wip/relays=8/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 4834222.75,
+            "range": "4.767e+06..4.902e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_relays/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 4115928.5,
+            "range": "4.092e+06..4.14e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_relays/moq-transport-22/relays=2/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 4648948.5,
+            "range": "4.523e+06..4.775e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_relays/moq-transport-22/relays=4/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 4760970.75,
+            "range": "4.679e+06..4.843e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_relays/moq-transport-22/relays=8/publishers=16/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 4798988.5,
+            "range": "4.763e+06..4.835e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_scale/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1487266.4375,
+            "range": "1.475e+06..1.5e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_scale/moq-lite-06/relays=1/publishers=256/broadcasts=1/viewers=256/watch=1/frame=64",
+            "value": 39897853,
+            "range": "3.99e+07..3.99e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_scale/moq-lite-06/relays=1/publishers=64/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 6035823.375,
+            "range": "5.987e+06..6.085e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_scale/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1930713,
+            "range": "1.931e+06..1.931e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_scale/moq-lite-07-wip/relays=1/publishers=256/broadcasts=1/viewers=256/watch=1/frame=64",
+            "value": 41977737,
+            "range": "4.198e+07..4.198e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_scale/moq-lite-07-wip/relays=1/publishers=64/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 6837456.625,
+            "range": "6.798e+06..6.877e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_scale/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1865326,
+            "range": "1.865e+06..1.865e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_scale/moq-transport-22/relays=1/publishers=256/broadcasts=1/viewers=256/watch=1/frame=64",
+            "value": 45437838,
+            "range": "4.544e+07..4.544e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_scale/moq-transport-22/relays=1/publishers=64/broadcasts=1/viewers=64/watch=1/frame=64",
+            "value": 7255694,
+            "range": "7.035e+06..7.477e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_viewers/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1561135.765625,
+            "range": "1.556e+06..1.566e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_viewers/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64",
+            "value": 79893.650390625,
+            "range": "7.963e+04..8.015e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_viewers/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=256/watch=1/frame=64",
+            "value": 14012705,
+            "range": "1.401e+07..1.401e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_viewers/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1647292.078125,
+            "range": "1.644e+06..1.65e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_viewers/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64",
+            "value": 87889.42236328125,
+            "range": "8.765e+04..8.813e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_viewers/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=256/watch=1/frame=64",
+            "value": 18615191,
+            "range": "1.862e+07..1.862e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_viewers/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1684823.578125,
+            "range": "1.68e+06..1.69e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_viewers/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=1/watch=1/frame=64",
+            "value": 85253.330078125,
+            "range": "8.428e+04..8.622e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_viewers/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=256/watch=1/frame=64",
+            "value": 21010278,
+            "range": "2.101e+07..2.101e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_watch/moq-lite-06/relays=1/publishers=1/broadcasts=256/viewers=16/watch=1/frame=64",
+            "value": 1333066.140625,
+            "range": "1.308e+06..1.358e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_watch/moq-lite-06/relays=1/publishers=1/broadcasts=256/viewers=16/watch=16/frame=64",
+            "value": 21104853,
+            "range": "2.11e+07..2.11e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_watch/moq-lite-06/relays=1/publishers=1/broadcasts=256/viewers=16/watch=256/frame=64",
+            "value": 217088043,
+            "range": "2.171e+08..2.171e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_watch/moq-lite-07-wip/relays=1/publishers=1/broadcasts=256/viewers=16/watch=1/frame=64",
+            "value": 1334278,
+            "range": "1.334e+06..1.334e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_watch/moq-lite-07-wip/relays=1/publishers=1/broadcasts=256/viewers=16/watch=16/frame=64",
+            "value": 21557139,
+            "range": "2.156e+07..2.156e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_watch/moq-lite-07-wip/relays=1/publishers=1/broadcasts=256/viewers=16/watch=256/frame=64",
+            "value": 222480695,
+            "range": "2.225e+08..2.225e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_watch/moq-transport-22/relays=1/publishers=1/broadcasts=256/viewers=16/watch=1/frame=64",
+            "value": 1441394,
+            "range": "1.441e+06..1.441e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_watch/moq-transport-22/relays=1/publishers=1/broadcasts=256/viewers=16/watch=16/frame=64",
+            "value": 23603307,
+            "range": "2.36e+07..2.36e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_delivery_watch/moq-transport-22/relays=1/publishers=1/broadcasts=256/viewers=16/watch=256/frame=64",
+            "value": 228917097,
+            "range": "2.289e+08..2.289e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-lite-06/relays=1/publishers=1/broadcasts=1024/viewers=16/watch=1/frame=64",
+            "value": 7968940.5,
+            "range": "7.933e+06..8.004e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 440611.81640625,
+            "range": "4.403e+05..4.409e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-lite-06/relays=1/publishers=1/broadcasts=64/viewers=16/watch=1/frame=64",
+            "value": 943348.375,
+            "range": "9.417e+05..9.45e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-lite-06/relays=2/publishers=1/broadcasts=1024/viewers=16/watch=1/frame=64",
+            "value": 8407397,
+            "range": "8.296e+06..8.519e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-lite-06/relays=2/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 573701.6328125,
+            "range": "5.71e+05..5.764e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-lite-06/relays=2/publishers=1/broadcasts=64/viewers=16/watch=1/frame=64",
+            "value": 1128887.796875,
+            "range": "1.128e+06..1.13e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-lite-06/relays=8/publishers=1/broadcasts=1024/viewers=16/watch=1/frame=64",
+            "value": 545756316,
+            "range": "5.458e+08..5.458e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-lite-06/relays=8/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 578441.2109375,
+            "range": "5.771e+05..5.798e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-lite-06/relays=8/publishers=1/broadcasts=64/viewers=16/watch=1/frame=64",
+            "value": 1283671.765625,
+            "range": "1.28e+06..1.287e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1024/viewers=16/watch=1/frame=64",
+            "value": 9281521.5,
+            "range": "9.042e+06..9.521e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 443525098,
+            "range": "4.435e+08..4.435e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-lite-07-wip/relays=1/publishers=1/broadcasts=64/viewers=16/watch=1/frame=64",
+            "value": 1094826.90625,
+            "range": "1.09e+06..1.099e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-lite-07-wip/relays=2/publishers=1/broadcasts=1024/viewers=16/watch=1/frame=64",
+            "value": 9302633.125,
+            "range": "9.219e+06..9.387e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-lite-07-wip/relays=2/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 656131.1640625,
+            "range": "6.545e+05..6.578e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-lite-07-wip/relays=2/publishers=1/broadcasts=64/viewers=16/watch=1/frame=64",
+            "value": 1273444.421875,
+            "range": "1.273e+06..1.274e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-lite-07-wip/relays=8/publishers=1/broadcasts=1024/viewers=16/watch=1/frame=64",
+            "value": 691563261,
+            "range": "6.916e+08..6.916e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-lite-07-wip/relays=8/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 696105.1328125,
+            "range": "6.867e+05..7.055e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-lite-07-wip/relays=8/publishers=1/broadcasts=64/viewers=16/watch=1/frame=64",
+            "value": 1416566.78125,
+            "range": "1.409e+06..1.424e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-transport-22/relays=1/publishers=1/broadcasts=1024/viewers=16/watch=1/frame=64",
+            "value": 13945814,
+            "range": "1.392e+07..1.397e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 694073508,
+            "range": "6.941e+08..6.941e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-transport-22/relays=1/publishers=1/broadcasts=64/viewers=16/watch=1/frame=64",
+            "value": 1623676.453125,
+            "range": "1.62e+06..1.627e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-transport-22/relays=2/publishers=1/broadcasts=1024/viewers=16/watch=1/frame=64",
+            "value": 12888021.8125,
+            "range": "1.288e+07..1.29e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-transport-22/relays=2/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1006893.3828125,
+            "range": "9.972e+05..1.017e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-transport-22/relays=2/publishers=1/broadcasts=64/viewers=16/watch=1/frame=64",
+            "value": 1856826.53125,
+            "range": "1.849e+06..1.865e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-transport-22/relays=8/publishers=1/broadcasts=1024/viewers=16/watch=1/frame=64",
+            "value": 860949653,
+            "range": "8.609e+08..8.609e+08",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-transport-22/relays=8/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1064956,
+            "range": "1.048e+06..1.082e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_broadcasts/moq-transport-22/relays=8/publishers=1/broadcasts=64/viewers=16/watch=1/frame=64",
+            "value": 1939185.3125,
+            "range": "1.91e+06..1.968e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_relays/moq-lite-06/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 574566.3359375,
+            "range": "5.742e+05..5.749e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_relays/moq-lite-06/relays=2/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 678786.390625,
+            "range": "6.731e+05..6.845e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_relays/moq-lite-06/relays=8/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 714657.6328125,
+            "range": "7.106e+05..7.187e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_relays/moq-lite-07-wip/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 687117.3359375,
+            "range": "6.829e+05..6.913e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_relays/moq-lite-07-wip/relays=2/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 807808.9453125,
+            "range": "8.071e+05..8.085e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_relays/moq-lite-07-wip/relays=8/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 875086.734375,
+            "range": "8.747e+05..8.754e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_relays/moq-transport-22/relays=1/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 953188.5,
+            "range": "9.398e+05..9.666e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_relays/moq-transport-22/relays=2/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1187134.75,
+            "range": "1.185e+06..1.19e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_relays/moq-transport-22/relays=8/publishers=16/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1263798.625,
+            "range": "1.262e+06..1.265e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 442388.8515625,
+            "range": "4.423e+05..4.425e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/history=64",
+            "value": 460251.1640625,
+            "range": "4.59e+05..4.615e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-lite-06/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/history=1024",
+            "value": 468943.8203125,
+            "range": "4.672e+05..4.707e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-lite-06/relays=1/publishers=32/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 730416.84375,
+            "range": "7.196e+05..7.412e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-lite-06/relays=1/publishers=32/broadcasts=1/viewers=16/watch=1/frame=64/history=64",
+            "value": 727040.640625,
+            "range": "7.231e+05..7.31e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-lite-06/relays=1/publishers=32/broadcasts=1/viewers=16/watch=1/frame=64/history=1024",
+            "value": 1037373.75,
+            "range": "1.016e+06..1.059e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-lite-06/relays=1/publishers=8/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 506381.6875,
+            "range": "5.025e+05..5.103e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-lite-06/relays=1/publishers=8/broadcasts=1/viewers=16/watch=1/frame=64/history=64",
+            "value": 515694.21875,
+            "range": "5.124e+05..5.19e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-lite-06/relays=1/publishers=8/broadcasts=1/viewers=16/watch=1/frame=64/history=1024",
+            "value": 525721.8203125,
+            "range": "5.236e+05..5.278e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 531854.9609375,
+            "range": "5.307e+05..5.33e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/history=64",
+            "value": 538256.109375,
+            "range": "5.346e+05..5.419e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-lite-07-wip/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/history=1024",
+            "value": 539064.71484375,
+            "range": "5.326e+05..5.455e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-lite-07-wip/relays=1/publishers=32/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 822678.9609375,
+            "range": "8.098e+05..8.356e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-lite-07-wip/relays=1/publishers=32/broadcasts=1/viewers=16/watch=1/frame=64/history=64",
+            "value": 851717.13671875,
+            "range": "8.496e+05..8.539e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-lite-07-wip/relays=1/publishers=32/broadcasts=1/viewers=16/watch=1/frame=64/history=1024",
+            "value": 1120854.8125,
+            "range": "1.115e+06..1.127e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-lite-07-wip/relays=1/publishers=8/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 588735.8125,
+            "range": "5.873e+05..5.902e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-lite-07-wip/relays=1/publishers=8/broadcasts=1/viewers=16/watch=1/frame=64/history=64",
+            "value": 588767.46875,
+            "range": "5.873e+05..5.902e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-lite-07-wip/relays=1/publishers=8/broadcasts=1/viewers=16/watch=1/frame=64/history=1024",
+            "value": 600076.6015625,
+            "range": "5.978e+05..6.024e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 740744.1171875,
+            "range": "7.358e+05..7.457e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/history=64",
+            "value": 756558.3359375,
+            "range": "7.531e+05..7.6e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-transport-22/relays=1/publishers=1/broadcasts=1/viewers=16/watch=1/frame=64/history=1024",
+            "value": 763410.28125,
+            "range": "7.595e+05..7.673e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-transport-22/relays=1/publishers=32/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 1108200.375,
+            "range": "1.102e+06..1.115e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-transport-22/relays=1/publishers=32/broadcasts=1/viewers=16/watch=1/frame=64/history=64",
+            "value": 1160144.859375,
+            "range": "1.158e+06..1.163e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-transport-22/relays=1/publishers=32/broadcasts=1/viewers=16/watch=1/frame=64/history=1024",
+            "value": 1192415.75,
+            "range": "1.162e+06..1.223e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-transport-22/relays=1/publishers=8/broadcasts=1/viewers=16/watch=1/frame=64",
+            "value": 815133.875,
+            "range": "8.115e+05..8.188e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-transport-22/relays=1/publishers=8/broadcasts=1/viewers=16/watch=1/frame=64/history=64",
+            "value": 808723.5078125,
+            "range": "7.973e+05..8.202e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_join_stale/moq-transport-22/relays=1/publishers=8/broadcasts=1/viewers=16/watch=1/frame=64/history=1024",
+            "value": 820717.0234375,
+            "range": "8.133e+05..8.281e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_withdrawal/16r_1b",
+            "value": 10485838.25,
+            "range": "1.032e+07..1.065e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_withdrawal/16r_32b",
+            "value": 87295235,
+            "range": "8.73e+07..8.73e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_withdrawal/4r_1b",
+            "value": 816856.484375,
+            "range": "8.166e+05..8.171e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_withdrawal/4r_32b",
+            "value": 5099569.875,
+            "range": "5.035e+06..5.164e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_withdrawal/8r_1b",
+            "value": 2410901.5625,
+            "range": "2.37e+06..2.452e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-relay/rust/relay/relay_session_withdrawal/8r_32b",
+            "value": 21509913.25,
+            "range": "2.096e+07..2.206e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmmsg_gro-off_gso-off",
+            "value": 14862155.5,
+            "range": "1.483e+07..1.489e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmmsg_gro-off_gso-on",
+            "value": 6700646.8125,
+            "range": "6.698e+06..6.703e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmmsg_gro-on_gso-off",
+            "value": 14787593.5,
+            "range": "1.478e+07..1.479e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmmsg_gro-on_gso-on",
+            "value": 1539015.6171875,
+            "range": "1.538e+06..1.54e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmsg_gro-off_gso-off",
+            "value": 16691263.875,
+            "range": "1.669e+07..1.67e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmsg_gro-off_gso-on",
+            "value": 8635588.6875,
+            "range": "8.635e+06..8.636e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmsg_gro-on_gso-off",
+            "value": 16913667.75,
+            "range": "1.689e+07..1.694e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-udp_tokio/udp_tokio_epoll/recvmsg_gro-on_gso-on",
+            "value": 1485758.2578125,
+            "range": "1.485e+06..1.486e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-udp_uring/udp_io_uring/recvmsg-multishot_gro-off_gso-off",
+            "value": 15093347.5,
+            "range": "1.509e+07..1.51e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-udp_uring/udp_io_uring/recvmsg-multishot_gro-off_gso-on",
+            "value": 6233361.71875,
+            "range": "6.224e+06..6.243e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-udp_uring/udp_io_uring/recvmsg-multishot_gro-on_gso-off",
+            "value": 15059556.5,
+            "range": "1.505e+07..1.507e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-udp_uring/udp_io_uring/recvmsg-multishot_gro-on_gso-on",
+            "value": 1679204.171875,
+            "range": "1.679e+06..1.68e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-echo_quic/echo_quic/udp/all-off",
+            "value": 7918289.25,
+            "range": "7.843e+06..7.994e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-echo_quic/echo_quic/udp/all-on",
+            "value": 3254281.75,
+            "range": "3.159e+06..3.35e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-echo_quic/echo_quic/udp/no-gro",
+            "value": 3864540.25,
+            "range": "3.786e+06..3.943e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-echo_quic/echo_quic/udp/no-gso",
+            "value": 5293341.25,
+            "range": "5.265e+06..5.321e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-echo_quic/echo_quic/udp/oneshot",
+            "value": 3476538,
+            "range": "3.405e+06..3.548e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-session_lite/session_lite/all-off",
+            "value": 10718772.375,
+            "range": "1.07e+07..1.074e+07",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-session_lite/session_lite/all-on",
+            "value": 2992128.046875,
+            "range": "2.989e+06..2.996e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-session_lite/session_lite/no-gro",
+            "value": 4011847.15625,
+            "range": "4.012e+06..4.012e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-session_lite/session_lite/no-gso",
+            "value": 5495330.8125,
+            "range": "5.485e+06..5.506e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-session_lite/session_lite/oneshot",
+            "value": 3045073.984375,
+            "range": "3.04e+06..3.05e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-1/1",
+            "value": 45506.300537109375,
+            "range": "4.545e+04..4.556e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-1/64",
+            "value": 3304634.75,
+            "range": "3.299e+06..3.31e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-1/8",
+            "value": 376736.802734375,
+            "range": "3.766e+05..3.769e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-256/1",
+            "value": 46494.625,
+            "range": "4.643e+04..4.656e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-256/64",
+            "value": 3240929.46875,
+            "range": "3.24e+06..3.241e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-256/8",
+            "value": 384339.017578125,
+            "range": "3.839e+05..3.848e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-4096/1",
+            "value": 48527.591796875,
+            "range": "4.853e+04..4.853e+04",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-4096/64",
+            "value": 3362199.75,
+            "range": "3.341e+06..3.383e+06",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-unreachable_dials/unreachable_dials/handshakes-4096/8",
+            "value": 403400.4453125,
+            "range": "4.028e+05..4.04e+05",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-timers/timers/rearm/1",
+            "value": 53.9598069190979,
+            "range": "53.95..53.97",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-timers/timers/rearm/1024",
+            "value": 72.17254400253296,
+            "range": "72.15..72.19",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-timers/timers/rearm/16384",
+            "value": 85.50042390823364,
+            "range": "85.49..85.51",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
+          },
+          {
+            "name": "bench-rust-uring/rust/uring-timers/timers/rearm/64",
+            "value": 57.35284233093262,
+            "range": "57.34..57.36",
+            "unit": "ns",
+            "extra": "Mean nanoseconds per iteration; 22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d"
           }
         ]
       }
