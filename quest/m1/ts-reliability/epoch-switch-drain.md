@@ -45,6 +45,33 @@ Decided 2026-10-26 (maintainer, importing
   is not hitless and that starting a backup causes it; say what a switch now
   costs.
 
+### Implementation checkpoint (2026-10-27)
+
+The private prototype keeps one export and jitter buffer, separates per-instance
+input/program state, and adopts the new program metadata at generation release.
+The original source discarded 32 buffered frames before the replacement supplied
+media; a paused-clock playback control also failed because the old subscription
+stopped at the route switch. Both controls pass with the prototype, as do the
+207 existing and new TS export tests. `just fix` passes.
+
+The real relay/bufferbloat Goal is not complete. One original-source run reported
+healthy switch gaps of 4.63/4.90 s and 8.20/8.16 s across its two viewers, and
+failed-leg gaps of 3.52/3.52 s. That run did not record a steady-delivery statistic.
+One candidate run, with the same impairment and switch ordering, reported healthy
+gaps of 62.7/805.0 ms and 8.7/10.1 ms, and failed-leg gaps of 1.16/1.22 s.
+The same-reader steady maxima were 35.8/43.8 ms. The healthy-gap assertion uses
+that independent steady control plus the existing 25 ms PCR and 20 ms polling
+grids, fixed before the candidate run. The second viewer's first switch fails it.
+The margin and assertion must remain unchanged while that remaining handoff
+interleaving is reproduced and fixed. These observations establish no matched
+performance confidence or speedup claim.
+
+The remaining work is to identify that 805 ms boundary through the input/program
+and jitter ownership paths, preserve the catalog-cold and failed-leg controls,
+and finish the documented real-surface and clean-head gates. No second full
+export, clock alignment, routing policy, startup policy, or arbitrary buffer
+budget is selected. The PR stays draft while this proof remains incomplete.
+
 ## Closes
 
 - [#6877](https://github.com/moq-dev/moq/issues/6877) - a redundant ingest pair: a follower switches without emptying its delay (the standby-epoch ask is declined)

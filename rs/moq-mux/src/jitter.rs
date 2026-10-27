@@ -169,6 +169,7 @@ pub(crate) struct Buffer<K, T> {
 	/// The next generation's frames, held while its clock is acquired.
 	acquire: Option<Acquire<K, T>>,
 	tracks: BTreeMap<K, Track<T>>,
+	incoming: BTreeSet<K>,
 	/// The latest deadline given out.
 	horizon: Option<Instant>,
 	/// The tracks an acquisition waits to hear from, bounded, so that it anchors on whichever
@@ -406,6 +407,7 @@ impl<K: Ord + Clone, T> Buffer<K, T> {
 			previous: None,
 			acquire: None,
 			tracks: BTreeMap::new(),
+			incoming: BTreeSet::new(),
 			horizon: None,
 			expect: BTreeSet::new(),
 			released: false,
@@ -431,6 +433,32 @@ impl<K: Ord + Clone, T> Buffer<K, T> {
 		self.expect = keys.into_iter().collect();
 	}
 
+	/// Start an independent publisher's clock while the current generation drains.
+	pub fn start(&mut self, keys: impl IntoIterator<Item = K>) -> u64 {
+		self.incoming = keys.into_iter().collect();
+		self.acquire = None;
+		self.clock.map_or(0, |clock| clock.generation + 1)
+	}
+
+	pub fn acquired_generation(&self) -> Option<u64> {
+		self.clock.map(|clock| clock.generation)
+	}
+
+	/// Discard an unselected program before any of its frames went out.
+	pub fn remove<'a>(&mut self, keys: impl IntoIterator<Item = &'a K>)
+	where
+		K: 'a,
+	{
+		for key in keys {
+			self.tracks.remove(key);
+			self.incoming.remove(key);
+			self.expect.remove(key);
+			self.leads.remove(key);
+			self.steer.tracks.remove(key);
+		}
+		self.acquire = None;
+	}
+
 	/// Anchor each clock on its first frame instead of acquiring it, for a test that writes a
 	/// broadcast whole before exporting it.
 	#[cfg(test)]
@@ -447,10 +475,11 @@ impl<K: Ord + Clone, T> Buffer<K, T> {
 	/// Queue a frame, or drop it if it cannot make its deadline. Fails once the source's clock
 	/// runs further off ours than the clock may follow.
 	pub fn push(&mut self, key: K, arrival: Arrival<T>) -> anyhow::Result<Push> {
-		let held = self
-			.acquire
-			.as_ref()
-			.is_some_and(|acquire| acquire.tracks.contains_key(&key));
+		let held = self.incoming.contains(&key)
+			|| self
+				.acquire
+				.as_ref()
+				.is_some_and(|acquire| acquire.tracks.contains_key(&key));
 		let Some(clock) = self
 			.clock
 			.filter(|_| !held && !(self.released && self.jumps(&key, &arrival)))
@@ -589,6 +618,7 @@ impl<K: Ord + Clone, T> Buffer<K, T> {
 			clock.anchor += horizon - kept;
 		}
 		self.previous = self.clock.replace(clock);
+		self.incoming.clear();
 		self.steer = Steer::default();
 		for (key, frame) in acquire.frames {
 			let (deadline, stale) = self.judge(&clock, &frame, acquiring);
