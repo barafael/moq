@@ -2600,6 +2600,20 @@ impl TrackState {
 		Ok(())
 	}
 
+	fn content_for_copy(&self, sequence: u64) -> Result<Option<Arc<group::Content>>> {
+		if let Some(content) = self.contents.get(sequence) {
+			return Ok(Some(content));
+		}
+		if let Some(slot) = self.lookup.get(&sequence) {
+			for copy in slot.copies() {
+				if let Some(content) = copy.activate_content()? {
+					return Ok(Some(content));
+				}
+			}
+		}
+		Ok(None)
+	}
+
 	/// Insert a group a [`Fill`] answered, setting the track's [`Info`]
 	/// if it isn't accepted yet. The group's timescale comes from that info, so a
 	/// fetch can serve an as-yet-unaccepted track (e.g. a relay with no live
@@ -2631,17 +2645,8 @@ impl TrackState {
 		if self.covering_range(sequence, frames).is_some() {
 			return Err(Error::Duplicate);
 		}
-		let mut content = self.contents.get(sequence);
-		if content.is_none()
-			&& let Some(slot) = self.lookup.get(&sequence)
-		{
-			for copy in slot.copies() {
-				if let Some(owner) = copy.activate_content()? {
-					content = Some(owner);
-					break;
-				}
-			}
-		}
+		let content = self.content_for_copy(sequence)?;
+
 		if !self.lookup.get(&sequence).is_some_and(Slot::is_live) {
 			self.uncache(sequence);
 		}
@@ -2867,20 +2872,39 @@ impl Producer {
 	/// live edge, or the successor that ages the group before it) only once its first frame
 	/// opens or it finishes.
 	pub fn create_group(&self, group: group::Info) -> Result<group::Producer> {
+		self.create_group_inner(group, None)
+	}
+
+	/// A received copy starts at its wire offset before any reader can see it.
+	pub(crate) fn create_group_at(&self, group: group::Info, start: u64) -> Result<group::Producer> {
+		self.create_group_inner(group, Some(start))
+	}
+
+	fn create_group_inner(&self, info: group::Info, received: Option<u64>) -> Result<group::Producer> {
 		let mut state = self.modify()?;
-		// A sealed track takes no group, not even one below its end.
-		if state.sealed || state.final_sequence().is_some_and(|fin| group.sequence >= fin) {
+		if state.sealed || state.final_sequence().is_some_and(|fin| info.sequence >= fin) {
 			return Err(Error::Closed);
 		}
+		let start = received.unwrap_or(0);
+		let content = if received.is_some() {
+			if state.covering_group(info.sequence, start).is_some() {
+				return Err(Error::Duplicate);
+			}
+			state.content_for_copy(info.sequence)?
+		} else {
+			None
+		};
 		let track = state.info.clone().unwrap();
-
-		// An evicted sequence can be re-created; a live one is a duplicate.
-		state.claim_sequence(group.sequence, 0)?;
-
-		let group = group::Producer::new(group, track, state.cache.clone()).with_meter(self.stats.meter());
+		state.claim_sequence(info.sequence, start)?;
+		let mut group = group::Producer::new(info, track, state.cache.clone()).with_meter(self.stats.meter());
+		if start != 0 {
+			group.bound(group::Bounds { start, end: None })?;
+		}
+		if let Some(content) = content {
+			group.handle().share_content(content);
+		}
 		state.cap(&group.handle())?;
 		state.commit_group(&group.handle());
-
 		Ok(group)
 	}
 

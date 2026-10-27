@@ -314,3 +314,116 @@ publication. Public explicit group recreation must retain its separate owner.
 Ordinary pre-existing cross-route duplication is not itself evidence of this
 specific tail-amplification bug. Final readiness still needs this direct ingress
 proof, current-main integration, clean committed-head gates and the real surface.
+
+
+### Live GROUP and intrinsic-ownership checkpoint
+
+The direct Lite ingress failure was reproduced through actual `GroupRecv` and
+one subscriber entry: eight independent GROUP streams for the same sequence,
+with starts 8 down to 1 and all earlier consumers held. Each stream received
+fresh 1 KiB buffers. Before the correction, matching frame 8 had different
+physical payload pointers. The private transport claim now receives the known
+start before group publication, discovers retained canonical content before
+replacing a Slot, and preserves public explicit recreation as a separate owner.
+The same wire control now passes, including each consumer's bounds, payload and
+FIN. No new route identity or Epoch-less cross-route sharing was introduced.
+
+The new inflater release guard also had a distinct accounting regression: a
+captured job retained the guard after group release, but its charge was cleared
+with the group. A deterministic negative control observed 0 B rather than the
+live guard's 64 B. The guard now carries its own intrinsic `Extra`; releasing
+the delivery preserves its error, and the final retained job/clone returns that
+metadata charge. The earlier shared-Plain preservation control still passes.
+
+Both weak discovery indexes now use randomized `hashbrown` maps instead of
+sorted vectors. The existing locked 0.17.1 release is a direct dependency with
+default features disabled and `std::RandomState`; `allocation_size()` measures
+the actual table allocation. Final owners remove their records immediately,
+empty tables release their buckets, and replacing a sequence cannot let the old
+owner remove the new incarnation. Frame-owned accounting events update a checked
+aggregate, so group sizing neither allocates nor walks all retained rows. The
+underlying intrinsic charges still end with the final physical owner.
+
+The pre-change benchmark used the actual canonical frame owners, 64 B frames,
+1/64/1024/8192 frames and 1/8 held owner sets. Sizing runs on a constant fixture;
+cleanup times actual final-owner destruction with setup outside the timed body.
+It used 20 samples, 500 ms warm-up and 2 s measurement, on this 24-CPU x86_64 host
+at 13:13:39–13:14:35 UTC; load averages were 0.64/2.05/3.47 before and
+1.13/1.97/3.36 after. At 8192 frames, sizing took 69.856/69.493 µs and cleanup
+12.734/13.046 ms for 1/8 owner sets. The largest cleanup case warned that the
+fixed 20 samples needed more than the 2 s estimate; no sample count or case was
+changed. Repeating the same cases after the source correction remains due.
+
+The strict frame/group/track/Lite cohort passes 606/606, including unordered
+empty-frame final releases, replacement owner discovery, actual live GROUP,
+sparse typed properties, raw/plain compression, independent errors/arrivals,
+frame-reader lifetime and original versus bounded ends. This includes actual
+main's IETF 14–17 removal through a normal merge of
+`22808bbb2f4aab9fdaf9a60507f77efbaef4bd0d`. Full CI and interop on 5796 are
+historical evidence only; this newer source still needs its final gates.
+
+Updated held-reader charges, with distinct per-delivery bookkeeping retained:
+
+| Payload/frame | End | Canonical rows | Unique payload | Shared charge | Delivery charge | Discovery charge | Total |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 0 B | Unbounded | 32 | 0 B | 9696 B | 36448 B | 180 B | 46324 B |
+| 0 B | Exclusive 17 | 17 | 0 B | 5144 B | 23296 B | 180 B | 28620 B |
+| 1 B | Unbounded | 32 | 32 B | 9728 B | 36448 B | 180 B | 46356 B |
+| 1 B | Exclusive 17 | 17 | 17 B | 5161 B | 23296 B | 180 B | 28637 B |
+| 1024 B | Unbounded | 32 | 32768 B | 42464 B | 36448 B | 180 B | 79092 B |
+| 1024 B | Exclusive 17 | 17 | 17408 B | 22552 B | 23296 B | 180 B | 46028 B |
+
+Raw evidence and SHA256:
+
+- Live GROUP negative: `.tmp/live-group-tail-before-2.log`,
+  `7490dc59ae51a8d719aa2f4dfc42cee989e4e874f9d3fe8f0ae7d49a6853d476`.
+- Retained guard charge negative: `.tmp/inflater-guard-charge-before.log`,
+  `d7d891702abefc0bf34c7860a202c7b8ab406afa131d1e31a3c635abb331db9e`.
+- Both focused positives: `.tmp/live-claim-guard-controls.log`,
+  `7e78fecf9113922de9e8d5162e030129b73c3d0e02ef053d42ee907dab0a5cf6`.
+- Strict 606-control cohort: `.tmp/canonical-map-focused.log`,
+  `a46a4bfaa8928eef9082f55e175bde24a610aad4de233f9ca90a94ccb735dc05`.
+- Before benchmark: `.tmp/canonical-bench.log`,
+  `0fe6d7d6dc4bbcf6a6d05a659cb8e72b0f366c929944a92465a732c0eb3c84f5`.
+
+No public API, wire field, resource budget, arrival policy or compressed
+representation was changed. The Goal remains unfinished until the after
+measurement, current-source committed-head gates and real surface proof finish.
+
+
+### Measured weak-index correction
+
+The identical single after-run completed 13:37:58–13:38:45 UTC on the same
+24-CPU x86_64 host, after the other worker's CI became terminal. No heavy job
+ran concurrently. Load averages were 3.58/5.89/5.86 before and
+2.51/5.24/5.64 after, higher than the earlier baseline. This is a bounded local
+comparison, not a general throughput or quiet-host performance guarantee.
+The fixed cases and measurement settings were unchanged; no threshold was tuned.
+
+| Frames × held owner sets | Sizing before | Sizing after | Cleanup before | Cleanup after |
+| --- | --- | --- | --- | --- |
+| 1 × 1 | 25.912 ns | 8.9837 ns | 230.16 ns | 252.76 ns |
+| 1 × 8 | 25.855 ns | 9.0134 ns | 263.43 ns | 285.32 ns |
+| 64 × 1 | 599.47 ns | 9.065 ns | 5.6539 µs | 6.4272 µs |
+| 64 × 8 | 606.83 ns | 8.9804 ns | 7.3737 µs | 8.1054 µs |
+| 1024 × 1 | 8.7272 µs | 9.0952 ns | 165.32 µs | 108.94 µs |
+| 1024 × 8 | 8.6809 µs | 8.9223 ns | 191.46 µs | 134.89 µs |
+| 8192 × 1 | 69.856 µs | 8.9981 ns | 12.734 ms | 887.63 µs |
+| 8192 × 8 | 69.493 µs | 8.9692 ns | 13.046 ms | 1.1143 ms |
+
+Small-group cleanup is modestly slower, while sizing is constant work and final
+cleanup no longer repeatedly shifts retained rows. Exact hash-table capacity is
+still charged, so a table may retain spare buckets until its last row drops.
+Empty tables free those buckets immediately. The same map and accounting helper
+serve the group discovery index; neither retains dead weak history.
+
+```sh
+nix develop --command cargo bench --locked -p moq-net --features fuzz \
+  --bench canonical -- --noplot
+```
+
+After output: `.tmp/canonical-map-bench.log`, SHA256
+`19ca1cca45bb37756cd9143e051e00b061796edd549a3579bbb20534d546e660`.
+Conditions: `.tmp/canonical-map-bench-conditions.json`, SHA256
+`2a91de696ca6eaf5d594742e15ee4045e97fe2add5533a67078beb2545d861fd`.
+The stable full CI and real surface gates remain due on the final committed head.

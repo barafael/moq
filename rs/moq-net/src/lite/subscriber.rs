@@ -987,7 +987,7 @@ impl GroupRecv {
 						// Stats (groups/frames/bytes) are counted in the model as the group
 						// is written, through the tagged `track::Producer`. The track counts
 						// it as content once its first frame lands.
-						let received = entry.producer.create_group(group_info);
+						let received = entry.producer.create_group_at(group_info, hdr.frame_start);
 						// The subscription's end waits until this stream is read. Counted
 						// whatever the cache said, since the publisher counts every stream it
 						// opens (a resubscribe resends a cached group), and only after the
@@ -1008,7 +1008,7 @@ impl GroupRecv {
 								None,
 							);
 						}
-						let mut group = match received {
+						let group = match received {
 							Ok(group) => group,
 							// The group is at or past the end the publisher declared, which no
 							// later stream can repair. Before lite-05 only a local finish sets
@@ -1028,10 +1028,6 @@ impl GroupRecv {
 							}
 							Err(err) => return Poll::Ready(Err(err)),
 						};
-						// The stream may carry only the tail of the group; number the frames
-						// from where the publisher said they start so a front continuing the
-						// group across routes lines them up.
-						group.start_at(hdr.frame_start)?;
 						(group, entry.producer.clone(), entry.framing, reading)
 					};
 					let (priority, order) = track
@@ -6099,6 +6095,84 @@ mod tests {
 		drop(prefix);
 		let _a = slots.acquire().expect("the failed stream kept a slot");
 		let _b = slots.acquire().expect("the failed stream kept a slot");
+	}
+	/// Distinct live GROUP starts are copies of the same group, including while
+	/// readers retain every earlier tail. Exercise the real header/ingest path.
+	#[moq_clock::test]
+	async fn live_group_tails_share_content_held_by_earlier_readers() {
+		use crate::transport::poll::Session as _;
+		let version = Version::Lite07;
+		let session = crate::lite::test_transport::ScriptedSession::eof(Vec::new());
+		let subscriber = Subscriber::new(SubscriberConfig {
+			runtime: crate::time::sim(),
+			session: crate::driver::Transport::new(session),
+			origin: origin::Config::new(crate::Hop::new(1).unwrap()).produce(),
+			recv_bandwidth: None,
+			version,
+			peer_setup: crate::lite::PeerSetup::new(false, crate::transport::Address::Setup),
+			peer_hop: None,
+			cost: None,
+			going_away: Default::default(),
+			auth: crate::auth::Link::new(false),
+		});
+		let track = track::Producer::new(
+			std::sync::Arc::new(crate::broadcast::Info::default()),
+			"video",
+			crate::track::Info::timed(),
+		);
+		subscriber.subscribes.lock().insert(
+			7,
+			TrackEntry {
+				producer: track.clone(),
+				framing: lite::Framing {
+					timescale: Some(Timescale::MILLI),
+					ietf: None,
+					compressed: false,
+				},
+				tail: Default::default(),
+			},
+		);
+		let mut held = Vec::new();
+		for start in (1..=8).rev() {
+			let mut script = Vec::new();
+			let mut encoder = crate::coding::Encoder::new(&mut script, version.into());
+			lite::Group {
+				subscribe: 7,
+				sequence: 0,
+				frame_start: start,
+			}
+			.encode(&mut encoder, version)
+			.unwrap();
+			for index in start..9 {
+				encoder.varint(crate::coding::varint::zigzag(0)).unwrap();
+				encoder.bytes(&vec![index as u8; 1024]).unwrap();
+			}
+			let mut incoming = crate::lite::test_transport::ScriptedSession::eof(script);
+			let (_, recv) = incoming.open_bi(Default::default()).await.unwrap();
+			let mut group = GroupRecv::new(
+				subscriber.clone(),
+				Reader::new(crate::transport::boxed::RecvStream::new(recv), version),
+			);
+			kio::wait(|waiter| group.poll_serve(waiter)).await.unwrap();
+			held.push((start, track.consume().peek_group(0).unwrap().with_range(start..)));
+		}
+		let mut pointers = std::collections::BTreeMap::new();
+		for (start, reader) in &mut held {
+			for index in *start..9 {
+				assert_eq!(reader.index(), index);
+				let frame = reader.read_frame().await.unwrap().unwrap();
+				assert_eq!(frame.payload.as_ref(), vec![index as u8; 1024]);
+				if let Some(prior) = pointers.insert(index, frame.payload.as_ptr() as usize) {
+					assert_eq!(
+						prior,
+						frame.payload.as_ptr() as usize,
+						"live GROUP frame {index} has one physical payload across held tails"
+					);
+				}
+			}
+			assert!(reader.read_frame().await.unwrap().is_none());
+		}
+		assert!(track.closed().now_or_never().is_none());
 	}
 }
 

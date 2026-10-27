@@ -20,6 +20,8 @@ use crate::cache;
 use crate::frame::{self, Cached, FrameBuf, Payload};
 use crate::{Timescale, stats, track};
 use bytes::Bytes;
+#[cfg(any(test, feature = "fuzz"))]
+pub(crate) use content::StorageBench;
 pub(super) use content::{Content, Contents, Key as ContentKey};
 use content::{Input, Spec};
 use std::collections::VecDeque;
@@ -339,7 +341,7 @@ struct Relay {
 /// What a compressed group keeps beside its stored DEFLATE slices.
 struct Flate {
 	// A pending inflater belongs to this delivery even when its Plain is shared.
-	release: Arc<Mutex<Option<Error>>>,
+	release: Option<Arc<Release>>,
 	// The inflated size of every frame admitted so far, held to the budget a plain
 	// group's bytes are, so a declaration is refused before anything inflates.
 	inflated: u64,
@@ -350,12 +352,27 @@ struct Flate {
 	plain: Arc<Plain>,
 }
 
-impl Flate {
-	const RELEASE_HEAP: u64 = (2 * size_of::<usize>() + size_of::<Mutex<Option<Error>>>()) as u64;
+struct Release {
+	error: Mutex<Option<Error>>,
+	bill: cache::Extra,
+}
 
-	fn new(plain: Arc<Plain>) -> Self {
+impl Release {
+	fn new(bill: cache::Extra) -> Arc<Self> {
+		bill.add(Flate::RELEASE_HEAP);
+		Arc::new(Self {
+			error: Mutex::default(),
+			bill,
+		})
+	}
+}
+
+impl Flate {
+	const RELEASE_HEAP: u64 = (2 * size_of::<usize>() + size_of::<Release>()) as u64;
+
+	fn new(plain: Arc<Plain>, bill: cache::Extra) -> Self {
 		Self {
-			release: Arc::default(),
+			release: Some(Release::new(bill)),
 			inflated: 0,
 			encoder: None,
 			plain,
@@ -391,7 +408,9 @@ impl Flate {
 	/// Drop everything but how the group is read, failing a late inflater with `err`.
 	fn release(&mut self, err: Error, shared: bool) {
 		// Wait for at most the frame currently inflating, just as Plain::release did.
-		*self.release.lock().unwrap_or_else(PoisonError::into_inner) = Some(err.clone());
+		if let Some(release) = self.release.take() {
+			*release.error.lock().unwrap_or_else(PoisonError::into_inner) = Some(err.clone());
+		}
 		if !shared {
 			self.encoder = None;
 			self.plain.release(err);
@@ -485,7 +504,7 @@ impl Plain {
 /// The stored slices a plain read of a compressed group inflates once the group's guard
 /// is released.
 struct Inflate {
-	release: Arc<Mutex<Option<Error>>>,
+	release: Arc<Release>,
 	plain: Arc<Plain>,
 	// Local index of the first slice: the copy's inflated length when the read took them.
 	from: usize,
@@ -501,7 +520,7 @@ impl Inflate {
 	/// lock held, since settling the debt takes the track's.
 	fn run(&self, meter: &stats::Meter) {
 		for (index, (slice, size)) in (self.from..).zip(&self.slices) {
-			let released = self.release.lock().unwrap_or_else(PoisonError::into_inner);
+			let released = self.release.error.lock().unwrap_or_else(PoisonError::into_inner);
 			if released.is_some() {
 				break;
 			}
@@ -546,7 +565,7 @@ impl Inflate {
 
 	/// Inflated local frame `local`, or why it is not.
 	fn get(&self, local: usize) -> Result<Bytes> {
-		let released = self.release.lock().unwrap_or_else(PoisonError::into_inner);
+		let released = self.release.error.lock().unwrap_or_else(PoisonError::into_inner);
 		if let Some(err) = released.as_ref() {
 			return Err(err.clone());
 		}
@@ -737,7 +756,10 @@ impl GroupState {
 		}
 		let from = flate.plain.len.load(Ordering::Acquire).min(last + 1);
 		Ok(Inflate {
-			release: flate.release.clone(),
+			release: flate
+				.release
+				.clone()
+				.ok_or_else(|| self.abort.clone().unwrap_or(Error::Dropped))?,
 			plain: flate.plain.clone(),
 			from,
 			slices: self
@@ -1224,13 +1246,15 @@ impl Producer {
 	/// track evicts toward under memory pressure.
 	pub(super) fn new(info: Info, track: track::Info, cache: Arc<cache::Track>) -> Self {
 		let state = kio::Producer::<GroupState>::default();
-		let mut charge = cache.charge();
+		let charge = cache.charge();
 		let access = charge.access();
 		let log = {
 			let mut state = state.write().ok().expect("a new group is open");
 			if track.compress {
-				charge.add(Flate::RELEASE_HEAP);
-				state.flate = Some(Box::new(Flate::new(Arc::new(Plain::new(charge.extra())))));
+				state.flate = Some(Box::new(Flate::new(
+					Arc::new(Plain::new(charge.extra())),
+					charge.extra(),
+				)));
 			}
 			state.charge = charge;
 			state.log.reader()
@@ -1997,7 +2021,13 @@ impl Handle {
 
 	pub(super) fn delivery_size(&self) -> u64 {
 		let state = self.state.read();
-		state.charge.size() + state.partial.as_ref().map_or(0, |partial| partial.buf.view_size())
+		state.charge.size()
+			+ state
+				.flate
+				.as_ref()
+				.and_then(|flate| flate.release.as_ref())
+				.map_or(0, |release| release.bill.size())
+			+ state.partial.as_ref().map_or(0, |partial| partial.buf.view_size())
 	}
 
 	/// Adopt the frames of `head` below where this copy starts, so it holds the group
@@ -2338,6 +2368,11 @@ impl Handle {
 	pub(super) fn cache_size(&self) -> u64 {
 		let state = self.state.read();
 		state.charge.size()
+			+ state
+				.flate
+				.as_ref()
+				.and_then(|flate| flate.release.as_ref())
+				.map_or(0, |release| release.bill.size())
 			+ state.content.as_ref().map_or_else(
 				|| state.flate.as_ref().map_or(0, |flate| flate.plain.bill.size()),
 				|content| content.size(),
@@ -5648,7 +5683,7 @@ mod test {
 		let pool = cache::Pool::unbounded();
 		let mut group = compressed_group(&pool);
 		group.write_frame(None, verbose(0)).unwrap();
-		let stored = group.handle.state.read().charge.size();
+		let stored = group.handle.state.read().charge.size() + Flate::RELEASE_HEAP;
 		assert_eq!(group.handle.cache_size(), stored + flate::ENCODER_HEAP);
 		group.write_frame(None, verbose(1)).unwrap();
 
@@ -5656,7 +5691,7 @@ mod test {
 		let mut reader = group.consume();
 		assert_eq!(read_plain(&mut reader).unwrap().unwrap(), verbose(0));
 		let inflated = (verbose(0).len() + verbose(1).len()) as u64;
-		let stored = group.handle.state.read().charge.size();
+		let stored = group.handle.state.read().charge.size() + Flate::RELEASE_HEAP;
 		let held = stored + flate::ENCODER_HEAP + flate::DECODER_HEAP + inflated;
 		assert_eq!(group.handle.cache_size(), held, "an open group keeps both");
 
@@ -5671,7 +5706,7 @@ mod test {
 		assert_eq!(read_plain(&mut reader).unwrap().unwrap(), verbose(0));
 		group.write_frame(None, verbose(1)).unwrap();
 		group.finish().unwrap();
-		let stored = group.handle.state.read().charge.size();
+		let stored = group.handle.state.read().charge.size() + Flate::RELEASE_HEAP;
 		assert_eq!(read_plain(&mut reader).unwrap().unwrap(), verbose(1));
 		assert_eq!(group.handle.cache_size(), stored + inflated);
 
@@ -5682,7 +5717,7 @@ mod test {
 		let job = take_slices(&group, 1);
 		group.finish().unwrap();
 		job.run(&stats::Meter::default());
-		let stored = group.handle.state.read().charge.size();
+		let stored = group.handle.state.read().charge.size() + Flate::RELEASE_HEAP;
 		assert_eq!(group.handle.cache_size(), stored + inflated, "the decoder is dropped");
 	}
 
@@ -5825,5 +5860,26 @@ mod test {
 		assert!(group.poll_expired(&waiter), "the writer abandons its stream");
 		expired.store(false, Ordering::Relaxed);
 		assert!(group.poll_expired(&waiter), "and the verdict stands");
+	}
+	/// A captured job owns its release guard independently of the cached delivery.
+	#[test]
+	fn inflater_release_guard_charge_follows_its_last_job() {
+		let pool = cache::Pool::unbounded();
+		let mut group = compressed_group(&pool);
+		group.write_frame(None, verbose(0)).unwrap();
+		group.finish().unwrap();
+		let job = take_slices(&group, 0);
+		let retained = job.release.clone();
+		group.abort(Error::Evicted).unwrap();
+		assert_eq!(
+			pool.used(),
+			Flate::RELEASE_HEAP,
+			"the job still owns the new guard allocation"
+		);
+		assert!(matches!(job.get(0), Err(Error::Evicted)));
+		drop(job);
+		assert_eq!(pool.used(), Flate::RELEASE_HEAP, "clones share one intrinsic charge");
+		drop(retained);
+		assert_eq!(pool.used(), 0, "the final guard releases its own charge");
 	}
 }

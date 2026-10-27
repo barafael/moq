@@ -472,7 +472,11 @@ struct Identity {
 impl Drop for FrameContent {
 	fn drop(&mut self) {
 		if let Some(identity) = self.identity.get() {
-			identity.owner.forget_frame(identity.key, self as *const Self as usize);
+			identity.owner.forget_frame(
+				identity.key,
+				self as *const Self as usize,
+				self.bill.get().map_or(0, cache::Extra::size),
+			);
 		}
 	}
 }
@@ -529,11 +533,25 @@ impl Shared {
 	pub(super) fn bill_content(&self, bill: cache::Extra) {
 		self.0.bill_content(bill);
 	}
+	#[cfg(test)]
 	pub(super) fn content_size(&self) -> u64 {
 		self.0.bill.get().map_or(0, cache::Extra::size)
 	}
 	pub(super) fn identify(&self, owner: Arc<group::Content>, key: group::ContentKey) -> bool {
-		self.0.identity.set(Identity { owner, key }).is_ok()
+		let _publication = self.0.publication.lock().unwrap_or_else(PoisonError::into_inner);
+		if self
+			.0
+			.identity
+			.set(Identity {
+				owner: owner.clone(),
+				key,
+			})
+			.is_err()
+		{
+			return false;
+		}
+		owner.charge_frame(self.0.bill.get().map_or(0, cache::Extra::size));
+		true
 	}
 }
 
@@ -553,8 +571,22 @@ impl FrameContent {
 				.checked_sub(bill.size())
 				.expect("transferred payload cannot exceed published bytes");
 			bill.add(fresh + (FrameBuf::CONTENT_HEAP + admission) as u64);
+			if let Some(identity) = self.identity.get() {
+				identity.owner.charge_frame(bill.size());
+			}
 			bill
 		});
+	}
+
+	/// Caller holds publication so attachment and growth update one aggregate.
+	fn add_charge(&self, bytes: u64) {
+		if let Some(bill) = self.bill.get() {
+			let before = bill.size();
+			bill.add(bytes);
+			if let Some(identity) = self.identity.get() {
+				identity.owner.charge_frame(bill.size() - before);
+			}
+		}
 	}
 
 	fn freeze(&self) -> Payload {
@@ -845,9 +877,7 @@ impl FrameBuf {
 		publication.admission = Arc::downgrade(&admission);
 		if !publication.admitted {
 			publication.admitted = true;
-			if let Some(bill) = content.bill.get() {
-				bill.add(Self::ADMISSION_HEAP as u64);
-			}
+			content.add_charge(Self::ADMISSION_HEAP as u64);
 		}
 		Some(admission)
 	}
@@ -885,9 +915,7 @@ impl FrameBuf {
 	unsafe fn store_written(&self, new_written: usize) {
 		let content = &self.0.content;
 		let before = content.written.load(Ordering::Relaxed);
-		if let Some(bill) = content.bill.get() {
-			bill.add((new_written - before) as u64);
-		}
+		content.add_charge((new_written - before) as u64);
 		// Release pairs with consumers' Acquire load to publish prior writes.
 		content.written.store(new_written, Ordering::Release);
 	}
