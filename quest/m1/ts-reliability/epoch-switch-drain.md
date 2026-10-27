@@ -49,10 +49,24 @@ Decided 2026-10-26 (maintainer, importing
 
 The private prototype keeps one export and jitter buffer, separates per-instance
 input/program state, and adopts the new program metadata at generation release.
+The buffer contains an active clock engine and at most one acquiring replacement,
+using the existing clock math independently. A replacement commits only after an
+actual usable video start (or the first usable item without video), retaining at
+most one issued item per other track under backpressure. Commit flushes old decode
+clocks and clamps the replacement against every old deadline already issued;
+program metadata and clock statistics change only after the old tail drains.
+Cancelling an unemitted replacement restores the old clock and keeps its data.
+Per-program statistics retain their existing reset behavior; received-byte
+accounting is unchanged.
 The original source discarded 32 buffered frames before the replacement supplied
 media; a paused-clock playback control also failed because the old subscription
-stopped at the route switch. Both controls pass with the prototype, as do the
-207 existing and new TS export tests. `just fix` passes.
+stopped at the route switch. Both controls pass with the prototype. A delayed
+replacement-video control reproduced a 1.133 s multi-track handoff hole before
+two-phase acquisition; it now passes with unchanged PCR/frame cadence bounds for
+zero, positive, and negative A/V leads. The 257 focused TS and jitter controls
+also cover actual held-replacement cancellation, valid empty-catalog EOF drain,
+cold same-epoch returns, old decode-clock flush, and independent active catalog
+updates/timeline jumps while a replacement acquires.
 
 The real relay/bufferbloat Goal is not complete. One original-source run reported
 healthy switch gaps of 4.63/4.90 s and 8.20/8.16 s across its two viewers, and
@@ -66,9 +80,11 @@ The margin and assertion must remain unchanged while that remaining handoff
 interleaving is reproduced and fixed. These observations establish no matched
 performance confidence or speedup claim.
 
-The remaining work is to identify that 805 ms boundary through the input/program
-and jitter ownership paths, preserve the catalog-cold and failed-leg controls,
-and finish the documented real-surface and clean-head gates. No second full
+The earlier candidate did not isolate the 805 ms boundary in transport logs;
+the deterministic controls establish a related nominal-acquisition/startup
+ownership failure, rather than claiming that exact transport trace as proven.
+The changed source still needs the documented real-surface and clean-head gates.
+No second full
 export, clock alignment, routing policy, startup policy, or arbitrary buffer
 budget is selected. The PR stays draft while this proof remains incomplete.
 

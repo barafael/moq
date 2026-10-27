@@ -132,7 +132,7 @@ fn handoff(c: &mut Criterion) {
 							if instance == 1 {
 								let keys = tracks + 1..=2 * tracks;
 								buffer.expect(keys.clone());
-								buffer.start(keys);
+								buffer.start(keys.clone(), keys);
 							}
 							for track in 1..=tracks {
 								for frame in 0..frames {
@@ -160,7 +160,11 @@ fn handoff(c: &mut Criterion) {
 							}
 							let _ = std::hint::black_box(buffer.poll_next(&kio::Waiter::noop()));
 						}
-						assert_eq!(buffer.acquired_generation(), Some(1));
+						tokio::time::advance(Duration::from_secs(1)).await;
+						if let std::task::Poll::Ready(ready) = buffer.poll_pending(&kio::Waiter::noop()) {
+							buffer.commit(ready).unwrap();
+						}
+						assert!(buffer.is_committed());
 					})
 				});
 			});

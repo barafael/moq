@@ -118,6 +118,7 @@ where
 	held: Option<jitter::Ready<TrackKey, Queued>>,
 	pending: Option<Box<Program<S>>>,
 	next_program: u64,
+	active_program: u64,
 	follow_until: Option<moq_clock::Instant>,
 	follow_timer: Option<std::pin::Pin<Box<moq_clock::Sleep>>>,
 }
@@ -129,8 +130,9 @@ where
 	S::Ext: catalog::Catalog,
 {
 	id: u64,
-	clock: Option<u64>,
 	retired: bool,
+	expected: Vec<TrackKey>,
+	expected_changed: bool,
 	source: crate::Source,
 	catalog: Option<S>,
 	/// Keep the concrete follower's format after EOF without polling an ended stream again.
@@ -214,7 +216,7 @@ where
 	/// up before it ever configures video. `None` until the tables are built, and for
 	/// programs with no video track (nothing to align to).
 	video_start: Option<Timestamp>,
-	/// The jitter buffer key of the first video frame out since [`Export::video_start`] was set.
+	/// The jitter buffer key of the first video frame out since `video_start` was set.
 	/// Until one has gone, what the other tracks release is dropped: a video track whose
 	/// start group was cut before it went out starts at its next keyframe instead
 	/// ([`jitter::Buffer`]).
@@ -1270,8 +1272,9 @@ where
 		let instance = source.broadcast().info().epoch.clone();
 		Self {
 			id: 0,
-			clock: None,
 			retired: false,
+			expected: Vec::new(),
+			expected_changed: false,
 			source,
 			catalog: Some(catalog),
 			catalog_ended: false,
@@ -1326,6 +1329,7 @@ where
 			held: None,
 			pending: None,
 			next_program: 1,
+			active_program: 0,
 			follow_until: None,
 			follow_timer: None,
 		}
@@ -1426,16 +1430,64 @@ where
 			self.follow_until = Some(moq_clock::now());
 			self.stop_old(waiter)?;
 		}
-		if let Some(mut pending) = self.pending.take() {
-			std::mem::swap(&mut self.program, pending.as_mut());
-			let prepared = self.prepare(waiter);
-			std::mem::swap(&mut self.program, pending.as_mut());
-			self.pending = Some(pending);
-			let ready = prepared?;
-			if !ready && self.selected().catalog_ended {
-				return Poll::Ready(Ok(None));
+		if self.pending.is_some() {
+			loop {
+				self.prepare_pending(waiter)?;
+				self.stop_old(waiter)?;
+				let Poll::Ready(ready) = self.jitter.poll_pending(waiter) else {
+					break;
+				};
+				let mut pending = self.pending.take().expect("an acquiring program");
+				std::mem::swap(&mut self.program, pending.as_mut());
+				let kind = self
+					.program
+					.tracks
+					.get(&ready.track.name)
+					.context("missing incoming track")?
+					.kind
+					.clone();
+				let leading = self.leads_video(&kind, &ready.item);
+				let waiting = !leading
+					&& self.program.video_out.is_none()
+					&& self
+						.program
+						.tracks
+						.values()
+						.any(|track| matches!(track.kind, Kind::Video(_)));
+				if !leading && !waiting {
+					// A future queued video start can still be cut. Own its Ready
+					// before selecting the program, and recheck held audio against it.
+					for held in self.jitter.take_pending() {
+						let kind = self
+							.program
+							.tracks
+							.get(&held.track.name)
+							.context("missing held track")?
+							.kind
+							.clone();
+						if held.generation != ready.generation || self.leads_video(&kind, &held.item) {
+							self.jitter.discard(&held);
+						} else {
+							self.jitter.hold_pending(held);
+						}
+					}
+				}
+				std::mem::swap(&mut self.program, pending.as_mut());
+				self.pending = Some(pending);
+				if leading {
+					self.jitter.discard(&ready);
+					continue;
+				}
+				if waiting {
+					self.jitter.hold_pending(ready);
+					continue;
+				}
+				for (name, track) in &mut self.program.tracks {
+					track.release(name, &mut self.jitter, true)?;
+				}
+				self.jitter.commit(ready)?;
+				break;
 			}
-			self.stop_old(waiter)?;
 		}
 
 		// Once every source has ended, the tail goes out late if it must: the end of the
@@ -1459,6 +1511,24 @@ where
 				},
 			};
 			let switching = self.pending.as_ref().is_some_and(|next| ready.track.program == next.id);
+			if switching {
+				let mut pending = self.pending.take().expect("the ready program");
+				std::mem::swap(&mut self.program, pending.as_mut());
+				let kind = self
+					.program
+					.tracks
+					.get(&ready.track.name)
+					.context("missing incoming track")?
+					.kind
+					.clone();
+				let leading = self.leads_video(&kind, &ready.item);
+				std::mem::swap(&mut self.program, pending.as_mut());
+				self.pending = Some(pending);
+				if leading {
+					self.jitter.discard(&ready);
+					continue;
+				}
+			}
 			if switching && (!self.program.schedule.is_empty() || self.packing()) {
 				self.lay(None)?;
 				self.held = Some(ready);
@@ -1482,6 +1552,11 @@ where
 				ready.generation >= self.program.generation,
 				"the jitter buffer released an older generation after a newer one"
 			);
+			if ready.track.program != self.program.id {
+				return Poll::Ready(Err(
+					anyhow::anyhow!("a queued frame outlived its publisher program").into()
+				));
+			}
 			let name = ready.track.name.clone();
 			let kind = self.program.tracks.get(&name).context("missing track")?.kind.clone();
 			if self.leads_video(&kind, &ready.item) {
@@ -1508,7 +1583,7 @@ where
 					self.lay(Some(schedule::slot(decode.saturating_sub(drain.as_nanos()))))?;
 				}
 			}
-			if self.program.queue.is_empty() {
+			if self.program.queue.is_empty() && !self.jitter.is_committed() {
 				// Releasing a due frame opens room in its source. Read it before parking:
 				// a zero-delay slot may need another frame to prove the slot is complete.
 				let track = self.program.tracks.get_mut(&name).expect("the released frame's track");
@@ -1568,6 +1643,30 @@ where
 					return Poll::Ready(Ok(Some(out)));
 				}
 			}
+		}
+
+		let pending_ended = !self.jitter.is_committed()
+			&& self.pending.as_ref().is_some_and(|pending| {
+				let finished = pending.catalog_ended
+					&& (pending.tracks.is_empty() || pending.tracks.values().all(|track| track.finished));
+				let no_video_start = pending.video_out.is_none()
+					&& pending
+						.tracks
+						.values()
+						.any(|track| matches!(track.kind, Kind::Video(_)))
+					&& pending
+						.tracks
+						.values()
+						.filter(|track| matches!(track.kind, Kind::Video(_)))
+						.all(|track| !self.jitter.holds(&track.key));
+				finished && (self.jitter.pending_empty() || no_video_start)
+			});
+		if pending_ended
+			&& (drained || self.program.tracks.is_empty())
+			&& self.program.schedule.is_empty()
+			&& self.program.queue.is_empty()
+		{
+			return Poll::Ready(Ok(None));
 		}
 
 		// End of stream once the catalog is closed too: nothing more can appear.
@@ -1631,12 +1730,21 @@ where
 		}))
 	}
 
+	fn prepare_pending(&mut self, waiter: &kio::Waiter) -> crate::Result<()> {
+		let mut pending = self.pending.take().expect("a selected program");
+		std::mem::swap(&mut self.program, pending.as_mut());
+		let result = self.prepare(waiter);
+		std::mem::swap(&mut self.program, pending.as_mut());
+		self.pending = Some(pending);
+		result.map(|_| ())
+	}
+
 	fn selected(&self) -> &Program<S> {
 		self.pending.as_deref().unwrap_or(&self.program)
 	}
 
 	fn prepare(&mut self, waiter: &kio::Waiter) -> crate::Result<bool> {
-		if self.program.retired {
+		if self.program.retired || (self.program.id == self.active_program && self.jitter.is_committed()) {
 			return Ok(true);
 		}
 		// 1. Drain catalog updates, discovering the track layout.
@@ -1672,6 +1780,19 @@ where
 		// one subscription round-trip behind the media.
 		for si in self.program.si.values_mut() {
 			si.poll(waiter);
+		}
+
+		if self.program.expected_changed {
+			if self.program.id == self.active_program {
+				self.jitter.expect(self.program.expected.clone());
+				self.program.expected_changed = false;
+			} else if self.jitter.has_pending() || self.jitter.is_committed() {
+				self.jitter.expect_pending(
+					self.program.tracks.values().map(|track| track.key.clone()),
+					self.program.expected.clone(),
+				);
+				self.program.expected_changed = false;
+			}
 		}
 
 		// 2. Read each source until it has a frame due, or before the program tables
@@ -1716,12 +1837,14 @@ where
 					}
 				}
 			}
-			if self.pending.is_none() && self.program.id != 0 && self.program.clock.is_none() {
-				self.program.clock = Some(
-					self.jitter
-						.start(self.program.tracks.values().map(|track| track.key.clone())),
+			if self.program.id != self.active_program && !self.jitter.has_pending() && !self.jitter.is_committed() {
+				self.jitter.start(
+					self.program.tracks.values().map(|track| track.key.clone()),
+					self.program.expected.clone(),
 				);
+				self.program.expected_changed = false;
 			}
+
 			// Hand the held frames to the jitter buffer in arrival order, so the
 			// earliest anchors its clock, then read on.
 			let mut held: Vec<(moq_clock::Instant, String)> = self
@@ -1746,13 +1869,9 @@ where
 		if self.program.retired {
 			return Ok(());
 		}
-		let acquired = self
-			.pending
-			.as_ref()
-			.and_then(|program| program.clock)
-			.is_some_and(|generation| self.jitter.acquired_generation() >= Some(generation));
+
 		let expired = self.follow_until.is_some_and(|until| moq_clock::now() >= until);
-		if !acquired && !expired {
+		if !expired {
 			if let Some(until) = self.follow_until {
 				let timer = self
 					.follow_timer
@@ -1771,7 +1890,9 @@ where
 		self.program.catalog_ended = true;
 		for (name, track) in &mut self.program.tracks {
 			if !track.finished {
-				track.release(name, &mut self.jitter, true)?;
+				if !self.jitter.is_committed() {
+					track.release(name, &mut self.jitter, true)?;
+				}
 				track.source.stop();
 				track.finished = true;
 			}
@@ -1807,6 +1928,8 @@ where
 		}
 		// Tables were prepared under the incoming layout, but no packet has left it yet.
 		next.psi = None;
+		self.active_program = next.id;
+		self.jitter.adopted();
 		self.program = *next;
 		self.program.generation = ready.generation;
 		self.follow_until = None;
@@ -2107,7 +2230,8 @@ where
 			.iter()
 			.filter(|(_, track)| !track.finished)
 			.filter(|(_, track)| track.kind.class() != super::stats::Class::Data || track.buffer.is_some());
-		self.jitter.expect(continuous.map(|(_, track)| track.key.clone()));
+		self.program.expected = continuous.map(|(_, track)| track.key.clone()).collect();
+		self.program.expected_changed = true;
 		Ok(())
 	}
 
@@ -2299,6 +2423,13 @@ where
 		Some(pid)
 	}
 
+	#[cfg(test)]
+	pub(super) fn holding_replacement(&self) -> bool {
+		self.held
+			.as_ref()
+			.is_some_and(|ready| self.pending.as_ref().is_some_and(|next| ready.track.program == next.id))
+	}
+
 	/// When the next queued frame is due, or the next grid slot while media is queued or
 	/// every source has finished and the tail runs out.
 	#[cfg(test)]
@@ -2334,12 +2465,11 @@ where
 	/// skip like any other. A track it adds or drops revises the PMT, as any catalog update
 	/// does.
 	///
-	/// Another instance (another epoch, or an epochless route) is a full program switch: a
-	/// fresh export of `broadcast` with a new PMT from its catalog, and nothing carried from
-	/// this one but the PAT and PMT `version_number`s, both advanced. Every PID's first packet
-	/// flags the break with `discontinuity_indicator`, and each stream starts on a keyframe.
-	/// The caller decides whether to follow a replacement at all; [`Follower`](super::Follower)
-	/// decides from the path's announcements.
+	/// Another instance (another epoch, or an epochless route) opens a fresh jitter generation.
+	/// The buffered old program drains before the new PMT, with advanced table versions,
+	/// every PID's first packet flagging the break, and each stream starting on a keyframe.
+	/// [`Follower`](super::Follower) keeps feeding the old program until the new clock and
+	/// first media are usable, bounded by its follow window. No timestamps are aligned.
 	pub fn follow(mut self, broadcast: moq_net::broadcast::Consumer, catalog: S) -> Result<Self, crate::Error> {
 		self.followed(&broadcast, catalog, Duration::ZERO)?;
 		Ok(self)
@@ -2357,42 +2487,91 @@ where
 		catalog: S,
 		follow: Duration,
 	) -> Result<(), crate::Error> {
+		if self.pending.is_some() && self.program.instance.is_some() && broadcast.info().epoch == self.program.instance
+		{
+			self.cancel_pending();
+			self.follow_until = None;
+			self.follow_timer = None;
+		}
 		let same = self.selected().instance.is_some() && broadcast.info().epoch == self.selected().instance;
 		if !same {
-			if let Some(previous) = self.pending.take() {
-				self.jitter.remove(previous.tracks.values().map(|track| &track.key));
-			}
-			let mut next = Program::new(self.program.source.switched(broadcast), catalog);
-			next.id = self.next_program;
-			self.next_program += 1;
-			next.delay = self.program.delay;
-			next.replay = self.program.replay;
-			next.mux_rate_override = self.program.mux_rate_override;
-			next.schedule = Schedule::new(next.delay);
+			self.cancel_pending();
+			let next = self.replacement(self.program.source.switched(broadcast), catalog);
 			self.pending = Some(Box::new(next));
-			self.follow_until = Some(moq_clock::now() + follow);
+			self.follow_until.get_or_insert_with(|| moq_clock::now() + follow);
 			return Ok(());
 		}
-		if let Some(pending) = &mut self.pending {
+		if let Some(mut pending) = self.pending.take() {
 			pending.source.pin(broadcast);
-			pending.catalog = Some(catalog);
-			pending.catalog_ended = false;
-			pending.cataloged = false;
+			if pending.psi.is_none() {
+				if self
+					.held
+					.as_ref()
+					.is_some_and(|ready| ready.track.program == pending.id)
+				{
+					self.held = None;
+				}
+				self.jitter.cancel();
+				let next = self.replacement(pending.source, catalog);
+				self.pending = Some(Box::new(next));
+			} else {
+				std::mem::swap(&mut self.program, pending.as_mut());
+				let resumed = self.resume(catalog);
+				std::mem::swap(&mut self.program, pending.as_mut());
+				self.pending = Some(pending);
+				resumed?;
+			}
 			return Ok(());
 		}
 		self.program.source.pin(broadcast);
+		if self.program.psi.is_none() {
+			self.program = self.replacement(self.program.source.clone(), catalog);
+			self.active_program = self.program.id;
+			self.held = None;
+			self.jitter = jitter::Buffer::new(self.program.delay);
+			#[cfg(test)]
+			if self.program.replay {
+				self.jitter = jitter::Buffer::new(self.program.delay).replay();
+			}
+			return Ok(());
+		}
+		self.resume(catalog)
+	}
 
+	fn cancel_pending(&mut self) {
+		if let Some(previous) = self.pending.take() {
+			if self
+				.held
+				.as_ref()
+				.is_some_and(|ready| ready.track.program == previous.id)
+			{
+				self.held = None;
+			}
+			self.jitter.cancel();
+		}
+	}
+
+	fn replacement(&mut self, source: crate::Source, catalog: S) -> Program<S> {
+		let mut next = Program::new(source, catalog);
+		next.id = self.next_program;
+		self.next_program += 1;
+		next.delay = self.program.delay;
+		next.replay = self.program.replay;
+		next.mux_rate_override = self.program.mux_rate_override;
+		next.schedule = Schedule::new(next.delay);
+		next
+	}
+
+	fn resume(&mut self, catalog: S) -> Result<(), crate::Error> {
 		self.program.catalog = Some(catalog);
 		self.program.catalog_ended = false;
 		self.program.cataloged = false;
+		self.program.retired = false;
 		self.program.si_flushed = false;
-		// A name no entry carries, so the returned catalog repoints every SI entry.
 		for si in self.program.si.values_mut() {
 			si.track.clear();
 		}
-		// Whatever the ended broadcast left is done, including a track whose error ended
-		// the export: polled again, it would end this one too. Its held frames still go out.
-		for (name, track) in self.program.tracks.iter_mut() {
+		for (name, track) in &mut self.program.tracks {
 			track.release(name, &mut self.jitter, true)?;
 			track.finished = true;
 			track.withdrawn = false;
@@ -2402,7 +2581,7 @@ where
 	}
 
 	/// Whether a frame of `kind` released now presents ahead of the video keyframe the stream
-	/// begins on ([`Self::video_start`]), and so is dropped. A video track whose start group
+	/// begins on (`video_start`), and so is dropped. A video track whose start group
 	/// was cut or went stale before it went out starts at its next keyframe instead
 	/// ([`jitter::Buffer`]), so until video goes out the start is the earliest frame a video
 	/// track holds, and with none held, everything leads the keyframe yet to arrive. Video goes
@@ -2485,7 +2664,7 @@ where
 	}
 
 	/// Every video track has buffered its first frame (the keyframe) or finished.
-	/// The tables wait for this so the tune-in point ([`Self::video_start`]) can be
+	/// The tables wait for this so the tune-in point (`video_start`) can be
 	/// read from the keyframe before any audio is emitted ahead of it. A program
 	/// with no video track is trivially ready.
 	fn video_ready(&self) -> bool {
