@@ -127,6 +127,69 @@ No second full
 export, clock alignment, routing policy, startup policy, or arbitrary buffer
 budget is selected. The PR stays draft while this proof remains incomplete.
 
+### Deadline characterization
+
+One diagnostic-only run at [b75205ef5b](https://github.com/moq-dev/moq/commit/b75205ef5b4e17445fd53ea4b9f9834b1753256a)
+retained both viewers' TS bytes, arrival offsets, exporter stderr and statuses
+before assertions. It passed in 45.497 s with the unchanged impairment, `--follow
+10s`, and 45 ms cadence margin. Healthy gaps were 13.256/13.675 ms and
+9.761/8.015 ms; failed-leg gaps were 684.186/719.080 ms. Same-reader steady
+maxima were 36.380/44.100 ms. The shaper throttled 1,540 of its 1,586 downstream
+packets. This instrumented pass does not clear or attribute the earlier
+184.619 ms failure; it is not a repeat-to-green argument. No further identical
+real run was made.
+
+The captured healthy replacements became emittable **after** the selected hard
+follow deadline. First-switch commits were 4.361/4.475 s after expiry; third-switch
+commits were 2.696/2.702 s after expiry. Old output nevertheless drained through
+the saved old horizons: each healthy last-old slice was 1.1–2.1 ms after its
+horizon, and the first-new slice 9.8–15.2 ms after it. The raw mux/reader gaps
+agree within 0.7 ms. This captured pass shows preserved tail, not an internal
+discard or proof of the earlier failing interleaving. Diagnostic provenance:
+2026-10-27 09:50:03 UTC, same compiler/kernel as above, shared-host load
+11.45/11.82/9.86, warm builds. The run-owned capture and its file hashes remain
+in checkout scratch; generated TS bytes are not source fixtures.
+
+The paused-clock control
+`an_expired_follow_stops_healthy_input_but_drains_its_buffered_tail` keeps A
+publishing, selects B at 1 s with a 100 ms follow and 500 ms delay, and withholds
+B media until 2 s. A's real track subscription is present before 1.1 s and gone
+at 1.1 s after zero-time request-task propagation. Its buffered tail remains,
+and every access unit read through PTS 61.080 s is delivered, including the tail
+after the input stops.
+The last old output is at 1.640 s and first new output at 2.520 s, an 880 ms
+hole despite healthy A. B's later acquisition therefore exposes a hole longer
+than the delay. No source
+threshold or follow behavior changed. All 258 focused TS/jitter controls pass
+(12.866 s), and the final formatter/lint pass succeeds (69 s). Initial demand probes inspected cached
+handle lifetime and the subscription aggregate before asynchronous propagation;
+those were fixture-observation mistakes, not evidence of a source deadline bug.
+
+### Decisions needed
+
+The Plan's hard follow bound and its unconditional healthy-switch wording cannot
+both hold when B is not emittable before A's selected input deadline and held
+tail. The real fixture also exceeds that deadline, but the earlier 184.619 ms
+failure remains unattributed because it had no internal trace.
+
+1. **Recommended:** preserve the selected hard bound and clarify the no-added-hole
+   guarantee for replacements emittable within it, with independent expiry
+   coverage. This preserves the existing resource/configuration contract. The
+   real fixture and its unconditional assertion have not been changed to accept
+   that scope without a maintainer decision.
+2. Keep an unconditional guarantee by allowing old input to continue until B is
+   usable even beyond follow. That changes the selected subscription lifetime
+   and can retain its receive/processing cost indefinitely when B never becomes
+   usable. It needs a different explicit resource policy; increasing a test
+   timeout only moves the same exposure and does not settle it.
+
+The bounded Engine checkpoint is worth retaining for review: deterministic
+controls prove the original backlog discard, old-input feeding, usable-start
+ownership, rapid cancellation, EOF and cold-return fixes. Its extra private
+context and held per-track item are stated costs, not a performance claim. No
+acceptance-scope or lifetime-policy option is selected while the maintainer is
+away; this remains a draft, with the real fixture, impairment and margin intact.
+
 ## Closes
 
 - [#6877](https://github.com/moq-dev/moq/issues/6877) - a redundant ingest pair: a follower switches without emptying its delay (the standby-epoch ask is declined)
