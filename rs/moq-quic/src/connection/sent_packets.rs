@@ -6,10 +6,12 @@ use super::spaces::SentPacket;
 
 /// ACK-only packets kept before the oldest is forgotten.
 ///
-/// RFC 9000 lets us forget them: they carry nothing to retransmit, and a peer that only receives
-/// never has to ACK them. Forgetting one costs only the RTT sample when the peer's largest ACK
-/// names it, so this covers our ACK rate over the RTT plus the peer's ACK delay: at one ACK per two
-/// 1200-byte packets and 25 ms of delay, about 40 Mbps of receive at 100 ms RTT.
+/// RFC 9000 lets us forget them: they carry nothing to retransmit, and the peer need never ACK
+/// them. Forgetting one costs the RTT sample when the peer's largest ACK names it, so this covers
+/// our ACK rate over the RTT plus the peer's ACK delay: at one ACK per two 1200-byte packets and
+/// 25 ms of delay, about 40 Mbps of receive at 100 ms RTT. Its gap also reads as an acknowledged
+/// packet to persistent congestion detection, which can then go undeclared, as a skipped packet
+/// number's gap already can.
 const MAX_ACK_ONLY: usize = 256;
 
 /// The packets sent in one space that are not yet acknowledged or declared lost.

@@ -1575,8 +1575,8 @@ impl Connection {
 			return Err(TransportError::PROTOCOL_VIOLATION("unsent packet acked"));
 		}
 		// Whether the largest acknowledged packet is new, and whether we still know when it was
-		// sent. A forgotten ACK-only packet, one declared lost, or a skipped number has no send
-		// time, so it yields no RTT sample.
+		// sent. A forgotten ACK-only packet, or one declared lost, has no send time, so it yields
+		// no RTT sample.
 		let (new_largest, largest_tracked) = {
 			let space = &mut self.spaces[space];
 			if space.largest_acked_packet.is_none_or(|pn| ack.largest > pn) {
