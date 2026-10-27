@@ -1849,6 +1849,8 @@ mod tests {
 	async fn drift(ppm: f64, hours: f64, settled: f64, queueing: impl Fn(f64) -> Duration) -> Run {
 		let delay = Duration::from_millis(500);
 		let start = moq_clock::now();
+		let clock = moq_clock::Deadlines::new(start);
+		let _entered = clock.enter();
 		let mut buffer = Buffer::new(delay);
 		let mut run = Run {
 			err: None,
@@ -1875,7 +1877,7 @@ mod tests {
 			}
 			let source = decode.as_secs_f64() * (1.0 + ppm * 1e-6);
 			let arrived = start + Duration::from_secs_f64(source) + queued;
-			tokio::time::advance(arrived.saturating_duration_since(moq_clock::now())).await;
+			clock.advance(arrived.max(clock.now()));
 			let frame = Arrival {
 				arrived,
 				read: arrived,
@@ -2037,6 +2039,8 @@ mod tests {
 	/// that is later, or never if `None`, in the order they reach us, until a push fails.
 	async fn feed(shape: &Shape, ppm: f64, secs: f64, arrive: impl Fn(u16, f64) -> Option<f64>) -> Fed {
 		let start = moq_clock::now();
+		let clock = moq_clock::Deadlines::new(start);
+		let _entered = clock.enter();
 		let mut buffer = Buffer::new(shape.delay);
 		let mut frames = Vec::new();
 		for &track in shape.tracks {
@@ -2061,7 +2065,7 @@ mod tests {
 		};
 		for (sent, track, decode) in frames {
 			let arrived = start + Duration::from_secs_f64(sent);
-			tokio::time::advance(arrived.saturating_duration_since(moq_clock::now())).await;
+			clock.advance(arrived.max(clock.now()));
 			let frame = Arrival {
 				arrived,
 				read: arrived,
