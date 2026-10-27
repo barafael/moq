@@ -1932,11 +1932,13 @@ type Served = { sequence: number; frameStart: number; payloads: string[] };
 /**
  * Serves `groups` (frame payloads per group, keyed by sequence) under `bounds`, and
  * reports every group stream that reached the wire plus the resolved
- * SUBSCRIBE_START / SUBSCRIBE_END range.
+ * SUBSCRIBE_START / SUBSCRIBE_END range. A group in `received` arrived as a tail
+ * starting at that frame.
  */
 async function serve(
 	groups: Record<number, string[]>,
 	bounds: { startGroup?: number; startFrame?: number; endGroup?: number; endFrame?: number },
+	received: Record<number, number> = {},
 ): Promise<{ start?: number; end?: number; served: Served[] }> {
 	const pair = createMockTransportPair(ALPN_06);
 	const origin = new OriginProducer();
@@ -1962,7 +1964,11 @@ async function serve(
 	void publisher.runSubscribe(msg, server);
 
 	for (const [sequence, frames] of Object.entries(groups)) {
-		const group = track.createGroup(Number(sequence));
+		const start = received[Number(sequence)];
+		const group =
+			start === undefined
+				? track.createGroup(Number(sequence))
+				: hooks.receiveGroup(track, { sequence: Number(sequence), start });
 		for (const frame of frames) group.writeFrame(textFrame(frame));
 		group.finish();
 
@@ -2033,6 +2039,12 @@ test("lite draft-06: a subscription starting at the end of a group serves it emp
 	const { start, served } = await serve({ 0: ["a", "b"] }, { startGroup: 0, startFrame: 2 });
 	expect(start).toBe(0);
 	expect(served).toEqual([{ sequence: 0, frameStart: 2, payloads: [] }]);
+});
+
+// A received tail that ends where it starts is the same valid, empty range.
+test("lite draft-06: an empty received tail is served empty at its start", async () => {
+	const { served } = await serve({ 0: [] }, { startGroup: 0, startFrame: 5 }, { 0: 5 });
+	expect(served).toEqual([{ sequence: 0, frameStart: 5, payloads: [] }]);
 });
 
 // The end bound is inclusive.

@@ -1778,8 +1778,8 @@ export class Publisher {
 
 			let prevTs = 0n;
 			// Whether the cursor ever reached the requested start, which decides how the
-			// end of the group is read below.
-			let reached = startFrame === 0;
+			// end of the group is read below. A received tail may already begin there.
+			let reached = hooks.groupIndex(group) === startFrame;
 
 			for (;;) {
 				const read = await race([hooks.readGroupFrame(group, compress), stream.closed]);
