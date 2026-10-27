@@ -2,7 +2,7 @@ import { afterEach, expect, test } from "bun:test";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
-import { checkReports } from "./api.ts";
+import { checkReports, writeModels } from "./api.ts";
 
 const directories: string[] = [];
 const previousMode = process.env.MOQ_API_REPORT;
@@ -101,4 +101,93 @@ test("a declaration resolves types from declared dependencies only", () => {
 	};
 	checkReports(fixture(files, { dependencies: { dep: "^0.0.0" } }));
 	expect(() => checkReports(fixture(files))).toThrow("API Extractor failed");
+});
+
+test("a hidden declaration cannot borrow an exported declaration's name", () => {
+	const directory = fixture({
+		"dist/index.d.ts": `${summary}export { read } from "./access";
+/** A public value. */
+export interface Value {
+/** Its text. */
+text: string;
+}
+`,
+		"dist/access.d.ts": `/** A hidden value. */
+interface Value {
+/** Its count. */
+count: number;
+}
+/** Read the hidden type. */
+export declare function read(): Value;
+`,
+	});
+	expect(() => checkReports(directory)).toThrow("API Extractor failed");
+});
+
+test("alias chains expose the declaration they name and produce doc models", () => {
+	const directory = fixture({
+		"dist/index.d.ts": `${summary}/** The underlying value. */
+interface Value {
+/** Its text. */
+text: string;
+}
+/** The first name. */
+export type First = Value;
+/** A second name. */
+export type Second = First;
+/** Read by either name. */
+export declare function read(input: Second): Value;
+`,
+	});
+	checkReports(directory);
+	const output = join(directory, "models");
+	writeModels(directory, output);
+	const model = JSON.parse(readFileSync(join(output, "index.api.json"), "utf8"));
+	expect(model.name).toBe("@moq/example");
+	expect(model.members[0].members.map((item: { name: string }) => item.name)).toContain("Second");
+	expect(model.members[0].members.find((item: { name: string }) => item.name === "read").docComment).toContain(
+		"Read by either name",
+	);
+});
+
+// These pairs are counterexamples to recovering public export names from an API model.
+// Keep the inputs beside the checkpoint so a newer extractor can prove the limit changed.
+test("different public namespace aliases can have indistinguishable doc models", () => {
+	const model = (name: string) => {
+		const directory = fixture({
+			"dist/index.d.ts": `${summary}export * as ${name} from "./errors";\n`,
+			"dist/errors.d.ts": "/** Return the builtin error. */\nexport declare function fail(): Error;\n",
+		});
+		const output = join(directory, "models");
+		writeModels(directory, output);
+		return JSON.parse(readFileSync(join(output, "index.api.json"), "utf8"));
+	};
+	const named = model("Error");
+	const suffixed = model("Error_2");
+	expect(named).toEqual(suffixed);
+	const namespace = named.members[0].members.find((item: { kind: string }) => item.kind === "Namespace");
+	expect(namespace.name).toBe("Error_2");
+	expect(namespace.canonicalReference).toBe("@moq/example!Error_2:namespace");
+	expect(namespace.fileUrlPath).toBe("index.d.ts");
+	expect(namespace.excerptTokens).toEqual([]);
+});
+
+test("different public external re-exports can have indistinguishable empty doc models", () => {
+	const model = (alias: string) => {
+		const directory = fixture(
+			{
+				"dist/index.d.ts": `${summary}export { Thing as ${alias} } from "dep";\n`,
+				"node_modules/dep/package.json": JSON.stringify({ name: "dep", version: "1.0.0", types: "index.d.ts" }),
+				"node_modules/dep/index.d.ts": "/** A dependency's public value. */\nexport declare class Thing {}\n",
+			},
+			{ dependencies: { dep: "^1.0.0" } },
+		);
+		const output = join(directory, "models");
+		writeModels(directory, output);
+		return JSON.parse(readFileSync(join(output, "index.api.json"), "utf8"));
+	};
+	const first = model("First");
+	const second = model("Second");
+	expect(first).toEqual(second);
+	expect(first.members[0].members).toEqual([]);
 });
