@@ -47,16 +47,12 @@ declare namespace audio {
         ranked,
         AudioConfigSchema,
         AudioSchema,
-        Audio_3 as Audio,
+        Audio_2 as Audio,
         AudioConfig
     }
 }
 
-const Audio_2: typeof audio;
-
-type Audio_2 = audio.Audio;
-
-type Audio_3 = z.infer<typeof AudioSchema>;
+type Audio_2 = z.infer<typeof AudioSchema>;
 
 type AudioConfig = z.infer<typeof AudioConfigSchema>;
 
@@ -279,8 +275,8 @@ type BufferedRanges = BufferedRange[];
 
 declare namespace Catalog {
     export {
-        Audio_2 as Audio,
-        Video,
+        audio as Audio,
+        video as Video,
         AudioConfig,
         AudioConfigSchema,
         AudioSchema,
@@ -1701,9 +1697,7 @@ type Verdict = "unknown" | "healthy" | "degraded" | "unhealthy";
 
 const VERSION = 4;
 
-const Video: typeof video;
-
-type Video = video.Video;
+type Video = z.infer<typeof VideoSchema>;
 
 declare namespace video {
     export {
@@ -1714,12 +1708,10 @@ declare namespace video {
         Projection,
         VideoConfigSchema,
         VideoSchema,
-        Video_2 as Video,
+        Video,
         VideoConfig
     }
 }
-
-type Video_2 = z.infer<typeof VideoSchema>;
 
 type VideoConfig = z.infer<typeof VideoConfigSchema>;
 

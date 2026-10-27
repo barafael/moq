@@ -1,6 +1,9 @@
 {
 	"$schema": "https://developer.microsoft.com/json-schemas/tsdoc/v0/tsdoc.schema.json",
 	"extends": ["@microsoft/api-extractor/extends/tsdoc-base.json"],
-	"tagDefinitions": [{ "tagName": "@module", "syntaxKind": "modifier" }],
-	"supportForTags": { "@module": true }
+	"tagDefinitions": [
+		{ "tagName": "@module", "syntaxKind": "modifier" },
+		{ "tagName": "@reexport", "syntaxKind": "modifier" }
+	],
+	"supportForTags": { "@module": true, "@reexport": true }
 }

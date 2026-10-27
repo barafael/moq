@@ -49,18 +49,12 @@ export function checkReports(dir: string) {
 	}
 }
 
-/** Write each built entrypoint's API Extractor doc model using the same visibility and link checks as its report. */
-export function writeModels(dir: string, output: string, declarations = join(dir, "dist")) {
-	mkdirSync(output, { recursive: true });
-	reports(resolve(dir), resolve(output), resolve(declarations));
-}
-
 /** Every entrypoint's API report for the package built in `dir`, by file name such as `index.api.md`. */
-function reports(dir: string, models?: string, declarations = join(dir, "dist")): Map<string, string> {
+function reports(dir: string): Map<string, string> {
 	const work = mkdtempSync(join(tmpdir(), "moq-api-"));
 	try {
 		const root = join(work, "package");
-		cpSync(declarations, root, { recursive: true });
+		cpSync(join(dir, "dist"), root, { recursive: true });
 		writeFileSync(
 			join(root, "tsdoc.json"),
 			JSON.stringify({
@@ -80,7 +74,7 @@ function reports(dir: string, models?: string, declarations = join(dir, "dist"))
 			if (!target.types) return [];
 			const entry = subpath === "." ? "index" : subpath.replace(/^\.\//, "").replaceAll("/", "-");
 			const entrypoint = join(root, target.types);
-			return [{ entry, entrypoint, config: configure(root, entrypoint, folder, entry, models) }];
+			return [{ entry, entrypoint, config: configure(root, entrypoint, folder, entry) }];
 		});
 		const [first] = entries;
 		if (!first) return new Map();
@@ -310,7 +304,7 @@ function prepareDeclarations(root: string) {
 	}
 }
 
-function configure(root: string, entrypoint: string, folder: string, entry: string, models?: string): ExtractorConfig {
+function configure(root: string, entrypoint: string, folder: string, entry: string): ExtractorConfig {
 	return ExtractorConfig.prepare({
 		configObject: {
 			projectFolder: root,
@@ -338,11 +332,7 @@ function configure(root: string, entrypoint: string, folder: string, entry: stri
 				// its declaration must change the report.
 				includeForgottenExports: true,
 			},
-			docModel: {
-				includeForgottenExports: true,
-				enabled: models !== undefined,
-				apiJsonFilePath: join(models ?? folder, `${entry}.api.json`),
-			},
+			docModel: { enabled: false },
 			dtsRollup: { enabled: false },
 			tsdocMetadata: { enabled: false },
 			messages: {

@@ -155,8 +155,7 @@ let makeConsumer: (state: AnnounceState) => Consumer;
 /**
  * The read side of an announcement stream.
  *
- * Created internally: obtain one from {@link Producer.consume} or the connection's
- * `announced(scope)`.
+ * Created internally: obtain one from an origin or the connection's `announced(scope)`.
  *
  * @public
  */
@@ -167,7 +166,7 @@ export class Consumer {
 		this.#state = state;
 	}
 
-	/** Settles once the stream closes; see {@link Producer.closed}. */
+	/** Settles once the stream closes: `null` on a clean close, or the abort {@link Error}. */
 	get closed(): GetPromise<Error | null> {
 		return this.#state.closed;
 	}

@@ -35,6 +35,7 @@
 	"workspaces": [
 		"bench/browser",
 		"doc",
+		"doc/.vitepress/api",
 		"js/net",
 		"js/p2p",
 		"js/qmux",

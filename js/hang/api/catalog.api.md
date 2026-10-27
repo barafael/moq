@@ -24,7 +24,7 @@ export const ArchiveSchema: z.ZodMiniObject<{
     version: z.ZodMiniOptional<z.core.$ZodBranded<z.ZodMiniNumber<number>, "u53", "out">>;
 }, z.core.$strip>;
 
-declare namespace audio {
+declare namespace Audio_2 {
     export {
         ranked,
         AudioConfigSchema,
@@ -33,10 +33,6 @@ declare namespace audio {
         AudioConfig
     }
 }
-
-const Audio_2: typeof audio;
-
-type Audio_2 = audio.Audio;
 export { Audio_2 as Audio }
 
 type Audio_3 = z.infer<typeof AudioSchema>;
@@ -1173,11 +1169,7 @@ export class UnsupportedVersion extends Error {
 
 export const VERSION = 4;
 
-export const Video: typeof video;
-
-export type Video = video.Video;
-
-declare namespace video {
+declare namespace Video {
     export {
         ranked_2 as ranked,
         ColorSchema,
@@ -1190,6 +1182,7 @@ declare namespace video {
         VideoConfig
     }
 }
+export { Video }
 
 type Video_2 = z.infer<typeof VideoSchema>;
 

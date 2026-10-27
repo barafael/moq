@@ -9,7 +9,7 @@ export const MOQ_EPOCH_UNIX_MILLIS = 1_577_836_800_000;
 const timescaleSchema = nonzeroU53Schema.check(z.lte(4_294_967_295));
 
 /**
- * The recording object format advertised in {@link Archive.version} when a store is present.
+ * The recording object format advertised in an {@link Archive}'s `version` when a store is present.
  */
 export const ARCHIVE_VERSION = 3;
 
