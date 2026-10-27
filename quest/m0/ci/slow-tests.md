@@ -48,8 +48,8 @@ Tried and dropped, so don't redo them without new evidence:
   cell regressed about 6%.
 - A containment shortcut for miss-verdict intersections in moq-net: sparse gap and
   range sweeps were unchanged (4096 timed gaps, 2.796 ms to 2.783 ms). The broader
-  algorithmic fix belongs to
-  [incremental sparse misses](/quest/m1/release-perf/sparse-misses.md).
+  algorithmic fix landed in
+  [moq-dev/moq#6921](https://github.com/moq-dev/moq/pull/6921).
 - Retaining only one phase's span in the TS reset tests: it shed the boundary and
   failed the unsignalled-reset assertion.
 
@@ -69,8 +69,9 @@ After CPU of the frozen cohort by module, largest first:
 | moq-stats `produce::tests` | 4 | 4.0 |
 | everything else | 42 | 32.4 |
 
-The moq-net `model::track::test` gap tests run through the same miss judging, so
-[incremental sparse misses](/quest/m1/release-perf/sparse-misses.md) may cut them as a
-side effect; the export timing and recovery tests are the largest fixture-only target.
+The moq-net `model::track::test` gap tests run through the same miss judging, which
+[moq-dev/moq#6921](https://github.com/moq-dev/moq/pull/6921) made incremental after this
+measurement, so re-measure them first; the export timing and recovery tests are the
+largest fixture-only target.
 
 Public API: none.
