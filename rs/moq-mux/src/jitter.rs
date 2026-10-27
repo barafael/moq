@@ -231,6 +231,7 @@ impl<K: Ord + Clone, T> Buffer<K, T> {
 			.horizon
 			.zip(first)
 			.map_or(Duration::ZERO, |(old, new)| old.saturating_duration_since(new));
+		tracing::debug!(target: "moq_mux::container::ts::handoff", phase = "commit-clock", now = ?moq_clock::now(), old_horizon = ?self.active.horizon, new_first = ?first, ?shift, old_clock = ?self.active.clock.map(|clock| (clock.anchor, clock.base, clock.generation)), new_clock = ?engine.clock.map(|clock| (clock.anchor, clock.base, clock.generation)));
 		let offset = self.active.clock.map_or(0, |clock| clock.generation + 1);
 		for clock in [&mut engine.clock, &mut engine.previous].into_iter().flatten() {
 			clock.anchor = clock.anchor.checked_add(shift).ok_or(moq_net::TimeOverflow)?;

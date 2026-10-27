@@ -159,7 +159,10 @@ fn export_as(relay: &Relay, global: &[&str], format: Format, flags: &[&str]) -> 
 	let mut child = moq(relay, global)
 		.args(["export", format.name])
 		.args(flags)
-		.env("RUST_LOG", "warn,moq_mux::container::ts::follower=info")
+		.env(
+			"RUST_LOG",
+			"warn,moq_mux::container::ts::follower=info,moq_mux::container::ts::handoff=debug",
+		)
 		.stdout(Stdio::piped())
 		.stderr(Stdio::piped())
 		.spawn()
@@ -891,6 +894,27 @@ async fn redundant_importers_switch_through_bufferbloat_on_lite_07() {
 }
 
 async fn redundant_failover(bufferbloat: bool) {
+	let started = Instant::now();
+	let scratch = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../.tmp");
+	std::fs::create_dir_all(&scratch).unwrap();
+	let capture = tempfile::Builder::new()
+		.prefix("epoch-switch-")
+		.tempdir_in(scratch)
+		.unwrap()
+		.keep();
+	std::fs::write(
+		capture.join("case.json"),
+		serde_json::to_vec_pretty(&serde_json::json!({
+			"bufferbloat": bufferbloat,
+			"start_unix_ns": std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos(),
+			"pcr_cadence_ms": 25,
+			"switch_poll_ms": 20,
+			"margin_ms": 45,
+		}))
+		.unwrap(),
+	)
+	.unwrap();
+	eprintln!("epoch-switch capture: .tmp/{}", capture.file_name().unwrap().display());
 	let relay = relay().await;
 	let shaper = if bufferbloat {
 		Some(
@@ -969,11 +993,29 @@ async fn redundant_failover(bufferbloat: bool) {
 	first.kill().await.unwrap();
 	second.kill().await.unwrap();
 	feeding.abort();
-	for mut export in exports {
+	let mut captured = Vec::new();
+	for (viewer, mut export) in exports.into_iter().enumerate() {
 		export.child.kill().await.unwrap();
 		let output = export.output.clone();
 		let arrivals = export.arrivals.clone();
 		let (status, errors) = export.wait().await;
+		std::fs::write(capture.join(format!("viewer-{viewer}.ts")), &*output.lock().unwrap()).unwrap();
+		let offsets: Vec<_> = arrivals
+			.lock()
+			.unwrap()
+			.iter()
+			.map(|(at, bytes)| (at.duration_since(started).as_nanos(), *bytes))
+			.collect();
+		std::fs::write(
+			capture.join(format!("viewer-{viewer}-arrivals.json")),
+			serde_json::to_vec_pretty(&offsets).unwrap(),
+		)
+		.unwrap();
+		std::fs::write(capture.join(format!("viewer-{viewer}-stderr.log")), &errors).unwrap();
+		std::fs::write(capture.join(format!("viewer-{viewer}-status.txt")), status.to_string()).unwrap();
+		captured.push((status, errors, output, arrivals));
+	}
+	for (status, errors, output, arrivals) in captured {
 		assert!(!status.success(), "test terminates the export");
 		assert!(!errors.contains("rewind"), "{errors}");
 		let output = output.lock().unwrap();

@@ -1485,6 +1485,7 @@ where
 				for (name, track) in &mut self.program.tracks {
 					track.release(name, &mut self.jitter, true)?;
 				}
+				tracing::debug!(target: "moq_mux::container::ts::handoff", phase = "commit-program", now = ?moq_clock::now(), old = self.program.id, new = ready.track.program, generation = ready.generation, pts = ?ready.item.frame.timestamp, key = ?ready.item.key, decode = ?ready.item.decode);
 				self.jitter.commit(ready)?;
 				break;
 			}
@@ -1694,6 +1695,7 @@ where
 		for pid in tally.units {
 			self.program.liveness.delivered(pid, 1);
 		}
+		tracing::debug!(target: "moq_mux::container::ts::handoff", phase = "output", now = ?moq_clock::now(), program = self.program.id, generation = self.program.generation, pcr = ?out.timestamp, bytes = out.payload.len(), keyframe = out.keyframe);
 		Some(out)
 	}
 
@@ -1838,6 +1840,7 @@ where
 				}
 			}
 			if self.program.id != self.active_program && !self.jitter.has_pending() && !self.jitter.is_committed() {
+				tracing::debug!(target: "moq_mux::container::ts::handoff", phase = "prepared", now = ?moq_clock::now(), program = self.program.id, old = self.active_program, tracks = self.program.tracks.len(), video_start = ?self.program.video_start);
 				self.jitter.start(
 					self.program.tracks.values().map(|track| track.key.clone()),
 					self.program.expected.clone(),
@@ -1883,6 +1886,7 @@ where
 			}
 			return Ok(());
 		}
+		tracing::debug!(target: "moq_mux::container::ts::handoff", phase = "follow-expired", now = ?moq_clock::now(), program = self.program.id, committed = self.jitter.is_committed());
 		self.program.retired = true;
 		self.follow_timer = None;
 		self.follow_until = None;
@@ -1911,6 +1915,7 @@ where
 			return Ok(());
 		}
 		let mut next = self.pending.take().expect("checked above");
+		tracing::debug!(target: "moq_mux::container::ts::handoff", phase = "adopt", now = ?moq_clock::now(), old = self.program.id, new = next.id, generation = ready.generation, old_pts = ?self.program.last_timestamp, new_pts = ?ready.item.frame.timestamp, new_key = ?ready.item.key);
 		let out = self
 			.program
 			.psi
@@ -2487,6 +2492,7 @@ where
 		catalog: S,
 		follow: Duration,
 	) -> Result<(), crate::Error> {
+		tracing::debug!(target: "moq_mux::container::ts::handoff", phase = "follow", now = ?moq_clock::now(), program = self.program.id, pending = ?self.pending.as_ref().map(|pending| pending.id), old_epoch = ?self.program.instance, new_epoch = ?broadcast.info().epoch, ?follow);
 		if self.pending.is_some() && self.program.instance.is_some() && broadcast.info().epoch == self.program.instance
 		{
 			self.cancel_pending();
