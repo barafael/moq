@@ -253,6 +253,11 @@ pub struct Config {
 	/// Draw the mouse cursor into captured frames. Screen/window/app sources
 	/// only; ignored by cameras. Defaults to `true`.
 	pub cursor: bool,
+	/// Wayland screens: restore the last portal grant, so a reopen skips the
+	/// desktop's picker, and ask the desktop to remember the choice. `false`
+	/// asks every time and remembers nothing. Ignored elsewhere. Defaults to
+	/// `true`.
+	pub restore: bool,
 }
 
 impl Default for Config {
@@ -263,6 +268,7 @@ impl Default for Config {
 			height: None,
 			framerate: None,
 			cursor: true,
+			restore: true,
 		}
 	}
 }

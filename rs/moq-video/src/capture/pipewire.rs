@@ -17,6 +17,8 @@
 //!   compositors that support persistence). The token is forgotten when the
 //!   compositor ends the stream (the user hit "stop sharing"), so a revoked
 //!   grant is asked for again rather than silently resumed.
+//!   With [`Config::restore`](super::Config::restore) off, nothing is kept or
+//!   replayed: every open asks.
 //! - Compositors only deliver frames on damage, so a static screen would starve
 //!   the encoder. A loop timer re-emits the last frame whenever a frame interval
 //!   passes without a fresh one.
@@ -74,7 +76,7 @@ pub(super) async fn open(config: &Config, device: Option<&str>) -> Result<Stream
 		tracing::debug!(%device, "portal screen capture ignores the device selector; the picker owns selection");
 	}
 
-	let (node_id, fd, session) = portal_negotiate(config.cursor).await?;
+	let (node_id, fd, session) = portal_negotiate(config.cursor, config.restore).await?;
 	start(
 		config,
 		Capture {
@@ -228,7 +230,9 @@ async fn start(config: &Config, capture: Capture, session: Option<SessionGuard>)
 /// Ask the ScreenCast portal for a monitor: create a session, (re)select the
 /// source, and start it, returning the PipeWire node to stream, the fd of the
 /// portal's PipeWire remote, and a guard that closes the session on drop.
-async fn portal_negotiate(cursor: bool) -> Result<(u32, OwnedFd, SessionGuard), Error> {
+/// With `restore`, the last grant's token is replayed and the new one kept;
+/// without, the desktop asks and remembers nothing.
+async fn portal_negotiate(cursor: bool, restore: bool) -> Result<(u32, OwnedFd, SessionGuard), Error> {
 	let proxy = Screencast::new().await.map_err(|e| err("screencast portal", e))?;
 	let session = proxy
 		.create_session(Default::default())
@@ -237,7 +241,11 @@ async fn portal_negotiate(cursor: bool) -> Result<(u32, OwnedFd, SessionGuard), 
 	let session = Arc::new(session);
 	let guard = SessionGuard::new(session.clone());
 
-	let restore = RESTORE_TOKEN.lock().unwrap().clone();
+	let (persist, token) = if restore {
+		(PersistMode::Application, RESTORE_TOKEN.lock().unwrap().clone())
+	} else {
+		(PersistMode::DoNot, None)
+	};
 	proxy
 		.select_sources(
 			&session,
@@ -249,8 +257,8 @@ async fn portal_negotiate(cursor: bool) -> Result<(u32, OwnedFd, SessionGuard), 
 				})
 				.set_sources(ashpd::enumflags2::BitFlags::from(SourceType::Monitor))
 				.set_multiple(false)
-				.set_persist_mode(PersistMode::Application)
-				.set_restore_token(restore.as_deref()),
+				.set_persist_mode(persist)
+				.set_restore_token(token.as_deref()),
 		)
 		.await
 		.map_err(|e| err("portal select sources", e))?;
@@ -263,7 +271,9 @@ async fn portal_negotiate(cursor: bool) -> Result<(u32, OwnedFd, SessionGuard), 
 		.map_err(|e| err("portal start", e))?
 		.response()
 		.map_err(|e| Error::PermissionDenied(format!("screen capture request: {e}")))?;
-	*RESTORE_TOKEN.lock().unwrap() = response.restore_token().map(str::to_string);
+	if restore {
+		*RESTORE_TOKEN.lock().unwrap() = response.restore_token().map(str::to_string);
+	}
 
 	let stream = response
 		.streams()
