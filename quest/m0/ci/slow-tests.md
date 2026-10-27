@@ -29,8 +29,9 @@ per-test baseline and after CPU, plus the runner wrapper and command. The wrappe
 system time, run under the normal `just rs test --workspace --exclude moq-net-fuzz
 --exclude moq-quic-fuzz` with zero retries. On a different machine, re-measure the
 baseline source (`6f6a3ae21432a3df74d4c432451f3909da339bee`) and the candidate with the
-same wrapper rather than comparing against these numbers. Unchanged tests vary a few
-percent between runs on a shared host, so credit only the tests a change touches.
+same wrapper rather than comparing against these numbers. Unchanged tests varied
+between runs on a shared host (moq-stats' `produce::tests` by up to 40%), so credit only
+the tests a change touches.
 
 ### Done so far
 
