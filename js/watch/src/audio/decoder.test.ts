@@ -154,12 +154,18 @@ let codecs = 0;
 let codecErrors: AudioDecoderInit["error"][] = [];
 // Thrown by the next `decode`, as WebCodecs does synchronously for a chunk it refuses.
 let decodeThrows: Error | undefined;
+let deferAudioOutput = false;
+let pendingAudio: (() => void)[] = [];
+let audioInputs: number[] = [];
 
 beforeEach(() => {
 	frameTimestamp = 0;
 	codecs = 0;
 	codecErrors = [];
 	decodeThrows = undefined;
+	deferAudioOutput = false;
+	pendingAudio = [];
+	audioInputs = [];
 	contexts = [];
 	worklets = [];
 	moduleLoaded = Promise.resolve();
@@ -179,12 +185,16 @@ beforeEach(() => {
 		}
 		reset() {
 			this.needsKey = true;
+			pendingAudio = [];
 		}
 		decode(chunk: { timestamp: number; type: EncodedAudioChunkType }) {
 			if (decodeThrows) throw decodeThrows;
 			if (this.needsKey && chunk.type !== "key") throw new DOMException("key chunk required", "DataError");
 			this.needsKey = false;
-			this.init.output(new FakeData(chunk.timestamp) as unknown as AudioData);
+			audioInputs.push(chunk.timestamp);
+			const emit = () => this.init.output(new FakeData(chunk.timestamp) as unknown as AudioData);
+			if (deferAudioOutput) pendingAudio.push(emit);
+			else emit();
 		}
 		close() {
 			this.state = "closed";
@@ -378,6 +388,40 @@ async function play(initial: Delay, buffered = false, cmaf = false) {
 			producer.close();
 		},
 	};
+}
+
+for (const cmaf of [false, true]) {
+	it(`a ${cmaf ? "CMAF" : "legacy"} gap releases accounting for codec outputs it discarded`, async () => {
+		const clock = new Manual();
+		const installed = clock.install();
+		deferAudioOutput = true;
+		const playback = await play(Milli(100), true, cmaf);
+		try {
+			for (let n = 0; n < 6; n++) {
+				playback.push({ ...frame(), group: n === 0 ? 0 : 1 });
+				await microtasks();
+			}
+			expect(audioInputs).toHaveLength(6);
+			expect(pendingAudio).toHaveLength(6);
+			expect(playback.inserted()).toHaveLength(0);
+			playback.push({ kind: "gap", timestamp: Micro(140_000), duration: Micro(20_000) });
+			await microtasks();
+			expect(pendingAudio).toHaveLength(0);
+			deferAudioOutput = false;
+			frameTimestamp = 160_000;
+			const resumed = frame();
+			playback.push({ ...resumed, group: 2 });
+			await microtasks();
+			expect(audioInputs).toHaveLength(7);
+			expect(playback.inserted()).toContain(resumed.frame.timestamp);
+			await playback.play(5);
+			expect(playback.sync.playing.peek()).toBe(true);
+		} finally {
+			playback.close();
+			await microtasks();
+			installed.close();
+		}
+	});
 }
 
 it("decodes an audio packet inside a group after a gap", async () => {

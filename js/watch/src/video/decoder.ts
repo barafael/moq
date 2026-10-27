@@ -32,6 +32,13 @@ import type { Source } from "./source";
 // The amount of time to wait before considering the video to be buffering.
 const BUFFERING = Milli(500);
 
+// The startup floor counts received media across holes, without counting the missing spans.
+function startupSpan(ranges: Container.BufferedRanges, first: Milli): { start: Milli; end: Milli } {
+	let duration = 0;
+	for (const range of ranges) duration += Math.max(0, range.end - Math.max(range.start, first));
+	return { start: first, end: Milli(first + duration) };
+}
+
 /** Signals the decoder reads. */
 export type DecoderInput = {
 	/** Whether to download the video track. Defaults to true; the parent may wire it from the renderer's output. */
@@ -157,8 +164,7 @@ export class Decoder {
 			const timestamp = effect.get(active.first);
 			if (timestamp === undefined) return null;
 			const ranges = effect.get(active.buffered);
-			const span = ranges.find((range) => range.start <= timestamp && range.end >= timestamp);
-			return span ? { ...span } : { start: timestamp, end: timestamp };
+			return startupSpan(ranges, timestamp);
 		});
 		this.#signals.cleanup(this.sync.register(target, startup));
 		this.#identity = this.#signals.computed((effect) => {
@@ -738,15 +744,17 @@ class DecoderTrack {
 	async #waitStartup(effect: Effect): Promise<void> {
 		// Some codecs need more input before their first output. Do not park that input
 		// behind a gate that needs the very picture the decoder has not produced yet.
-		if (this.first.peek() === undefined) return;
-		const span = this.#buffered.peek()[0];
-		if (!span || span.end - span.start < this.sync.out.delay.peek()) return;
+		const first = this.first.peek();
+		if (first === undefined) return;
+		const span = startupSpan(this.#buffered.peek(), first);
+		if (span.end - span.start < this.sync.out.delay.peek()) return;
 		const waiting = new Effect();
 		const refill = new Once<true>();
 		waiting.run((inner) => {
 			// An adaptive floor can rise while another track fills. Resume decoding to reach it,
 			// rather than waiting on a clock whose startup now needs more video.
-			if (span.end - span.start < inner.get(this.sync.out.delay)) refill.set(true);
+			const current = startupSpan(inner.get(this.#buffered), first);
+			if (current.end - current.start < inner.get(this.sync.out.delay)) refill.set(true);
 		});
 		try {
 			// Wait on the span's first picture, which is due the moment startup releases, so decoding

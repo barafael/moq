@@ -1070,6 +1070,46 @@ it("buffered video holds its poster until its own span reaches the floor", async
 	}
 });
 
+for (const kind of ["legacy", "cmaf"] as const) {
+	it(`${kind} bounds startup across disconnected ranges, then starts on the retained timeline`, async () => {
+		const clock = manualAt(0);
+		const reads: Read[] = [];
+		const playback = await guardedPlayback(kind, reads, [], false, 1000);
+		const audio = new Signal<{ start: Milli; end: Milli } | null>(null);
+		const remove = playback.sync.register(new Signal(Milli(100)), audio);
+		const reset = spyOn(playback.sync, "reset");
+		try {
+			playback.enabled.set(false);
+			await microtasks();
+			for (let group = 0; group < 10; group++) {
+				if (group) reads.push(gap);
+				reads.push(sample(group, group * 100_000), sample(group, group * 100_000 + 40_000, false));
+			}
+			playback.enabled.set(true);
+			await microtasks();
+			await clock.advance(0);
+			// Three received 40ms spans cover the 100ms floor; their holes count for nothing.
+			expect(playback.submitted).toEqual([0, 40_000, 100_000, 140_000, 200_000, 240_000]);
+			expect(playback.sync.playing.peek()).toBe(false);
+			expect(reset).not.toHaveBeenCalled();
+			audio.set({ start: Milli(0), end: Milli(100) });
+			await microtasks();
+			await clock.advance(0);
+			expect(playback.sync.playing.peek()).toBe(true);
+			expect(playback.submitted).toHaveLength(20);
+			await clock.advance(1000);
+			expect(playback.decoder.out.timestamp.peek()).toBe(Milli(940));
+			expect(reset).not.toHaveBeenCalled();
+		} finally {
+			remove();
+			reset.mockRestore();
+			playback.close();
+			await microtasks();
+			clock.installed.close();
+		}
+	});
+}
+
 it("bounds startup decoding while another track is missing and releases it on close", async () => {
 	const clock = manualAt(0);
 	const playback = await guardedPlayback("legacy", [], [], true, 1000);

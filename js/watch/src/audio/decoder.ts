@@ -512,9 +512,7 @@ export class Decoder {
 					if (!(await play(order.flush()))) return;
 					if (!next) break;
 					if (this.#onRead(next)) {
-						decoder.reset();
-						decoder.configure(decoderConfig);
-						order.reset();
+						this.#reprime(decoder, decoderConfig, order);
 					}
 					if (next.kind === "gap") this.#arrivals.write(gap(next));
 					continue;
@@ -601,9 +599,7 @@ export class Decoder {
 					if (!(await play(order.flush()))) return;
 					if (!next) break;
 					if (this.#onRead(next)) {
-						decoder.reset();
-						decoder.configure(decoderConfig);
-						order.reset();
+						this.#reprime(decoder, decoderConfig, order);
 					}
 					if (next.kind === "gap") this.#arrivals.write(gap(next));
 					continue;
@@ -639,14 +635,20 @@ export class Decoder {
 	): Promise<boolean> {
 		for (const read of reads) {
 			if (this.#onRead(read)) {
-				decoder.reset();
-				decoder.configure(config);
-				order.reset();
+				this.#reprime(decoder, config, order);
 			}
 			if (!order.admit(read)) continue;
 			if (!(await this.#decode(effect, decoder, read.frame))) return false;
 		}
 		return true;
+	}
+
+	// A reset discards queued codec output, so release its accounting without clearing retained PCM.
+	#reprime(decoder: AudioDecoder, config: AudioDecoderConfig, order: Order<FrameRead>): void {
+		decoder.reset();
+		this.#ring.peek()?.dropped();
+		decoder.configure(config);
+		order.reset();
 	}
 
 	// Decode one frame once backpressure admits it, reporting whether to keep going.
