@@ -797,6 +797,10 @@ fn run_loop(args: CaptureLoop) -> Result<(), Error> {
 		Kind::Screen => ("moq-screen", "Screen"),
 		Kind::Camera => ("moq-camera", "Camera"),
 	};
+	// Watches the producer's node: when it goes (the user stopped sharing from
+	// the compositor, the output or camera went away), the stream only pauses,
+	// so its removal is what ends the capture.
+	let registry = core.get_registry_rc().map_err(|e| err("pipewire registry", e))?;
 	let stream = pw::stream::StreamRc::new(
 		core,
 		name,
@@ -1181,8 +1185,44 @@ fn run_loop(args: CaptureLoop) -> Result<(), Error> {
 				}
 			}
 		})
+		// A removed buffer is freed: a lease still out on it must not be queued
+		// back, and the retained frame may point into it.
+		.remove_buffer({
+			let state = state.clone();
+			move |_, _, _| {
+				let mut state = state.borrow_mut();
+				state.generation = state.generation.wrapping_add(1);
+				state.last = None;
+			}
+		})
 		.register()
 		.map_err(|e| err("pipewire listener", e))?;
+
+	let _node_listener = registry
+		.add_listener_local()
+		.global_remove({
+			let mainloop = mainloop.downgrade();
+			let state = state.clone();
+			move |id| {
+				if id != node_id {
+					return;
+				}
+				// As for `Unconnected` above: the producer ended it, so a reopen
+				// asks again.
+				if kind == Kind::Screen {
+					*RESTORE_TOKEN.lock().unwrap() = None;
+				}
+				state.borrow_mut().terminal = Some(Error::SourceUnavailable(format!(
+					"the selected {} is no longer available",
+					role.to_lowercase()
+				)));
+				tracing::debug!(?kind, node = id, "capture node removed");
+				if let Some(mainloop) = mainloop.upgrade() {
+					mainloop.quit();
+				}
+			}
+		})
+		.register();
 
 	// DMA-BUF formats come first so PipeWire prefers them. Each has a matching
 	// shared-memory offer without a modifier as the required fallback.
