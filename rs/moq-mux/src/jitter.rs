@@ -183,7 +183,7 @@ pub(crate) struct Buffer<K, T> {
 	/// of its decode time a source sends each track belongs to its mux, not to one generation,
 	/// so a new generation keeps the track sent latest at the delay even before that track
 	/// reaches it, and a step that does not hear that track still measures against it.
-	leads: BTreeMap<K, Lead>,
+	leads: BTreeMap<K, VecDeque<f64>>,
 	timer: Option<Pin<Box<Sleep>>>,
 	dropped: u64,
 	trimmed: u64,
@@ -207,25 +207,6 @@ const RATE_WINDOW: f64 = 600.0;
 /// How many steering steps a track's lead is the median of: a window's worth, so a spell of
 /// queueing shorter than half of it does not move the lead either.
 const LEADS: usize = (RATE_WINDOW / STEER.as_secs_f64()) as usize;
-/// A track's rolling lead, queried between steering updates without re-sorting its samples.
-#[derive(Default)]
-struct Lead {
-	samples: VecDeque<f64>,
-	median: f64,
-}
-
-impl Lead {
-	fn push(&mut self, value: f64) {
-		self.samples.push_back(value);
-		if self.samples.len() > LEADS {
-			self.samples.pop_front();
-		}
-		let mut sorted: Vec<_> = self.samples.iter().copied().collect();
-		sorted.sort_by(f64::total_cmp);
-		self.median = sorted[sorted.len() / 2];
-	}
-}
-
 /// How quickly the clock pulls the slack back to the delay: it closes the gap over this
 /// many seconds, or slower where the slew limit could not stop it in time.
 const RESPONSE: f64 = 600.0;
@@ -777,7 +758,11 @@ impl<K: Ord + Clone, T> Buffer<K, T> {
 			base = unheard + (phase - placed);
 		}
 		for (key, (track, _)) in &floor.tracks {
-			self.leads.entry(key.clone()).or_default().push(track - phase + base);
+			let leads = self.leads.entry(key.clone()).or_default();
+			leads.push_back(track - phase + base);
+			if leads.len() > LEADS {
+				leads.pop_front();
+			}
 		}
 		self.steer.steered += elapsed * clock.drift;
 		let window = |series: &mut VecDeque<(f64, f64)>| {
@@ -927,7 +912,9 @@ impl<K: Ord + Clone, T> Buffer<K, T> {
 	/// How much more slack a track has than the track sent latest, in seconds: the median of
 	/// its last [`LEADS`], so a spell of queueing does not move it.
 	fn lead(&self, key: &K) -> Option<f64> {
-		Some(self.leads.get(key)?.median)
+		let mut leads: Vec<f64> = self.leads.get(key)?.iter().copied().collect();
+		leads.sort_by(f64::total_cmp);
+		Some(leads[leads.len() / 2])
 	}
 
 	/// When `acquire` ends: a track not yet heard from may be the one sent latest, so until
@@ -1179,24 +1166,6 @@ fn depth(points: &VecDeque<(f64, f64)>, slope: f64, at: f64, now: f64) -> f64 {
 #[cfg(test)]
 mod tests {
 	use super::*;
-
-	/// The cached upper median changes with the rolling window, including when its old
-	/// majority expires; reads between updates keep the same result.
-	#[test]
-	fn a_lead_follows_its_rolling_window() {
-		let mut lead = Lead::default();
-		for value in 1..=LEADS {
-			lead.push(value as f64);
-		}
-		assert_eq!(lead.median, (LEADS / 2 + 1) as f64);
-		for _ in 0..LEADS / 2 {
-			lead.push(-100.0);
-		}
-		assert_eq!(lead.median, (LEADS / 2 + 1) as f64);
-		lead.push(-100.0);
-		assert_eq!(lead.median, -100.0);
-		assert_eq!(lead.samples.len(), LEADS);
-	}
 
 	const DELAY: Duration = Duration::from_millis(100);
 

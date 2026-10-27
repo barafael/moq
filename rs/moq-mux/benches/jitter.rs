@@ -12,22 +12,21 @@ use moq_net::Timestamp;
 )]
 mod jitter;
 
-/// Every track sends at its frame rate, for as many two-second steering steps as fill the
-/// rate window with `floors`, each step measuring every track heard.
-async fn steer(tracks: u16, floors: u64, frames_per_second: u64) -> u64 {
+/// Every track sends a frame a second as it decodes, for as many two-second steering steps as
+/// fill the rate window with `floors`, each step measuring every track heard.
+async fn steer(tracks: u16, floors: u64) -> u64 {
 	let start = moq_clock::now();
 	let mut buffer = jitter::Buffer::new(Duration::from_millis(500));
 	buffer.expect(1..=tracks);
 	let waiter = kio::Waiter::noop();
-	for frame in 0..floors * 2 * frames_per_second {
-		let elapsed = Duration::from_secs_f64(frame as f64 / frames_per_second as f64);
-		let at = start + elapsed;
+	for second in 0..floors * 2 {
+		let at = start + Duration::from_secs(second);
 		tokio::time::advance(at.saturating_duration_since(moq_clock::now())).await;
 		for track in 1..=tracks {
 			let arrival = jitter::Arrival {
 				arrived: at,
 				read: at,
-				decode: Timestamp::from_micros(elapsed.as_micros() as u64).unwrap().into(),
+				decode: Timestamp::from_millis(second * 1_000).unwrap().into(),
 				restart: 0,
 				skip: 0,
 				cut: 0,
@@ -55,29 +54,7 @@ fn steering(c: &mut Criterion) {
 	for tracks in [1u16, 4, 16, 64] {
 		for floors in [10u64, 100, 300] {
 			group.bench_function(BenchmarkId::new(tracks.to_string(), floors), |b| {
-				b.iter(|| assert_eq!(runtime.block_on(steer(tracks, floors, 1)), 0));
-			});
-		}
-	}
-	group.finish();
-}
-
-/// Frame rates multiply lead queries between the same two-second steering updates. Keep a
-/// full rate window and sweep track count independently of the number of frames it carries.
-fn frame_rate(c: &mut Criterion) {
-	let runtime = tokio::runtime::Builder::new_current_thread()
-		.enable_time()
-		.start_paused(true)
-		.build()
-		.unwrap();
-	let mut group = c.benchmark_group("jitter_frame_rate");
-	group.measurement_time(Duration::from_secs(1));
-	group.warm_up_time(Duration::from_millis(200));
-	group.sample_size(10);
-	for tracks in [1u16, 4, 16] {
-		for frames_per_second in [1u64, 25, 100] {
-			group.bench_function(BenchmarkId::new(tracks.to_string(), frames_per_second), |b| {
-				b.iter(|| assert_eq!(runtime.block_on(steer(tracks, 300, frames_per_second)), 0));
+				b.iter(|| assert_eq!(runtime.block_on(steer(tracks, floors)), 0));
 			});
 		}
 	}
@@ -132,5 +109,5 @@ fn acquisition(c: &mut Criterion) {
 	group.finish();
 }
 
-criterion_group!(benches, steering, frame_rate, acquisition);
+criterion_group!(benches, steering, acquisition);
 criterion_main!(benches);
