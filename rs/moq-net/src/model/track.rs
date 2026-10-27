@@ -2876,6 +2876,7 @@ impl Producer {
 	}
 
 	/// A received copy starts at its wire offset before any reader can see it.
+	#[cfg(feature = "async")]
 	pub(crate) fn create_group_at(&self, group: group::Info, start: u64) -> Result<group::Producer> {
 		self.create_group_inner(group, Some(start))
 	}

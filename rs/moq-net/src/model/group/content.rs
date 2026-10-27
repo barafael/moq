@@ -284,14 +284,14 @@ impl Contents {
 }
 
 /// The actual weak-index/strong-frame ownership used by canonical cache accounting.
-#[cfg(any(test, feature = "fuzz"))]
+#[cfg(all(feature = "async", any(test, feature = "fuzz")))]
 pub(crate) struct StorageBench {
 	content: Arc<Content>,
 	_owners: Vec<Vec<frame::Shared>>,
 	_charge: cache::Charge,
 }
 
-#[cfg(any(test, feature = "fuzz"))]
+#[cfg(all(feature = "async", any(test, feature = "fuzz")))]
 impl StorageBench {
 	pub(crate) fn new(frames: usize, views: usize) -> Self {
 		let account = cache::Track::new(cache::Pool::unbounded(), Default::default(), kio::Weak::new());

@@ -20,7 +20,7 @@ use crate::cache;
 use crate::frame::{self, Cached, FrameBuf, Payload};
 use crate::{Timescale, stats, track};
 use bytes::Bytes;
-#[cfg(any(test, feature = "fuzz"))]
+#[cfg(all(feature = "async", any(test, feature = "fuzz")))]
 pub(crate) use content::StorageBench;
 pub(super) use content::{Content, Contents, Key as ContentKey};
 use content::{Input, Spec};
@@ -5539,7 +5539,6 @@ mod test {
 	}
 
 	/// The slices a plain read up to local frame `last` takes under the group's guard.
-	#[cfg(feature = "async")]
 	fn take_slices(group: &Producer, last: usize) -> Inflate {
 		let state = group.handle.state.read();
 		state.inflate(state.flate.as_ref().unwrap(), last).unwrap()
