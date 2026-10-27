@@ -31,7 +31,9 @@ impl<T> Chunk<T> {
 
 impl<T> Default for Slots<T> {
 	fn default() -> Self {
-		Self { chunks: VecDeque::new() }
+		Self {
+			chunks: VecDeque::new(),
+		}
 	}
 }
 
@@ -109,7 +111,10 @@ impl<T> Slots<T> {
 		};
 		let start = match self.chunks.front() {
 			Some(chunk) if low < chunk.offset + CHUNK as u64 => 0,
-			_ => self.chunks.partition_point(|chunk| chunk.offset <= low).saturating_sub(1),
+			_ => self
+				.chunks
+				.partition_point(|chunk| chunk.offset <= low)
+				.saturating_sub(1),
 		};
 		self.chunks
 			.range(start..)
@@ -217,7 +222,10 @@ mod tests {
 		}
 		assert_eq!(slots.last(), Some(30 * N));
 		assert_eq!(entries(&slots, 5..=10 * N), vec![(10, 10), (10 * N, 10 * N)]);
-		assert_eq!(entries(&slots, 10 * N + 1..), vec![(10 * N + 3, 10 * N + 3), (30 * N, 30 * N)]);
+		assert_eq!(
+			entries(&slots, 10 * N + 1..),
+			vec![(10 * N + 3, 10 * N + 3), (30 * N, 30 * N)]
+		);
 		assert_eq!(entries(&slots, 11..10 * N), vec![]);
 		assert_eq!(entries(&slots, 31 * N..), vec![]);
 	}
@@ -244,7 +252,10 @@ mod tests {
 		}
 		assert_eq!(slots.get(4), Some(&1004));
 		let values: Vec<_> = slots.into_values().collect();
-		assert_eq!(values, expected[2..].iter().map(|&(pn, _)| pn + 1000).collect::<Vec<_>>());
+		assert_eq!(
+			values,
+			expected[2..].iter().map(|&(pn, _)| pn + 1000).collect::<Vec<_>>()
+		);
 	}
 
 	#[test]

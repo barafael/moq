@@ -210,10 +210,7 @@ mod tests {
 		// Acknowledged, so the next ACK-only packet takes its place.
 		m.remove(2);
 		assert!(m.insert(MAX_ACK_ONLY as u64 + 2, packet(0)).is_none());
-		assert_eq!(
-			m.range(..).filter(|(_, p)| !p.ack_eliciting).count(),
-			MAX_ACK_ONLY
-		);
+		assert_eq!(m.range(..).filter(|(_, p)| !p.ack_eliciting).count(), MAX_ACK_ONLY);
 		assert!(m.get(3).is_some());
 		assert!(m.has_in_flight());
 		m.remove(1);
@@ -241,18 +238,11 @@ mod tests {
 		for pn in (10..300).filter(|pn| pn % 7 != 0) {
 			m.insert(pn, eliciting(pn as u16));
 		}
-		let expect = |r: std::ops::Range<u64>| {
-			r.filter(|pn| pn % 7 != 0)
-				.map(|pn| (pn, pn as u16))
-				.collect::<Vec<_>>()
-		};
+		let expect = |r: std::ops::Range<u64>| r.filter(|pn| pn % 7 != 0).map(|pn| (pn, pn as u16)).collect::<Vec<_>>();
 		assert_eq!(range_of(&m, ..), expect(10..300));
 		assert_eq!(range_of(&m, 12..15), expect(12..15));
 		assert_eq!(range_of(&m, 70..=140), expect(70..141));
-		assert_eq!(
-			range_of(&m, (Bound::Excluded(200), Bound::Unbounded)),
-			expect(201..300)
-		);
+		assert_eq!(range_of(&m, (Bound::Excluded(200), Bound::Unbounded)), expect(201..300));
 		// Out-of-window ranges are empty, not a panic.
 		assert_eq!(range_of(&m, 0..5), vec![]);
 		assert_eq!(range_of(&m, 400..500), vec![]);

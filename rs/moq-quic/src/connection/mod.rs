@@ -1700,10 +1700,7 @@ impl Connection {
 		}
 
 		for range in ack.iter() {
-			let spurious_losses: Vec<u64> = lost_packets
-				.range(range.clone())
-				.map(|(pn, _info)| pn)
-				.collect();
+			let spurious_losses: Vec<u64> = lost_packets.range(range.clone()).map(|(pn, _info)| pn).collect();
 
 			for pn in spurious_losses {
 				lost_packets.remove(pn);
@@ -3754,6 +3751,14 @@ impl Connection {
 	#[cfg(test)]
 	pub(crate) fn bytes_in_flight(&self) -> u64 {
 		self.path.in_flight.bytes
+	}
+
+	/// Forget the newest packet sent in the Data space, as making room for an ACK-only packet does.
+	#[cfg(test)]
+	pub(crate) fn forget_newest_sent_packet(&mut self) {
+		let sent = &mut self.spaces[SpaceId::Data].sent_packets;
+		let packet = sent.remove(sent.last().expect("a packet sent")).unwrap();
+		self.path.remove_in_flight(&packet);
 	}
 
 	/// Number of bytes worth of non-ack-only packets that may be sent

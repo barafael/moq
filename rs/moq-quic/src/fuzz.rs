@@ -32,10 +32,10 @@ use crate::{
 	transport_parameters::{PreferredAddress, TransportParameters},
 };
 
-pub use connection::connection;
-pub use plaintext::Plaintext;
 #[cfg(feature = "fuzz")]
 pub use crate::connection::BenchSentPackets as SentPackets;
+pub use connection::connection;
+pub use plaintext::Plaintext;
 
 /// One fuzz target body: it returns whether the input got past the first parse, which
 /// is what [`seeds`] is checked against.
