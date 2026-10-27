@@ -1217,23 +1217,21 @@ fn bench_parked_read(c: &mut Criterion) {
 struct Sparse {
 	_broadcast: broadcast::Producer,
 	track: track::Producer,
-	subs: Vec<track::Subscriber>,
+	sub: track::Subscriber,
 	next: u64,
 	missing: u64,
 	timed: bool,
 }
 
 impl Sparse {
-	fn new(info: track::Info, gaps: u64, readers: usize) -> Self {
+	fn new(info: track::Info, gaps: u64) -> Self {
 		let broadcast = broadcast::Info::default().produce();
 		let track = broadcast.create_track("bench", info.clone()).unwrap();
-		let subs = (0..readers)
-			.map(|_| track.subscribe(track::Subscription::default().with_max_delay(Duration::from_secs(3600))))
-			.collect();
+		let sub = track.subscribe(track::Subscription::default().with_max_delay(Duration::from_secs(3600)));
 		let mut sparse = Self {
 			_broadcast: broadcast,
 			track,
-			subs,
+			sub,
 			next: gaps * 2,
 			missing: 1,
 			timed: info.timescale.is_some(),
@@ -1254,12 +1252,10 @@ impl Sparse {
 		let mut group = self.track.create_group(moq_net::group::Info { sequence }).unwrap();
 		group.write_frame(timestamp, Bytes::from_static(b"x")).unwrap();
 		group.finish().unwrap();
-		for sub in &mut self.subs {
-			let Poll::Ready(Ok(Some(read))) = sub.poll_recv_group(&kio::Waiter::noop()) else {
-				panic!("the group is cached");
-			};
-			black_box(read);
-		}
+		let Poll::Ready(Ok(Some(read))) = self.sub.poll_recv_group(&kio::Waiter::noop()) else {
+			panic!("the group is cached");
+		};
+		black_box(read);
 	}
 
 	// A profiling boundary excludes filling the initial sparse backlog.
@@ -1283,7 +1279,7 @@ fn bench_sparse_read(c: &mut Criterion) {
 		for gaps in [16u64, 256, 4096] {
 			group.bench_function(BenchmarkId::new(name, gaps), |b| {
 				b.iter_custom(|iterations| {
-					let mut sparse = Sparse::new(info.clone(), gaps, 1);
+					let mut sparse = Sparse::new(info.clone(), gaps);
 					let start = WallInstant::now();
 					for _ in 0..iterations {
 						sparse.read_pair();
@@ -1291,30 +1287,6 @@ fn bench_sparse_read(c: &mut Criterion) {
 					start.elapsed()
 				});
 			});
-		}
-	}
-	group.finish();
-}
-
-/// Several subscribers share the same sparse track: growth across both axes exposes
-/// per-cursor walks multiplied by the audience, without including setup in the sample.
-fn bench_sparse_subscribers(c: &mut Criterion) {
-	let mut group = c.benchmark_group("track_sparse_subscribers");
-	for (name, info) in [("untimed", track::Info::default()), ("timed", timed())] {
-		for gaps in [16u64, 256] {
-			for readers in [1usize, 4, 16] {
-				group.throughput(Throughput::Elements(2 * readers as u64));
-				group.bench_function(BenchmarkId::new(format!("{name}/{gaps}"), readers), |b| {
-					b.iter_custom(|iterations| {
-						let mut sparse = Sparse::new(info.clone(), gaps, readers);
-						let start = WallInstant::now();
-						for _ in 0..iterations {
-							sparse.read_pair();
-						}
-						start.elapsed()
-					});
-				});
-			}
 		}
 	}
 	group.finish();
@@ -1329,8 +1301,9 @@ struct Expiring {
 
 impl Expiring {
 	fn new(gaps: u64) -> Self {
-		let mut sparse = Sparse::new(track::Info::default(), 0, 1);
-		sparse.subs[0]
+		let mut sparse = Sparse::new(track::Info::default(), 0);
+		sparse
+			.sub
 			.update(track::Subscription::default().with_max_delay(Duration::from_millis(gaps)))
 			.unwrap();
 		let pool = sparse._broadcast.info().pool.clone();
@@ -1967,7 +1940,6 @@ criterion_group!(
 	bench_datagram_pressure,
 	bench_parked_read,
 	bench_sparse_read,
-	bench_sparse_subscribers,
 	bench_sparse_expire,
 	bench_gap_flush,
 	bench_wall,

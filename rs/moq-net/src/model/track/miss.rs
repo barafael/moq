@@ -289,15 +289,24 @@ impl Misses {
 		}
 		// What left the span is forgotten, so it is judged afresh if it comes back, and a
 		// verdict behind the reader's floor stops costing it memory.
-		intersect(&mut self.judged, &span);
-		intersect(&mut self.refused, &span);
-		intersect(&mut self.given_up, &span);
-		let mut candidates: RangeSet<u64> = span.iter().flat_map(|run| self.judged.gaps(run)).collect();
+		let clip = |set: &RangeSet<u64>| -> RangeSet<u64> {
+			set.iter()
+				.flat_map(|run| {
+					span.overlapping(run)
+						.map(move |s| s.start.max(run.start)..s.end.min(run.end))
+				})
+				.collect()
+		};
+		let judged = clip(&self.judged);
+		self.refused = clip(&self.refused);
+		self.given_up = clip(&self.given_up);
+		let mut candidates: RangeSet<u64> = span.iter().flat_map(|run| judged.gaps(run)).collect();
 		for run in std::mem::take(&mut self.deferred).iter() {
 			for s in span.overlapping(run) {
 				candidates.insert(s.start.max(run.start)..s.end.min(run.end));
 			}
 		}
+		self.judged = judged;
 		for run in candidates.iter() {
 			self.judged.insert(run.clone());
 		}
@@ -563,23 +572,6 @@ pub(super) fn holes(state: &TrackState, run: ops::Range<u64>) -> Vec<ops::Range<
 	holes
 }
 
-/// Keep verdicts inside the span, without rebuilding an already-contained set as its
-/// reader's window grows. Both ends must fit in one span run, so holes still clip.
-fn intersect(set: &mut RangeSet<u64>, span: &RangeSet<u64>) {
-	let Some(first) = set.first() else { return };
-	let last = set.last().expect("the set is nonempty");
-	if span.get(&first.start).is_some_and(|cover| last.end <= cover.end) {
-		return;
-	}
-	*set = set
-		.iter()
-		.flat_map(|run| {
-			span.overlapping(run)
-				.map(move |s| s.start.max(run.start)..s.end.min(run.end))
-		})
-		.collect();
-}
-
 /// The parts of `run` at or above `from` inside `admitted`.
 fn clip(run: ops::Range<u64>, from: u64, admitted: &RangeInclusiveSet<u64>) -> Vec<ops::Range<u64>> {
 	let run = run.start.max(from)..run.end;
@@ -600,24 +592,5 @@ fn looser(ours: Option<Duration>, asked: Option<Duration>) -> bool {
 		(Some(asked), Some(ours)) => ours > asked,
 		(Some(_), None) => true,
 		(None, _) => false,
-	}
-}
-
-#[cfg(test)]
-mod tests {
-	use super::*;
-
-	#[test]
-	fn verdict_intersection_keeps_holes_and_exclusive_ends() {
-		let mut set: RangeSet<_> = [1..4, 7..10].into_iter().collect();
-		intersect(&mut set, &std::iter::once(0..11).collect());
-		assert_eq!(set.iter().cloned().collect::<Vec<_>>(), [1..4, 7..10]);
-		// Covering both endpoints in different runs cannot take the containment path.
-		intersect(&mut set, &[1..2, 3..8, 9..10].into_iter().collect());
-		assert_eq!(set.iter().cloned().collect::<Vec<_>>(), [1..2, 3..4, 7..8, 9..10]);
-		intersect(&mut set, &[2..3, 8..9].into_iter().collect());
-		assert!(set.is_empty(), "touching exclusive ends do not overlap");
-		intersect(&mut set, &RangeSet::new());
-		assert!(set.is_empty());
 	}
 }
