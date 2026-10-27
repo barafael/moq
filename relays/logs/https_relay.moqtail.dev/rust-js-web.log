@@ -1,19 +1,23 @@
 [page] negotiated protocol: moqt-18
 [page] subscribe_namespace written: requestId=0
-[page] announced: broadcast=moqtail/testsrc active=true
-[page] announced: broadcast=moqtail/ch02 active=true
-[page] announced: broadcast=moqtail/ch07 active=true
-[page] announced: broadcast=moqtail/ch05 active=true
-[page] announced: broadcast=moqtail/ch01 active=true
-[page] announced: broadcast=moqtail/ch06 active=true
-[page] announced: broadcast=smoke-rust-5068-31710.hang active=true
-[page] subscribe start: id=2 broadcast=smoke-rust-5068-31710.hang track=catalog.json
-[page] announced: broadcast=moqtail/ch03 active=true
-[page] announced: broadcast=moqtail/ch00 active=true
 [page] announced: broadcast=moqtail/ch04 active=true
-[page] subscribe written: id=2 broadcast=smoke-rust-5068-31710.hang track=catalog.json
-[page] subscribe error: id=2 broadcast=smoke-rust-5068-31710.hang track=catalog.json error=subscribe timed out after 10000ms waiting for SUBSCRIBE_OK (browser stream limit reached?)
-[page] catalog subscription ended smoke-rust-5068-31710.hang Stream: subscribe timed out after 10000ms waiting for SUBSCRIBE_OK (browser stream limit reached?)
-    at Ue (http://localhost:34967/assets/index-Dt-K0rwx.js:1:15201)
-    at #b (http://localhost:34967/assets/index-Dt-K0rwx.js:1:218948)
-decoded 0 frames from smoke-rust-5068-31710.hang (vite)
+[page] announced: broadcast=moqtail/ch07 active=true
+[page] announced: broadcast=moqtail/ch06 active=true
+[page] announced: broadcast=moqtail/ch01 active=true
+[page] announced: broadcast=moqtail/ch05 active=true
+[page] announced: broadcast=moqtail/ch02 active=true
+[page] announced: broadcast=moqtail/testsrc active=true
+[page] announced: broadcast=moqtail/ch03 active=true
+[page] announced: broadcast=smoke-rust-5098-20149.hang active=true
+[page] subscribe start: id=2 broadcast=smoke-rust-5098-20149.hang track=catalog.json
+[page] announced: broadcast=moqtail/ch00 active=true
+[page] subscribe written: id=2 broadcast=smoke-rust-5098-20149.hang track=catalog.json
+[page] subscribe ok: id=2 broadcast=smoke-rust-5098-20149.hang track=catalog.json
+[page] received catalog hang smoke-rust-5098-20149.hang {video: Object, audio: Object, archive: Object, clock: Object}
+[page] subscribe start: id=4 broadcast=smoke-rust-5098-20149.hang track=0.avc3
+[page] subscribe written: id=4 broadcast=smoke-rust-5098-20149.hang track=0.avc3
+[page] subscribe ok: id=4 broadcast=smoke-rust-5098-20149.hang track=0.avc3
+[page] dropping a group with no head: alias=8 group=2
+[page] spawn error DataError: Failed to execute 'decode' on 'VideoDecoder': A key frame is required after configure() or flush(). If you're using AVC formatted H.264 you must fill out the description field in the VideoDecoderConfig.
+    at http://localhost:36109/assets/index-Dt-K0rwx.js:782:10680
+decoded 1 frames from smoke-rust-5098-20149.hang (vite)
