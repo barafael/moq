@@ -651,7 +651,8 @@ class DecoderTrack {
 				latest = next.group;
 				this.#resetAtKeyframe(decoder, frame.keyframe);
 				decoder.decode(chunk);
-				if (!this.sync.playing.peek()) await this.#waitStartup(effect);
+				if (!this.sync.playing.peek())
+					await this.#waitStartup(effect, Milli.fromMicro(frame.timestamp as Micro));
 			}
 		});
 	}
@@ -734,32 +735,38 @@ class DecoderTrack {
 						timestamp: frame.timestamp,
 					}),
 				);
-				if (!this.sync.playing.peek()) await this.#waitStartup(effect);
+				if (!this.sync.playing.peek()) await this.#waitStartup(effect, Milli.fromMicro(frame.timestamp));
 			}
 		});
 	}
 
-	// Once this track has filled its floor, leave further media encoded upstream while the other
-	// track fills. Otherwise a missing audio track could retain unbounded decoded GPU frames.
-	async #waitStartup(effect: Effect): Promise<void> {
+	// Decoded pictures park until startup releases, so leave further media encoded upstream once this
+	// track covers its floor, or once `timestamp` sits the max delay past the opening picture: the
+	// most any held frame may lead the playhead, which startup anchors there. Holes keep coverage
+	// short without bound, so only the second limit bounds the parked pictures.
+	async #waitStartup(effect: Effect, timestamp: Milli): Promise<void> {
 		// Some codecs need more input before their first output. Do not park that input
 		// behind a gate that needs the very picture the decoder has not produced yet.
 		const first = this.first.peek();
 		if (first === undefined) return;
-		const span = startupSpan(this.#buffered.peek(), first);
-		if (span.end - span.start < this.sync.out.delay.peek()) return;
+		const filled = (get: <T>(signal: Getter<T>) => T) => {
+			const span = startupSpan(get(this.#buffered), first);
+			return (
+				span.end - span.start >= get(this.sync.out.delay) || timestamp - first >= get(this.sync.out.maxDelay)
+			);
+		};
+		if (!filled((signal) => signal.peek())) return;
 		const waiting = new Effect();
 		const refill = new Once<true>();
 		waiting.run((inner) => {
 			// An adaptive floor can rise while another track fills. Resume decoding to reach it,
 			// rather than waiting on a clock whose startup now needs more video.
-			const current = startupSpan(inner.get(this.#buffered), first);
-			if (current.end - current.start < inner.get(this.sync.out.delay)) refill.set(true);
+			if (!filled((signal) => inner.get(signal))) refill.set(true);
 		});
 		try {
-			// Wait on the span's first picture, which is due the moment startup releases, so decoding
+			// Wait on the first picture, which is due the moment startup releases, so decoding
 			// resumes with the whole floor still ahead instead of once it has played out.
-			await effect.race(refill, this.sync.wait(span.start, waiting.abort));
+			await effect.race(refill, this.sync.wait(first, waiting.abort));
 		} finally {
 			waiting.close();
 		}

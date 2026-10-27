@@ -1109,6 +1109,34 @@ for (const kind of ["legacy", "cmaf"] as const) {
 	});
 }
 
+// Single-picture groups split by holes never build a received span, so coverage alone never stops
+// startup decoding. Parked pictures must stay within the max delay of the opening one instead.
+for (const kind of ["legacy", "cmaf"] as const) {
+	it(`${kind} bounds startup pictures by the max delay when holes keep coverage empty`, async () => {
+		const clock = manualAt(0);
+		const reads: Read[] = [];
+		for (let group = 0; group < 64; group++) {
+			if (group) reads.push(gap);
+			reads.push(sample(group * 2, group * 40_000));
+		}
+		const playback = await guardedPlayback(kind, reads, [], false, 1000);
+		const remove = playback.sync.register(new Signal(Milli(100)), new Signal(null));
+		try {
+			await microtasks();
+			await clock.advance(0);
+			// The 1100ms max delay holds the opening picture through the first one at or past it.
+			expect(playback.submitted).toHaveLength(29);
+			expect(playback.submitted.at(-1)).toBe(1_120_000);
+			expect(playback.sync.playing.peek()).toBe(false);
+		} finally {
+			remove();
+			playback.close();
+			await microtasks();
+			clock.installed.close();
+		}
+	});
+}
+
 it("bounds startup decoding while another track is missing and releases it on close", async () => {
 	const clock = manualAt(0);
 	const playback = await guardedPlayback("legacy", [], [], true, 1000);
