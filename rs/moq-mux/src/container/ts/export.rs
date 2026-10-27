@@ -1432,7 +1432,18 @@ where
 		}
 		if self.pending.is_some() {
 			loop {
-				self.prepare_pending(waiter)?;
+				if let Err(err) = self.prepare_pending(waiter) {
+					// A replacement that leaves before it commits is no switch: the old program
+					// plays on, and a later replacement gets its own follow window.
+					if self.jitter.is_committed() || self.program.retired || !super::follower::left(&err) {
+						return Poll::Ready(Err(err));
+					}
+					tracing::warn!(%err, "replacement left before it went out, keeping the old program");
+					self.cancel_pending();
+					self.follow_until = None;
+					self.follow_timer = None;
+					break;
+				}
 				self.stop_old(waiter)?;
 				let Poll::Ready(ready) = self.jitter.poll_pending(waiter) else {
 					break;

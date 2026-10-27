@@ -204,6 +204,9 @@ impl<K: Ord + Clone, T> Buffer<K, T> {
 
 	/// The new program is emittable. Keep all old deadlines and queues until adoption.
 	pub fn commit(&mut self, ready: Ready<K, T>) -> Result<(), moq_net::TimeOverflow> {
+		// Nothing more of the old publisher is read, and only the incoming engine is polled from
+		// here, so a timeline restart it is still acquiring anchors on what it holds now.
+		self.active.acquired();
 		let Handoff::Pending(Pending {
 			keys,
 			mut engine,
@@ -1595,6 +1598,31 @@ mod tests {
 		assert_eq!((next.item, next.generation), ("C", 1));
 		buffer.adopted();
 		assert_eq!(buffer.reporting().dropped(), 0);
+	}
+
+	/// A restart the old publisher is still acquiring at commit goes out before the replacement.
+	#[moq_clock::test]
+	async fn a_commit_drains_the_old_publishers_acquiring_restart() {
+		let start = moq_clock::now();
+		let delay = Duration::from_millis(500);
+		let mut buffer = Buffer::new(delay);
+		buffer.push(0u16, arrival(start, 0, "A0")).unwrap();
+		moq_clock::sleep(delay).await;
+		assert_eq!(released(&mut buffer), [("A0", 0)]);
+		buffer.start([1], [1]);
+		buffer.push(1, arrival(moq_clock::now(), 10_000, "B")).unwrap();
+		moq_clock::sleep(Duration::from_millis(10)).await;
+		buffer
+			.push(0, after(1, arrival(moq_clock::now(), 5_000, "A restart")))
+			.unwrap();
+		moq_clock::sleep(delay - Duration::from_millis(10)).await;
+		let Poll::Ready(first) = buffer.poll_pending(&kio::Waiter::noop()) else {
+			panic!("B ready");
+		};
+		// A's acquisition has 10 ms left to run, so only the commit can settle it.
+		buffer.commit(first).unwrap();
+		moq_clock::sleep(Duration::from_millis(10)).await;
+		assert_eq!(released(&mut buffer), [("A restart", 1), ("B", 2)]);
 	}
 
 	#[moq_clock::test]
