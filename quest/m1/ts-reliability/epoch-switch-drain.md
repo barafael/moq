@@ -38,163 +38,36 @@ Decided 2026-10-26 (maintainer, importing
   the legs' timestamps; that is the cross-importer alignment dropped on
   2026-10-19.
 - The redundant failover integration test in
-  `rs/moq-cli/tests/integration/export.rs` prints each switch's output gap
-  without asserting it. Assert that a switch away from a healthy leg leaves
-  no gap, behind a bufferbloat impairment.
+  `rs/moq-cli/tests/integration/export.rs` asserts that a switch away from a
+  healthy leg adds no output gap when the replacement is usable within the
+  follow, which the unimpaired run shows. Behind its bufferbloat impairment it
+  asserts the marked switches only (see 2026-10-27).
 - Fix inline: `doc/setup/redundancy.md` and `doc/bin/cli.md` say the switch
   is not hitless and that starting a backup causes it; say what a switch now
   costs.
 
-### Implementation checkpoint (2026-10-27)
+Decided 2026-10-27 (maintainer, on
+[moq-dev/moq#6919](https://github.com/moq-dev/moq/pull/6919)): the hard follow
+bound cannot also guarantee no hole when the replacement becomes usable only
+after the old input stops.
 
-The private prototype keeps one export and jitter buffer, separates per-instance
-input/program state, and adopts the new program metadata at generation release.
-The buffer contains an active clock engine and at most one acquiring replacement,
-using the existing clock math independently. A replacement commits only after an
-actual usable video start (or the first usable item without video), retaining at
-most one issued item per other track under backpressure. Commit flushes old decode
-clocks and clamps the replacement against every old deadline already issued;
-program metadata and clock statistics change only after the old tail drains.
-Cancelling an unemitted replacement restores the old clock and keeps its data.
-Per-program statistics retain their existing reset behavior; received-byte
-accounting is unchanged.
-The original source discarded 32 buffered frames before the replacement supplied
-media; a paused-clock playback control also failed because the old subscription
-stopped at the route switch. Both controls pass with the prototype. A delayed
-replacement-video control reproduced a 1.133 s multi-track handoff hole before
-two-phase acquisition; it now passes with unchanged PCR/frame cadence bounds for
-zero, positive, and negative A/V leads. The 257 focused TS and jitter controls
-also cover actual held-replacement cancellation, valid empty-catalog EOF drain,
-cold same-epoch returns, old decode-clock flush, and independent active catalog
-updates/timeline jumps while a replacement acquires.
+1. ✅ Keep the hard follow bound and limit the no-added-hole guarantee to
+   replacements usable within it. Past the bound a hole is the honest result;
+   old input is never kept alive without bound.
+2. Keep old input feeding until the replacement is usable, even past the
+   follow, which can hold its receive and processing cost indefinitely.
 
-The real relay/bufferbloat Goal is not complete. One original-source run reported
-healthy switch gaps of 4.63/4.90 s and 8.20/8.16 s across its two viewers, and
-failed-leg gaps of 3.52/3.52 s. That run did not record a steady-delivery statistic.
-One candidate run, with the same impairment and switch ordering, reported healthy
-gaps of 62.7/805.0 ms and 8.7/10.1 ms, and failed-leg gaps of 1.16/1.22 s.
-The same-reader steady maxima were 35.8/43.8 ms. The healthy-gap assertion uses
-that independent steady control plus the existing 25 ms PCR and 20 ms polling
-grids, fixed before the candidate run. The second viewer's first switch fails it.
-The margin and assertion must remain unchanged while that remaining handoff
-interleaving is reproduced and fixed. These observations establish no matched
-performance confidence or speedup claim.
-
-The earlier candidate did not isolate the 805 ms boundary in transport logs;
-the deterministic controls establish a related nominal-acquisition/startup
-ownership failure, rather than claiming that exact transport trace as proven.
-The changed source at [d47aff597e](https://github.com/moq-dev/moq/commit/d47aff597ea023ea2128a741996cf8c8232ab5a1) still fails
-the real bufferbloat assertion: healthy program 1 paused **184.619362 ms**,
-against that reader's steady maximum **66.78136 ms + the unchanged 45 ms**.
-Healthy program 3 was 8.764922 ms; failed-leg program 2 was 996.872918 ms.
-The first viewer's assertion prevented collecting the second viewer's summary.
-The command was `just rs test -p moq-cli --test integration --run-ignored only
--E 'test(=export::redundant_importers_switch_through_bufferbloat_on_lite_07)'
---success-output immediate`. It failed after 45.731 s. No unchanged-source
-repeat or margin adjustment was made.
-
-Provenance: base [3c41865d73](https://github.com/moq-dev/moq/commit/3c41865d73b74caa0f74e315b70d9e51c5d44523), Rust 1.98.1
-(`48a229cea`, LLVM 22.1.8), x86_64 Linux 7.0.0-38-generic, 24 logical CPUs,
-warm builds after formatting and focused tests, shared-host load 9.74/3.94/3.40
-at the run's start (2026-10-27 09:28:02 UTC). Importer start diagnostics were
-09:28:27.927, 09:28:32.589, and 09:28:57.036 UTC. The retained full failing
-log's SHA-256 is `34d3d64e7dc74f6016172c6b3aa29f05a6e630f49b37a9f9a5012d9064bebcd2`.
-It contains aggregate gaps and importer phases only. Raw TS bytes, arrival
-offsets, and exporter stderr were test-local memory and were not persisted
-before the assertion panicked; there is no internal handoff trace to attribute
-the remaining hole to a clock, mux, transport, or scheduling cause.
-
-The same clean source head passed `just fix`, all 257 focused TS/jitter controls,
-and strict `just ci 3c41865d73b74caa0f74e315b70d9e51c5d44523` in 664 s
-(4,153 selected Rust tests passed, 61 skipped, plus selected feature, WebAssembly,
-JS, documentation, and tooling checks). All 36 existing jitter steering,
-acquisition, and handoff Criterion cases passed once via `just gh criterion
--p moq-mux --bench jitter -- --test`; this is a smoke proof, not a CPU comparison.
-Static follow-up review found no actionable source issue and did not execute
-another runtime reproduction. None of these passes completes the failed Goal.
-
-Next capture: persist both viewers' TS bytes and arrival offsets plus per-program
-follow, prepare, commit, adopt, last-old and first-new timestamps before asserting.
-Isolate the failing boundary before changing scheduling or acquisition again;
-keep the impairment, fixed cadence margin, healthy assertion and failed-leg
-control. The extra bounded clock context preserves the proven backlog/startup/
-cancellation/EOF ownership cases, so it remains a reviewable draft checkpoint.
-The diagnostic capture is the next implementation step within this settled
-quest, without claiming a scheduler cause or relaxing the assertion. Product docs describe the
-implemented bounded behavior without promising the unproven no-hole outcome.
-
-No second full
-export, clock alignment, routing policy, startup policy, or arbitrary buffer
-budget is selected. The PR stays draft while this proof remains incomplete.
-
-### Deadline characterization
-
-One diagnostic-only run at [b75205ef5b](https://github.com/moq-dev/moq/commit/b75205ef5b4e17445fd53ea4b9f9834b1753256a)
-retained both viewers' TS bytes, arrival offsets, exporter stderr and statuses
-before assertions. It passed in 45.497 s with the unchanged impairment, `--follow
-10s`, and 45 ms cadence margin. Healthy gaps were 13.256/13.675 ms and
-9.761/8.015 ms; failed-leg gaps were 684.186/719.080 ms. Same-reader steady
-maxima were 36.380/44.100 ms. The shaper throttled 1,540 of its 1,586 downstream
-packets. This instrumented pass does not clear or attribute the earlier
-184.619 ms failure; it is not a repeat-to-green argument. No further identical
-real run was made.
-
-The captured healthy replacements became emittable **after** the selected hard
-follow deadline. First-switch commits were 4.361/4.475 s after expiry; third-switch
-commits were 2.696/2.702 s after expiry. Old output nevertheless drained through
-the saved old horizons: each healthy last-old slice was 1.1–2.1 ms after its
-horizon, and the first-new slice 9.8–15.2 ms after it. The raw mux/reader gaps
-agree within 0.7 ms. This captured pass shows preserved tail, not an internal
-discard or proof of the earlier failing interleaving. Diagnostic provenance:
-2026-10-27 09:50:03 UTC, same compiler/kernel as above, shared-host load
-11.45/11.82/9.86, warm builds. The run-owned capture and its file hashes remain
-in checkout scratch; generated TS bytes are not source fixtures.
-
-The paused-clock control
-`an_expired_follow_stops_healthy_input_but_drains_its_buffered_tail` keeps A
-publishing, selects B at 1 s with a 100 ms follow and 500 ms delay, and withholds
-B media until 2 s. A's real track subscription is present before 1.1 s and gone
-at 1.1 s after zero-time request-task propagation. Its buffered tail remains,
-and every access unit read through PTS 61.080 s is delivered, including the tail
-after the input stops.
-The last old output is at 1.640 s and first new output at 2.520 s, an 880 ms
-hole despite healthy A. B's later acquisition therefore exposes a hole longer
-than the delay. No source
-threshold or follow behavior changed. All 258 focused TS/jitter controls pass
-(12.866 s), and the final formatter/lint pass succeeds (69 s). Initial demand probes inspected cached
-handle lifetime and the subscription aggregate before asynchronous propagation;
-those were fixture-observation mistakes, not evidence of a source deadline bug.
-
-The final trace/deadline source at [ec6c90b9a1](https://github.com/moq-dev/moq/commit/ec6c90b9a15df10e25b16ad0eba7ffc131c4bc0d)
-passes strict clean-head CI against the recorded base in 322 s: 4,154 selected
-Rust tests pass (61 skipped), with the selected feature, WebAssembly, JS, docs
-and tooling gates green. The private handoff trace filter is enabled only for
-the redundant-failover fixture; other CLI fixtures keep their original logging.
-
-### Decisions needed
-
-The Plan's hard follow bound and its unconditional healthy-switch wording cannot
-both hold when B is not emittable before A's selected input deadline and held
-tail. The real fixture also exceeds that deadline, but the earlier 184.619 ms
-failure remains unattributed because it had no internal trace.
-
-1. **Recommended:** preserve the selected hard bound and clarify the no-added-hole
-   guarantee for replacements emittable within it, with independent expiry
-   coverage. This preserves the existing resource/configuration contract. The
-   real fixture and its unconditional assertion have not been changed to accept
-   that scope without a maintainer decision.
-2. Keep an unconditional guarantee by allowing old input to continue until B is
-   usable even beyond follow. That changes the selected subscription lifetime
-   and can retain its receive/processing cost indefinitely when B never becomes
-   usable. It needs a different explicit resource policy; increasing a test
-   timeout only moves the same exposure and does not settle it.
-
-The bounded Engine checkpoint is worth retaining for review: deterministic
-controls prove the original backlog discard, old-input feeding, usable-start
-ownership, rapid cancellation, EOF and cold-return fixes. Its extra private
-context and held per-track item are stated costs, not a performance claim. No
-acceptance-scope or lifetime-policy option is selected while the maintainer is
-away; this remains a draft, with the real fixture, impairment and margin intact.
+The real bufferbloat run's healthy holes (184.6 ms before, 173.7 ms and
+783.7 ms reproduced) are this past-bound case, not a mux or clock fault. Its
+160 kbit/s link is slower than either leg alone (about 250 kbit/s), and audio
+outranks video, so while both legs are subscribed their audio fills the link:
+traced group arrivals show neither leg's video completing a frame once the
+replacement's audio flows, and the replacement's first keyframe arriving only
+0.7 to 2.2 s after the follow stops the old input. Whether a hole appears then depends only on whether the
+old tail outlasts that late acquisition. Unimpaired, the replacement commits
+1.4 to 3 s after the follow starts, inside the bound, with no added gap.
+Demoting the old leg's subscriber priority while the replacement acquires did
+not get the replacement's video through sooner in this run, so it is not kept.
 
 ## Closes
 

@@ -1695,7 +1695,6 @@ where
 		for pid in tally.units {
 			self.program.liveness.delivered(pid, 1);
 		}
-		tracing::debug!(target: "moq_mux::container::ts::handoff", phase = "output", now = ?moq_clock::now(), program = self.program.id, generation = self.program.generation, pcr = ?out.timestamp, bytes = out.payload.len(), keyframe = out.keyframe);
 		Some(out)
 	}
 
