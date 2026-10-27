@@ -8171,7 +8171,7 @@ mod tests {
 		let origin = crate::origin::Config::new(Hop::new(1).unwrap()).produce();
 		let broadcast = origin.create_broadcast("room").unwrap();
 		let track = broadcast.create_track("video", track::Info::timed()).unwrap();
-		let dynamic = track.dynamic();
+		let dynamic = track.requests();
 		let peer_setup = crate::lite::PeerSetup::new(false, crate::transport::Address::Setup);
 		peer_setup.set(crate::lite::Setup::default());
 		let (_, goaway) = crate::goaway::Handle::new(true);
@@ -8193,7 +8193,7 @@ mod tests {
 			&publisher.shared,
 			lite::Fetch {
 				epoch: None,
-				broadcast: crate::Path::new("room"),
+				broadcast: crate::Path::new("room").unwrap(),
 				track: "video".into(),
 				priority: 0,
 				max_delay: None,

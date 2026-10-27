@@ -239,3 +239,78 @@ claimed to share raw wire storage. Compressed transport fetches must continue
 widening to start 0/end None, and a plain reader without the prefix must still
 refuse. No public API, wire, resource-budget or maintainer-policy choice has been
 selected by this checkpoint.
+
+### Storage-lifetime preservation checkpoint
+
+The later implementation supersedes the 2420 prototype's ownership details.
+Canonical frame storage now owns its group identity, while the group's index
+holds weak frame records. Completed delivery entries retain shared frame owners;
+their owner cell can be populated during activation without replacing payloads
+that lock-free readers already see. A streamed reader keeps the same identity
+through its existing buffer. Last storage release removes its weak record, so
+neither retired entries nor frame readers can hide retained bytes from a refill.
+The index retains no dead weak history and introduces no new union-wide limits.
+Existing per-delivery limits remain enforced.
+
+A deterministic evicted-streaming-reader control first failed because its weak
+group identity vanished while its frame buffer still existed. It now passes,
+reusing the same physical payload on refill while the old reader still returns
+`Evicted`. A separate control accepts an existing valid 8192-frame tail and a
+disjoint valid one-frame prefix, preserving their existing per-delivery limits.
+
+An independent review found that a captured inflater job could outlive delivery
+A's release when delivery B kept the shared Plain alive. The existing
+`inflation_is_shared_and_stops_at_release` control was extended and reproduced
+that failure. A compressed delivery now has its own release guard. Each inflation
+frame and get synchronizes with that guard; releasing A waits for its current
+frame and preserves A's error while B can still read and inflate. The guard's
+metadata is charged to the active delivery. This changes neither the shared
+inflation representation nor the existing caller ownership of completed bytes.
+
+Typed object controls preserve IDs across different delivery ordinals, sealed
+timestamps and delivery-local terminal metadata. The compressed ingress control
+uses independent received buffers, verifies raw payload pointer reuse without
+recompression, preserves the missing-prefix refusal and different arrival times,
+inflates plain bytes once, and keeps start-0/end-None widening for repeated tail
+requests. Local plaintext compression scratch remains a separate producer path.
+
+The full strict frame/group/track cohort passes 512/512. `just fix` passes.
+Source includes the actually landed request and Path prerequisites through a
+normal merge of main `c764acebb90b5c102a8ea90207dd125ae4fd326b`; no rebase.
+The subsequent IETF version-removal integration and final full gates remain.
+
+The updated x86_64 metadata sizes are content 216 B, progress view 56 B and
+admission bookkeeping 32 B. Ownership charges from the retained-reader control:
+
+| Payload/frame | End | Canonical rows | Unique payload | Shared charge | Delivery charge | Discovery charge | Total |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 0 B | Unbounded | 32 | 0 B | 8304 B | 36448 B | 136 B | 44888 B |
+| 0 B | Exclusive 17 | 17 | 0 B | 5064 B | 23296 B | 136 B | 28496 B |
+| 1 B | Unbounded | 32 | 32 B | 8336 B | 36448 B | 136 B | 44920 B |
+| 1 B | Exclusive 17 | 17 | 17 B | 5081 B | 23296 B | 136 B | 28513 B |
+| 1024 B | Unbounded | 32 | 32768 B | 41072 B | 36448 B | 136 B | 77656 B |
+| 1024 B | Exclusive 17 | 17 | 17408 B | 22472 B | 23296 B | 136 B | 45904 B |
+
+Raw outputs and SHA256:
+
+- Full focused model cohort: `.tmp/weak-owner-model-tests.log`,
+  `65b5eba4bd4a0c6d95536806469c8ede169cb5f6112ae11a2d638e094590fbf4`.
+- Frame-reader negative: `.tmp/frame-reader-owner-before-2.log`,
+  `41b552539fe590464c5040fbc93e8fc0597214cb73bfaa630fce1124b06c7005`.
+- Frame-reader/union positive: `.tmp/weak-frame-owner-controls.log`,
+  `13639d690f523102d340f5f4106f2b8ed9eb9a9e76184452bb470006cf716f4c`.
+- Shared late-inflater negative: `.tmp/shared-late-inflate-before.log`,
+  `ad2524de1e81d2a5e01ee02707585401ae15d428653f21a40392e7d010452c99`.
+- Late-inflater/typed/compressed positives:
+  `.tmp/canonical-representation-controls.log`,
+  `44a2868fc82a01871af38327cc13697450988df42c9c379bbc946796bd80bec1`.
+
+The Goal is still unfinished. Read-only review found a direct live Lite GROUP
+path that creates a public whole group before applying the received frame start,
+then resets the owner when replacing an earlier positive-start copy. The next
+control must exercise actual GroupRecv with held readers and distinct tail
+starts, followed by a private transport claim that knows the offset before
+publication. Public explicit group recreation must retain its separate owner.
+Ordinary pre-existing cross-route duplication is not itself evidence of this
+specific tail-amplification bug. Final readiness still needs this direct ingress
+proof, current-main integration, clean committed-head gates and the real surface.

@@ -1,9 +1,9 @@
-//! One immutable content owner, independent of each transport delivery's progress.
+//! Weak indexed identity; delivery records and streaming readers own the bytes.
 use super::*;
 
-/// Wire Object IDs are not frame ordinals on a sparse IETF stream.
+/// Object IDs are not frame ordinals on a sparse IETF stream.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
-pub(super) enum Key {
+pub(in crate::model) enum Key {
 	Frame(u64),
 	Object(u64),
 }
@@ -11,7 +11,7 @@ pub(super) enum Key {
 pub(super) enum Input {
 	Whole(Payload),
 	Stream(Option<FrameBuf>),
-	Adopt(Arc<Row>),
+	Adopt(frame::Shared),
 }
 
 pub(super) struct Spec {
@@ -20,26 +20,18 @@ pub(super) struct Spec {
 	pub inflated: Option<u64>,
 }
 
-pub(super) struct Row {
+struct Row {
 	key: Key,
 	inflated: Option<u64>,
-	pub(super) buf: FrameBuf,
-	bill: cache::Extra,
+	content: frame::SharedWeak,
 }
 
 pub(in crate::model) struct Content {
-	state: Mutex<Stored>,
+	state: Mutex<Vec<Row>>,
 	bill: cache::Extra,
 	plain: Mutex<Option<Arc<Plain>>>,
 	views: AtomicUsize,
 	index: Mutex<Option<(Arc<Index>, u64)>>,
-}
-
-#[derive(Default)]
-struct Stored {
-	rows: Vec<Arc<Row>>,
-	declared: u64,
-	inflated: u64,
 }
 
 impl Content {
@@ -56,7 +48,7 @@ impl Content {
 	}
 
 	pub(super) fn key(index: usize, fields: Option<&super::super::object::Fields>, wire: bool) -> Key {
-		if wire {
+		if wire || fields.is_some() {
 			Key::Object(fields.map_or(index as u64, |fields| fields.id))
 		} else {
 			Key::Frame(index as u64)
@@ -64,75 +56,87 @@ impl Content {
 	}
 
 	pub(super) fn row(
-		&self,
+		self: &Arc<Self>,
 		spec: Spec,
 		input: Input,
 		charge: &cache::Charge,
 		transferred: Option<cache::Extra>,
-	) -> Result<Arc<Row>> {
+	) -> Result<frame::Shared> {
 		let Spec { key, size, inflated } = spec;
 		let mut state = self.state.lock().unwrap_or_else(PoisonError::into_inner);
-		let at = match state.rows.binary_search_by_key(&key, |row| row.key) {
+		let at = match state.binary_search_by_key(&key, |row| row.key) {
 			Ok(at) => {
-				let row = &state.rows[at];
-				if row.buf.size() as u64 != size || row.inflated != inflated {
-					return Err(Error::ProtocolViolation);
-				}
-				let payload = match input {
-					Input::Whole(payload) => Some(payload),
-					Input::Adopt(row) => Some(row.buf.freeze()),
-					Input::Stream(_) => None,
-				};
-				if let Some(payload) = payload {
-					let delivery = row.buf.fork();
-					let mut at = 0;
-					while at < payload.len() {
-						let chunk = payload.chunk_at(at);
-						delivery.append(&chunk)?;
-						at += chunk.len();
+				if let Some(shared) = state[at].content.upgrade() {
+					let matches = shared.size() as u64 == size && state[at].inflated == inflated;
+					// A temporary strong owner must never drop under this mutex: its last
+					// release removes its weak record through `forget_frame`.
+					drop(state);
+					if !matches {
+						return Err(Error::ProtocolViolation);
 					}
+					let payload = match input {
+						Input::Whole(payload) => Some(payload),
+						Input::Adopt(shared) => Some(shared.freeze()),
+						Input::Stream(_) => None,
+					};
+					if let Some(payload) = payload {
+						let delivery = shared.fork();
+						let mut at = 0;
+						while at < payload.len() {
+							let chunk = payload.chunk_at(at);
+							delivery.append(&chunk)?;
+							at += chunk.len();
+						}
+					}
+					return Ok(shared);
 				}
-				return Ok(row.clone());
+				state.remove(at);
+				at
 			}
 			Err(at) => at,
 		};
+		// Retained bytes/frame limits remain per delivery. Combining valid disjoint
+		// ranges must not introduce a stricter aggregate admission policy.
 		if size > MAX_CACHE_BYTES || inflated.is_some_and(|size| size > MAX_CACHE_BYTES) {
 			return Err(Error::FrameTooLarge);
 		}
-		if state.rows.len() == MAX_GROUP_FRAMES
-			|| state.declared.saturating_add(size) > MAX_CACHE_BYTES
-			|| state.inflated.saturating_add(inflated.unwrap_or(0)) > MAX_CACHE_BYTES
-		{
-			return Err(Error::GroupTooLarge);
-		}
-		let row = match input {
-			Input::Adopt(row) if row.key == key && row.inflated == inflated => row,
-			input => {
-				let buf = match input {
-					Input::Whole(payload) => FrameBuf::from_payload(payload),
-					Input::Stream(Some(buf)) => buf,
-					Input::Stream(None) => FrameBuf::new(size as usize),
-					Input::Adopt(row) => FrameBuf::from_payload(row.buf.freeze()),
-				};
-				buf.bill_content(transferred.unwrap_or_else(|| charge.extra()));
-				buf.bill_view(charge.extra());
-				let bill = charge.extra();
-				bill.add((2 * size_of::<usize>() + size_of::<Row>()) as u64);
-				Arc::new(Row {
-					key,
-					inflated,
-					buf,
-					bill,
-				})
-			}
+		let shared = match input {
+			Input::Whole(payload) => frame::Shared::from_payload(payload),
+			Input::Stream(Some(buf)) => buf.shared(),
+			Input::Stream(None) => FrameBuf::new(size as usize).shared(),
+			Input::Adopt(shared) => frame::Shared::from_payload(shared.freeze()),
 		};
-		let before = state.rows.capacity();
-		state.rows.insert(at, row.clone());
-		self.bill
-			.add(((state.rows.capacity() - before) * size_of::<Arc<Row>>()) as u64);
-		state.declared += size;
-		state.inflated += inflated.unwrap_or(0);
-		Ok(row)
+		if !shared.identify(self.clone(), key) {
+			drop(state);
+			return Err(Error::ProtocolViolation);
+		}
+		shared.bill_content(transferred.unwrap_or_else(|| charge.extra()));
+		let before = state.capacity();
+		state.insert(
+			at,
+			Row {
+				key,
+				inflated,
+				content: shared.downgrade(),
+			},
+		);
+		self.bill.add(((state.capacity() - before) * size_of::<Row>()) as u64);
+		drop(state);
+		Ok(shared)
+	}
+
+	pub(in crate::model) fn forget_frame(&self, key: Key, address: usize) {
+		let mut state = self.state.lock().unwrap_or_else(PoisonError::into_inner);
+		if let Ok(at) = state.binary_search_by_key(&key, |row| row.key)
+			&& state[at].content.address() == address
+		{
+			state.remove(at);
+		}
+		if state.is_empty() {
+			let bytes = state.capacity() * size_of::<Row>();
+			*state = Vec::new();
+			self.bill.sub(bytes as u64);
+		}
 	}
 
 	pub(super) fn attach(&self, charge: &cache::Charge) -> Option<Arc<Plain>> {
@@ -153,20 +157,24 @@ impl Content {
 		}
 	}
 
+	fn frames(&self) -> Vec<frame::Shared> {
+		self.state
+			.lock()
+			.unwrap_or_else(PoisonError::into_inner)
+			.iter()
+			.filter_map(|row| row.content.upgrade())
+			.collect()
+	}
+
 	#[cfg(test)]
 	pub(in crate::model) fn cost(&self) -> (usize, usize, u64) {
-		let state = self.state.lock().unwrap_or_else(PoisonError::into_inner);
-		let rows = state.rows.len();
-		let bytes = state
-			.rows
-			.iter()
-			.map(|row| row.buf.shared_written(Ordering::Acquire))
-			.sum();
-		drop(state);
-		(rows, bytes, self.size())
+		let frames = self.frames();
+		let bytes = frames.iter().map(frame::Shared::written).sum();
+		(frames.len(), bytes, self.size())
 	}
 
 	pub(super) fn size(&self) -> u64 {
+		let frames = self.frames();
 		self.bill.size()
 			+ self
 				.plain
@@ -174,14 +182,7 @@ impl Content {
 				.unwrap_or_else(PoisonError::into_inner)
 				.as_ref()
 				.map_or(0, |plain| plain.bill.size())
-			+ self
-				.state
-				.lock()
-				.unwrap_or_else(PoisonError::into_inner)
-				.rows
-				.iter()
-				.map(|row| row.bill.size() + row.buf.content_size() + row.buf.view_size())
-				.sum::<u64>()
+			+ frames.iter().map(frame::Shared::content_size).sum::<u64>()
 	}
 }
 

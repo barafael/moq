@@ -15201,7 +15201,7 @@ mod test {
 	#[cfg(feature = "async")]
 	async fn bounded_transport_copies_never_answer_whole_fetches() {
 		let producer = track_producer("test", Info::timed());
-		let dynamic = producer.dynamic();
+		let dynamic = producer.requests();
 		let consumer = producer.consume();
 		let request = |start, end| FetchOptions {
 			options: group::Fetch {
@@ -15260,7 +15260,7 @@ mod test {
 	#[cfg(feature = "async")]
 	async fn bounded_tail_refills_coalesce_behind_a_live_copy() {
 		let producer = track_producer("test", Info::timed());
-		let dynamic = producer.dynamic();
+		let dynamic = producer.requests();
 		let consumer = producer.consume();
 		let mut live = producer.create_group(group::Info { sequence: 0 }).unwrap();
 		live.start_at(200).unwrap();
@@ -15301,7 +15301,7 @@ mod test {
 	#[cfg(feature = "async")]
 	async fn bounded_fetches_widen_before_dispatch_and_split_after() {
 		let producer = track_producer("test", Info::timed());
-		let dynamic = producer.dynamic();
+		let dynamic = producer.requests();
 		let consumer = producer.consume();
 		let request = |end| FetchOptions {
 			options: group::Fetch::default(),
@@ -19713,7 +19713,7 @@ mod test {
 			for bounded in [false, true] {
 				let producer = track_producer("test", Info::timed());
 				let pool = producer.broadcast.pool.clone();
-				let dynamic = producer.dynamic();
+				let dynamic = producer.requests();
 				let consumer = producer.consume();
 				let mut live = producer.create_group(group::Info { sequence: 0 }).unwrap();
 				live.start_at(32).unwrap();
@@ -19957,5 +19957,353 @@ mod test {
 				"all completed producers return admission"
 			);
 		}
+	}
+	/// IETF Object IDs can occupy different delivery ordinals. Sharing bytes must
+	/// preserve their typed fields and each delivery's independent terminal record.
+	#[moq_clock::test]
+	#[cfg(feature = "async")]
+	async fn canonical_content_keys_typed_objects_by_id_not_ordinal() {
+		fn wire(first: u64) -> group::Wire {
+			group::Wire {
+				sparse: true,
+				first_object: false,
+				first_id: first,
+				extensions: true,
+				has_end: true,
+				fetchable: true,
+				last: None,
+			}
+		}
+		fn write(group: group::Producer, id: u64, payload: &'static [u8]) -> group::Producer {
+			let mut frame = group
+				.create_object(frame::Header {
+					info: frame::Info {
+						size: payload.len() as u64,
+						timestamp: Some(Timestamp::ZERO),
+					},
+					fields: Some(Arc::new(super::super::object::Fields {
+						id,
+						properties: super::super::object::Properties {
+							sealed_time: Some(Timestamp::ZERO),
+							..Default::default()
+						},
+					})),
+					inflated: None,
+				})
+				.unwrap();
+			frame.write(payload).unwrap();
+			frame.finish().unwrap()
+		}
+		let producer = track_producer("test", Info::timed());
+		let mut live = producer.create_group(group::Info { sequence: 0 }).unwrap();
+		live.start_at(2).unwrap();
+		live.set_wire(wire(100)).unwrap();
+		let live = write(live, 100, b"a");
+		let head = producer
+			.state
+			.write()
+			.ok()
+			.unwrap()
+			.insert_group_request(0, group::Bounds { start: 1, end: Some(3) }, None)
+			.unwrap();
+		head.set_wire(wire(90)).unwrap();
+		let head = write(head, 90, b"b");
+		let mut head = write(head, 100, b"a");
+		head.set_end_object(super::super::object::Fields {
+			id: 101,
+			properties: Default::default(),
+		})
+		.unwrap();
+		head.finish().unwrap();
+		let earlier = producer
+			.state
+			.write()
+			.ok()
+			.unwrap()
+			.insert_group_request(0, group::Bounds { start: 0, end: Some(2) }, None)
+			.unwrap();
+		earlier.set_wire(wire(90)).unwrap();
+		let earlier = write(earlier, 90, b"b");
+		let mut earlier = write(earlier, 95, b"c");
+		earlier.finish().unwrap();
+		assert!(head.consume().end_object().is_some_and(|fields| fields.id == 101));
+		assert!(
+			earlier.consume().end_object().is_none(),
+			"content sharing copies no terminal metadata"
+		);
+		let mut prior = head.consume().with_range(1..).compressed();
+		let mut later = earlier.consume().compressed();
+		let mut a = arrayvec::ArrayVec::<frame::Object, 4>::new();
+		let mut b = arrayvec::ArrayVec::<frame::Object, 4>::new();
+		assert!(matches!(
+			prior.poll_read_objects(&kio::Waiter::noop(), &mut a),
+			Poll::Ready(Ok(2))
+		));
+		assert!(matches!(
+			later.poll_read_objects(&kio::Waiter::noop(), &mut b),
+			Poll::Ready(Ok(2))
+		));
+		assert_eq!(
+			a.iter()
+				.map(|object| object.fields.as_ref().unwrap().id)
+				.collect::<Vec<_>>(),
+			[90, 100]
+		);
+		assert_eq!(
+			b.iter()
+				.map(|object| object.fields.as_ref().unwrap().id)
+				.collect::<Vec<_>>(),
+			[90, 95]
+		);
+		assert_eq!(
+			a[0].payload.chunk_at(0).as_ptr(),
+			b[0].payload.chunk_at(0).as_ptr(),
+			"one Object ID shares bytes across different ordinals"
+		);
+		assert_eq!(
+			b[1].payload.contiguous(0),
+			b"c".as_slice(),
+			"the same ordinal cannot alias a different Object ID"
+		);
+		assert!(
+			a.iter()
+				.chain(&b)
+				.all(|object| object.fields.as_ref().unwrap().properties.sealed_time == Some(Timestamp::ZERO))
+		);
+		assert_eq!(live.handle().content().unwrap().cost().0, 3);
+	}
+
+	/// Compressed transport refills keep the received slices, share one inflation,
+	/// and continue widening hostile tail requests rather than minting local encoders.
+	#[moq_clock::test]
+	#[cfg(feature = "async")]
+	async fn canonical_compressed_ingress_preserves_raw_plain_and_widening() {
+		fn ingest(group: group::Producer, object: &frame::Object) -> group::Producer {
+			assert!(
+				object.inflated.is_some(),
+				"compressed ingress carries the stored representation"
+			);
+			let mut frame = group
+				.create_object(frame::Header {
+					info: frame::Info {
+						size: object.payload.len() as u64,
+						timestamp: object.timestamp,
+					},
+					fields: object.fields.clone(),
+					inflated: object.inflated,
+				})
+				.unwrap();
+			let mut at = 0;
+			while at < object.payload.len() {
+				let chunk = object.payload.chunk_at(at);
+				at += chunk.len();
+				frame.write(bytes::Bytes::copy_from_slice(&chunk)).unwrap();
+			}
+			frame.finish().unwrap()
+		}
+		let info = Info::timed().with_compress(true);
+		let reference = track_producer("reference", info.clone());
+		let mut source = reference.create_group(group::Info { sequence: 0 }).unwrap();
+		let expected: Vec<_> = (0..9)
+			.map(|index| bytes::Bytes::from(format!("shared dictionary frame {index}; ").repeat(64)))
+			.collect();
+		for payload in &expected {
+			source.write_frame(Timestamp::ZERO, payload.clone()).unwrap();
+		}
+		source.finish().unwrap();
+		let mut stored = arrayvec::ArrayVec::<frame::Object, 16>::new();
+		assert!(matches!(
+			source
+				.consume()
+				.compressed()
+				.poll_read_objects(&kio::Waiter::noop(), &mut stored),
+			Poll::Ready(Ok(9))
+		));
+		let producer = track_producer("test", info.clone());
+		let requests = producer.requests();
+		let consumer = producer.consume();
+		let mut live = producer.create_group(group::Info { sequence: 0 }).unwrap();
+		live.start_at(8).unwrap();
+		let live = ingest(live, &stored[8]);
+		let mut raw_live = live.consume().with_range(8..).compressed();
+		let raw_live = raw_live.read_frame().await.unwrap().unwrap();
+		assert!(
+			matches!(live.consume().with_range(8..).read_frame().await, Err(Error::Lagged)),
+			"canonical storage does not grant a missing compression prefix"
+		);
+		let pending = consumer.fetch_range(
+			0,
+			FetchOptions {
+				options: group::Fetch {
+					frame_start: 2,
+					..Default::default()
+				},
+				end: Some(4),
+			},
+		);
+		let fill = requests.requested_fill_group().await.unwrap();
+		assert_eq!((fill.frame_start(), fill.frame_end()), (0, None));
+		let mut head = fill.accept(info).unwrap();
+		for object in &stored[..8] {
+			head = ingest(head, object);
+		}
+		let registry = stats::Registry::new(stats::Config::new());
+		let meter = registry.publisher_meter(crate::Path::new("demo").unwrap(), &stats::Tier::default());
+		let mut first = head.consume().with_meter(meter.clone());
+		assert_eq!(first.read_frame().await.unwrap().unwrap().payload, expected[0]);
+		moq_clock::sim::advance(Duration::from_millis(20)).await;
+		head = ingest(head, &stored[8]);
+		head.finish().unwrap();
+		pending.await.unwrap();
+		let mut raw_head = head.consume().with_range(8..).compressed();
+		let raw_head = raw_head.read_frame().await.unwrap().unwrap();
+		assert_eq!(
+			raw_live.payload.as_ptr(),
+			raw_head.payload.as_ptr(),
+			"stored compressed bytes are retained once"
+		);
+		assert_eq!(
+			raw_head.payload,
+			stored[8].payload.contiguous(0),
+			"the relay does not recompress"
+		);
+		assert_eq!(
+			raw_head.arrived().duration_since(raw_live.arrived()),
+			Duration::from_millis(20)
+		);
+		let mut second = head.consume().with_meter(meter);
+		for (index, payload) in expected.iter().enumerate() {
+			if index != 0 {
+				assert_eq!(first.read_frame().await.unwrap().unwrap().payload, *payload);
+			}
+			assert_eq!(second.read_frame().await.unwrap().unwrap().payload, *payload);
+		}
+		let inflated: u64 = registry
+			.snapshot()
+			.traffic()
+			.into_iter()
+			.map(|(_, _, traffic)| traffic.inflated)
+			.sum();
+		assert_eq!(
+			inflated,
+			expected.iter().map(|payload| payload.len() as u64).sum::<u64>()
+		);
+		for start in 1..9 {
+			consumer
+				.fetch_range(
+					0,
+					FetchOptions {
+						options: group::Fetch {
+							frame_start: start,
+							..Default::default()
+						},
+						end: Some(start + 1),
+					},
+				)
+				.await
+				.unwrap();
+		}
+		assert!(
+			requests.poll_requested_fill_group(&kio::Waiter::noop()).is_pending(),
+			"compressed tail starts coalesce through the established widening policy"
+		);
+		assert_eq!(head.handle().content().unwrap().cost().0, 9);
+	}
+
+	/// An evicted streaming reader still owns in-flight storage until it is dropped.
+	/// A refill must discover those same bytes without changing that reader's abort.
+	#[moq_clock::test]
+	#[cfg(feature = "async")]
+	async fn canonical_owner_follows_an_evicted_streaming_frame_reader() {
+		let producer = track_producer("test", Info::timed());
+		let mut live = producer.create_group(group::Info { sequence: 0 }).unwrap();
+		live.start_at(4).unwrap();
+		let observing = live.handle();
+		let mut reader = live.consume().with_range(4..);
+		let mut live = live
+			.create_frame(frame::Info {
+				size: 1024,
+				timestamp: Some(Timestamp::ZERO),
+			})
+			.unwrap();
+		live.write(vec![4; 512]).unwrap();
+		let mut streaming = reader.next_frame().await.unwrap().unwrap();
+		let first = streaming.read_chunk().await.unwrap().unwrap();
+		let original = first.as_ptr() as usize;
+		drop(first);
+		let mut head = producer
+			.state
+			.write()
+			.ok()
+			.unwrap()
+			.insert_group_request(0, group::Bounds { start: 3, end: Some(4) }, None)
+			.unwrap();
+		head.write_frame(Timestamp::ZERO, b"three".as_slice()).unwrap();
+		head.finish().unwrap();
+		let identity = Arc::downgrade(&observing.content().unwrap());
+		producer
+			.state
+			.write()
+			.ok()
+			.unwrap()
+			.uncache(0)
+			.unwrap()
+			.abort(Error::Evicted);
+		drop(live);
+		assert!(
+			identity.upgrade().is_some(),
+			"the streaming frame still owns canonical storage"
+		);
+		let refill = producer
+			.state
+			.write()
+			.ok()
+			.unwrap()
+			.insert_group_request(0, group::Bounds { start: 4, end: Some(5) }, None)
+			.unwrap();
+		assert!(Arc::ptr_eq(
+			&identity.upgrade().unwrap(),
+			&refill.handle().content().unwrap()
+		));
+		let mut refill = refill
+			.create_frame(frame::Info {
+				size: 1024,
+				timestamp: Some(Timestamp::ZERO),
+			})
+			.unwrap();
+		refill.write(vec![4; 1024]).unwrap();
+		let mut refill = refill.finish().unwrap();
+		refill.finish().unwrap();
+		let complete = refill.consume().with_range(4..).read_frame().await.unwrap().unwrap();
+		assert_eq!(
+			complete.payload.as_ptr() as usize,
+			original,
+			"refill reuses the reader-held content"
+		);
+		assert_eq!(complete.payload.as_ref(), &[4; 1024]);
+		assert!(matches!(streaming.read_chunk().await, Err(Error::Evicted)));
+	}
+
+	/// Existing limits apply to each delivery, not the union of disjoint valid ranges.
+	#[test]
+	fn canonical_content_preserves_individually_valid_disjoint_ranges() {
+		let producer = track_producer("test", Info::timed());
+		let mut live = producer.create_group(group::Info { sequence: 0 }).unwrap();
+		live.start_at(group::MAX_GROUP_FRAMES as u64).unwrap();
+		for _ in 0..group::MAX_GROUP_FRAMES {
+			live.write_frame(Timestamp::ZERO, bytes::Bytes::new()).unwrap();
+		}
+		let mut head = producer
+			.state
+			.write()
+			.ok()
+			.unwrap()
+			.insert_group_request(0, group::Bounds { start: 0, end: Some(1) }, None)
+			.unwrap();
+		head.write_frame(Timestamp::ZERO, bytes::Bytes::new()).unwrap();
+		head.finish().unwrap();
+		assert_eq!(live.handle().content().unwrap().cost().0, group::MAX_GROUP_FRAMES + 1);
+		assert_eq!(live.frame_count(), 2 * group::MAX_GROUP_FRAMES);
+		assert_eq!(head.frame_count(), 1);
 	}
 }

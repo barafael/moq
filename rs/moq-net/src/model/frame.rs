@@ -461,6 +461,148 @@ struct FrameContent {
 	frozen: OnceLock<Payload>,
 	publication: Mutex<Publication>,
 	bill: OnceLock<cache::Extra>,
+	identity: OnceLock<Identity>,
+}
+
+struct Identity {
+	owner: Arc<group::Content>,
+	key: group::ContentKey,
+}
+
+impl Drop for FrameContent {
+	fn drop(&mut self) {
+		if let Some(identity) = self.identity.get() {
+			identity.owner.forget_frame(identity.key, self as *const Self as usize);
+		}
+	}
+}
+
+#[derive(Clone)]
+pub(super) struct Shared(Arc<FrameContent>);
+
+#[derive(Clone)]
+pub(super) struct SharedWeak(Weak<FrameContent>);
+
+impl SharedWeak {
+	pub(super) fn upgrade(&self) -> Option<Shared> {
+		self.0.upgrade().map(Shared)
+	}
+	pub(super) fn address(&self) -> usize {
+		self.0.as_ptr() as usize
+	}
+}
+
+impl Shared {
+	pub(super) fn from_payload(payload: Payload) -> Self {
+		let size = payload.len();
+		Self(Arc::new(FrameContent {
+			size,
+			grow: AtomicBool::new(false),
+			written: AtomicUsize::new(size),
+			storage: OnceLock::from(FrameStorage::Shared(payload.clone())),
+			frozen: OnceLock::from(payload),
+			publication: Mutex::default(),
+			bill: OnceLock::new(),
+			identity: OnceLock::new(),
+		}))
+	}
+	pub(super) fn downgrade(&self) -> SharedWeak {
+		SharedWeak(Arc::downgrade(&self.0))
+	}
+	pub(super) fn fork(&self) -> FrameBuf {
+		FrameBuf(Arc::new(FrameBufInner {
+			content: self.0.clone(),
+			received: AtomicUsize::new(0),
+			bill: OnceLock::new(),
+		}))
+	}
+	pub(super) fn freeze(&self) -> Payload {
+		self.0.freeze()
+	}
+	pub(super) fn size(&self) -> usize {
+		self.0.size
+	}
+	#[cfg(test)]
+	pub(super) fn written(&self) -> usize {
+		self.0.written.load(Ordering::Acquire)
+	}
+	pub(super) fn bill_content(&self, bill: cache::Extra) {
+		self.0.bill_content(bill);
+	}
+	pub(super) fn content_size(&self) -> u64 {
+		self.0.bill.get().map_or(0, cache::Extra::size)
+	}
+	pub(super) fn identify(&self, owner: Arc<group::Content>, key: group::ContentKey) -> bool {
+		self.0.identity.set(Identity { owner, key }).is_ok()
+	}
+}
+
+impl FrameContent {
+	fn bill_content(&self, bill: cache::Extra) {
+		let content = self;
+		let publication = content.publication.lock().unwrap_or_else(PoisonError::into_inner);
+		content.bill.get_or_init(|| {
+			let admission = if publication.admitted {
+				FrameBuf::ADMISSION_HEAP
+			} else {
+				0
+			};
+			let written = self.written.load(Ordering::Relaxed) as u64;
+			// A lazy owner may take already-billed payload from the original delivery.
+			let fresh = written
+				.checked_sub(bill.size())
+				.expect("transferred payload cannot exceed published bytes");
+			bill.add(fresh + (FrameBuf::CONTENT_HEAP + admission) as u64);
+			bill
+		});
+	}
+
+	fn freeze(&self) -> Payload {
+		debug_assert_eq!(self.written.load(Ordering::Acquire), self.size);
+		self.frozen
+			.get_or_init(|| match self.storage.get() {
+				Some(FrameStorage::Shared(payload)) => payload.clone(),
+				Some(FrameStorage::Chain(segments)) => {
+					let segments = segments.lock().unwrap_or_else(PoisonError::into_inner);
+					debug_assert!(segments.open.is_none(), "froze a frame mid-segment");
+					Payload::Chain(Chain {
+						segments: segments.sealed.as_slice().into(),
+						start: 0,
+					})
+				}
+				_ => Payload::Whole(self.slice(0, self.size)),
+			})
+			.clone()
+	}
+
+	fn slice(&self, start: usize, end: usize) -> Bytes {
+		if start >= end {
+			return Bytes::new();
+		}
+		let (segment, base) = match self.storage.get() {
+			Some(FrameStorage::Shared(payload)) => {
+				let chunk = payload.chunk_at(start);
+				return chunk.slice(..chunk.len().min(end - start));
+			}
+			Some(FrameStorage::Fixed(segment)) => (segment.clone(), 0),
+			Some(FrameStorage::Growing(current)) => (current.lock().unwrap_or_else(PoisonError::into_inner).clone(), 0),
+			Some(FrameStorage::Chain(segments)) => {
+				let segments = segments.lock().unwrap_or_else(PoisonError::into_inner);
+				let index = start / SEGMENT;
+				let base = index * SEGMENT;
+				if let Some(sealed) = segments.sealed.get(index) {
+					return sealed.slice(start - base..end.min(base + SEGMENT) - base);
+				}
+				let open = segments.open.clone().expect("written bytes are sealed or open");
+				(open, base)
+			}
+			// Nothing written, so the range is empty.
+			None => return Bytes::new(),
+		};
+		let len = end.min(base + SEGMENT) - base;
+		debug_assert!(len <= segment.capacity);
+		Bytes::from_owner(Filled { segment, len }).slice(start - base..)
+	}
 }
 
 #[derive(Default)]
@@ -624,6 +766,7 @@ impl FrameBuf {
 				frozen: OnceLock::new(),
 				publication: Mutex::default(),
 				bill: OnceLock::new(),
+				identity: OnceLock::new(),
 			}),
 			received: AtomicUsize::new(0),
 			bill: OnceLock::new(),
@@ -631,24 +774,22 @@ impl FrameBuf {
 	}
 
 	/// Keep an already-complete payload without copying its buffers or segments.
+	#[cfg(test)]
 	pub(super) fn from_payload(payload: Payload) -> Self {
 		let size = payload.len();
 		Self(Arc::new(FrameBufInner {
-			content: Arc::new(FrameContent {
-				size,
-				grow: AtomicBool::new(false),
-				written: AtomicUsize::new(size),
-				storage: OnceLock::from(FrameStorage::Shared(payload.clone())),
-				frozen: OnceLock::from(payload),
-				publication: Mutex::default(),
-				bill: OnceLock::new(),
-			}),
+			content: Shared::from_payload(payload).0,
 			received: AtomicUsize::new(size),
 			bill: OnceLock::new(),
 		}))
 	}
 
+	pub(super) fn shared(&self) -> Shared {
+		Shared(self.0.content.clone())
+	}
+
 	/// Another delivery of the same immutable frame, starting before its first byte.
+	#[cfg(test)]
 	pub(super) fn fork(&self) -> Self {
 		Self(Arc::new(FrameBufInner {
 			content: self.0.content.clone(),
@@ -659,19 +800,9 @@ impl FrameBuf {
 
 	/// Bill physical content once, including bytes already received before attachment.
 	/// The charge follows its buffers even if a cached row lets go before a stream does.
+	#[cfg(test)]
 	pub(super) fn bill_content(&self, bill: cache::Extra) {
-		let content = &self.0.content;
-		let publication = content.publication.lock().unwrap_or_else(PoisonError::into_inner);
-		content.bill.get_or_init(|| {
-			let admission = if publication.admitted { Self::ADMISSION_HEAP } else { 0 };
-			let written = self.shared_written(Ordering::Relaxed) as u64;
-			// A lazy owner may take already-billed payload from the original delivery.
-			let fresh = written
-				.checked_sub(bill.size())
-				.expect("transferred payload cannot exceed published bytes");
-			bill.add(fresh + (Self::CONTENT_HEAP + admission) as u64);
-			bill
-		});
+		self.0.content.bill_content(bill);
 	}
 
 	/// One delivery's metadata, retained by its streaming readers and shared by clones.
@@ -683,6 +814,7 @@ impl FrameBuf {
 	}
 
 	/// The canonical allocation's charge, counted once by its cache owner.
+	#[cfg(test)]
 	pub(super) fn content_size(&self) -> u64 {
 		self.0.content.bill.get().map_or(0, cache::Extra::size)
 	}
@@ -842,23 +974,7 @@ impl FrameBuf {
 	/// Called only once the canonical payload is complete. Delivery completion is
 	/// checked separately by [`Producer::finish`].
 	pub(super) fn freeze(&self) -> Payload {
-		debug_assert_eq!(self.shared_written(Ordering::Acquire), self.size());
-		self.0
-			.content
-			.frozen
-			.get_or_init(|| match self.0.content.storage.get() {
-				Some(FrameStorage::Shared(payload)) => payload.clone(),
-				Some(FrameStorage::Chain(segments)) => {
-					let segments = segments.lock().unwrap_or_else(PoisonError::into_inner);
-					debug_assert!(segments.open.is_none(), "froze a frame mid-segment");
-					Payload::Chain(Chain {
-						segments: segments.sealed.as_slice().into(),
-						start: 0,
-					})
-				}
-				_ => Payload::Whole(self.slice(0, self.size())),
-			})
-			.clone()
+		self.0.content.freeze()
 	}
 
 	/// A zero-copy slice of the written region from `start` to `end`, or to the end of
@@ -867,32 +983,7 @@ impl FrameBuf {
 	/// `end` must not exceed a shared published value already loaded with `Acquire`.
 	/// A delivery's own received count is always within that prefix too.
 	fn slice(&self, start: usize, end: usize) -> Bytes {
-		if start >= end {
-			return Bytes::new();
-		}
-		let (segment, base) = match self.0.content.storage.get() {
-			Some(FrameStorage::Shared(payload)) => {
-				let chunk = payload.chunk_at(start);
-				return chunk.slice(..chunk.len().min(end - start));
-			}
-			Some(FrameStorage::Fixed(segment)) => (segment.clone(), 0),
-			Some(FrameStorage::Growing(current)) => (current.lock().unwrap_or_else(PoisonError::into_inner).clone(), 0),
-			Some(FrameStorage::Chain(segments)) => {
-				let segments = segments.lock().unwrap_or_else(PoisonError::into_inner);
-				let index = start / SEGMENT;
-				let base = index * SEGMENT;
-				if let Some(sealed) = segments.sealed.get(index) {
-					return sealed.slice(start - base..end.min(base + SEGMENT) - base);
-				}
-				let open = segments.open.clone().expect("written bytes are sealed or open");
-				(open, base)
-			}
-			// Nothing written, so the range is empty.
-			None => return Bytes::new(),
-		};
-		let len = end.min(base + SEGMENT) - base;
-		debug_assert!(len <= segment.capacity);
-		Bytes::from_owner(Filled { segment, len }).slice(start - base..)
+		self.0.content.slice(start, end)
 	}
 
 	/// Heap bytes the buffer currently holds for the payload.
