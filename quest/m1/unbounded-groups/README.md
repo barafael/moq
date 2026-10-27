@@ -90,9 +90,8 @@ Decided 2026-10-16 (maintainer interview):
 - `GroupTooLarge` and `FrameTooLarge` stay, raised only when an allocation
   can't be satisfied.
 - The byte offset goes on the next unpublished lite version after lite-07,
-  not lite-07. Frame-boundary holes refill over lite-07's frame offsets once
-  [transport frame offsets](/quest/m1/transport-frame-offsets.md) lets a
-  refill start at a frame the relay no longer holds below (decided
+  not lite-07. Frame-boundary holes refill over lite-07's transport frame
+  offsets, which allow a refill to start without the evicted prefix (decided
   2026-10-25, maintainer: the application API stays whole-group).
 - JS is a separate quest. Docs change inline: the lite draft, `doc/concept`,
   the relay cache docs, the JSON and moq-net compression docs, and the e2ee
