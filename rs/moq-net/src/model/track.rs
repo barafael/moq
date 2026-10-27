@@ -558,10 +558,16 @@ impl Slot {
 		self.is_live() && self.group.is_started()
 	}
 
+	/// Whether a group-only reader may treat this slot as reaching the original end.
+	fn serves_end(&self) -> bool {
+		let group = self.serving();
+		!group.is_aborted() && !group.back_cut()
+	}
+
 	/// Whether the arrival walk hands this slot out: the live feed's, and still serving, a
 	/// fetched head counting for an aborted live group.
 	fn is_walked(&self) -> bool {
-		self.visible && !self.is_aborted()
+		self.visible && self.serves_end()
 	}
 
 	/// Why the publisher gave up this live-feed group readers were shown, once nothing
@@ -581,7 +587,7 @@ impl Slot {
 	/// The copy to hand readers: the fetched head while it lasts, else the live group.
 	fn serving(&self) -> &group::Handle {
 		match &self.head {
-			Some(head) if !head.is_aborted() => head,
+			Some(head) if !head.is_aborted() && !head.back_cut() => head,
 			_ => &self.group,
 		}
 	}
@@ -593,7 +599,7 @@ impl Slot {
 
 	/// Whether every copy is gone, so the slot has nothing left to serve.
 	fn is_aborted(&self) -> bool {
-		self.serving().is_aborted()
+		self.copies().all(group::Handle::is_aborted)
 	}
 
 	/// The mean access over copies still held, weighed the way each one samples the
@@ -1143,11 +1149,17 @@ impl TrackState {
 	/// it to someone who asked for the whole group would silently hand back a tail. It
 	/// is a miss instead, so the fetch goes upstream for the frames that are missing.
 	fn covering_group(&self, sequence: u64, frame_start: u64) -> Option<&group::Handle> {
-		self.lookup.get(&sequence)?.copies().find(|group| {
-			group
-				.live_first_frame()
-				.is_some_and(|first| first as u64 <= frame_start)
-		})
+		self.covering_range(
+			sequence,
+			group::Bounds {
+				start: frame_start,
+				end: None,
+			},
+		)
+	}
+
+	fn covering_range(&self, sequence: u64, frames: group::Bounds) -> Option<&group::Handle> {
+		self.lookup.get(&sequence)?.copies().find(|group| group.covers(frames))
 	}
 
 	/// The local retention bound, or `None` when unknown or unlimited.
@@ -1477,10 +1489,10 @@ impl TrackState {
 	/// once it can never be served. A missing group is a failure ([`Error::NotFound`]), not an
 	/// end-of-stream. The handler side (a refusal, or no [`Dynamic`] at all) lives
 	/// in the track's fills; [`Fetching`] polls both.
-	fn poll_fetch_cached(&self, sequence: u64, frame_start: u64) -> Poll<Result<group::Consumer>> {
+	fn poll_fetch_cached(&self, sequence: u64, frames: group::Bounds) -> Poll<Result<group::Consumer>> {
 		// A group aborted between the lookup and the consume (an abandoned fetch cut
 		// short) is a miss, not a hit that fails on its first read.
-		if let Some(group) = self.covering_group(sequence, frame_start)
+		if let Some(group) = self.covering_range(sequence, frames)
 			&& let Some(consumer) = group.try_consume()
 		{
 			// A cache hit refreshes the group: it resets both its age (expiry keys
@@ -2584,7 +2596,7 @@ impl TrackState {
 	pub(super) fn insert_group_request(
 		&mut self,
 		sequence: u64,
-		frame_start: u64,
+		frames: group::Bounds,
 		info: Option<Info>,
 	) -> Result<group::Producer> {
 		if let Some(err) = &self.abort {
@@ -2609,18 +2621,21 @@ impl TrackState {
 		// head instead. Anything else that can't answer from `frame_start` (evicted,
 		// aborted, or narrower backfill) is replaced; a group that can is a duplicate.
 		if self.lookup.get(&sequence).is_some_and(Slot::is_live) {
-			if self.covering_group(sequence, frame_start).is_some() {
+			if self.covering_range(sequence, frames).is_some() {
 				return Err(Error::Duplicate);
 			}
 		} else {
-			self.claim_sequence(sequence, frame_start)?;
+			if self.covering_range(sequence, frames).is_some() {
+				return Err(Error::Duplicate);
+			}
+			self.uncache(sequence);
 		}
 
 		let mut group = group::Producer::new(group::Info { sequence }, info, self.cache.clone());
 		// Start where the request did before the group is visible: a fetch looking it up
 		// in between would otherwise see it begin at 0 and get a reader that later skips
 		// the head it asked for.
-		group.start_at(frame_start)?;
+		group.bound(frames)?;
 		self.cap(&group.handle())?;
 		// A backfill exists because someone is fetching it right now: stamp that
 		// access so the eviction walk can't kill it before the fetch resolves.
@@ -4618,7 +4633,43 @@ impl Consumer {
 	/// or the track's abort error if it's already closed. A miss queues a one-group [`Fill`],
 	/// which concurrent fetches of the same sequence join.
 	pub fn fetch_group(&self, sequence: u64, options: impl Into<Option<group::Fetch>>) -> kio::Pending<Fetching> {
-		let options = options.into().unwrap_or_default();
+		self.fetching(
+			sequence,
+			FetchOptions {
+				options: options.into().unwrap_or_default(),
+				end: None,
+			},
+		)
+	}
+
+	/// Fill a wire request, widening a cold or compressed group to a reusable prefix.
+	pub(crate) fn fetch_range(&self, sequence: u64, mut request: FetchOptions) -> kio::Pending<Fetching> {
+		let state = self.resolve(None).0;
+		{
+			let state = state.read();
+			if state.lookup.get(&sequence).is_none_or(Slot::is_aborted)
+				|| state.info.as_ref().is_none_or(|info| info.compress)
+			{
+				request.options.frame_start = 0;
+			}
+			// A compressed stream needs the entire dictionary; an unknown track is conservative
+			// until TRACK_INFO has told the relay which representation it will receive.
+			if state.info.as_ref().is_none_or(|info| info.compress) {
+				request.end = None;
+			}
+		}
+		self.fetching(sequence, request)
+	}
+
+	fn fetching(&self, sequence: u64, request: FetchOptions) -> kio::Pending<Fetching> {
+		let FetchOptions {
+			options,
+			end: frame_end,
+		} = request;
+		let frames = group::Bounds {
+			start: options.frame_start,
+			end: frame_end,
+		};
 
 		// One fetch per calling context, counted here (coalesced upstream work is
 		// still one request served). Independent of `subscriptions` and the viewer
@@ -4634,6 +4685,7 @@ impl Consumer {
 				fills,
 				sequence,
 				frame_start: options.frame_start,
+				frame_end,
 				priority: options.priority,
 				max_delay: options.max_delay,
 				result: None,
@@ -4654,12 +4706,20 @@ impl Consumer {
 				fills: state.read().fills.clone(),
 				sequence,
 				frame_start: options.frame_start,
+				frame_end,
 				priority: options.priority,
 				max_delay: options.max_delay,
 				result: None,
 				hit: None,
 				stats: self.stats.clone(),
-				resume: Some(Box::new(resume.fetch_group(sequence, options, state.clone()))),
+				resume: Some(Box::new(resume.fetch_group(
+					sequence,
+					FetchOptions {
+						options,
+						end: frame_end,
+					},
+					state.clone(),
+				))),
 			});
 		}
 
@@ -4668,10 +4728,7 @@ impl Consumer {
 		// a queue entry).
 		let (fills, cached) = {
 			let state = state.read();
-			(
-				state.fills.clone(),
-				state.poll_fetch_cached(sequence, options.frame_start),
-			)
+			(state.fills.clone(), state.poll_fetch_cached(sequence, frames))
 		};
 		let unresolved = cached.is_pending();
 		// Hold a hit until the caller polls: the held consumer keeps the group wanted,
@@ -4682,7 +4739,14 @@ impl Consumer {
 		};
 
 		if unresolved {
-			result = queue(&fills, sequence, &options);
+			result = queue(
+				&fills,
+				sequence,
+				&FetchOptions {
+					options: options.clone(),
+					end: frame_end,
+				},
+			);
 		}
 
 		kio::Pending::new(Fetching {
@@ -4690,6 +4754,7 @@ impl Consumer {
 			fills,
 			sequence,
 			frame_start: options.frame_start,
+			frame_end,
 			priority: options.priority,
 			max_delay: options.max_delay,
 			result,
@@ -4723,7 +4788,7 @@ impl Consumer {
 			let cached = state
 				.lookup
 				.range(span.clone())
-				.filter(|(_, slot)| !slot.is_aborted())
+				.filter(|(_, slot)| slot.serves_end())
 				.map(|(sequence, _)| *sequence)
 				.collect();
 			let holes: Vec<ops::Range<u64>> = miss::holes(&state, span)
@@ -4759,7 +4824,7 @@ impl Consumer {
 			state
 				.lookup
 				.range(span)
-				.filter(|(_, slot)| !slot.is_aborted())
+				.filter(|(_, slot)| slot.serves_end())
 				.map(|(sequence, _)| *sequence)
 				.collect()
 		})
@@ -4995,7 +5060,8 @@ impl kio::Task for Resolving {
 
 /// Join the fill covering `sequence`, or queue a one-group fill; `None` when no handler
 /// exists to take one, or for the last sequence, which a fill's exclusive end can't name.
-fn queue(fills: &kio::Shared<FillState>, sequence: u64, options: &group::Fetch) -> Option<Box<fill::Join>> {
+fn queue(fills: &kio::Shared<FillState>, sequence: u64, request: &FetchOptions) -> Option<Box<fill::Join>> {
+	let options = &request.options;
 	let end = sequence.checked_add(1)?;
 	let ask = fill::Ask {
 		start: Position {
@@ -5003,6 +5069,7 @@ fn queue(fills: &kio::Shared<FillState>, sequence: u64, options: &group::Fetch) 
 			frame: options.frame_start,
 		},
 		end,
+		frame_end: request.end,
 		asking: fill::Asking {
 			priority: options.priority,
 			max_delay: options.max_delay,
@@ -5161,6 +5228,7 @@ fn ask_span(fills: &kio::Shared<FillState>, span: ops::Range<u64>, priority: i8)
 	let ask = fill::Ask {
 		start: Position::group(span.start),
 		end: span.end,
+		frame_end: None,
 		asking: fill::Asking {
 			priority,
 			// A fetch names its groups outright, so only the publisher's max age applies.
@@ -5169,6 +5237,13 @@ fn ask_span(fills: &kio::Shared<FillState>, span: ops::Range<u64>, priority: i8)
 		},
 	};
 	fills.lock().join(fills, &ask).0
+}
+
+/// One transport request, whose end may cut the stored copy short.
+#[derive(Clone)]
+pub(crate) struct FetchOptions {
+	pub options: group::Fetch,
+	pub end: Option<u64>,
 }
 
 /// The pollable state of a [`Consumer::fetch_group`].
@@ -5183,6 +5258,7 @@ pub struct Fetching {
 	// This caller's own start, so a cached group that begins above it is a miss
 	// rather than a short answer.
 	frame_start: u64,
+	frame_end: Option<u64>,
 	// This caller's priority, for a fetch that moves to a front's routes.
 	priority: i8,
 	// This caller's own age cap. None means only the publisher's max age.
@@ -5214,7 +5290,14 @@ impl kio::Task for Fetching {
 				max_delay: self.max_delay,
 				frame_start: self.frame_start,
 			};
-			self.resume = Some(Box::new(routes.fetch_group(self.sequence, options, self.state.clone())));
+			self.resume = Some(Box::new(routes.fetch_group(
+				self.sequence,
+				FetchOptions {
+					options,
+					end: self.frame_end,
+				},
+				self.state.clone(),
+			)));
 		}
 		if let Some(resume) = &mut self.resume {
 			let group = ready!(kio::Task::poll(&mut **resume, waiter))?;
@@ -5247,6 +5330,7 @@ impl kio::Task for Fetching {
 		let resolve = |group: group::Consumer| {
 			group
 				.with_range(frame_start..)
+				.with_end(self.frame_end)
 				.with_meter(self.stats.meter())
 				.with_expiry(expiry.clone())
 		};
@@ -5256,12 +5340,19 @@ impl kio::Task for Fetching {
 
 		// Track side: the cached group, the abort error, or past-final. The outer
 		// error is the channel closing without any of those.
-		let cached =
-			|waiter: &kio::Waiter| match state.poll(waiter, |state| state.poll_fetch_cached(sequence, frame_start)) {
-				Poll::Ready(Ok(res)) => Poll::Ready(res.map(resolve)),
-				Poll::Ready(Err(closed)) => Poll::Ready(Err(closed.abort.clone().unwrap_or(Error::Dropped))),
-				Poll::Pending => Poll::Pending,
-			};
+		let cached = |waiter: &kio::Waiter| match state.poll(waiter, |state| {
+			state.poll_fetch_cached(
+				sequence,
+				group::Bounds {
+					start: frame_start,
+					end: self.frame_end,
+				},
+			)
+		}) {
+			Poll::Ready(Ok(res)) => Poll::Ready(res.map(resolve)),
+			Poll::Ready(Err(closed)) => Poll::Ready(Err(closed.abort.clone().unwrap_or(Error::Dropped))),
+			Poll::Pending => Poll::Pending,
+		};
 		if let Poll::Ready(res) = cached(waiter) {
 			return Poll::Ready(res);
 		}
@@ -5320,7 +5411,14 @@ impl kio::Task for Fetching {
 				max_delay: self.max_delay,
 				frame_start: self.frame_start,
 			};
-			self.result = queue(&self.fills, self.sequence, &options);
+			self.result = queue(
+				&self.fills,
+				self.sequence,
+				&FetchOptions {
+					options,
+					end: self.frame_end,
+				},
+			);
 			return self.poll(waiter);
 		}
 		Poll::Ready(Err(err))
@@ -15078,6 +15176,126 @@ mod test {
 		assert_eq!(&fetched.read_frame().await.unwrap().unwrap().payload[..], b"head");
 	}
 
+	/// A bounded FIN is local to its request, never proof that the original group ended.
+	#[moq_clock::test]
+	#[cfg(feature = "async")]
+	async fn bounded_transport_copies_never_answer_whole_fetches() {
+		let producer = track_producer("test", Info::timed());
+		let dynamic = producer.dynamic();
+		let consumer = producer.consume();
+		let request = |start, end| FetchOptions {
+			options: group::Fetch {
+				frame_start: start,
+				..Default::default()
+			},
+			end,
+		};
+		let bounded = consumer.fetch_range(0, request(2, Some(4)));
+		let fill = dynamic.requested_fill_group().await.unwrap();
+		assert_eq!((fill.frame_start(), fill.frame_end()), (0, Some(4)));
+		let mut prefix = fill.accept(Info::timed()).unwrap();
+		for _ in 0..4 {
+			prefix.write_frame(Timestamp::ZERO, b"prefix".as_slice()).unwrap();
+		}
+		prefix.finish().unwrap();
+		let mut bounded = bounded.await.unwrap().with_range(2..).with_end(Some(4));
+		for expected in 2..4 {
+			assert_eq!(bounded.index(), expected);
+			assert!(bounded.read_frame().await.unwrap().is_some());
+		}
+		assert!(bounded.read_frame().await.unwrap().is_none());
+		assert!(
+			consumer.cached_groups(0..1).is_empty(),
+			"a bounded prefix is no whole cached group"
+		);
+		let all = consumer.fill_groups(0..1, 0);
+		// A narrower bound reuses the same stored prefix.
+		assert!(
+			consumer
+				.fetch_range(0, request(1, Some(3)))
+				.now_or_never()
+				.unwrap()
+				.is_ok()
+		);
+		let mut whole = consumer.fetch_group(0, None);
+		assert!(kio::Task::poll(&mut *whole, &kio::Waiter::noop()).is_pending());
+		let fill = dynamic.requested_fill_group().await.unwrap();
+		assert_eq!((fill.frame_start(), fill.frame_end()), (0, None));
+		let mut complete = fill.accept(Info::timed()).unwrap();
+		for _ in 0..6 {
+			complete.write_frame(Timestamp::ZERO, b"whole".as_slice()).unwrap();
+		}
+		complete.finish().unwrap();
+		let mut whole = whole.await.unwrap();
+		for _ in 0..6 {
+			assert!(whole.read_frame().await.unwrap().is_some());
+		}
+		assert!(whole.read_frame().await.unwrap().is_none());
+		assert_eq!(all.await.held(0..1), BTreeSet::from([0]));
+		assert_eq!(producer.state.read().lookup[&0].copies().count(), 1);
+	}
+
+	/// Tail starts replace one backfill slot rather than retaining a copy per peer range.
+	#[moq_clock::test]
+	#[cfg(feature = "async")]
+	async fn bounded_tail_refills_coalesce_behind_a_live_copy() {
+		let producer = track_producer("test", Info::timed());
+		let dynamic = producer.dynamic();
+		let consumer = producer.consume();
+		let mut live = producer.create_group(group::Info { sequence: 0 }).unwrap();
+		live.start_at(200).unwrap();
+		live.write_frame(Timestamp::ZERO, b"live".as_slice()).unwrap();
+		for start in (1..100).rev() {
+			let fetched = consumer.fetch_range(
+				0,
+				FetchOptions {
+					options: group::Fetch {
+						frame_start: start,
+						..Default::default()
+					},
+					end: Some(start + 1),
+				},
+			);
+			let fill = dynamic.requested_fill_group().await.unwrap();
+			assert_eq!((fill.frame_start(), fill.frame_end()), (start, Some(start + 1)));
+			let mut tail = fill.accept(Info::timed()).unwrap();
+			tail.write_frame(Timestamp::ZERO, b"tail".as_slice()).unwrap();
+			tail.finish().unwrap();
+			assert_eq!(fetched.await.unwrap().index(), start);
+			assert_eq!(producer.state.read().lookup[&0].copies().count(), 2);
+		}
+		let mut sub = producer.subscribe(None);
+		let group = sub.recv_group().await.unwrap().unwrap();
+		assert_eq!(
+			group.with_range(0..).index(),
+			200,
+			"a bounded head does not replace the live feed for whole-group readers"
+		);
+		live.abort(Error::Cancel).unwrap();
+		// The backfill remains cache-owned after the live copy failed.
+		assert!(!producer.state.read().lookup[&0].is_aborted());
+	}
+
+	/// Queued ranges widen before dispatch; a taken cap does not promise an unseen suffix.
+	#[moq_clock::test]
+	#[cfg(feature = "async")]
+	async fn bounded_fetches_widen_before_dispatch_and_split_after() {
+		let producer = track_producer("test", Info::timed());
+		let dynamic = producer.dynamic();
+		let consumer = producer.consume();
+		let request = |end| FetchOptions {
+			options: group::Fetch::default(),
+			end: Some(end),
+		};
+		let _a = consumer.fetch_range(0, request(3));
+		let _b = consumer.fetch_range(0, request(5));
+		let first = dynamic.requested_fill_group().await.unwrap();
+		assert_eq!(first.frame_end(), Some(5));
+		let _c = consumer.fetch_range(0, request(8));
+		let second = dynamic.requested_fill_group().await.unwrap();
+		assert_eq!((first.frame_end(), second.frame_end()), (Some(5), Some(8)));
+	}
+
 	/// An accepted group starts where its request did before anyone can see it, so a
 	/// wider fetch arriving before the handler writes misses instead of being handed a
 	/// reader that would skip the head it asked for.
@@ -17318,7 +17536,7 @@ mod test {
 			.write()
 			.ok()
 			.unwrap()
-			.insert_group_request(3, 0, None)
+			.insert_group_request(3, group::Bounds::default(), None)
 			.unwrap();
 		assert!(subscriber.poll_recv_group(&waiter).is_pending());
 		assert!(fill.is_wanted(3), "the answer has not reached the reader yet");

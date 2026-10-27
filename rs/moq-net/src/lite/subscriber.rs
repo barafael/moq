@@ -8093,12 +8093,14 @@ enum FetchRunState {
 		request: Option<track::GroupFill>,
 		stream: Stream<Transport, Version>,
 		frame_start: u64,
+		frame_end: Option<u64>,
 	},
 	/// Flushed; waiting for the publisher to answer before accepting.
 	Answer {
 		request: Option<track::GroupFill>,
 		stream: Stream<Transport, Version>,
 		frame_start: u64,
+		frame_end: Option<u64>,
 	},
 	Ingest {
 		stream: Stream<Transport, Version>,
@@ -8244,8 +8246,15 @@ impl kio::Task for FetchServeRun {
 					// been. Asking for the offset anyway would fail to encode and reject a
 					// fetch we can serve.
 					let frame_start = match self.serve.subscriber.version.has_frame_bounds() {
-						true => request.frame_start(),
+						true if !self.info.compress => request.frame_start(),
+						true => 0,
 						false => 0,
+					};
+
+					let frame_end = if self.serve.subscriber.version.has_frame_bounds() && !self.info.compress {
+						request.frame_end()
+					} else {
+						None
 					};
 
 					let msg = lite::Fetch {
@@ -8259,10 +8268,9 @@ impl kio::Task for FetchServeRun {
 							.filter(|_| self.serve.subscriber.version.has_fetch_max_delay()),
 						group: self.group,
 						start_frame: frame_start,
-						// Always through the end of the group: a fetch that stopped short
-						// would cache a group indistinguishable from a complete one. A
-						// downstream cap is applied when serving, not when fetching.
-						end_frame: None,
+						// A bounded plain copy keeps this provenance in the cache; older wires
+						// and compressed groups widen to a complete representation.
+						end_frame: frame_end.and_then(|end| end.checked_sub(1)),
 					};
 					stream = stream.with_stats(self.serve.subscriber.origin.stats());
 					let buffered = stream
@@ -8279,6 +8287,7 @@ impl kio::Task for FetchServeRun {
 						request: Some(request),
 						stream,
 						frame_start,
+						frame_end,
 					};
 				}
 				FetchRunState::Send { stream, .. } => {
@@ -8296,6 +8305,7 @@ impl kio::Task for FetchServeRun {
 						request,
 						stream,
 						frame_start,
+						frame_end,
 					} = std::mem::replace(&mut self.state, FetchRunState::Done)
 					else {
 						unreachable!()
@@ -8304,6 +8314,7 @@ impl kio::Task for FetchServeRun {
 						request,
 						stream,
 						frame_start,
+						frame_end,
 					};
 				}
 				FetchRunState::Answer { stream, .. } => {
@@ -8317,6 +8328,7 @@ impl kio::Task for FetchServeRun {
 						request,
 						stream,
 						frame_start,
+						frame_end,
 					} = std::mem::replace(&mut self.state, FetchRunState::Done)
 					else {
 						unreachable!()
@@ -8337,7 +8349,13 @@ impl kio::Task for FetchServeRun {
 					// The group's readers pick it up from the cache only when next polled,
 					// so their demand outlives the request until then.
 					let readers = request.readers();
-					let mut producer = match request.accept(group_info) {
+					let producer = match request.accept_from(
+						group_info,
+						group::Bounds {
+							start: frame_start,
+							end: frame_end,
+						},
+					) {
 						Ok(producer) => producer,
 						Err(err) => {
 							// Already served (a concurrent fetch) or the track closed.
@@ -8346,14 +8364,6 @@ impl kio::Task for FetchServeRun {
 							return Poll::Ready(());
 						}
 					};
-
-					// The response starts at the frame we asked for, so number it from
-					// there rather than restarting the group at 0.
-					if let Err(err) = producer.start_at(frame_start) {
-						stream.writer.abort(&err);
-						let _ = producer.abort(err);
-						return Poll::Ready(());
-					}
 
 					self.state = FetchRunState::Ingest {
 						stream,

@@ -552,6 +552,48 @@ test("lite draft-05: the fetch response ranks the publisher's own writes", async
 	}
 });
 
+test.each([0, 5, 6, 7])("a fetched cached tail keeps absolute indices from %s", async (startFrame) => {
+	const version = Version.DRAFT_07;
+	const pair = createMockTransportPair(ALPN_07_WIP);
+	const origin = new OriginProducer();
+	const publisher = new Publisher(pair.server, version, randomHop(), origin.consume());
+	const broadcast = publish(origin, Path.from("test"));
+	const track = broadcast.createTrack("video", { timescale: Timescale.MILLI });
+	const group = hooks.receiveGroup(track, { sequence: 0, start: 5 });
+	for (const value of ["a", "b"]) group.writeFrame(textFrame(value));
+	group.finish();
+	const client = await Stream.open(pair.client, { version });
+	const server = await Stream.accept(pair.server, version);
+	if (!server) throw new Error("publisher never saw the fetch stream");
+	try {
+		await publisher.runFetch(
+			new Fetch({
+				broadcast: Path.from("test"),
+				track: "video",
+				priority: 0,
+				group: 0,
+				startFrame,
+			}),
+			server,
+		);
+		if (startFrame === 0) {
+			await expect(client.reader.done()).rejects.toThrow();
+		} else {
+			const payloads: string[] = [];
+			while (!(await client.reader.done())) {
+				await client.reader.u62();
+				payloads.push(new TextDecoder().decode(await client.reader.read(await client.reader.u53())));
+			}
+			expect(payloads).toEqual(["a", "b"].slice(startFrame - 5));
+		}
+	} finally {
+		publisher.close();
+		client.close();
+		broadcast.close();
+		origin.close();
+	}
+});
+
 // An unchecked track goes out untimed, so lite-06 carries its send time, never the frame's own
 // timestamp, which may be a moq-transport arrival time.
 test("lite draft-06: an unchecked track's fetched frames carry their send time", async () => {

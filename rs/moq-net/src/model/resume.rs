@@ -315,7 +315,7 @@ impl Consumer {
 	pub(super) fn fetch_group(
 		&self,
 		sequence: u64,
-		options: group::Fetch,
+		options: track::FetchOptions,
 		logical: kio::Consumer<track::TrackState>,
 	) -> Fetching {
 		Fetching {
@@ -1753,7 +1753,7 @@ pub(super) struct Recover {
 }
 
 enum Fetch {
-	Pending(kio::Pending<track::Fetching>),
+	Pending(Box<track::Fetching>),
 	/// The serving route will not fetch it: wait for its subscription instead.
 	Refused(Error),
 }
@@ -1962,7 +1962,10 @@ impl Recover {
 				frame_start: index,
 				..Default::default()
 			};
-			self.fetch = Some((generation, Fetch::Pending(serving.fetch_group(self.sequence, options))));
+			self.fetch = Some((
+				generation,
+				Fetch::Pending(Box::new(serving.fetch_group(self.sequence, options).into_inner())),
+			));
 		}
 		let Some((_, fetch)) = &mut self.fetch else {
 			unreachable!("asked above")
@@ -2060,7 +2063,7 @@ pub(super) struct Replacement {
 pub(super) struct Fetching {
 	route: Consumer,
 	sequence: u64,
-	options: group::Fetch,
+	options: track::FetchOptions,
 	logical: kio::Consumer<track::TrackState>,
 	/// The fetch in flight, and the route generation it went to.
 	pending: Option<(u64, kio::Pending<track::Fetching>)>,
@@ -2089,7 +2092,7 @@ impl kio::Task for Fetching {
 				continue;
 			}
 			if self.pending.as_ref().is_none_or(|(asked, _)| *asked != generation) {
-				self.pending = Some((generation, serving.fetch_group(self.sequence, self.options.clone())));
+				self.pending = Some((generation, serving.fetch_range(self.sequence, self.options.clone())));
 			}
 			let (_, pending) = self.pending.as_mut().expect("asked above");
 			let result = match kio::Task::poll(&mut **pending, waiter) {
@@ -2107,7 +2110,7 @@ impl kio::Task for Fetching {
 					Poll::Ready(Ok(group.with_recover(Recover {
 						sequence: self.sequence,
 						reader: None,
-						max_delay: self.options.max_delay,
+						max_delay: self.options.options.max_delay,
 						route: self.route.clone(),
 						generation,
 						copy: serving.clone(),

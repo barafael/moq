@@ -167,6 +167,13 @@ impl Entry {
 	}
 }
 
+/// The frames carried by one transport copy; `end` is exclusive, not the group's end.
+#[derive(Clone, Copy, Debug, Default)]
+pub(crate) struct Bounds {
+	pub start: u64,
+	pub end: Option<u64>,
+}
+
 /// Shared group state. Model-visible so [`frame`] handles can observe the abort flag
 /// while streaming a partial frame.
 #[derive(Default)]
@@ -198,6 +205,8 @@ pub(super) struct GroupState {
 	// Exclusive cap on `next_index`, set when the track ends inside this group: a write
 	// past the track's end is refused rather than served as content that does not exist.
 	limit: Option<usize>,
+	// A transport stopped this copy here; FIN does not declare the original group complete.
+	range_end: Option<usize>,
 
 	// The total size (in bytes) of all cached frames plus what the in-flight frame has
 	// written so far.
@@ -1197,7 +1206,7 @@ impl Producer {
 	/// there.
 	///
 	/// A group can be short at its front or its back, never in the middle: this trims
-	/// the front, and simply stopping (then [`finish`](Self::finish)ing) trims the back.
+	/// the front. Transport cuts at the back also retain their incomplete provenance.
 	/// The frames below `index` are not a gap this handle will ever fill, so a reader
 	/// positioned below it gets [`Error::Lagged`]. They belong to whoever produced the
 	/// head of the group, typically another route serving the same track (see
@@ -1222,6 +1231,21 @@ impl Producer {
 		state.offset = index;
 		state.next_index = index;
 		state.log.evict(index as u64);
+		Ok(())
+	}
+
+	/// Apply transport bounds before this copy is published to the cache.
+	pub(crate) fn bound(&mut self, frames: Bounds) -> Result<()> {
+		self.start_at(frames.start)?;
+		if let Some(end) = frames.end {
+			let end = usize::try_from(end).map_err(|_| Error::BoundsExceeded(crate::coding::BoundsExceeded))?;
+			let mut state = modify(&self.handle.state)?;
+			if end < state.offset {
+				return Err(Error::InvalidRange);
+			}
+			state.range_end = Some(end);
+			state.limit = Some(state.limit.map_or(end, |limit| limit.min(end)));
+		}
 		Ok(())
 	}
 
@@ -1934,9 +1958,29 @@ impl Handle {
 		Fate(self.alive.clone())
 	}
 
+	/// Whether a transport-bounded copy may answer these requested frames.
+	pub(super) fn covers(&self, frames: Bounds) -> bool {
+		let state = self.state.read();
+		state.abort.is_none()
+			&& state.offset as u64 <= frames.start
+			&& match (state.range_end, frames.end) {
+				(None, _) => true,
+				(Some(cap), Some(end)) => end <= cap as u64,
+				(Some(_), None) => false,
+			}
+	}
+
+	/// Whether this copy was cut short at the back by its transport request.
+	pub(super) fn back_cut(&self) -> bool {
+		self.state.read().range_end.is_some()
+	}
+
 	/// Whether the group was finished: it holds every frame it will ever have.
 	pub(crate) fn is_finished(&self) -> bool {
-		self.state.read().fin.is_some()
+		{
+			let state = self.state.read();
+			state.fin.is_some() && state.range_end.is_none()
+		}
 	}
 
 	/// The index of the first frame this group still holds, or `None` once it has been
@@ -1966,7 +2010,7 @@ impl Handle {
 	/// tail, and the count outlives the released cache.
 	pub(super) fn resume_frame(&self) -> Option<usize> {
 		let state = self.state.read();
-		if state.fin.is_some() || state.sparse() {
+		if (state.fin.is_some() && state.range_end.is_none()) || state.sparse() {
 			return None;
 		}
 		(state.committed() > state.offset).then_some(state.committed())
