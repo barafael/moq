@@ -4,6 +4,22 @@ How to update your code for each breaking change, newest first.
 
 ## Unreleased
 
+### `broadcast::Demand` reads like `track::Demand`
+
+Replace `is_used()` with `wanted()`, and `used()`, `unused()`, `poll_used`, and `poll_unused` with a loop over `wanted_changed()` (or `poll_wanted_changed`), which returns the new value each time it changes and errors once the broadcast closes.
+`broadcast::Consumer::demand()` is gone: call `demand()` on the broadcast's `Producer`.
+
+```rust
+// Before
+demand.used().await?;
+demand.unused().await?;
+// After
+while !demand.wanted_changed().await? {}
+while demand.wanted_changed().await? {}
+```
+
+A group a subscription or fetch handed out now keeps its track wanted until a reader reads the group's end: until then `track::Demand::wanted` stays `Some` and `track::Producer::abort_unused` declines. Drop the group, or read it to its end, to let the demand go.
+
 ### Building a `Path` refuses empty segments ([#6648](https://github.com/moq-dev/moq/pull/6648))
 
 `Path::new` and `TryFrom` fail with `path::Invalid::EmptySegment` on a leading, trailing, or doubled `/` instead of collapsing it, so a path has one spelling; the empty path is still the root. Origin entry points report it as `Error::EmptySegment`, and `Path::from_static` panics on it.
@@ -73,7 +89,6 @@ A sender that relied on `None` to hold its rate while unwatched should check its
 
 These had no caller outside tests; replace them as follows.
 
-- `broadcast::Demand` and both `broadcast::{Producer, Consumer}::demand()`: watch each track's `track::Demand` instead.
 - `goaway::Consumer::{peek, recv}`: poll it, `goaway.poll(&kio::Waiter::noop())` to peek or `kio::wait(|waiter| goaway.poll(waiter)).await` to wait.
 - `bandwidth::Producer::{abort, closed}`: drop the last producer to close it.
 - `Version::{names, from_alpn, is_ietf}`: use `Versions::all().iter()` or `Version::from_code`, match `alpn()` yourself, and `!is_lite()`.
