@@ -46,10 +46,12 @@ Beyond "does not panic":
   same code, so emitting something we would reject is a bug on the wire.
 - Encoding is stable: encode, decode, encode again yields identical bytes. Skipped
   where a parameter map reaches the wire, since those encoders walk a `HashMap` and its
-  iteration order differs per instance (moq-lite SETUP, and draft-14/15, which unlike
-  draft-16+ do not sort by key first).
+  iteration order differs per instance (moq-lite SETUP).
 - A lite-07 announce stream our decoder accepts, recompressed by our encoder, resolves
-  to the same announcements, and every resolved path fits a literal ANNOUNCE\_START.
+  to the same announcements.
+- Every path decoded from the wire (a moq-lite path, an IETF namespace or Full Track
+  Name) or resolved from an announce stream parses back to itself under the strict
+  constructor, and so does each run of its leading segments.
 - Setup Options a client accepts from its server, a server accepts from its client: only
   PATH and AUTHORITY are one-sided.
 - `Path::relative` inverts `Path::resolve`, and never produces a reference that walks

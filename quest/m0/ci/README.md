@@ -128,7 +128,6 @@ The historical samples locate candidates; they are not controlled benchmarks.
 
 - [Land main through quest land](/quest/m0/ci/land.md) - one self-hosted runner tests every queued PR as a squash chain and fast-forwards `main` to the longest passing prefix
 - [Bump quest to quest land](/quest/m0/ci/land-bump.md) - condition: kixelated/quest ships `quest land`; then bump the flake input
-- [Feature PRs stop editing MIGRATE.md](/quest/m0/ci/migrate-unreleased.md) - Unreleased sections stop conflicting, and the cut writes each version's section
 - [Measure nightly compiler levers](/quest/m0/ci/nightly-levers.md) - the parallel frontend and Cranelift, adopted only if the numbers beat their risks
 - [Verify the R2 Rust cache](/quest/m0/ci/mbx-r2-verify.md) - measure the hosted Nightly jobs' hits, restore time, and expiry once the bump lands
 - [Verify the Nix cache](/quest/m0/ci/nix-cache-verify.md) - confirm CI and releases use `nix.moq.dev` and retire Cachix
@@ -137,4 +136,3 @@ The historical samples locate candidates; they are not controlled benchmarks.
 - [First shared FFI release](/quest/m0/ci/nightly-ffi-reuse.md) - condition: the backport merges and the next `moq-ffi-v*` tag runs `Release FFI`; verify the wrappers
 - [Fewer BTreeMap instantiations](/quest/m0/ci/btree-keys.md) - moq-net shares BTreeMap key and value types, kept only if its CPU time drops
 - [Halve the slowest tests' CPU](/quest/m0/ci/slow-tests.md) - the slowest 1% of tests take under half their 289 CPU-seconds, with coverage kept
-- [Measure moving unit tests out](/quest/m0/ci/test-layout.md) - deprioritized: keep inline unit tests unless a profile shows moq-net's second library build is worth a migration

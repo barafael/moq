@@ -478,9 +478,12 @@ impl Publish {
 		args: &CaptureArgs,
 		bandwidth: moq_net::bandwidth::Allocator,
 		max_age: Option<std::time::Duration>,
+		hls: bool,
 	) -> anyhow::Result<Self> {
 		let mut broadcast = publication.broadcast().clone();
-		let config = moq_mux::catalog::Config::default().with_max_age(max_age);
+		let config = moq_mux::catalog::Config::default()
+			.with_max_age(max_age)
+			.with_hls(hls.then(moq_mux::hls::Config::default));
 		let catalog = moq_mux::catalog::Producer::new(&mut broadcast, config)?;
 
 		let video = if args.no_video {
@@ -1278,7 +1281,7 @@ pub(crate) mod tests {
 		let input = [&lead[..], &second].concat();
 
 		let _ = moq_tokio::crypto::install_default();
-		for version in ["moq-lite-06", "moq-lite-07-wip", "moq-transport-14"] {
+		for version in ["moq-lite-06", "moq-lite-07-wip", "moq-transport-18"] {
 			let fixture = moq_relay::test_relay().await.unwrap();
 			let ready = fixture.relay.ready();
 			tokio::spawn(fixture.relay.run());
