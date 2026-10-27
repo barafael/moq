@@ -452,8 +452,10 @@ class DecoderTrack {
 	// Codec description from the last configure, reused after a playhead reset.
 	#description?: Uint8Array;
 
-	// The playhead moved and the next decoded frame decides whether the decoder resets.
+	// A hole or timeline restart makes the next decoded frame decide whether the codec resets.
 	#resetPending = false;
+	// A declared endpoint stays in force through holes until a later group starts a new timeline.
+	#endGroup?: number;
 
 	// The newest consumer reading this track, whose estimate a replacement continues. The predecessor
 	// is only held until the first one opens.
@@ -599,20 +601,19 @@ class DecoderTrack {
 			for (;;) {
 				const next = await nextMedia(consumer);
 				if (!next) break;
+				this.#onRead(next, latest);
 
-				// A gap or a declared end breaks the timeline: re-anchor before decoding further, and
-				// never bridge the buffer across it.
+				// A gap or declared end cuts the decoded span; neither bridges buffered ranges.
 				if (next.kind !== "frame") {
 					if (next.kind === "gap") recovery.gap();
-					if (latest !== undefined) this.#onBreak();
 					previous = undefined;
 					continue;
 				}
 				const { frame } = next;
 
 				// An older keyframe would replace the codec references needed by live deltas. Group
-				// sequences only grow within a subscription, so a break (which a stale marker can
-				// raise) never resets this guard. Rejected payloads still count as received bytes.
+				// sequences only grow within a subscription, so neither a hole nor an endpoint
+				// resets this guard. Rejected payloads still count as received bytes.
 				const stale = latest !== undefined && next.group < latest;
 				const accepted = !stale && recovery.accept(frame);
 				this.stats.update((current) => ({
@@ -685,19 +686,19 @@ class DecoderTrack {
 			for (;;) {
 				const next = await nextMedia(consumer);
 				if (!next) break;
+				this.#onRead(next, latest);
 
-				// A gap or a declared end breaks the timeline (see #runLegacy).
+				// Do not bridge buffered ranges across a gap or end (see #runLegacy).
 				if (next.kind !== "frame") {
 					if (next.kind === "gap") recovery.gap();
-					if (latest !== undefined) this.#onBreak();
 					previous = undefined;
 					continue;
 				}
 				const { frame } = next;
 
 				// An older keyframe would replace the codec references needed by live deltas. Group
-				// sequences only grow within a subscription, so a break (which a stale marker can
-				// raise) never resets this guard. Rejected payloads still count as received bytes.
+				// sequences only grow within a subscription, so neither a hole nor an endpoint
+				// resets this guard. Rejected payloads still count as received bytes.
 				const stale = latest !== undefined && next.group < latest;
 				const accepted = !stale && recovery.accept(frame);
 				this.stats.update((current) => ({
@@ -756,10 +757,21 @@ class DecoderTrack {
 		}
 	}
 
-	// The container read a gap or a declared end after media. Re-anchor and let the next decoded
-	// frame decide the decoder reset (see #resetAtKeyframe). Clearing `timestamp` keeps a stale
-	// high value from late-rejecting the following frames, which may overlap the previous group's
-	// tail. The held picture stays until the new keyframe renders.
+	// Container gaps restart prediction on the existing clock. Only a declared end followed by
+	// a later group establishes another timeline; a marker from older history cannot end live media.
+	#onRead(read: Container.Read, latest: number | undefined): void {
+		if (read.kind === "gap") {
+			if (latest !== undefined) this.#resetPending = true;
+		} else if (read.kind === "end") {
+			if (latest === undefined || read.group >= latest) this.#endGroup = read.group;
+		} else if (this.#endGroup !== undefined && read.group > this.#endGroup) {
+			this.#endGroup = undefined;
+			this.#onBreak();
+		}
+	}
+
+	// A fresh timeline invalidates parked pictures and its previous decoded span. The held picture
+	// stays until the new keyframe renders; the codec resets before that keyframe is decoded.
 	#onBreak(): void {
 		this.first.set(undefined);
 		this.timestamp.set(undefined);
@@ -768,12 +780,10 @@ class DecoderTrack {
 		this.#resetPending = true;
 	}
 
-	// Call before each decode. After a break, a keyframe starts a new timeline, so drop the
-	// pictures still queued in the decoder: one from later in a group that restarts would
-	// otherwise come out above the new keyframe and late-reject it. A delta continues a group the
-	// break interrupted (a stale marker or a max-delay hole), so it keeps the decoder's references;
-	// a reset would make WebCodecs require a key chunk and throw. `reset()` cannot cancel an
-	// output callback that already holds a frame; the clock epoch it captured rejects that one.
+	// Re-prime at a keyframe after a hole or restart, dropping pictures still queued in the codec.
+	// A delta may continue a group that a max-delay hole interrupted and still need its references;
+	// resetting before it would make WebCodecs require a key chunk. An output callback that already
+	// holds a frame stays parked on Sync; only a new timeline invalidates its clock epoch.
 	#resetAtKeyframe(decoder: VideoDecoder, keyframe: boolean): void {
 		if (!this.#resetPending) return;
 		this.#resetPending = false;

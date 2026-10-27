@@ -891,8 +891,11 @@ export class Decoder {
 	// a gap, or a later group after a declared end.
 	#onRead(read: Container.Read): boolean {
 		if (!this.#terminal.update(read)) return false;
-		this.sync.reset();
-		this.reset();
+		// A hole restarts codec prediction on the same timeline, keeping decoded PCM and parked video.
+		if (read.kind === "frame") {
+			this.sync.reset();
+			this.reset();
+		}
 		return true;
 	}
 

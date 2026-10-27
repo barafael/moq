@@ -683,20 +683,42 @@ describe("Decoder across a rendition's absence", () => {
 		}
 	});
 
-	it("keeps the graph when only the container changes", async () => {
-		const playback = await play(Milli(100));
-		try {
-			await playback.play();
-			playback.restore({ container: { kind: "loc" } });
-			await microtasks();
-			await playback.play();
-
-			expect(playback.subscriptions()).toBe(2);
-			expect(contexts).toHaveLength(1);
-		} finally {
-			playback.close();
-		}
-	});
+	for (const [name, patch] of Object.entries({
+		container: { container: { kind: "loc" } },
+		codec: { codec: "mp4a.40.2" },
+	})) {
+		it(`keeps compatible PCM and Sync when the ${name} changes on the same instance`, async () => {
+			const clock = new Manual();
+			const installed = clock.install();
+			const playback = await play(Milli(100), true);
+			const reset = spyOn(playback.sync, "reset");
+			try {
+				await playback.play(7);
+				const ring = playback.rings().at(-1);
+				if (!ring) throw new Error("missing audio ring");
+				const held = ring.length;
+				const reference = playback.sync.out.reference.peek();
+				expect(held).toBeGreaterThan(0);
+				playback.restore(patch);
+				await microtasks();
+				expect(playback.subscriptions()).toBe(2);
+				expect(playback.codecs()).toBe(2);
+				expect(contexts).toHaveLength(1);
+				expect(playback.rings()).toEqual([ring]);
+				expect(ring.length).toBe(held);
+				expect(playback.resets()).toBe(0);
+				expect(reset).not.toHaveBeenCalled();
+				expect(playback.sync.out.reference.peek()).toBe(reference);
+				expect(ring.read([new Float32Array(960), new Float32Array(960)])).toBe(960);
+				await playback.play();
+				expect(reset).not.toHaveBeenCalled();
+			} finally {
+				playback.close();
+				await microtasks();
+				installed.close();
+			}
+		});
+	}
 
 	it("rebuilds the graph on a new channel count", async () => {
 		const playback = await play(Milli(100));
@@ -930,6 +952,14 @@ async function livePlayback(burst: number) {
 	return {
 		sync,
 		error: decoder.out.error,
+		arrivals: () => decoder.arrivals(),
+		// Lose one whole group without changing the following media timestamps or arrival cadence.
+		async hole() {
+			if (held.length) throw new Error("a hole needs an empty delivery burst");
+			sequence++;
+			frame++;
+			await clock.advance(FRAME);
+		},
 		counts,
 		ring,
 		get burst() {
@@ -992,6 +1022,36 @@ async function livePlayback(burst: number) {
 		},
 	};
 }
+
+it("a missing live group re-primes without clearing decoded PCM or resetting Sync", async () => {
+	const playback = await livePlayback(1);
+	const reset = spyOn(playback.sync, "reset");
+	const prime = spyOn(AudioDecoder.prototype, "reset");
+	const arrivals = playback.arrivals();
+	const received: { kind: string }[] = [];
+	const reading = (async () => {
+		for await (const arrival of arrivals) received.push(arrival);
+	})();
+	try {
+		await playback.run(1000);
+		const ring = playback.ring();
+		expect(ring?.stalled).toBe(false);
+		const buffered = ring?.length;
+		await playback.hole();
+		expect(ring?.length).toBe(buffered);
+		await playback.run(2000);
+		expect(received.some((arrival) => arrival.kind === "gap")).toBe(true);
+		expect(prime).toHaveBeenCalledTimes(1);
+		expect(reset).not.toHaveBeenCalled();
+		expect(playback.ring()).toBe(ring);
+		expect(ring?.stalled).toBe(false);
+		expect(playback.error.peek()).toBeUndefined();
+	} finally {
+		arrivals.close();
+		await reading;
+		await playback.close();
+	}
+});
 
 describe("Decoder across a rename", () => {
 	// A codec change renames the audio track, and the replacement's consumer reads the same path.
@@ -1179,30 +1239,47 @@ it("waits for video support before allowing audio-only startup", async () => {
 	}
 });
 
-it("does not count flushed audio toward a new startup floor after a gap", async () => {
-	const playback = await play(Milli(100), true);
-	try {
-		await playback.play(7);
-		expect(playback.sync.playing.peek()).toBe(true);
-		const openingRing = playback.rings().at(-1);
-		if (!openingRing) throw new Error("missing audio ring");
-		openingRing.read([new Float32Array(960), new Float32Array(960)]);
-		await microtasks();
-		playback.push({ kind: "gap", timestamp: Micro(160_000), duration: Micro(840_000) });
-		await microtasks();
-		frameTimestamp = 1_000_000;
-		await playback.play(1);
-		expect(playback.sync.playing.peek()).toBe(false);
-		const ring = playback.rings().at(-1);
-		if (!ring) throw new Error("missing audio ring");
-		expect(ring.read([new Float32Array(960), new Float32Array(960)])).toBe(0);
-		await playback.play(5);
-		expect(playback.sync.playing.peek()).toBe(true);
-	} finally {
-		playback.close();
-		await microtasks();
-	}
-});
+for (const cmaf of [false, true]) {
+	it(`a ${cmaf ? "CMAF" : "legacy"} hole re-primes the codec while keeping PCM and the clock`, async () => {
+		const clock = new Manual();
+		const installed = clock.install();
+		const playback = await play(Milli(100), true, cmaf);
+		const reset = spyOn(playback.sync, "reset");
+		const prime = spyOn(AudioDecoder.prototype, "reset");
+		try {
+			await playback.play(7);
+			expect(playback.sync.playing.peek()).toBe(true);
+			const ring = playback.rings().at(-1);
+			if (!ring) throw new Error("missing audio ring");
+			ring.read([new Float32Array(960), new Float32Array(960)]);
+			await microtasks();
+			const held = ring.length;
+			const reference = playback.sync.out.reference.peek();
+			const resets = playback.resets();
+			const parked = playback.sync.wait(Milli(1000));
+			expect(held).toBeGreaterThan(0);
+			playback.push({ kind: "gap", timestamp: Micro(160_000), duration: Micro(20_000) });
+			await microtasks();
+			expect(prime).toHaveBeenCalledTimes(1);
+			expect(reset).not.toHaveBeenCalled();
+			expect(playback.resets()).toBe(resets);
+			expect(ring.length).toBe(held);
+			expect(playback.sync.out.reference.peek()).toBe(reference);
+			expect(playback.sync.playing.peek()).toBe(true);
+			expect(Bun.peek.status(parked)).toBe("pending");
+			frameTimestamp = 160_000;
+			await playback.play(1);
+			expect(playback.sync.playing.peek()).toBe(true);
+			expect(ring.read([new Float32Array(960), new Float32Array(960)])).toBe(960);
+			await clock.advance(Nano.fromMilli(Milli(1200)));
+			expect(await parked).toBe(true);
+		} finally {
+			playback.close();
+			await microtasks();
+			installed.close();
+		}
+	});
+}
 
 it.each([100, 1000])(
 	"closing during shared startup at %dms releases the audio graph and backpressured reader",
