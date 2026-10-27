@@ -40,11 +40,7 @@ group must not multiply its copies; coalesce to one copy per group.
 
 Public API: none. Wire: lite-07-wip draft text only; the fields exist.
 
-## Related
-
-- [Front eviction](/quest/m1/unbounded-groups/front-eviction.md) - refills a front hole with a frame-precise range
-
-## Verification remaining
+### Verification remaining
 
 The private implementation, current-main integration and surface controls are
 retained in [moq-dev/moq#6922](https://github.com/moq-dev/moq/pull/6922). The full
@@ -466,3 +462,7 @@ After output: `.tmp/canonical-map-bench.log`, SHA256
 Conditions: `.tmp/canonical-map-bench-conditions.json`, SHA256
 `2a91de696ca6eaf5d594742e15ee4045e97fe2add5533a67078beb2545d861fd`.
 The stable full CI and real surface gates remain due on the final committed head.
+
+## Related
+
+- [Front eviction](/quest/m1/unbounded-groups/front-eviction.md) - refills a front hole with a frame-precise range
