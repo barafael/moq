@@ -57,6 +57,7 @@ macro_rules! design {
 design!(sent_packets::BTree, "btree");
 design!(sent_packets::Chunked, "chunked");
 design!(sent_packets::Split, "split");
+design!(sent_packets::Capped, "capped");
 
 /// A packet that counts toward congestion control.
 const MTU: u16 = 1200;
@@ -270,6 +271,7 @@ fn benches(c: &mut Criterion<ThreadCpu>) {
 	designs::<sent_packets::BTree>(c);
 	designs::<sent_packets::Chunked>(c);
 	designs::<sent_packets::Split>(c);
+	designs::<sent_packets::Capped>(c);
 }
 
 criterion_group! {

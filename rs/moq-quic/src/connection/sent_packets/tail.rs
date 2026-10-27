@@ -116,3 +116,63 @@ impl Tree {
 
 tail_design!(BTree, Tree);
 tail_design!(Chunked, Slots<SentPacket>);
+
+/// Chunked slots, forgetting the oldest ACK-only packet anywhere beyond the cap.
+#[derive(Default)]
+pub(crate) struct Capped {
+	packets: Slots<SentPacket>,
+	in_flight: usize,
+	/// The last ACK-only packet numbers sent, oldest first; some may be gone already
+	ack_only: std::collections::VecDeque<u64>,
+}
+
+impl Capped {
+	pub(crate) fn insert(&mut self, pn: u64, packet: SentPacket) -> Option<SentPacket> {
+		let mut forgotten = None;
+		if !packet.ack_eliciting {
+			if self.ack_only.len() == super::MAX_ACK_ONLY {
+				let oldest = self.ack_only.pop_front().unwrap();
+				forgotten = self.remove(oldest);
+			}
+			self.ack_only.push_back(pn);
+		}
+		self.in_flight += usize::from(packet.size != 0);
+		self.packets.insert(pn, packet);
+		forgotten
+	}
+
+	pub(crate) fn remove(&mut self, pn: u64) -> Option<SentPacket> {
+		let packet = self.packets.remove(pn)?;
+		self.in_flight -= usize::from(packet.size != 0);
+		Some(packet)
+	}
+
+	pub(crate) fn get(&self, pn: u64) -> Option<&SentPacket> {
+		self.packets.get(pn)
+	}
+
+	pub(crate) fn last(&self) -> Option<u64> {
+		self.packets.last()
+	}
+
+	pub(crate) fn has_in_flight(&self) -> bool {
+		self.in_flight != 0
+	}
+
+	pub(crate) fn range(&self, range: impl RangeBounds<u64> + Clone) -> impl Iterator<Item = (u64, &SentPacket)> + '_ {
+		self.packets.range(range)
+	}
+
+	pub(crate) fn values_mut(&mut self) -> impl Iterator<Item = &mut SentPacket> + '_ {
+		self.packets.values_mut()
+	}
+
+	pub(crate) fn into_values(self) -> impl Iterator<Item = SentPacket> {
+		self.packets.into_values()
+	}
+
+	#[cfg(test)]
+	pub(crate) fn slots(&self) -> usize {
+		self.packets.slots()
+	}
+}

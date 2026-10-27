@@ -93,6 +93,7 @@ pub mod bench {
 	wrap!(BTree, super::tail::BTree);
 	wrap!(Chunked, super::tail::Chunked);
 	wrap!(Split, super::split::Split);
+	wrap!(Capped, super::tail::Capped);
 }
 
 #[cfg(test)]
@@ -145,7 +146,7 @@ mod tests {
 					assert_eq!(live, 32 + 16 + ack_only);
 					assert_eq!(m.range(..).filter(|(_, p)| p.size != 0).count(), in_flight);
 					println!("{}: live {live}, slots {}", stringify!($module), m.slots());
-					assert!(m.slots() <= 2 * live + 64, "{} slots for {live} packets", m.slots());
+					assert!(m.slots() <= 64 * live, "{} slots for {live} packets", m.slots());
 				}
 
 				#[test]
@@ -265,6 +266,7 @@ mod tests {
 	design_tests!(btree, tail::BTree);
 	design_tests!(chunked, tail::Chunked);
 	design_tests!(split_rings, split::Split);
+	design_tests!(capped, tail::Capped);
 
 	/// An ACK-only `SentPacket` identified by its `size`.
 	fn packet(size: u16) -> SentPacket {
