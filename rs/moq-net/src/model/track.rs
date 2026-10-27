@@ -325,6 +325,7 @@ pub(crate) struct TrackState {
 	// Ordered so an in-range subscriber can seek to its cursor instead of scanning
 	// every cached group for each delivery.
 	lookup: BTreeMap<u64, Slot>,
+	contents: group::Contents,
 
 	// Publisher-produced groups in arrival order as (sequence, stamp), walked by
 	// subscriptions; an entry only resolves while its stamp matches the slot's.
@@ -617,7 +618,15 @@ impl Slot {
 
 	/// The bytes every copy holds, all freed together.
 	fn cache_size(&self) -> u64 {
-		self.copies().map(group::Handle::cache_size).sum()
+		let mut size = self.group.cache_size();
+		if let Some(head) = &self.head {
+			size += if head.same_content(&self.group) {
+				head.delivery_size()
+			} else {
+				head.cache_size()
+			};
+		}
+		size
 	}
 
 	/// Whether every copy still held sat idle past the scan's expiry window. Asks
@@ -1885,6 +1894,10 @@ impl TrackState {
 	fn insert_group(&mut self, group: &group::Handle, visible: bool) {
 		self.latch_settled();
 		let sequence = group.sequence;
+		if visible {
+			self.contents.remove(sequence);
+		}
+		group.register_content(&self.contents);
 		self.next_stamp = self.next_stamp.wrapping_add(1);
 		let stamp = self.next_stamp;
 
@@ -2616,22 +2629,29 @@ impl TrackState {
 		}
 		let info = self.info.clone().unwrap();
 
-		// A live group the feed started past `frame_start` keeps its slot: subscribers
-		// walk it in arrival order and the feed keeps writing it. The fetch fills its
-		// head instead. Anything else that can't answer from `frame_start` (evicted,
-		// aborted, or narrower backfill) is replaced; a group that can is a duplicate.
-		if self.lookup.get(&sequence).is_some_and(Slot::is_live) {
-			if self.covering_range(sequence, frames).is_some() {
-				return Err(Error::Duplicate);
+		if self.covering_range(sequence, frames).is_some() {
+			return Err(Error::Duplicate);
+		}
+		let mut content = self.contents.get(sequence);
+		if content.is_none()
+			&& let Some(slot) = self.lookup.get(&sequence)
+		{
+			for copy in slot.copies() {
+				if let Some(owner) = copy.activate_content()? {
+					content = Some(owner);
+					break;
+				}
 			}
-		} else {
-			if self.covering_range(sequence, frames).is_some() {
-				return Err(Error::Duplicate);
-			}
+		}
+		if !self.lookup.get(&sequence).is_some_and(Slot::is_live) {
 			self.uncache(sequence);
 		}
 
 		let mut group = group::Producer::new(group::Info { sequence }, info, self.cache.clone());
+		if let Some(content) = content {
+			group.handle().share_content(content);
+		}
+		group.handle().register_content(&self.contents);
 		// Start where the request did before the group is visible: a fetch looking it up
 		// in between would otherwise see it begin at 0 and get a reader that later skips
 		// the head it asked for.
@@ -15223,7 +15243,7 @@ mod test {
 		assert_eq!((fill.frame_start(), fill.frame_end()), (0, None));
 		let mut complete = fill.accept(Info::timed()).unwrap();
 		for _ in 0..6 {
-			complete.write_frame(Timestamp::ZERO, b"whole".as_slice()).unwrap();
+			complete.write_frame(Timestamp::ZERO, b"prefix".as_slice()).unwrap();
 		}
 		complete.finish().unwrap();
 		let mut whole = whole.await.unwrap();
@@ -15512,8 +15532,13 @@ mod test {
 			.unwrap()
 			.accept(Info::timed())
 			.unwrap();
-		for _ in 0..3 {
-			head.write_frame(Timestamp::ZERO, b"x".as_slice()).unwrap();
+		for index in 0..3 {
+			let payload = if index == 0 {
+				b"x".as_slice()
+			} else {
+				b"delta".as_slice()
+			};
+			head.write_frame(Timestamp::ZERO, payload).unwrap();
 		}
 		fetch.await.unwrap();
 
@@ -19678,5 +19703,259 @@ mod test {
 			.update(narrow.with_max_delay(Duration::from_secs(60)))
 			.unwrap();
 		assert_eq!(drain(&mut subscriber), Vec::<u64>::new());
+	}
+	/// Distinct transport starts retain delivery outcomes, but share the same indexed
+	/// bytes even while every earlier delivery is held by an unread consumer.
+	#[moq_clock::test]
+	#[cfg(feature = "async")]
+	async fn distinct_tail_readers_share_canonical_content() {
+		for size in [0, 1, 1024] {
+			for bounded in [false, true] {
+				let producer = track_producer("test", Info::timed());
+				let pool = producer.broadcast.pool.clone();
+				let dynamic = producer.dynamic();
+				let consumer = producer.consume();
+				let mut live = producer.create_group(group::Info { sequence: 0 }).unwrap();
+				live.start_at(32).unwrap();
+				live.write_frame(Timestamp::ZERO, vec![32; size]).unwrap();
+				assert!(
+					live.handle().content().is_none(),
+					"a single copy keeps its fast representation"
+				);
+				let mut held = Vec::new();
+				let mut deliveries = vec![live.handle()];
+				let end = if bounded { 17 } else { 33 };
+				for start in (1..=8).rev() {
+					let pending = consumer.fetch_range(
+						0,
+						FetchOptions {
+							options: group::Fetch {
+								frame_start: start,
+								..Default::default()
+							},
+							end: bounded.then_some(end),
+						},
+					);
+					let fill = dynamic.requested_fill_group().await.unwrap();
+					let mut tail = fill.accept(Info::timed()).unwrap();
+					for frame in start..end {
+						tail.write_frame(Timestamp::ZERO, vec![frame as u8; size]).unwrap();
+					}
+					tail.finish().unwrap();
+					deliveries.push(tail.handle());
+					held.push(pending.await.unwrap());
+				}
+				let owner = deliveries[0].content().unwrap();
+				for delivery in &deliveries {
+					assert!(Arc::ptr_eq(&owner, &delivery.content().unwrap()));
+				}
+				let (rows, bytes, shared_charge) = owner.cost();
+				assert_eq!(rows, if bounded { 17 } else { 32 });
+				assert_eq!(bytes, rows * size);
+				let total = pool.used();
+				let delivery_charge: u64 = deliveries.iter().map(group::Handle::delivery_size).sum();
+				eprintln!(
+					"CANONICAL_TAIL_COST size={size} bounded={bounded} delivery_handles={} canonical_rows={rows} unique_payload={bytes} shared_charge={shared_charge} delivery_charge={delivery_charge} discovery_charge={} total={total}",
+					deliveries.len(),
+					total - shared_charge - delivery_charge
+				);
+				let mut pointers = BTreeMap::new();
+				for (copy, reader) in held.iter_mut().enumerate() {
+					for index in (8 - copy) as u64..end {
+						assert_eq!(reader.index(), index);
+						let frame = reader.read_frame().await.unwrap().unwrap();
+						assert_eq!(frame.payload.as_ref(), vec![index as u8; size]);
+						if size != 0
+							&& let Some(prior) = pointers.insert(index, frame.payload.as_ptr() as usize)
+						{
+							assert_eq!(
+								prior,
+								frame.payload.as_ptr() as usize,
+								"one physical payload for every matching frame"
+							);
+						}
+					}
+					if bounded {
+						assert!(reader.read_frame().await.unwrap().is_none());
+					}
+				}
+				drop((pointers, owner, deliveries));
+				assert_eq!(
+					pool.used(),
+					total,
+					"identity probes neither own nor conceal payload copies"
+				);
+				drop(held);
+				live.abort(Error::Cancel).unwrap();
+			}
+		}
+	}
+
+	/// Evicting a Slot does not hide a canonical owner from still-held older tails;
+	/// explicitly recreating the live group, however, starts a new incarnation.
+	#[moq_clock::test]
+	#[cfg(feature = "async")]
+	async fn tail_owner_survives_slot_removal_but_not_live_recreation() {
+		let producer = track_producer("test", Info::timed());
+		let mut live = producer.create_group(group::Info { sequence: 0 }).unwrap();
+		live.start_at(8).unwrap();
+		live.write_frame(Timestamp::ZERO, b"eight".as_slice()).unwrap();
+		let mut tails = Vec::new();
+		let mut held = Vec::new();
+		for start in [4, 2] {
+			let mut tail = producer
+				.state
+				.write()
+				.ok()
+				.unwrap()
+				.insert_group_request(
+					0,
+					group::Bounds {
+						start,
+						end: Some(start + 1),
+					},
+					None,
+				)
+				.unwrap();
+			tail.write_frame(Timestamp::ZERO, vec![start as u8; 4]).unwrap();
+			tail.finish().unwrap();
+			held.push(tail.consume().with_range(start..));
+			tails.push(tail);
+		}
+		let owner = tails[0].handle().content().unwrap();
+		producer
+			.state
+			.write()
+			.ok()
+			.unwrap()
+			.uncache(0)
+			.unwrap()
+			.abort(Error::Evicted);
+		assert!(
+			!tails[0].handle().is_aborted(),
+			"the replaced delivery is held outside the Slot"
+		);
+		let mut refill = producer
+			.state
+			.write()
+			.ok()
+			.unwrap()
+			.insert_group_request(0, group::Bounds { start: 0, end: Some(1) }, None)
+			.unwrap();
+		assert!(Arc::ptr_eq(&owner, &refill.handle().content().unwrap()));
+		refill.write_frame(Timestamp::ZERO, b"zero".as_slice()).unwrap();
+		refill.finish().unwrap();
+		refill.abort(Error::Cancel).unwrap();
+		let mut recreated = producer.create_group(group::Info { sequence: 0 }).unwrap();
+		recreated.start_at(8).unwrap();
+		recreated.write_frame(Timestamp::ZERO, b"new eight".as_slice()).unwrap();
+		assert!(
+			recreated.handle().content().is_none(),
+			"an explicit new live incarnation starts independently"
+		);
+		let mut new = producer
+			.state
+			.write()
+			.ok()
+			.unwrap()
+			.insert_group_request(0, group::Bounds { start: 0, end: Some(1) }, None)
+			.unwrap();
+		new.write_frame(Timestamp::ZERO, b"new zero".as_slice()).unwrap();
+		assert!(!Arc::ptr_eq(&owner, &new.handle().content().unwrap()));
+		assert_eq!(held[0].read_frame().await.unwrap().unwrap().payload.as_ref(), &[4; 4]);
+	}
+
+	/// Activation preserves an already-streaming reader and producer, and every
+	/// delivery's progress, arrival and abort while sharing the origin's admission.
+	#[moq_clock::test]
+	#[cfg(feature = "async")]
+	async fn canonical_activation_preserves_inflight_delivery_ownership() {
+		for abort_first in [false, true] {
+			let budget = frame::Budget::new(1024);
+			let broadcast = Arc::new(broadcast::Info {
+				frames: budget.clone(),
+				..Default::default()
+			});
+			let producer = Producer::new(broadcast, "test", Info::timed());
+			let mut first = producer.create_group(group::Info { sequence: 0 }).unwrap();
+			first.start_at(4).unwrap();
+			let mut first_read = first.consume().with_range(4..);
+			let mut first = first
+				.create_frame(frame::Info {
+					size: 1024,
+					timestamp: Some(Timestamp::ZERO),
+				})
+				.unwrap();
+			first.write(vec![4; 512]).unwrap();
+			let mut streaming = first_read.next_frame().await.unwrap().unwrap();
+			let early = streaming.read_chunk().await.unwrap().unwrap();
+			assert_eq!(early.as_ref(), &[4; 512]);
+			let mut second = producer
+				.state
+				.write()
+				.ok()
+				.unwrap()
+				.insert_group_request(0, group::Bounds { start: 3, end: Some(5) }, None)
+				.unwrap();
+			second.write_frame(Timestamp::ZERO, b"three".as_slice()).unwrap();
+			let mut second_read = second.consume().with_range(4..);
+			let mut second = second
+				.create_frame(frame::Info {
+					size: 1024,
+					timestamp: Some(Timestamp::ZERO),
+				})
+				.unwrap();
+			assert!(
+				budget.reserve(1).is_none(),
+				"overlap shares the first producer's reservation"
+			);
+			assert_eq!(first.remaining(), 512);
+			second.write(vec![4; 256]).unwrap();
+			assert_eq!(first.remaining(), 512, "another delivery credits no progress");
+			assert!(streaming.read_chunk().now_or_never().is_none());
+			moq_clock::sim::advance(Duration::from_millis(20)).await;
+			if abort_first {
+				first.abort(Error::Cancel).unwrap();
+				assert!(budget.reserve(1).is_none(), "the survivor still holds admission");
+				second.write(vec![4; 768]).unwrap();
+				let mut second = second.finish().unwrap();
+				second.finish().unwrap();
+				assert!(matches!(streaming.read_chunk().await, Err(Error::Cancel)));
+				let frame = second_read.read_frame().await.unwrap().unwrap();
+				assert_eq!(frame.payload.as_ref(), &[4; 1024]);
+				assert_eq!(
+					early.as_ptr(),
+					frame.payload.as_ptr(),
+					"the survivor reuses the published storage"
+				);
+			} else {
+				second.write(vec![4; 768]).unwrap();
+				let mut second = second.finish().unwrap();
+				second.finish().unwrap();
+				let later_copy = second_read.read_frame().await.unwrap().unwrap();
+				assert!(
+					budget.reserve(1).is_none(),
+					"the slower first delivery still owns admission"
+				);
+				assert_eq!(first.remaining(), 512);
+				assert!(streaming.read_chunk().now_or_never().is_none());
+				moq_clock::sim::advance(Duration::from_millis(10)).await;
+				first.write(vec![4; 512]).unwrap();
+				let mut first = first.finish().unwrap();
+				first.finish().unwrap();
+				let original_copy = first.consume().with_range(4..).read_frame().await.unwrap().unwrap();
+				assert_eq!(
+					original_copy.arrived().duration_since(later_copy.arrived()),
+					Duration::from_millis(10)
+				);
+				assert_eq!(original_copy.payload.as_ptr(), later_copy.payload.as_ptr());
+				assert_eq!(early.as_ptr(), later_copy.payload.as_ptr());
+				assert_eq!(streaming.read_chunk().await.unwrap().unwrap().as_ref(), &[4; 512]);
+			}
+			assert!(
+				budget.reserve(1024).is_some(),
+				"all completed producers return admission"
+			);
+		}
 	}
 }

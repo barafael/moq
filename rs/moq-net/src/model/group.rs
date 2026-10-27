@@ -15,10 +15,13 @@
 //!
 //! The stream is closed with [Error] when all writers or readers are dropped.
 use super::flate;
+mod content;
 use crate::cache;
 use crate::frame::{self, Cached, FrameBuf, Payload};
 use crate::{Timescale, stats, track};
 use bytes::Bytes;
+pub(super) use content::Contents;
+use content::{Content, Input, Row, Spec};
 use std::collections::VecDeque;
 use std::mem::MaybeUninit;
 use std::ops::RangeBounds;
@@ -119,6 +122,7 @@ impl From<u16> for Info {
 /// The in-flight (tail) frame being written. At most one exists at a time, since a
 /// group is a single ordered stream.
 pub(super) struct Partial {
+	owner: Option<Arc<Row>>,
 	timestamp: Option<Timestamp>,
 	fields: Option<Arc<super::object::Fields>>,
 	buf: FrameBuf,
@@ -134,6 +138,7 @@ pub(super) struct Partial {
 /// A completed frame as a group stores it, with what egress needs beside it.
 #[derive(Clone)]
 pub(super) struct Entry {
+	owner: Option<Weak<Row>>,
 	frame: Cached,
 	// The IETF object fields it arrived with, for a relay to forward.
 	fields: Option<Arc<super::object::Fields>>,
@@ -145,6 +150,7 @@ impl Entry {
 	/// A frame without object fields.
 	fn plain(frame: Cached, inflated: u64) -> Self {
 		Self {
+			owner: None,
 			frame,
 			fields: None,
 			inflated,
@@ -178,6 +184,7 @@ pub(crate) struct Bounds {
 /// while streaming a partial frame.
 #[derive(Default)]
 pub(super) struct GroupState {
+	content: Option<Arc<Content>>,
 	// Completed frames, each a contiguous payload, from where this copy started (see
 	// [`Producer::start_at`]). Its end is one past the last frame fully written. Cursors
 	// read it without this state's lock. A compressed group stores DEFLATE slices here.
@@ -244,6 +251,7 @@ pub(super) struct GroupState {
 /// The frames a copy of a group holds, from where it starts, which a successor copy of
 /// the same group on another route adopts below where it starts.
 pub(super) struct Head {
+	content: Option<Arc<Content>>,
 	start: usize,
 	// Whether `start` is the group's first object.
 	first_object: bool,
@@ -304,7 +312,7 @@ impl Head {
 			.filter_map(|entry| entry.fields.as_ref())
 			.map(|fields| fields.heap())
 			.sum();
-		payload + fields + (self.entries.len() * size_of::<Entry>()) as u64
+		self.content.as_ref().map_or(payload, |_| 0) + fields + (self.entries.len() * size_of::<Entry>()) as u64
 	}
 }
 
@@ -332,15 +340,11 @@ struct Flate {
 }
 
 impl Flate {
-	fn new(bill: cache::Extra) -> Self {
+	fn new(plain: Arc<Plain>) -> Self {
 		Self {
 			inflated: 0,
 			encoder: None,
-			plain: Arc::new(Plain {
-				len: AtomicUsize::new(0),
-				bill,
-				state: Mutex::new(PlainState::default()),
-			}),
+			plain,
 		}
 	}
 
@@ -356,10 +360,13 @@ impl Flate {
 
 	/// Drop the codec state once no frame follows at `fin`: the encoder, and the decoder if
 	/// its readers already inflated every frame.
-	fn finish(&mut self, fin: usize) {
+	fn finish(&mut self, fin: Option<usize>) {
 		if self.encoder.take().is_some() {
 			self.plain.bill.sub(flate::ENCODER_HEAP);
 		}
+		let Some(fin) = fin else {
+			return;
+		};
 		let mut plain = self.plain.lock();
 		plain.fin = Some(fin);
 		if plain.frames.len() == fin {
@@ -368,9 +375,16 @@ impl Flate {
 	}
 
 	/// Drop everything but how the group is read, failing a late inflater with `err`.
-	fn release(&mut self, err: Error) {
-		self.encoder = None;
-		self.plain.release(err);
+	fn release(&mut self, err: Error, shared: bool) {
+		if !shared {
+			self.encoder = None;
+			self.plain.release(err);
+			return;
+		}
+		if self.encoder.take().is_some() {
+			self.plain.bill.sub(flate::ENCODER_HEAP);
+		}
+		self.plain = Arc::new(Plain::released(err));
 	}
 }
 
@@ -405,6 +419,20 @@ struct PlainState {
 }
 
 impl Plain {
+	fn new(bill: cache::Extra) -> Self {
+		Self {
+			len: AtomicUsize::new(0),
+			bill,
+			state: Mutex::default(),
+		}
+	}
+
+	fn released(err: Error) -> Self {
+		let plain = Self::new(cache::Extra::default());
+		plain.release(err);
+		plain
+	}
+
 	fn lock(&self) -> MutexGuard<'_, PlainState> {
 		self.state.lock().unwrap_or_else(PoisonError::into_inner)
 	}
@@ -845,6 +873,30 @@ impl GroupState {
 		self.relay.as_mut()?.wire.as_mut()
 	}
 
+	fn canonicalize(&self, index: usize, entry: &mut Entry) -> Result<()> {
+		let Some(content) = &self.content else {
+			return Ok(());
+		};
+		let key = Content::key(index, entry.fields.as_deref(), self.wire().is_some());
+		let input = match entry.owner.as_ref().and_then(Weak::upgrade) {
+			Some(row) => Input::Adopt(row),
+			None => Input::Whole(entry.frame.payload.clone()),
+		};
+		let row = content.row(
+			Spec {
+				key,
+				size: entry.frame.payload.len() as u64,
+				inflated: self.flate.as_ref().map(|_| entry.inflated),
+			},
+			input,
+			&self.charge,
+			None,
+		)?;
+		entry.frame.payload = row.buf.freeze();
+		entry.owner = Some(Arc::downgrade(&row));
+		Ok(())
+	}
+
 	/// Whether Object IDs left the frame ordinals, so ordinal recovery cannot stitch.
 	pub(super) fn sparse(&self) -> bool {
 		self.wire().is_some_and(|wire| wire.sparse)
@@ -877,7 +929,8 @@ impl GroupState {
 			Some(_) => self.reserve_frame(),
 			None => 0,
 		};
-		self.charge.add(written + slots)
+		self.charge
+			.add(slots + if self.content.is_none() { written } else { 0 })
 	}
 
 	/// Whether the frames held start at the group's first object.
@@ -892,6 +945,7 @@ impl GroupState {
 			return None;
 		}
 		Some(Head {
+			content: self.content.clone(),
 			start: self.offset,
 			first_object: self.first_object(),
 			entries: self.entries(self.offset, self.committed()).cloned().collect(),
@@ -915,10 +969,14 @@ impl GroupState {
 		self.front = VecDeque::new();
 		self.log.evict(self.log.end());
 		self.partial = None;
+		let shared = self.content.is_some();
+		if let Some(content) = self.content.take() {
+			content.detach(self.abort.clone().unwrap_or(Error::Dropped));
+		}
 		self.cache = 0;
 		self.charge.clear();
 		if let Some(flate) = &mut self.flate {
-			flate.release(self.abort.clone().unwrap_or(Error::Dropped));
+			flate.release(self.abort.clone().unwrap_or(Error::Dropped), shared);
 		}
 		// The header state and terminal object outlive the frames.
 		if let Some(relay) = &mut self.relay {
@@ -937,6 +995,14 @@ impl GroupState {
 			*handoff.salvaged.lock().unwrap_or_else(PoisonError::into_inner) = Some(salvage);
 			// Only once it is held: a sweep finding the hand-off empty forgets it.
 			track.pool().hold_head(&handoff);
+		}
+	}
+}
+
+impl Drop for GroupState {
+	fn drop(&mut self) {
+		if let Some(content) = self.content.take() {
+			content.detach(Error::Dropped);
 		}
 	}
 }
@@ -1144,7 +1210,7 @@ impl Producer {
 		let log = {
 			let mut state = state.write().ok().expect("a new group is open");
 			if track.compress {
-				state.flate = Some(Box::new(Flate::new(charge.extra())));
+				state.flate = Some(Box::new(Flate::new(Arc::new(Plain::new(charge.extra())))));
 			}
 			state.charge = charge;
 			state.log.reader()
@@ -1289,21 +1355,21 @@ impl Producer {
 		if state.would_overflow(1, size) || state.inflated_overflow(inflated) {
 			return Err(self.abort_too_large(state));
 		}
-		state.cache += size;
-		let inflated = match &mut state.flate {
-			Some(flate) => {
-				flate.inflated += inflated;
-				inflated
-			}
-			None => 0,
-		};
+		let inflated = if state.flate.is_some() { inflated } else { 0 };
 		let frame = Cached {
 			timestamp,
 			payload: payload.into(),
 			arrived: super::clock::now(),
 		};
-		let slots = state.push(Entry::plain(frame, inflated));
-		let now = state.charge.add(size + slots);
+		let mut entry = Entry::plain(frame, inflated);
+		state.canonicalize(state.next_index, &mut entry)?;
+		state.cache += size;
+		if let Some(flate) = &mut state.flate {
+			flate.inflated += inflated;
+		}
+		let slots = state.push(entry);
+		let charged = slots + if state.content.is_none() { size } else { 0 };
+		let now = state.charge.add(charged);
 		state.next_index = next_index;
 		state.stamp(timestamp);
 		let bound = state.settle(origin);
@@ -1389,27 +1455,41 @@ impl Producer {
 		let mut now = None;
 		let mut latest = None;
 		let mut deflated = deflated.into_iter();
-		// The whole batch lands at once.
 		let arrived = super::clock::now();
-		for mut frame in frames.drain() {
-			frame.arrived = arrived;
-			frame.timestamp =
+		let mut prepared = arrayvec::ArrayVec::<Entry, N>::new();
+		for (index, frame) in frames.filled().iter().enumerate() {
+			let timestamp =
 				on_track(frame.timestamp, self.handle.track.timescale).expect("timestamp scale checked above");
-			let inflated = match &mut state.flate {
-				Some(flate) => {
-					let inflated = frame.payload.len() as u64;
-					flate.inflated += inflated;
-					frame.payload = deflated.next().expect("one slice per frame");
-					inflated
-				}
-				None => 0,
+			let (payload, inflated) = match state.flate.is_some() {
+				true => (
+					deflated.next().expect("one slice per frame"),
+					frame.payload.len() as u64,
+				),
+				false => (frame.payload.clone(), 0),
 			};
-			let size = frame.payload.len() as u64;
+			let mut entry = Entry::plain(
+				Cached {
+					timestamp,
+					payload: payload.into(),
+					arrived,
+				},
+				inflated,
+			);
+			state.canonicalize(state.next_index + index, &mut entry)?;
+			prepared.push(entry);
+		}
+		frames.drain().for_each(drop);
+		for entry in prepared {
+			let size = entry.frame.payload.len() as u64;
+			if let Some(flate) = &mut state.flate {
+				flate.inflated += entry.inflated;
+			}
 			state.cache += size;
-			state.stamp(frame.timestamp);
-			latest = latest.max(frame.timestamp);
-			let slots = state.push(Entry::plain(frame.into(), inflated));
-			now = state.charge.add(size + slots);
+			state.stamp(entry.frame.timestamp);
+			latest = latest.max(entry.frame.timestamp);
+			let slots = state.push(entry);
+			let charged = slots + if state.content.is_none() { size } else { 0 };
+			now = state.charge.add(charged);
 		}
 		state.next_index = next_index;
 		let bound = state.settle(origin);
@@ -1459,20 +1539,14 @@ impl Producer {
 	#[cfg_attr(not(feature = "async"), allow(dead_code, reason = "async-only"))]
 	pub(crate) fn create_object(mut self, frame: frame::Header) -> Result<frame::Producer> {
 		let meter = self.chunk_meter(frame.inflated);
-		let size = frame.info.size as usize;
-		// Only the segment being written is ever allocated ahead of its bytes.
-		let reserved = self.handle.cache.frames().reserve(size.min(frame::SEGMENT));
-		let buf = match reserved {
-			Some(_) => FrameBuf::new(size),
-			None => FrameBuf::growing(size),
-		};
-		let info = match self.open_frame(frame, &buf) {
-			Ok(info) => info,
+		let (info, buf) = match self.open_frame(frame) {
+			Ok(opened) => opened,
 			Err(err) => {
 				let _ = self.handle.abort(err.clone());
 				return Err(err);
 			}
 		};
+		let reserved = buf.admit(self.handle.cache.frames());
 		Ok(frame::Producer::new(self, buf, info, reserved).with_meter(meter))
 	}
 
@@ -1490,7 +1564,7 @@ impl Producer {
 	///
 	/// Its bytes are charged to the cache as they are written, not here: the declared
 	/// size is only a promise until they arrive.
-	fn open_frame(&mut self, header: frame::Header, buf: &FrameBuf) -> Result<frame::Info> {
+	fn open_frame(&mut self, header: frame::Header) -> Result<(frame::Info, FrameBuf)> {
 		let frame = header.info;
 		let timestamp = on_track(frame.timestamp, self.handle.track.timescale)?;
 		if frame.size > MAX_CACHE_BYTES || header.inflated.is_some_and(|inflated| inflated > MAX_CACHE_BYTES) {
@@ -1529,8 +1603,28 @@ impl Producer {
 		if let (Some(flate), Some(inflated)) = (&mut state.flate, header.inflated) {
 			flate.inflated += inflated;
 		}
+		let (owner, buf) = match state.content.as_ref().filter(|_| !scratch) {
+			Some(content) => {
+				let key = Content::key(state.next_index, header.fields.as_deref(), state.wire().is_some());
+				let row = content.row(
+					Spec {
+						key,
+						size: frame.size,
+						inflated: header.inflated,
+					},
+					Input::Stream(None),
+					&state.charge,
+					None,
+				)?;
+				let buf = row.buf.fork();
+				buf.bill_view(state.charge.extra());
+				(Some(row), buf)
+			}
+			None => (None, FrameBuf::new(frame.size as usize)),
+		};
 		let now = state.charge.record_write();
 		state.partial = Some(Partial {
+			owner,
 			timestamp,
 			fields: header.fields,
 			buf: buf.clone(),
@@ -1577,10 +1671,13 @@ impl Producer {
 		// producer writes them.
 		self.stats.frames(1);
 
-		Ok(frame::Info {
-			size: frame.size,
-			timestamp,
-		})
+		Ok((
+			frame::Info {
+				size: frame.size,
+				timestamp,
+			},
+			buf,
+		))
 	}
 
 	/// Wake consumers parked on the group channel (called after a partial write).
@@ -1625,7 +1722,8 @@ impl Producer {
 				return Err(self.abort_too_large(state));
 			}
 			state.cache += size;
-			now = state.charge.add(size);
+			let charged = if state.content.is_none() { size } else { 0 };
+			now = state.charge.add(charged);
 			self.stats.bytes(size);
 		} else if let Some(size) = partial.as_ref().and_then(|partial| partial.inflated) {
 			// Admitted against the budget when it opened.
@@ -1633,11 +1731,16 @@ impl Producer {
 		}
 		// Stamped once readable, so a slow DEFLATE above counts against its lateness.
 		frame.arrived = super::clock::now();
-		let entry = Entry {
+		let (owner, fields) = partial.map_or((None, None), |partial| (partial.owner, partial.fields));
+		let mut entry = Entry {
+			owner: owner.as_ref().map(Arc::downgrade),
 			frame,
-			fields: partial.and_then(|partial| partial.fields),
+			fields,
 			inflated,
 		};
+		if entry.owner.is_none() {
+			state.canonicalize(state.next_index - 1, &mut entry)?;
+		}
 		// The slot was reserved and charged by `charge_partial` above.
 		state.push(entry);
 		debug_assert_eq!(
@@ -1678,8 +1781,9 @@ impl Producer {
 		let fin = state.next_index;
 		state.fin = Some(fin);
 		// No frame follows to compress.
+		let original_fin = state.range_end.is_none().then_some(fin);
 		if let Some(flate) = &mut state.flate {
-			flate.finish(fin);
+			flate.finish(original_fin);
 		}
 		drop(state);
 		// An empty group counts as content once it ends.
@@ -1775,6 +1879,91 @@ impl Handle {
 		}
 	}
 
+	pub(super) fn content(&self) -> Option<Arc<Content>> {
+		self.state.read().content.clone()
+	}
+
+	pub(super) fn activate_content(&self) -> Result<Option<Arc<Content>>> {
+		let Ok(mut state) = self.state.write() else {
+			return Ok(None);
+		};
+		if state.abort.is_some() {
+			return Ok(None);
+		}
+		if let Some(content) = &state.content {
+			return Ok(Some(content.clone()));
+		}
+		let content = Content::new(&state.charge, state.flate.as_ref().map(|flate| flate.plain.clone()));
+		let entries: Vec<_> = state.entries(state.offset, state.committed()).cloned().collect();
+		for (index, entry) in (state.offset..).zip(entries) {
+			let key = Content::key(index, entry.fields.as_deref(), state.wire().is_some());
+			let transferred = state.charge.transfer(entry.frame.payload.len() as u64);
+			content.row(
+				Spec {
+					key,
+					size: entry.frame.payload.len() as u64,
+					inflated: state.flate.as_ref().map(|_| entry.inflated),
+				},
+				Input::Whole(entry.frame.payload),
+				&state.charge,
+				Some(transferred),
+			)?;
+		}
+		if state.partial.as_ref().is_some_and(|partial| !partial.scratch) {
+			let partial = state.partial.as_ref().expect("checked above");
+			let key = Content::key(state.next_index - 1, partial.fields.as_deref(), state.wire().is_some());
+			let (buf, inflated, charged) = (partial.buf.clone(), partial.inflated, partial.charged);
+			let transferred = state.charge.transfer(charged);
+			let row = content.row(
+				Spec {
+					key,
+					size: buf.size() as u64,
+					inflated,
+				},
+				Input::Stream(Some(buf)),
+				&state.charge,
+				Some(transferred),
+			)?;
+			state.partial.as_mut().expect("still open").owner = Some(row);
+		}
+		content.attach(&state.charge);
+		state.content = Some(content.clone());
+		Ok(Some(content))
+	}
+
+	pub(super) fn register_content(&self, contents: &Contents) {
+		let state = self.state.read();
+		if let Some(content) = &state.content {
+			contents.insert(self.sequence, content, &state.charge);
+		}
+	}
+
+	pub(super) fn share_content(&self, content: Arc<Content>) {
+		let Ok(mut state) = self.state.write() else {
+			return;
+		};
+		debug_assert!(state.partial.is_none() && state.next_index == state.offset);
+		let plain = content.attach(&state.charge);
+		if let Some(old) = state.content.replace(content) {
+			old.detach(Error::Dropped);
+		}
+		if let (Some(flate), Some(plain)) = (&mut state.flate, plain) {
+			flate.plain = plain;
+		}
+	}
+
+	pub(super) fn same_content(&self, other: &Self) -> bool {
+		match (self.content(), other.content()) {
+			(Some(a), Some(b)) => Arc::ptr_eq(&a, &b),
+			_ => false,
+		}
+	}
+
+	pub(super) fn delivery_size(&self) -> u64 {
+		let state = self.state.read();
+		state.charge.size() + state.partial.as_ref().map_or(0, |partial| partial.buf.view_size())
+	}
+
 	/// Adopt the frames of `head` below where this copy starts, so it holds the group
 	/// from `head`'s start, as if this route had delivered them.
 	///
@@ -1814,8 +2003,16 @@ impl Handle {
 		let before = state.front.capacity();
 		state.front.reserve(count);
 		let growth = ((state.front.capacity() - before) * size_of::<Entry>()) as u64;
-		for entry in entries.iter().rev() {
-			state.front.push_front(entry.clone());
+		let mut adopted = Vec::with_capacity(count);
+		for (index, entry) in (head.start..).zip(entries) {
+			let mut entry = entry.clone();
+			if state.canonicalize(index, &mut entry).is_err() {
+				return;
+			}
+			adopted.push(entry);
+		}
+		for entry in adopted.into_iter().rev() {
+			state.front.push_front(entry);
 		}
 		if metadata > 0 {
 			state.relay().bytes += metadata;
@@ -1842,7 +2039,8 @@ impl Handle {
 			wire.first_id = head.start as u64;
 			wire.last = wire.last.or(Some(offset as u64 - 1));
 		}
-		let now = state.charge.add(payload + metadata + growth);
+		let extra = metadata + growth + if state.content.is_none() { payload } else { 0 };
+		let now = state.charge.add(extra);
 		drop(state);
 		self.start(None);
 		self.cache.settle(now);
@@ -2102,7 +2300,11 @@ impl Handle {
 	/// as an eviction victim.
 	pub(super) fn cache_size(&self) -> u64 {
 		let state = self.state.read();
-		state.charge.size() + state.flate.as_ref().map_or(0, |flate| flate.plain.bill.size())
+		state.charge.size()
+			+ state.content.as_ref().map_or_else(
+				|| state.flate.as_ref().map_or(0, |flate| flate.plain.bill.size()),
+				|content| content.size(),
+			) + state.partial.as_ref().map_or(0, |partial| partial.buf.view_size())
 	}
 
 	/// Whether the payload cached after the first frame exceeds `ratio` times the first
@@ -3494,6 +3696,7 @@ mod test {
 	#[test]
 	fn adopted_heads_keep_the_highest_pts_beside_the_tail() {
 		let head = Head {
+			content: None,
 			start: 0,
 			first_object: true,
 			entries: [0, 80, 40]
@@ -4074,6 +4277,7 @@ mod test {
 			})
 			.unwrap();
 		let head = Head {
+			content: None,
 			start: 0,
 			first_object: true,
 			entries: vec![Entry::plain(Frame::new(None, Bytes::from_static(b"ab")).into(), 0)],
@@ -4099,11 +4303,13 @@ mod test {
 			}))
 		};
 		let head = Head {
+			content: None,
 			start: 0,
 			first_object: true,
 			entries: vec![
 				Entry::plain(Frame::new(None, Bytes::from_static(b"a")).into(), 0),
 				Entry {
+					owner: None,
 					frame: Frame::new(None, Bytes::from_static(b"b")).into(),
 					fields: fields(1),
 					inflated: 0,

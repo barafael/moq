@@ -151,3 +151,91 @@ nix develop --command just rs test -p moq-net --lib \
 		}
 	}
 ```
+
+### Canonical-owner prototype checkpoint
+
+The private Rust prototype activates an indexed content owner when a second
+transport delivery would coexist with the first. Ordinary single-copy whole
+and batch writes retain their existing representation. Activation imports the
+existing payloads without copying and attaches the exact in-flight `FrameBuf`,
+so an already-streaming reader and writer keep their progress. New deliveries
+fork their own received counter while sharing immutable content, publication
+and the origin's admission. Contradictory bytes use `ProtocolViolation`.
+
+A `TrackState`-scoped weak index lets a refill discover an owner still retained
+by older tails after its Slot was removed. Owners remove their weak entries;
+the index is owned by the live owners, so dead history does not accumulate.
+Explicit live-group recreation replaces the sequence's indexed incarnation.
+A different track instance does not inherit it. Delivery logs, bounds, FIN,
+errors, timestamps and public arrival records remain separate. IETF Object IDs
+have their own key space instead of being mistaken for dense frame ordinals.
+
+Intrinsic `FrameBuf` charges follow the shared storage and each progress view,
+including streamed readers that outlive the delivery's partial slot. A
+payload-only `Charge::transfer` moves old bytes without recording them as new
+writes. Fresh attachment and already-canonical transfer have controls. Deferred
+log entries hold weak row handles; a non-polling cursor cannot keep a canonical
+owner alive through retired log storage. Handoff heads retain the content owner.
+
+The first eager prototype exposed real ownership and accounting integration
+failures: 466/491 existing group/track tests passed initially, then 482/491
+after ownership corrections. Its sources and raw results remain in
+`.tmp/eager-content-prototype/`, `.tmp/content-model-tests.log` and
+`.tmp/content-model-tests-2.log`. It was replaced by lazy activation rather than
+relaxing cache-pressure thresholds. Two refill fixtures had different bytes for
+the same fixed incarnation; only those payloads were made consistent, preserving
+the bounds, lifetime and end-refusal assertions.
+
+The lazy implementation passes 508/508 strict frame, group and track controls,
+including the following new outer controls:
+
+- Eight distinct tail starts with all earlier readers held, at 0, 1 and 1024 B
+  per frame, both bounded and unbounded. Matching nonempty frame payloads have
+  the same physical pointer. Dropping identity probes changes no charge.
+- Actual Slot removal with an older reader-held tail, followed by a refill
+  sharing its owner; explicit live recreation accepts different bytes and uses
+  a separate owner.
+- Activation while the original frame and streaming reader are already open.
+  Overlap credits no progress to that delivery. One abort leaves the other
+  producer valid and admitted. Two completions retain distinct arrival times
+  10 ms apart under the deterministic clock while sharing the same payload.
+
+The nine delivery handles remain distinct. Their logs and arrival metadata are
+charged separately; this proves one canonical content store, not a constant
+bound on all delivery bookkeeping or arbitrary caller-retained public Frames.
+The bounded case also retains the live frame at 32 beside tail frames 1..16.
+
+| Payload/frame | End | Canonical rows | Unique payload | Shared charge | Delivery charge | Discovery charge | Total |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 0 B | Unbounded | 32 | 0 B | 10368 B | 34272 B | 136 B | 44776 B |
+| 0 B | Exclusive 17 | 17 | 0 B | 5688 B | 22272 B | 136 B | 28096 B |
+| 1 B | Unbounded | 32 | 32 B | 10400 B | 34272 B | 136 B | 44808 B |
+| 1 B | Exclusive 17 | 17 | 17 B | 5705 B | 22272 B | 136 B | 28113 B |
+| 1024 B | Unbounded | 32 | 32768 B | 43136 B | 34272 B | 136 B | 77544 B |
+| 1024 B | Exclusive 17 | 17 | 17408 B | 23096 B | 22272 B | 136 B | 45504 B |
+
+On this x86_64 build the shared frame content allocation is 184 B, a progress
+view is 56 B, and admission bookkeeping is 32 B. The empty-payload cases expose
+the metadata independently of payload savings. These are ownership and charge
+measurements, not quiet-host timing or allocator-overhead claims.
+
+```sh
+nix develop --command just rs test -p moq-net --lib \
+  -E 'test(model::frame::tests) | test(model::group::test) | test(model::track::test)' \
+  --no-fail-fast --success-output immediate
+```
+
+Raw output: `.tmp/lazy-content-model-tests-2.log`, SHA256
+`76e5c37663d9529589e0119fa817cf3c064cfd4cc436a099f56bf6055bdccbda`.
+`just fix` also passed. These focused results precede this checkpoint's final
+integration gates; the full CI and interop pass on 5796 remain separate evidence.
+
+The Goal remains unfinished pending typed sparse/relay and compressed raw/plain
+outer preservation controls, actual-main prerequisite integration, final clean
+committed-head gates and real surface proof. Actual compressed transport ingress
+must share stored raw slices as received, with one lazy inflated copy. Local
+plaintext-to-DEFLATE producer scratch is a distinct representation; it is not
+claimed to share raw wire storage. Compressed transport fetches must continue
+widening to start 0/end None, and a plain reader without the prefix must still
+refuse. No public API, wire, resource-budget or maintainer-policy choice has been
+selected by this checkpoint.
